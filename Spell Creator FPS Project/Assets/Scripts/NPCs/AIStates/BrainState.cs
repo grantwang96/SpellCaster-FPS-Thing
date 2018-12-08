@@ -76,9 +76,6 @@ public class MoveState : BrainState {
     public override void Execute() {
         facingTarget = npcBehaviour.CurrentTarget != null;
         Vector3 lookDirection = npcBehaviour.transform.forward;
-        if (facingTarget) {
-            lookDirection = npcBehaviour.CurrentTarget.transform.position - npcBehaviour.transform.position;
-        }
 
         if (npcBehaviour.Agent.pathPending) { Debug.Log(npcBehaviour.name + " path is pending..."); return; }
 
@@ -87,7 +84,9 @@ public class MoveState : BrainState {
             npcBehaviour.ChangeBrainState(new IdleState(npcBehaviour.Blueprint.GetNewIdleTime));
             return;
         }
-        if (!facingTarget) {
+        if (facingTarget) {
+            lookDirection = npcBehaviour.CurrentTarget.transform.position - npcBehaviour.transform.position;
+        } else {
             lookDirection = npcBehaviour.currentDestination - npcBehaviour.transform.position;
         }
 

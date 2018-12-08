@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(CharacterMoveController))]
 public class NPCBehaviour : CharacterBehaviour, IVision, IDamageable {
 
     [SerializeField] protected int _health;
-    public int Health;
+    public int Health { get { return _health; } }
 
     [SerializeField] protected CharacterMoveController _charMove;
     public CharacterMoveController CharMove { get { return _charMove; } }

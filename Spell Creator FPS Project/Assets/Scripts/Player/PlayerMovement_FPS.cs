@@ -21,8 +21,12 @@ public class PlayerMovement_FPS : MonoBehaviour {
 
 	}
 
+    private void OnEnable() {
+        GameplayController.Instance.OnJumpPressed += OnJump;
+    }
+
     private void OnDisable() {
-        
+        GameplayController.Instance.OnJumpPressed -= OnJump;
     }
 
     // Update is called once per frame
@@ -38,7 +42,8 @@ public class PlayerMovement_FPS : MonoBehaviour {
         }
     }
 
-    public void ProcessWalkInput(Vector3 inputVector) {
+    private void ProcessWalkInput() {
+        Vector3 inputVector = GameplayController.Instance.walkVector;
         Vector3 newMoveVector = new Vector3();
         newMoveVector += transform.right * inputVector.x;
         newMoveVector += transform.forward * inputVector.z;
@@ -46,7 +51,7 @@ public class PlayerMovement_FPS : MonoBehaviour {
         moveVector.z = newMoveVector.z * speed;
     }
 
-    public void OnJump() {
+    private void OnJump() {
         if (characterController.isGrounded) {
             moveVector.y = jumpForce;
         }

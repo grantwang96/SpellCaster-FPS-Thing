@@ -20,8 +20,8 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     public Transform BodyTransform { get { return _bodyTransform; } }
 
     // where vision is calculated
-    [SerializeField] protected Transform _head;
-    public Transform Head { get { return _head; } }
+    [SerializeField] protected Transform _headTransform;
+    public Transform Head { get { return _headTransform; } }
 
     protected virtual void Awake() {
 

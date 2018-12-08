@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class PlayerCamera_FPS : MonoBehaviour {
 
-    [SerializeField] private float horizontalBodyRotation = 0f;
-    [SerializeField] private float verticalHeadRotation = 0f;
-
+    [SerializeField] private Vector3 lookRotation;
     [SerializeField] private float lookSpeed;
+
+    [SerializeField] private Transform _body;
+    public Transform Body { get { return _body; } set { _body = value; } }
+    [SerializeField] private Transform _head;
+    public Transform Head { get { return _head; } set { _head = value; } }
 
 	// Use this for initialization
 	void Start () {
@@ -16,23 +19,19 @@ public class PlayerCamera_FPS : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        ProcessLookInput();
+
 	}
 
     private void ProcessLookInput() {
-        Transform head = GameplayController.Instance.Head;
-        Transform body = GameplayController.Instance.BodyTransform;
+        Vector3 lookInput = GameplayController.Instance.LookVector;
+        lookRotation.x += lookInput.x * lookSpeed * Time.deltaTime;
+        lookRotation.y -= lookInput.y * lookSpeed * Time.deltaTime;
+        lookRotation.y = Mathf.Clamp(lookRotation.y, -80f, 80f);
 
-        Vector3 lookInput = GameplayController.Instance.lookVector;
+        Vector3 newBodyRotation = new Vector3(0f, lookRotation.x, 0f);
+        Vector3 newHeadRotation = new Vector3(lookRotation.y, 0f, 0f);
 
-        horizontalBodyRotation += lookInput.x * lookSpeed * Time.deltaTime;
-        verticalHeadRotation -= lookInput.y * lookSpeed * Time.deltaTime;
-        verticalHeadRotation = Mathf.Clamp(verticalHeadRotation, -80f, 80f);
-
-        Vector3 newBodyRotation = new Vector3(0f, horizontalBodyRotation, 0f);
-        Vector3 newHeadRotation = new Vector3(verticalHeadRotation, 0f, 0f);
-
-        head.localEulerAngles = newHeadRotation;
-        body.localEulerAngles = newBodyRotation;
+        _head.localEulerAngles = newHeadRotation;
+        _body.localEulerAngles = newBodyRotation;
     }
 }
