@@ -8,6 +8,12 @@ using UnityEngine;
 public class SpellBook : MonoBehaviour, IInteractable {
 
     [SerializeField] private Spell _heldSpell;
+    public Spell HeldSpell {
+        get { return _heldSpell; }
+        set {
+            _heldSpell = value;
+        }
+    }
 
     // Get Components here
     void Awake() {
@@ -23,11 +29,15 @@ public class SpellBook : MonoBehaviour, IInteractable {
 
     }
 
-    public void Interact() {
+    public void Interact(CharacterBehaviour character) {
 
     }
 
     public void Drop() {
 
+    }
+
+    public void Detect() {
+        Debug.Log("Found Spell Book");
     }
 }

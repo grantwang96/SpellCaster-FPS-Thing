@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IInteractable {
 
-    void Interact();
+    void Interact(CharacterBehaviour character);
+    void Detect(); // should display message when looking at interactable object
 }

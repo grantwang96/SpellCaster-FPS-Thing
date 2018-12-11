@@ -32,10 +32,13 @@ public class PlayerMovement_FPS : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         ProcessGravity();
-
-        characterController.Move(moveVector * Time.deltaTime);
+        ProcessWalkInput();
 	}
-    
+
+    private void FixedUpdate() {
+        characterController.Move(moveVector * Time.deltaTime);
+    }
+
     private void ProcessGravity() {
         if(moveVector.y > Physics.gravity.y) {
             moveVector.y += Time.deltaTime * Physics.gravity.y;

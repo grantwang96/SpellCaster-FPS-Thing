@@ -19,7 +19,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        ProcessLookInput();
 	}
 
     private void ProcessLookInput() {

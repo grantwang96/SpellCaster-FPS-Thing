@@ -4,7 +4,10 @@ using UnityEngine;
 
 public interface ISpellCaster {
 
-    Transform GunBarrel { get; set; }
+    int mana { get; }
+    ActiveSpell ActiveSpell { get; }
+
+    Transform GunBarrel { get; }
     IDamageable Damageable { get; }
     CharacterBehaviour CharacterBehaviour { get; }
     SpellsInventory SpellsInventory { get; }
