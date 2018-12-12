@@ -7,24 +7,27 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     public int mana { get; private set; }
     public ActiveSpell ActiveSpell { get; private set; }
 
-    public Transform GunBarrel { get; set; }
+    [SerializeField] private Transform _gunBarrel;
+    public Transform GunBarrel { get { return _gunBarrel; } }
     public IDamageable Damageable { get; private set; }
     public CharacterBehaviour CharacterBehaviour { get; private set; }
-    public SpellsInventory SpellsInventory { get; private set; }
 
+    [SerializeField] private List<Spell> spellsList;
+    public List<Spell> SpellsList { get { return spellsList; } }
+
+    [SerializeField] private int spellInventoryLimit;
     [SerializeField] private int selectedSpellIndex;
     private Spell SelectedSpell {
         get {
-            if(SpellsInventory.SpellsList.Count == 0) { return null; }
-            if(selectedSpellIndex >= SpellsInventory.SpellsList.Count) { selectedSpellIndex = 0; }
-            return SpellsInventory.SpellsList[selectedSpellIndex];
+            if(spellsList.Count == 0) { return null; }
+            if(selectedSpellIndex >= spellsList.Count) { selectedSpellIndex = 0; }
+            return spellsList[selectedSpellIndex];
         }
     }
 
     void Awake() {
         Damageable = GetComponent<IDamageable>();
         CharacterBehaviour = GetComponent<CharacterBehaviour>();
-        SpellsInventory = GetComponent<SpellsInventory>();
     }
 
     void OnEnable() {
@@ -81,5 +84,22 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             selectedSpell.OnEndCastSpell(this);
             ActiveSpell = new ActiveSpell();
         }
+    }
+
+    public void PickUpSpell(Spell newSpell) {
+        if(spellsList.Count >= spellInventoryLimit) {
+            Spell dropSpell = spellsList[selectedSpellIndex];
+            spellsList[selectedSpellIndex] = newSpell;
+            Drop(dropSpell, transform.position + transform.forward, transform.rotation);
+        } else {
+            spellsList.Add(newSpell);
+        }
+    }
+
+    private void Drop(Spell spell, Vector3 location, Quaternion rotation) {
+        if (spellsList.Contains(spell)) {
+            spellsList.Remove(spell);
+        }
+        SpellManager.Instance.GenerateSpellBook(spell, location, rotation);
     }
 }

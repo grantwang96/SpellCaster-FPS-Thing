@@ -10,10 +10,10 @@ public class SpellBook : MonoBehaviour, IInteractable {
     [SerializeField] private Spell _heldSpell;
     public Spell HeldSpell {
         get { return _heldSpell; }
-        set {
-            _heldSpell = value;
-        }
+        set { _heldSpell = value; }
     }
+
+    [SerializeField] private bool _interactable = true;
 
     // Get Components here
     void Awake() {
@@ -26,18 +26,21 @@ public class SpellBook : MonoBehaviour, IInteractable {
 	}
 
     private void Initialize() {
-
+        Spell newSpell = SpellManager.Instance.GenerateRandomSpell();
+        _heldSpell = newSpell;
     }
 
     public void Interact(CharacterBehaviour character) {
-
-    }
-
-    public void Drop() {
-
+        if (!_interactable) { return; }
+        ISpellCaster caster = character.GetComponent<ISpellCaster>();
+        if(caster != null) {
+            _interactable = false;
+            caster.PickUpSpell(HeldSpell);
+            Destroy(gameObject);
+        }
     }
 
     public void Detect() {
-        Debug.Log("Found Spell Book");
+        
     }
 }

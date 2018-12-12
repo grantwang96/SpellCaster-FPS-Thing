@@ -12,13 +12,13 @@ public class PlayerInteract : MonoBehaviour {
     private IInteractable currentInteractable;
 
     private void OnEnable() {
-        GameplayController.Instance.OnInteractPressed += AttemptInteract;
-        GameplayController.Instance.OnInteractHeld += AttemptInteract;
+        GameplayController.Instance.OnInteractPressed += PressInteract;
+        GameplayController.Instance.OnInteractHeld += HoldInteract;
     }
 
     private void OnDisable() {
-        GameplayController.Instance.OnInteractPressed += AttemptInteract;
-        GameplayController.Instance.OnInteractHeld += AttemptInteract;
+        GameplayController.Instance.OnInteractPressed += PressInteract;
+        GameplayController.Instance.OnInteractHeld += HoldInteract;
     }
 
     // Use this for initialization
@@ -45,9 +45,21 @@ public class PlayerInteract : MonoBehaviour {
         }
     }
 
-    private void AttemptInteract() {
-        if(currentInteractable != null) {
+    private void PressInteract() {
+        Debug.Log("Interact pressed!");
+        if (currentInteractable != null) {
             currentInteractable.Interact(GameplayController.Instance);
         }
+    }
+
+    private void HoldInteract() {
+        Debug.Log("Interact Held!");
+        if (currentInteractable != null) {
+            currentInteractable.Interact(GameplayController.Instance);
+        }
+    }
+
+    private void ReleaseInteract() {
+        Debug.Log("Interact Released!");
     }
 }

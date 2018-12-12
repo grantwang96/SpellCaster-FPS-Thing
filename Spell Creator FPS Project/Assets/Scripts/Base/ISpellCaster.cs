@@ -10,5 +10,6 @@ public interface ISpellCaster {
     Transform GunBarrel { get; }
     IDamageable Damageable { get; }
     CharacterBehaviour CharacterBehaviour { get; }
-    SpellsInventory SpellsInventory { get; }
+
+    void PickUpSpell(Spell newSpell);
 }

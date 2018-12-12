@@ -6,6 +6,6 @@ using UnityEngine;
 public class Effect_Dummy : Spell_Effect {
 
     public override void TriggerEffect(IDamageable damageable, ISpellCaster caster) {
-        Debug.Log(caster.Damageable + " performed spell on " + damageable);
+        Debug.Log(caster + " performed spell on " + damageable);
     }
 }

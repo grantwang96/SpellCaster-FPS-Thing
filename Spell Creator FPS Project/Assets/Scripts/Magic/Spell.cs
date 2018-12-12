@@ -1,18 +1,23 @@
 ﻿using System;
+using UnityEngine;
 
 [System.Serializable]
 public class Spell {
 
-    public Spell_CastingMethod CastingMethod { get; private set; }
-    public Spell_Effect[] Effects { get; private set; }
+    [SerializeField] private Spell_CastingMethod _castingMethod;
+    public Spell_CastingMethod CastingMethod {
+        get { return _castingMethod; }
+    }
+    [SerializeField] private Spell_Effect[] _effects;
+    public Spell_Effect[] Effects { get { return _effects; } }
 
     public int ManaCost { get; private set; }
     public float maxChargeTime { get; private set; }
     public float intervalTime { get; private set; }
 
     public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects) {
-        CastingMethod = castingMethod;
-        Effects = effects;
+        _castingMethod = castingMethod;
+        _effects = effects;
     }
 
     public void OnStartCastSpell(ISpellCaster caster) {

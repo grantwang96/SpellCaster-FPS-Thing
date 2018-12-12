@@ -32,13 +32,4 @@ public abstract class Spell_CastingMethod : ScriptableObject {
     /// </summary>
     /// <param name="caster"></param>
     public abstract bool OnEndCast(ISpellCaster caster, Spell_Effect[] effects); // returns if spell is successfully cast
-
-    protected virtual void ApplyEffects(ISpellCaster caster, Spell_Effect[] effects) {
-        for (int i = 0; i < effects.Length; i++) {
-            IDamageable damageable = caster.Damageable;
-            if (damageable != null) {
-                effects[i].TriggerEffect(damageable, caster);
-            }
-        }
-    }
 }

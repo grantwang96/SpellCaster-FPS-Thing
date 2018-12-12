@@ -30,4 +30,13 @@ public class CastingMethod_Self : Spell_CastingMethod {
         }
         return false;
     }
+
+    private void ApplyEffects(ISpellCaster caster, Spell_Effect[] effects) {
+        for (int i = 0; i < effects.Length; i++) {
+            IDamageable damageable = caster.Damageable;
+            if (damageable != null) {
+                effects[i].TriggerEffect(damageable, caster);
+            }
+        }
+    }
 }

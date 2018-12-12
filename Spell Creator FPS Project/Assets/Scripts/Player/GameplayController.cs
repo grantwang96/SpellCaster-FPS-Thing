@@ -101,10 +101,13 @@ public class GameplayController : CharacterBehaviour {
         
         if (Input.GetButtonDown("Jump")) { Jump(); }
 
-        if (Input.GetButtonDown("Interact")) {  }
-        else if (Input.GetButtonUp("Interact")) {  }
+        if (Input.GetButtonDown("Interact")) { InteractPressed(); }
+        else if (Input.GetButton("Interact")) { InteractHeld(); }
+        else if (Input.GetButtonUp("Interact")) { InteractReleased(); }
 
         if (Input.GetButtonDown("Fire1")) { Shoot1Pressed(); }
+        else if (Input.GetButton("Fire1")) { Shoot1Held(); }
+        else if (Input.GetButtonUp("Fire1")) { Shoot1Released(); }
     }
 
     private void Jump() {
@@ -112,14 +115,26 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void InteractPressed() {
+        if (OnInteractPressed == null) {
+            Debug.LogError("Interact Pressed event is empty!");
+            return;
+        }
         OnInteractPressed.Invoke();
     }
 
     private void InteractHeld() {
+        if (OnInteractHeld == null) {
+            Debug.LogError("Interact Hold event is empty!");
+            return;
+        }
         OnInteractHeld.Invoke();
     }
 
     private void InteractReleased() {
+        if(OnInteractReleased == null) {
+            Debug.LogError("Interact Released event is empty!");
+            return;
+        }
         OnInteractReleased.Invoke();
     }
 
