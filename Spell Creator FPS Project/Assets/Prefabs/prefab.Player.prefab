@@ -24,10 +24,25 @@ GameObject:
   - component: {fileID: 114187418731465560}
   - component: {fileID: 114425304417330804}
   - component: {fileID: 114242404479300404}
-  - component: {fileID: 114204625368198856}
   - component: {fileID: 114419468601579986}
+  - component: {fileID: 114820299144877070}
   m_Layer: 9
   m_Name: prefab.Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1332790424547498
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4325496623865586}
+  m_Layer: 9
+  m_Name: GunBarrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,6 +114,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4325496623865586
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1332790424547498}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4739983236925610}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4739983236925610
 Transform:
   m_ObjectHideFlags: 1
@@ -110,6 +138,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224353430590701508}
+  - {fileID: 4325496623865586}
   m_Father: {fileID: 4107163916722246}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -188,20 +217,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   lookSpeed: 100
-  jumpForce: 10
+  jumpForce: 7
   moveVector: {x: 0, y: 0, z: 0}
---- !u!114 &114204625368198856
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1125936217374846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4588e8db14904a94abee8b71c16c6ee7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spellsList: []
 --- !u!114 &114242404479300404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -213,6 +230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71dd165649df6e7408c0cdb33c1dd27a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gunBarrel: {fileID: 4325496623865586}
+  spellsList: []
+  spellInventoryLimit: 5
   selectedSpellIndex: 0
 --- !u!114 &114419468601579986
 MonoBehaviour:
@@ -241,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookRotation: {x: 0, y: 0, z: 0}
-  lookSpeed: 100
+  lookSpeed: 150
   _body: {fileID: 4107163916722246}
   _head: {fileID: 4739983236925610}
 --- !u!114 &114585492066675596
@@ -298,6 +318,18 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: This is text on screen
+--- !u!114 &114820299144877070
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1125936217374846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f31853af2dae80e49a43db70c30fc06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _health: 10
 --- !u!114 &114981237779579466
 MonoBehaviour:
   m_ObjectHideFlags: 1

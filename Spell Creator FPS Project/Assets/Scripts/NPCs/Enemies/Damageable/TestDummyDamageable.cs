@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDamageable : MonoBehaviour, IDamageable {
+public class TestDummyDamageable : MonoBehaviour, IDamageable {
 
     [SerializeField] private int _health;
     public int Health { get { return _health; } }
-
-    private bool _isDead;
-    public bool IsDead { get { return _isDead; } }
 
 	// Use this for initialization
 	void Start () {
@@ -21,8 +18,8 @@ public class PlayerDamageable : MonoBehaviour, IDamageable {
 	}
 
     public void TakeDamage(int damage) {
+        Debug.Log(name + " has received " + damage + " damage!");
         _health -= damage;
-        if(_health < 0) { Die(); }
     }
 
     private void Die() {
