@@ -13,7 +13,7 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     /// <summary>
     /// The "intended" vector that the character wants to move
     /// </summary>
-    protected Vector3 _walkVector;
+    [SerializeField] protected Vector3 _walkVector;
     public Vector3 walkVector { get { return _walkVector; } }
 
     [SerializeField] protected Transform _bodyTransform;

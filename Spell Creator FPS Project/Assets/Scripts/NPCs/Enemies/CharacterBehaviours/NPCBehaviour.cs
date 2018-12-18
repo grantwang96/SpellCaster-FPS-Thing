@@ -5,13 +5,13 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterMoveController))]
-public class NPCBehaviour : CharacterBehaviour, IVision, IDamageable {
+public class NPCBehaviour : CharacterBehaviour, IVision {
 
     [SerializeField] protected int _health;
     public int Health { get { return _health; } }
 
-    [SerializeField] protected CharacterMoveController _charMove;
-    public CharacterMoveController CharMove { get { return _charMove; } }
+    [SerializeField] protected NPCMoveController _charMove;
+    public NPCMoveController CharMove { get { return _charMove; } }
     [SerializeField] protected NPCBlueprint blueprint; // blueprint to derive data from
     public NPCBlueprint Blueprint { get { return blueprint; } }
     protected BrainState currentBrainState; // current state of AI State Machine
@@ -51,7 +51,7 @@ public class NPCBehaviour : CharacterBehaviour, IVision, IDamageable {
 
     protected override void Awake() {
         base.Awake();
-        _charMove = GetComponent<CharacterMoveController>();
+        _charMove = GetComponent<NPCMoveController>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.updateRotation = false;
@@ -130,14 +130,6 @@ public class NPCBehaviour : CharacterBehaviour, IVision, IDamageable {
             return hit.position;
         }
         return transform.position;
-    }
-
-    public virtual void TakeDamage(int damage) {
-        Debug.Log(name + " received " + damage + " damage!");
-    }
-
-    public virtual void Die() {
-        Debug.Log(name + " has died!");
     }
 
     public virtual void CheckVision() {

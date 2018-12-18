@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
-    public int mana { get; private set; }
+    [SerializeField] private int _mana;
+    public int mana {
+        get {
+            return _mana;
+        }
+    }
     public ActiveSpell ActiveSpell { get; private set; }
 
     [SerializeField] private Transform _gunBarrel;
@@ -48,8 +53,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             // Attempt to fire currently equipped spell
             ActiveSpell = new ActiveSpell() {
                 holdTime = 0f,
-                interval = selectedSpell.intervalTime,
-                maxHoldTime = selectedSpell.maxChargeTime
+                interval = selectedSpell.IntervalTime,
+                maxHoldTime = selectedSpell.MaxChargeTime
             };
             selectedSpell.OnStartCastSpell(this);
         }

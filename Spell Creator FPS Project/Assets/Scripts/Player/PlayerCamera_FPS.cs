@@ -6,6 +6,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
 
     [SerializeField] private Vector3 lookRotation;
     [SerializeField] private float lookSpeed;
+    [SerializeField] private float maxVerticalLookRotation;
 
     [SerializeField] private Transform _body;
     public Transform Body { get { return _body; } set { _body = value; } }
@@ -26,7 +27,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
         Vector3 lookInput = GameplayController.Instance.LookVector;
         lookRotation.x += lookInput.x * lookSpeed * Time.deltaTime;
         lookRotation.y -= lookInput.y * lookSpeed * Time.deltaTime;
-        lookRotation.y = Mathf.Clamp(lookRotation.y, -80f, 80f);
+        lookRotation.y = Mathf.Clamp(lookRotation.y, -maxVerticalLookRotation, maxVerticalLookRotation);
 
         Vector3 newBodyRotation = new Vector3(0f, lookRotation.x, 0f);
         Vector3 newHeadRotation = new Vector3(lookRotation.y, 0f, 0f);

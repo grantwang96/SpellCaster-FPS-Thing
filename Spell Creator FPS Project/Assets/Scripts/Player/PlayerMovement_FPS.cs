@@ -2,24 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement_FPS : MonoBehaviour {
-
-    [SerializeField] private float speed;
+public class PlayerMovement_FPS : CharacterMoveController {
+    
     [SerializeField] private float lookSpeed;
     [SerializeField] private float jumpForce;
-
-    [SerializeField] private Vector3 moveVector;
-
-    private CharacterController characterController;
-
-    private void Awake() {
-        characterController = GetComponent<CharacterController>();
-    }
-
-    // Use this for initialization
-    void Start () {
-
-	}
 
     private void OnEnable() {
         GameplayController.Instance.OnJumpPressed += OnJump;
@@ -30,19 +16,15 @@ public class PlayerMovement_FPS : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-        ProcessGravity();
-        ProcessWalkInput();
+    protected override void Update () {
+        movementVelocity = ProcessGravity(movementVelocity);
+        if(externalForces == null) {
+            ProcessWalkInput();
+        }
 	}
 
-    private void FixedUpdate() {
-        characterController.Move(moveVector * Time.deltaTime);
-    }
-
-    private void ProcessGravity() {
-        if(moveVector.y > Physics.gravity.y) {
-            moveVector.y += Time.deltaTime * Physics.gravity.y;
-        }
+    protected override void FixedUpdate() {
+        characterController.Move(movementVelocity * Time.deltaTime);
     }
 
     private void ProcessWalkInput() {
@@ -50,13 +32,30 @@ public class PlayerMovement_FPS : MonoBehaviour {
         Vector3 newMoveVector = new Vector3();
         newMoveVector += transform.right * inputVector.x;
         newMoveVector += transform.forward * inputVector.z;
-        moveVector.x = newMoveVector.x * speed;
-        moveVector.z = newMoveVector.z * speed;
+        movementVelocity.x = newMoveVector.x * _baseSpeed;
+        movementVelocity.z = newMoveVector.z * _baseSpeed;
     }
 
     private void OnJump() {
         if (characterController.isGrounded) {
-            moveVector.y = jumpForce;
+            movementVelocity.y = jumpForce;
         }
+    }
+
+    protected override IEnumerator ExternalForceRoutine(Vector3 externalForce) {
+        movementVelocity = externalForce;
+        yield return new WaitForEndOfFrame();
+        Vector3 start = externalForce;
+        while (!characterController.isGrounded && (characterController.velocity.x != 0 || characterController.velocity.z != 0)) {
+            yield return null;
+        }
+        float time = 0f;
+        while(movementVelocity.x != 0 && movementVelocity.z != 0) {
+            time += Time.deltaTime;
+            movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
+            movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
+            yield return null;
+        }
+        externalForces = null;
     }
 }

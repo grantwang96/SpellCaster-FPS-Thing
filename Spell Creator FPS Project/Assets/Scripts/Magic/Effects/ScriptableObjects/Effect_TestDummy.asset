@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Name: Effect_TestDummy
   m_EditorClassIdentifier: 
   _manaCost: 0
+  _chargeTime: 0
+  _intervalTime: 0
+  _basePower: 0
+  _upwardForce: 10

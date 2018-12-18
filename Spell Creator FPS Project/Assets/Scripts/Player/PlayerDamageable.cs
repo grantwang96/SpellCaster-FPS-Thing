@@ -10,6 +10,8 @@ public class PlayerDamageable : MonoBehaviour, IDamageable {
     private bool _isDead;
     public bool IsDead { get { return _isDead; } }
 
+    private CharacterMoveController moveController;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -21,11 +23,21 @@ public class PlayerDamageable : MonoBehaviour, IDamageable {
 	}
 
     public void TakeDamage(int damage) {
+        if (_isDead) { return; }
         _health -= damage;
         if(_health < 0) { Die(); }
     }
 
-    private void Die() {
+    public void TakeDamage(int damage, Vector3 velocity) {
+        TakeDamage(damage);
+        AddForce(velocity);
+    }
 
+    private void Die() {
+        _isDead = true;
+    }
+
+    public void AddForce(Vector3 velocity) {
+        moveController.AddForce(velocity);
     }
 }

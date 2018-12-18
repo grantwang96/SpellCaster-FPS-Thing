@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4464769941709492}
   - component: {fileID: 143881912130502528}
   - component: {fileID: 114522143137223104}
+  - component: {fileID: 114702878809848424}
   m_Layer: 11
   m_Name: prefab.TestDummy
   m_TagString: Untagged
@@ -345,6 +346,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 9999
+--- !u!114 &114702878809848424
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1118018252547554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58ae692769b838043a956820f3f8e9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _baseSpeed: 0
+  _linearDrag: 3
+  _performingAction: 0
+  movementVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &143881912130502528
 CharacterController:
   m_ObjectHideFlags: 1
