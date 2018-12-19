@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feda22a22abb1fd4db22bbffc7d23cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _walkVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4107163916722246}
   _headTransform: {fileID: 4739983236925610}
   _controlScheme: 0
@@ -306,11 +307,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186f2456f4da7a84ca58e52a2d019773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseSpeed: 5
+  _baseSpeed: 5
+  _mass: 2
+  _linearDrag: 2
   _performingAction: 0
+  movementVelocity: {x: 0, y: 0, z: 0}
   lookSpeed: 100
   jumpForce: 8
-  moveVector: {x: 0, y: 0, z: 0}
 --- !u!114 &114216178686495076
 MonoBehaviour:
   m_ObjectHideFlags: 1

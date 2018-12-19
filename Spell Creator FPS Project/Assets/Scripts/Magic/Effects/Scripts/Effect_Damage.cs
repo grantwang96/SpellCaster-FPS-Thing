@@ -5,24 +5,27 @@ using UnityEngine;
 /// <summary>
 /// Basic damage effect
 /// </summary>
+[CreateAssetMenu(menuName = "Spell Effect/Damage")]
 public class Effect_Damage : Spell_Effect {
-
-    [SerializeField] private int _basePower;
-    public int BasePower { get { return _basePower; } }
+    
     [SerializeField] private float _upwardForce;
     [SerializeField] private Element _element;
     public Element Element { get { return _element; } }
 
     [SerializeField] private float _force;
 
-    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster) {
-        Debug.Log("Applied damage: " + BasePower);
-        damageable.TakeDamage(BasePower);
+    public override void TriggerEffect(ISpellCaster caster, int power) {
+        
     }
 
-    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster, Vector3 velocity) {
-        Debug.Log("Applied damage: " + BasePower);
+    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster, int power) {
+        Debug.Log("Applied damage: " + power);
+        damageable.TakeDamage(power);
+    }
+
+    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster, Vector3 velocity, int power) {
+        Debug.Log("Applied damage: " + power);
         velocity.y += _upwardForce;
-        damageable.TakeDamage(BasePower, velocity);
+        damageable.TakeDamage(power, velocity * power);
     }
 }

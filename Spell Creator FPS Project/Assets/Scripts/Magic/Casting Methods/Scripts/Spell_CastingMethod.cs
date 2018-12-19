@@ -20,7 +20,7 @@ public abstract class Spell_CastingMethod : ScriptableObject {
     /// <param name="caster"></param>
     public virtual bool OnStartCast(ISpellCaster caster, Spell_Effect[] effects) {
         if (ArrayHelper.Contains(spellTiming, SpellTiming.Instant)) {
-            ApplyEffects(caster, effects);
+            CastSpell(caster, effects);
             return true;
         }
         return false;
@@ -33,7 +33,7 @@ public abstract class Spell_CastingMethod : ScriptableObject {
     public virtual bool OnHoldCast(ISpellCaster caster, Spell_Effect[] effects) {
         if (ArrayHelper.Contains(spellTiming, SpellTiming.Continuous)) {
             if (Mathf.Approximately(caster.ActiveSpell.holdIntervalTime, 0f)) {
-                ApplyEffects(caster, effects);
+                CastSpell(caster, effects);
                 return true;
             }
         }
@@ -46,11 +46,11 @@ public abstract class Spell_CastingMethod : ScriptableObject {
     /// <param name="caster"></param>
     public virtual bool OnEndCast(ISpellCaster caster, Spell_Effect[] effects) {
         if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
-            ApplyEffects(caster, effects);
+            CastSpell(caster, effects);
             return true;
         }
         return false;
     } // returns if spell is successfully cast
 
-    protected abstract void ApplyEffects(ISpellCaster caster, Spell_Effect[] effects);
+    protected abstract void CastSpell(ISpellCaster caster, Spell_Effect[] effects);
 }

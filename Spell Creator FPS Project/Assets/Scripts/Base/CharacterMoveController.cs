@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public abstract class CharacterMoveController : MonoBehaviour { // Handles character movement
 
     [SerializeField] protected float _baseSpeed;
+    [SerializeField] protected float _mass;
     [SerializeField] protected float _linearDrag;
     [SerializeField] protected bool _performingAction;
     public bool performingAction { get { return _performingAction; } }
@@ -50,9 +51,10 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce) {
-        movementVelocity = externalForce;
+        movementVelocity = externalForce / _mass;
         float magnitude = externalForce.magnitude;
-        yield return new WaitForEndOfFrame();
+        characterController.Move(movementVelocity * Time.deltaTime);
+        yield return new WaitForFixedUpdate();
         Vector3 start = externalForce;
         while (!characterController.isGrounded) {
             yield return null;

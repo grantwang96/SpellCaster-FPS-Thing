@@ -11,7 +11,7 @@ public class CastingMethod_SpreadShot : Spell_CastingMethod {
     [SerializeField] private int _count;
     [SerializeField] private float _spread;
 
-	protected override void ApplyEffects(ISpellCaster caster, Spell_Effect[] effects) {
+	protected override void CastSpell(ISpellCaster caster, Spell_Effect[] effects) {
         for(int i = 0; i < _count; i++) {
             Vector3 target = Random.insideUnitCircle * _spread;
             Vector3 forward = caster.GunBarrel.forward;

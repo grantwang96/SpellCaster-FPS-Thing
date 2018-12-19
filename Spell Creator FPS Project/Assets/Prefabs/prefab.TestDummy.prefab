@@ -358,6 +358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseSpeed: 0
+  _mass: 2
   _linearDrag: 3
   _performingAction: 0
   movementVelocity: {x: 0, y: 0, z: 0}

@@ -25,6 +25,8 @@ public class Spell {
         for(int i = 0; i < _effects.Length; i++) {
             ManaCost += _effects[i].ManaCost;
         }
+        IntervalTime = .25f;
+        MaxChargeTime = 3f;
     }
 
     public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, float maxChargeTime, float intervalTime, int power, string name) {

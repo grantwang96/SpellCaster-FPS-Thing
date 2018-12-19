@@ -27,10 +27,11 @@ public abstract class Spell_Effect : ScriptableObject {
     [SerializeField] private int _basePower;
     public int BasePower { get { return _basePower; } }
 
+    public abstract void TriggerEffect(ISpellCaster caster, int power);
     /// <summary>
     /// Applies effect to given damageable
     /// </summary>
     /// <param name="damageable"></param>
-    public abstract void TriggerEffect(IDamageable damageable, ISpellCaster caster);
-    public abstract void TriggerEffect(IDamageable damageable, ISpellCaster caster, Vector3 velocity);
+    public abstract void TriggerEffect(IDamageable damageable, ISpellCaster caster, int power);
+    public abstract void TriggerEffect(IDamageable damageable, ISpellCaster caster, Vector3 velocity, int power);
 }
