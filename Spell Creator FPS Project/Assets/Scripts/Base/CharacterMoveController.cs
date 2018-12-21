@@ -13,7 +13,8 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     public bool performingAction { get { return _performingAction; } }
 
     protected CharacterController characterController; // accesses the character controller on the character
-    
+    public CharacterController CharacterController { get { return characterController; } }
+
     [SerializeField] protected Vector3 movementVelocity;
 
     protected Coroutine busyAnimation; // coroutine that prevents other actions from being taken

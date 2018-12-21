@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Name: TestEnemy
   m_EditorClassIdentifier: 
   _totalHealth: 10
-  _walkSpeed: 2.5
-  _runSpeed: 5
+  _walkSpeed: 1.5
+  _runSpeed: 3
   _idleTimeMinimum: 5
   _idleTimeMaximum: 6
-  _visionRange: 20
+  _visionRange: 10
   _visionAngle: 80
   _visionMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2561

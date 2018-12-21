@@ -46,20 +46,18 @@ public class PlayerInteract : MonoBehaviour {
     }
 
     private void PressInteract() {
-        Debug.Log("Interact pressed!");
         if (currentInteractable != null) {
             currentInteractable.Interact(GameplayController.Instance);
         }
     }
 
     private void HoldInteract() {
-        Debug.Log("Interact Held!");
         if (currentInteractable != null) {
             currentInteractable.Interact(GameplayController.Instance);
         }
     }
 
     private void ReleaseInteract() {
-        Debug.Log("Interact Released!");
+
     }
 }

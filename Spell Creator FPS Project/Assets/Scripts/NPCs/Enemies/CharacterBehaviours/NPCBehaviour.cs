@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(CharacterMoveController))]
+[RequireComponent(typeof(NPCMoveController))]
 public class NPCBehaviour : CharacterBehaviour, IVision {
 
     [SerializeField] protected int _health;
@@ -19,7 +19,7 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     // where pathfinding is handled (do not allow agent to move character)
     [SerializeField] protected NavMeshAgent _agent;
     public NavMeshAgent Agent { get { return _agent; } }
-
+    
     // characters this NPC is aware of
     [SerializeField] protected List<CharacterBehaviour> knownCharacters = new List<CharacterBehaviour>();
     public List<CharacterBehaviour> KnownCharacters { get { return knownCharacters; } }
@@ -87,7 +87,10 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     /// </summary>
     /// <param name="behaviour"></param>
     protected virtual void ReactToCharacter(CharacterBehaviour behaviour) {
-
+        if(behaviour.Friendly != Friendly) {
+            currentTarget = behaviour;
+            ChangeBrainState(new ChaseState());
+        }
     }
 
     // TODO: GET RID OF THIS HACK IN THE FUTURE
@@ -121,7 +124,6 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     }
 
     public virtual Vector3 GetNextDestination() {
-
         Vector3 randomLocation = transform.position + Random.onUnitSphere * 10f;
         randomLocation.y = transform.position.y;
 
@@ -134,11 +136,27 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
 
     public virtual void CheckVision() {
         // TODO: IMPLEMENT THIS FUNCTION
+        for(int i = 0; i < KnownCharacters.Count; i++) {
+            CharacterBehaviour knownCharacter = KnownCharacters[i];
+            float distance = Vector3.Distance(knownCharacter.transform.position, transform.position);
+            float angle = Vector3.Angle(transform.forward, knownCharacter.transform.position - transform.position);
+            if(distance <= Blueprint.VisionRange && angle <= Blueprint.VisionAngle) {
+                Vector3 dir = knownCharacter.GetBodyPosition() - Head.position;
+                RaycastHit hit;
+                Debug.DrawRay(Head.position, dir, Color.red);
+                if (Physics.Raycast(Head.position, dir, out hit, blueprint.VisionRange, blueprint.VisionMask)) {
+                    CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
+                    if (otherCB != null && knownCharacters.Contains(otherCB)) {
+                        ReactToCharacter(otherCB);
+                    }
+                }
+            }
+        }
     }
 
-    public virtual bool CanSeeTarget(Transform target) {
-        float distance = Vector3.Distance(target.position, Head.position);
-        Vector3 targetDir = target.position - Head.position;
+    public virtual bool CanSeeTarget(Vector3 target) {
+        float distance = Vector3.Distance(target, Head.position);
+        Vector3 targetDir = target - Head.position;
         Vector3 targetDirZero = targetDir;
         targetDirZero.y = 0f;
         Vector3 headForward = Head.forward;
@@ -147,7 +165,7 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
         if (distance < Blueprint.VisionRange && angle < Blueprint.VisionAngle) {
             RaycastHit hit;
             if(Physics.Raycast(Head.position, targetDir, out hit, distance, Blueprint.VisionMask)) {
-                if(hit.transform == target.root) { return true; }
+                if(hit.transform == CurrentTarget.transform) { return true; }
             }
         }
         return false;
@@ -178,7 +196,7 @@ public interface IVision {
     // WIP: these should return values
     
     void CheckVision(); // checks general vision and returns first custom object it sees
-    bool CanSeeTarget(Transform target); // checks to see if this target is viewable(if it has one)
+    bool CanSeeTarget(Vector3 target); // checks to see if this target is viewable(if it has one)
     bool DetectThreat(); // checks for potential threat. Probably saves that info
     void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour);
     void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour);

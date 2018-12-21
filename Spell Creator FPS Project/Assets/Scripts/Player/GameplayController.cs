@@ -16,6 +16,9 @@ public class GameplayController : CharacterBehaviour {
 
     [SerializeField] protected Vector2 _lookVector; // Vector that saves camera controls input
     public Vector2 LookVector { get { return _lookVector; } }
+    public override Vector3 GetBodyPosition() {
+        return _bodyTransform.position + playerMovement.CharacterController.center;
+    }
 
     public delegate void BasicBtnEvent(); // for button presses that don't need to pass information
     public event BasicBtnEvent OnJumpPressed;

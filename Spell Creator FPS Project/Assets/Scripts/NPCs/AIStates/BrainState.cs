@@ -74,9 +74,6 @@ public class MoveState : BrainState {
     }
 
     public override void Execute() {
-        facingTarget = npcBehaviour.CurrentTarget != null;
-        Vector3 lookDirection = npcBehaviour.transform.forward;
-
         if (npcBehaviour.Agent.pathPending) { Debug.Log(npcBehaviour.name + " path is pending..."); return; }
 
         if (!npcBehaviour.Agent.hasPath) {
@@ -84,14 +81,14 @@ public class MoveState : BrainState {
             npcBehaviour.ChangeBrainState(new IdleState(npcBehaviour.Blueprint.GetNewIdleTime));
             return;
         }
+        facingTarget = npcBehaviour.CurrentTarget != null;
+        Vector3 lookTarget = npcBehaviour.currentDestination;
         if (facingTarget) {
-            lookDirection = npcBehaviour.CurrentTarget.transform.position - npcBehaviour.transform.position;
-        } else {
-            lookDirection = npcBehaviour.currentDestination - npcBehaviour.transform.position;
+            lookTarget = npcBehaviour.CurrentTarget.transform.position;
         }
 
+        npcBehaviour.Blueprint.OnMoveExecute(npcBehaviour, moveSpeed, lookTarget);
         CheckReachedPathCorner();
-        npcBehaviour.Blueprint.OnMoveExecute(npcBehaviour, moveSpeed, lookDirection);
     }
 
     public override void Exit() {
@@ -119,7 +116,7 @@ public class ChaseState : BrainState {
     }
 
     public override void Execute() {
-        if (!npcBehaviour.CanSeeTarget(npcBehaviour.CurrentTarget.BodyTransform)) {
+        if (!npcBehaviour.CanSeeTarget(npcBehaviour.CurrentTarget.GetBodyPosition())) {
             Debug.Log("lost sight of target");
             npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.Blueprint.RunSpeed));
             return;
