@@ -24,6 +24,11 @@ public class NPCMoveController : CharacterMoveController {
         }
     }
 
+    public virtual void Stop() {
+        movementVelocity.x = 0f;
+        movementVelocity.z = 0f;
+    }
+
     // sets the rotation of the character
     public virtual void SetRotation(Vector3 target) {
         Vector3 lookDirection = target - characterBehaviour.Head.position;

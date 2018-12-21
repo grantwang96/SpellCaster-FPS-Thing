@@ -92,12 +92,6 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
             ChangeBrainState(new ChaseState());
         }
     }
-
-    // TODO: GET RID OF THIS HACK IN THE FUTURE
-    public void HACKSetDestination(Vector3 destination) {
-        targetDestination = destination;
-        ChangeBrainState(new MoveState(Blueprint.WalkSpeed));
-    }
     
     public virtual bool CalculatePath(Vector3 destination) {
         if (_agent.pathPending) { StopCoroutine(PathPending()); }
@@ -174,6 +168,10 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     public virtual bool DetectThreat() {
         // TODO: IMPLEMENT THIS FUNCTION
         return false;
+    }
+
+    public virtual void ClearCurrentTarget() {
+        currentTarget = null;
     }
 
     public virtual void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour) {

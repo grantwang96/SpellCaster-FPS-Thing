@@ -8,8 +8,4 @@ public class EnemyBehaviour : NPCBehaviour {
         base.Start();
         ChangeBrainState(new IdleState(blueprint.GetNewIdleTime));
     }
-
-    public override void CheckVision() {
-        base.CheckVision();
-    }
 }

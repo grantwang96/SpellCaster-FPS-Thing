@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: TestEnemy
   m_EditorClassIdentifier: 
   _totalHealth: 10
-  _walkSpeed: 1.5
-  _runSpeed: 3
+  _walkSpeed: 1
+  _runSpeed: 1
   _idleTimeMinimum: 5
   _idleTimeMaximum: 6
   _visionRange: 10

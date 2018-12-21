@@ -112,22 +112,38 @@ public class ChaseState : BrainState {
 
     public override void Enter(NPCBehaviour behaviour) {
         base.Enter(behaviour);
-        if(npcBehaviour.CurrentTarget == null) { npcBehaviour.ChangeBrainState(new IdleState(npcBehaviour.Blueprint.GetNewIdleTime)); }
+        if(npcBehaviour.CurrentTarget == null) {
+            npcBehaviour.ChangeBrainState(new IdleState(npcBehaviour.Blueprint.GetNewIdleTime));
+            return;
+        }
+        targetLastKnownPosition = behaviour.CurrentTarget.transform.position;
     }
 
     public override void Execute() {
-        if (!npcBehaviour.CanSeeTarget(npcBehaviour.CurrentTarget.GetBodyPosition())) {
-            Debug.Log("lost sight of target");
-            npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.Blueprint.RunSpeed));
-            return;
+        bool canSeeTarget = npcBehaviour.CanSeeTarget(npcBehaviour.CurrentTarget.GetBodyPosition());
+        if (ReachedLastKnownDestination()) {
+            if (canSeeTarget) {
+                // switch into attack mode
+                // return;
+            } else {
+                npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.Blueprint.WalkSpeed));
+                npcBehaviour.ClearCurrentTarget();
+                return;
+            }
         }
-        targetLastKnownPosition = npcBehaviour.CurrentTarget.transform.position;
-
+        if (canSeeTarget) {
+            targetLastKnownPosition = npcBehaviour.CurrentTarget.transform.position;
+        }
         npcBehaviour.Blueprint.OnChaseExecute(npcBehaviour, targetLastKnownPosition);
     }
 
     public override void Exit() {
         base.Exit();
+    }
+
+    private bool ReachedLastKnownDestination() {
+        float distance = Vector3.Distance(npcBehaviour.transform.position, targetLastKnownPosition);
+        return (distance < npcBehaviour.Agent.radius * 2);
     }
 }
 

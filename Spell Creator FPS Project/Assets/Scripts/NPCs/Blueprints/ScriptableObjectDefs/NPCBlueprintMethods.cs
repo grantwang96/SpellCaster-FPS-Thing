@@ -7,7 +7,6 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     // these functions are called by brain states. BrainStates handle duration/timing
     public virtual void OnIdleEnter(NPCBehaviour npc) {
         // play idle animation
-        npc.CharMove.Move(Vector3.zero, npc.transform.forward, 0f);
     }
     public virtual void OnIdleExecute(NPCBehaviour npc) {
         npc.CheckVision();
@@ -21,13 +20,12 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     }
     public virtual void OnMoveExecute(NPCBehaviour npc, float speed, Vector3 target) {
         npc.CheckVision();
-
         Vector3 dir = npc.currentDestination - npc.transform.position;
         dir.y = 0;
         npc.CharMove.Move(dir, target, speed);
     }
     public virtual void OnMoveExit(NPCBehaviour npc) {
-        npc.CharMove.Move(Vector3.zero, npc.transform.forward, 0f);
+        npc.CharMove.Stop();
     }
 
     public virtual void OnChaseEnter(NPCBehaviour npc) {
