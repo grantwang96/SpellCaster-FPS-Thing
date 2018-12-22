@@ -35,23 +35,25 @@ public abstract partial class NPCBlueprint : ScriptableObject {
         Vector3 dir = target - npc.transform.position;
         dir.y = 0;
         npc.CharMove.Move(dir, target, RunSpeed);
-
-        if(Vector3.Distance(npc.transform.position, target) < 2f) {
-            Debug.Log("Reached target!");
-        }
     }
     public virtual void OnChaseExit(NPCBehaviour npc) {
-
+        npc.CharMove.Stop();
     }
 
     public virtual void OnAttackEnter(NPCBehaviour npc) {
-
+        npc.CharMove.Stop();
+        npc.CharMove.SetRotation(npc.CurrentTarget.transform.position);
     }
     public virtual void OnAttackExecute(NPCBehaviour npc) {
 
     }
     public virtual void OnAttackExit(NPCBehaviour npc) {
 
+    }
+    public virtual bool CanAttack(NPCBehaviour npc) {
+        if(npc.CurrentTarget == null) { return false; }
+        float distance = Vector3.Distance(npc.transform.position, npc.CurrentTarget.transform.position);
+        return distance <= AttackRange;
     }
 
     public virtual void OnSkillUseEnter(NPCBehaviour npc) {

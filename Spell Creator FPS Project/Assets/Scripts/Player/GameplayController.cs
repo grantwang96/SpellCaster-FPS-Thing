@@ -51,6 +51,12 @@ public class GameplayController : CharacterBehaviour {
         ProcessInputs();
 	}
 
+    public override float GetMoveMagnitude() {
+        Vector3 vel = playerMovement.CharacterController.velocity;
+        vel.y = 0f;
+        return vel.magnitude;
+    }
+
     // hides the mouse
     private void SetMouseEnabled(bool enabled) {
         if (enabled) {

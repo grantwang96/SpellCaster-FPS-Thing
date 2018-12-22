@@ -16,6 +16,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     public CharacterController CharacterController { get { return characterController; } }
 
     [SerializeField] protected Vector3 movementVelocity;
+    public Vector3 MovementVelocity { get { return movementVelocity; } }
 
     protected Coroutine busyAnimation; // coroutine that prevents other actions from being taken
     protected Coroutine externalForces; // coroutine that prevents movement due to external forces

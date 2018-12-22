@@ -19,6 +19,8 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     // where pathfinding is handled (do not allow agent to move character)
     [SerializeField] protected NavMeshAgent _agent;
     public NavMeshAgent Agent { get { return _agent; } }
+    [SerializeField] protected Animator _animator;
+    public Animator Animator { get { return _animator; } }
     
     // characters this NPC is aware of
     [SerializeField] protected List<CharacterBehaviour> knownCharacters = new List<CharacterBehaviour>();
@@ -55,6 +57,7 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
         _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.updateRotation = false;
+        _animator = BodyTransform.GetComponent<Animator>();
     }
 
     protected virtual void Start() {
@@ -63,10 +66,18 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
             return;
         }
         _health = blueprint.TotalHealth;
+        BaseSpeed = blueprint.WalkSpeed;
+        MaxSpeed = blueprint.RunSpeed;
     }
 
     protected virtual void Update() {
         if(currentBrainState != null) { currentBrainState.Execute(); }
+    }
+
+    public override float GetMoveMagnitude() {
+        Vector3 vel = _charMove.CharacterController.velocity;
+        vel.y = 0f;
+        return vel.magnitude;
     }
 
     /// <summary>
@@ -80,6 +91,9 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
         // save the new brain state and enter
         currentBrainState = brainState;
         currentBrainState.Enter(this);
+
+        string stateName = currentBrainState.GetStateName();
+        InvokeChangeAnimationState(stateName);
     }
 
     /// <summary>
@@ -151,22 +165,14 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     public virtual bool CanSeeTarget(Vector3 target) {
         float distance = Vector3.Distance(target, Head.position);
         Vector3 targetDir = target - Head.position;
-        Vector3 targetDirZero = targetDir;
-        targetDirZero.y = 0f;
         Vector3 headForward = Head.forward;
         headForward.y = 0f;
-        float angle = Vector3.Angle(targetDirZero, headForward);
-        if (distance < Blueprint.VisionRange && angle < Blueprint.VisionAngle) {
+        if (distance < Blueprint.VisionRange) {
             RaycastHit hit;
             if(Physics.Raycast(Head.position, targetDir, out hit, distance, Blueprint.VisionMask)) {
                 if(hit.transform == CurrentTarget.transform) { return true; }
             }
         }
-        return false;
-    }
-    
-    public virtual bool DetectThreat() {
-        // TODO: IMPLEMENT THIS FUNCTION
         return false;
     }
 
@@ -195,7 +201,6 @@ public interface IVision {
     
     void CheckVision(); // checks general vision and returns first custom object it sees
     bool CanSeeTarget(Vector3 target); // checks to see if this target is viewable(if it has one)
-    bool DetectThreat(); // checks for potential threat. Probably saves that info
     void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour);
     void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour);
 }

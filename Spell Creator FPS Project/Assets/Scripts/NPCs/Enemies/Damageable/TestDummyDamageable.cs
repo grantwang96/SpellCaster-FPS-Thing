@@ -35,7 +35,7 @@ public class TestDummyDamageable : MonoBehaviour, IDamageable {
     }
 
     private void Die() {
-
+        gameObject.SetActive(false);
     }
 
     public void AddForce(Vector3 velocity) {

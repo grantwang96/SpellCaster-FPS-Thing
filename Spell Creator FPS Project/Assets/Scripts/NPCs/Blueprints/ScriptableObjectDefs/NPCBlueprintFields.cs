@@ -21,4 +21,9 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public float VisionAngle { get { return _visionAngle; } }
     [SerializeField] protected LayerMask _visionMask;
     public LayerMask VisionMask { get { return _visionMask; } }
+
+    [SerializeField] protected float _attackRange;
+    public float AttackRange { get { return _attackRange; } }
+    [SerializeField] protected int _attackComboMax;
+    public int AttackComboMax { get { return _attackComboMax; } }
 }

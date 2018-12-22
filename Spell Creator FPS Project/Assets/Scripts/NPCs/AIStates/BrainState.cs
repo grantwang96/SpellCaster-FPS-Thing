@@ -6,8 +6,12 @@ public abstract class BrainState {
 
     protected NPCBehaviour npcBehaviour;
 
+    public virtual string GetStateName() {
+        return string.Empty;
+    }
+
     public virtual void Enter(NPCBehaviour behaviour) {
-        Debug.Log(behaviour.name + " has entered " + ToString());
+        // Debug.Log(behaviour.name + " has entered " + ToString());
         npcBehaviour = behaviour;
     }
     public virtual void Execute() {
@@ -44,7 +48,7 @@ public class IdleState : BrainState {
         // idle time is over, change to walk mode
         if(Time.time - idleStartTime > idleTime) {
             npcBehaviour.targetDestination = npcBehaviour.GetNextDestination();
-            npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.Blueprint.WalkSpeed));
+            npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.BaseSpeed));
         }
         // perform normal idle behavior
         npcBehaviour.Blueprint.OnIdleExecute(npcBehaviour);
@@ -121,12 +125,13 @@ public class ChaseState : BrainState {
 
     public override void Execute() {
         bool canSeeTarget = npcBehaviour.CanSeeTarget(npcBehaviour.CurrentTarget.GetBodyPosition());
+        if (npcBehaviour.Blueprint.CanAttack(npcBehaviour)) {
+            npcBehaviour.ChangeBrainState(new AttackState(0));
+        }
         if (ReachedLastKnownDestination()) {
-            if (canSeeTarget) {
+            if (!canSeeTarget) {
                 // switch into attack mode
-                // return;
-            } else {
-                npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.Blueprint.WalkSpeed));
+                npcBehaviour.ChangeBrainState(new MoveState(npcBehaviour.MaxSpeed));
                 npcBehaviour.ClearCurrentTarget();
                 return;
             }
@@ -143,7 +148,7 @@ public class ChaseState : BrainState {
 
     private bool ReachedLastKnownDestination() {
         float distance = Vector3.Distance(npcBehaviour.transform.position, targetLastKnownPosition);
-        return (distance < npcBehaviour.Agent.radius * 2);
+        return (distance < npcBehaviour.Agent.radius);
     }
 }
 
@@ -152,13 +157,35 @@ public class ChaseState : BrainState {
 /// </summary>
 public class AttackState : BrainState {
 
+    private int _attackComboIndex;
+
+    public AttackState(int attackComboIndex) : base() {
+        _attackComboIndex = attackComboIndex;
+    }
+
+    public override string GetStateName() {
+        return "Attack";
+    }
+
     public override void Enter(NPCBehaviour behaviour) {
         base.Enter(behaviour);
         npcBehaviour.Blueprint.OnAttackEnter(npcBehaviour);
+        if(_attackComboIndex > npcBehaviour.Blueprint.AttackComboMax) { _attackComboIndex = 0; }
+        npcBehaviour.CharacterAnimationHandler.SetIntParameter("AttackComboIndex", _attackComboIndex);
     }
 
     public override void Execute() {
         npcBehaviour.Blueprint.OnAttackExecute(npcBehaviour);
+        float currentTime = npcBehaviour.CharacterAnimationHandler.GetCurrentAnimationTime();
+        if(currentTime > 0.75f) {
+            if (npcBehaviour.Blueprint.CanAttack(npcBehaviour)) {
+                npcBehaviour.ChangeBrainState(new AttackState(_attackComboIndex + 1));
+                return;
+            }
+        }
+        if(currentTime >= 1f) {
+            npcBehaviour.ChangeBrainState(new ChaseState());
+        }
     }
 
     public override void Exit() {

@@ -9,6 +9,12 @@ using UnityEngine;
 public class DetectionRadius : MonoBehaviour {
 
     [SerializeField] private NPCBehaviour myBehaviour;
+    private SphereCollider _collider;
+
+    private void Start() {
+        _collider = GetComponent<SphereCollider>();
+        _collider.radius = myBehaviour.Blueprint.VisionRange;
+    }
 
     private void OnTriggerEnter(Collider other) {
         // check if collider has a character behaviour
@@ -16,7 +22,6 @@ public class DetectionRadius : MonoBehaviour {
 
         // if so, and it's not us, add to list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {
-            Debug.Log(otherCharBehaviour.name + " has entered my sight radius");
             myBehaviour.RegisterToKnownCharacters(otherCharBehaviour);
         }
     }
@@ -27,7 +32,6 @@ public class DetectionRadius : MonoBehaviour {
 
         // if so, and it's not us, remove from list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {
-            Debug.Log(otherCharBehaviour.name + " has exited my sight radius");
             myBehaviour.DeregisterFromKnownCharacters(otherCharBehaviour);
         }
     }

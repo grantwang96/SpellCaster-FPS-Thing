@@ -5,18 +5,22 @@ using UnityEngine;
 public class CharacterAnimationHandler : MonoBehaviour { // base class that handles animations
 
     public Animator anim;
-    public Transform bodyCore;
+    public Transform bodyRoot;
+    protected CharacterBehaviour characterBehaviour;
 
     public AnimationCurve accelerationTiltCurve;
     public float tiltLimit;
     [SerializeField] private bool tiltEnabled;
 
-    private void Start() {
-
+    protected virtual void Start() {
+        characterBehaviour = GetComponent<CharacterBehaviour>();
+        characterBehaviour.ChangeAnimationState += OnStateChange;
+        bodyRoot = characterBehaviour.BodyTransform;
+        anim = bodyRoot.GetComponent<Animator>();
     }
 
-    private void Update() {
-        
+    protected virtual void OnDestroy() {
+        characterBehaviour.ChangeAnimationState -= OnStateChange;
     }
 
     public virtual void TiltCharacter(float x) {
@@ -24,47 +28,8 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         float val = Mathf.Clamp(x, -1, 1);
         // int mod = x > 0 ? 1 : -1;
         // float val = Mathf.Abs(accelerationTiltCurve.Evaluate(x));
-        bodyCore.localEulerAngles = new Vector3(
-            bodyCore.localEulerAngles.x, bodyCore.localEulerAngles.y, -val * tiltLimit);
-    }
-
-    public virtual void InitializeCharacterAnimations() {
-
-    }
-
-    /// <summary>
-    /// Method that will override and save animation controller
-    /// </summary>
-    /// <param name="overrideClips"></param> // a dictionary that has contains old clips and the new clips that will replace them
-    public virtual void OverrideCharacterAnimations(Dictionary<AnimationClip, AnimationClip> overrideClips) {
-        AnimatorOverrideController aoc = new AnimatorOverrideController(anim.runtimeAnimatorController);
-        var animClips = new List<KeyValuePair<AnimationClip, AnimationClip>>();
-
-        foreach (AnimationClip a in aoc.animationClips) {
-            AnimationClip clip = a;
-            if (overrideClips.ContainsKey(clip)) {
-                clip = overrideClips[clip];
-            }
-            animClips.Add(new KeyValuePair<AnimationClip, AnimationClip>(a, clip));
-        }
-        aoc.ApplyOverrides(animClips);
-        anim.runtimeAnimatorController = aoc;
-    }
-
-    public virtual void RetrieveAnimations() {
-        
-    }
-
-    public virtual void PlayAnimationByTrigger(string triggerName, params int[] args) {
-
-    }
-
-    public virtual void PlayAnimationByName(string animationName, params int[] args) {
-
-    }
-    
-    protected virtual void OnCharacterIdle() {
-
+        bodyRoot.localEulerAngles = new Vector3(
+            bodyRoot.localEulerAngles.x, bodyRoot.localEulerAngles.y, -val * tiltLimit);
     }
 
     public virtual bool IsStateByName(string name) {
@@ -73,5 +38,30 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
 
     public virtual bool IsStateByTag(string tag) {
         return anim.GetCurrentAnimatorStateInfo(0).IsTag(tag);
+    }
+
+    public virtual float GetCurrentAnimationTime() {
+        return anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+    }
+
+    public virtual float GetCurrentAnimationDuration() {
+        return anim.GetCurrentAnimatorStateInfo(0).length;
+    }
+
+    public virtual string GetCurrentAnimationStateName() {
+        return anim.GetCurrentAnimatorStateInfo(0).ToString();
+    }
+
+    public virtual void SetIntParameter(string parameter, int num) {
+        if (anim.GetInteger(parameter) != -1) {
+            anim.SetInteger(parameter, num);
+        }
+    }
+
+    protected virtual void OnStateChange(string stateName, params int[] args) {
+        if(stateName == string.Empty) {
+            return;
+        }
+        anim.SetTrigger(stateName);
     }
 }
