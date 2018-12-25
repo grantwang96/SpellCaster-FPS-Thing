@@ -170,7 +170,7 @@ public class AttackState : BrainState {
     public override void Enter(NPCBehaviour behaviour) {
         base.Enter(behaviour);
         npcBehaviour.Blueprint.OnAttackEnter(npcBehaviour);
-        if(_attackComboIndex > npcBehaviour.Blueprint.AttackComboMax) { _attackComboIndex = 0; }
+        if(_attackComboIndex >= npcBehaviour.Blueprint.AttackComboMax) { _attackComboIndex = 0; }
         npcBehaviour.CharacterAnimationHandler.SetIntParameter("AttackComboIndex", _attackComboIndex);
     }
 
