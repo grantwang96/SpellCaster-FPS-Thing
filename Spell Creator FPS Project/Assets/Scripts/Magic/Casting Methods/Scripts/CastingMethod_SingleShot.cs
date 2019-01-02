@@ -9,11 +9,12 @@ public class CastingMethod_SingleShot : Spell_CastingMethod {
     [SerializeField] private float _projectileSpeed;
     [SerializeField] private float _lifeTime;
 
-    protected override void CastSpell(ISpellCaster caster, Spell_Effect[] effects) {
+    protected override void CastSpell(ISpellCaster caster, Spell spell) {
         Vector3 startPosition = caster.GunBarrel.position;
         Vector3 direction = caster.GunBarrel.forward;
         MagicProjectile magicProjectile = Instantiate(_magicProjectilePrefab, startPosition, caster.GunBarrel.rotation);
-        magicProjectile.InitializeMagic(caster, effects);
+        magicProjectile.InitializeMagic(caster, spell.Effects);
+        magicProjectile.InitializeMagicModifiers(spell.SpellModifiers);
         magicProjectile.InitializePosition(startPosition, direction);
 
         int power = 1;

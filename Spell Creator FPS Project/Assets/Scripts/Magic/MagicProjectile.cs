@@ -7,8 +7,13 @@ public class MagicProjectile : MonoBehaviour {
     public Spell_Effect[] Effects { get; private set; }
     public ISpellCaster spellCaster { get; private set; }
 
+    [SerializeField] private MeshFilter _meshFilter;
+    public MeshFilter MeshFilter { get { return _meshFilter; } }
     private Rigidbody _rigidBody;
+    public Rigidbody Rigidbody { get { return _rigidBody; } }
     private Collider _collider;
+    public Collider Collider { get { return _collider; } }
+
     private Vector3 _previousPosition;
     [SerializeField] private LayerMask _collisionMask;
 
@@ -21,6 +26,12 @@ public class MagicProjectile : MonoBehaviour {
     public void InitializeMagic(ISpellCaster caster, Spell_Effect[] effects) {
         spellCaster = caster;
         Effects = effects;
+    }
+
+    public void InitializeMagicModifiers(SpellModifier[] modifiers) {
+        for(int i = 0; i < modifiers.Length; i++) {
+            modifiers[i].SetupProjectile(this);
+        }
     }
 
     public void InitializePosition(Vector3 startPosition, Vector3 direction) {

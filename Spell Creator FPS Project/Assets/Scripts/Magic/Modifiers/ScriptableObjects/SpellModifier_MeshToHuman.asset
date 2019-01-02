@@ -1,0 +1,14 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8438100e11c055b4b877a48e4617e14e, type: 3}
+  m_Name: SpellModifier_MeshToHuman
+  m_EditorClassIdentifier: 
+  _nextMesh: {fileID: 4300000, guid: 527a1ab7885f39448a1c5c22ac8e9dc9, type: 3}

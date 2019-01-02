@@ -5,11 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Spell Casting Method/Self")]
 public class CastingMethod_Self : Spell_CastingMethod {
 
-    protected override void CastSpell(ISpellCaster caster, Spell_Effect[] effects) {
-        for (int i = 0; i < effects.Length; i++) {
+    protected override void CastSpell(ISpellCaster caster, Spell spell) {
+        for (int i = 0; i < spell.Effects.Length; i++) {
             IDamageable damageable = caster.Damageable;
             if (damageable != null) {
-                effects[i].TriggerEffect(damageable, caster, effects[i].BasePower);
+                spell.Effects[i].TriggerEffect(damageable, caster, spell.Effects[i].BasePower);
             }
         }
     }

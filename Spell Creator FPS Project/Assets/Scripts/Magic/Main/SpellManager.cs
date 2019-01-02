@@ -12,6 +12,9 @@ public class SpellManager : MonoBehaviour {
     [SerializeField] private Spell_Effect[] _spellEffects;
     public int spellEffectsLength { get { return _spellEffects.Length; } }
 
+    [SerializeField] private SpellModifier[] _spellModifiers;
+    public int spellModifiersLength { get { return _spellModifiers.Length; } }
+
     [SerializeField] private SpellBook spellBookPrefab;
 
     private void Awake() {
@@ -25,11 +28,14 @@ public class SpellManager : MonoBehaviour {
         Spell_Effect[] effects = new Spell_Effect[1];
         Spell_Effect spellEffect = _spellEffects[index];
         effects[0] = spellEffect;
-        return new Spell(castingMethod, effects);
+        SpellModifier[] spellModifiers = new SpellModifier[1];
+        index = Random.Range(0, spellModifiersLength);
+        spellModifiers[0] = _spellModifiers[index];
+        return new Spell(castingMethod, effects, spellModifiers);
     }
 
-    public Spell GenerateSpell(Spell_CastingMethod castingMethod, Spell_Effect[] effects) {
-        Spell newSpell = new Spell(castingMethod, effects);
+    public Spell GenerateSpell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers) {
+        Spell newSpell = new Spell(castingMethod, effects, spellModifiers);
         return newSpell;
     }
 

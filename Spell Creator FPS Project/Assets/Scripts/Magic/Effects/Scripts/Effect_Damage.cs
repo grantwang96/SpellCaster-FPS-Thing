@@ -9,9 +9,6 @@ using UnityEngine;
 public class Effect_Damage : Spell_Effect {
     
     [SerializeField] private float _upwardForce;
-    [SerializeField] private Element _element;
-    public Element Element { get { return _element; } }
-
     [SerializeField] private float _force;
 
     public override void TriggerEffect(ISpellCaster caster, int power) {

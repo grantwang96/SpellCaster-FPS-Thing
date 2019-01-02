@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDamageable : MonoBehaviour, IDamageable {
+public class PlayerDamageable : IDamageable {
 
     [SerializeField] private int _health;
     public int Health { get { return _health; } }
@@ -12,32 +12,30 @@ public class PlayerDamageable : MonoBehaviour, IDamageable {
 
     private CharacterMoveController moveController;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void TakeDamage(int damage) {
+    public override void TakeDamage(int damage) {
         if (_isDead) { return; }
         _health -= damage;
         if(_health < 0) { Die(); }
     }
 
-    public void TakeDamage(int damage, Vector3 velocity) {
+    public override void TakeDamage(int damage, Vector3 velocity) {
         TakeDamage(damage);
         AddForce(velocity);
+    }
+
+    public override void TakeDamage(int damage, StatusEffect statusEffect) {
+        TakeDamage(damage);
+    }
+
+    public override void TakeDamage(int damage, Vector3 velocity, StatusEffect statusEffect) {
+        TakeDamage(damage, velocity);
     }
 
     private void Die() {
         _isDead = true;
     }
 
-    public void AddForce(Vector3 velocity) {
+    public override void AddForce(Vector3 velocity) {
         moveController.AddForce(velocity);
     }
 }

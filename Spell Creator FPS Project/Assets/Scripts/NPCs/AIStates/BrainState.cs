@@ -37,7 +37,10 @@ public class IdleState : BrainState {
     public IdleState(float length) : base() {
         idleTime = length;
     }
-    
+
+    public override string GetStateName() {
+        return "Idle";
+    }
     public override void Enter(NPCBehaviour behaviour) {
         base.Enter(behaviour);
         idleStartTime = Time.time;
