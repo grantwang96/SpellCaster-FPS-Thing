@@ -26,7 +26,23 @@ public class LevelBuilder : MonoBehaviour {
         IntVector3.Left,
         IntVector3.Right,
     };
-    
+    [SerializeField] private RoomBlueprint[] _roomBlueprints;
+
+    // HACK
+    public int offsetXMin;
+    public int offsetXMax;
+    public int offsetYMin;
+    public int offsetYMax;
+    public int offsetZMin;
+    public int offsetZMax;
+
+    public int x;
+    public int y;
+    public int z;
+
+    public Tile floorPrefab;
+    public Tile wallPrefab;
+
     void Awake() {
         Instance = this;
     }
@@ -34,6 +50,11 @@ public class LevelBuilder : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         InitializeGameMap();
+        IntVector3 offsetMin = new IntVector3(offsetXMin, offsetYMin, offsetZMin);
+        IntVector3 offsetMax = new IntVector3(offsetXMax, offsetYMax, offsetZMax);
+        IntVector3 position = new IntVector3(x, y, z);
+        LayoutRoom(offsetMin, offsetMax, position);
+        BuildMap();
 	}
 	
 	// Update is called once per frame
@@ -121,7 +142,7 @@ public class LevelBuilder : MonoBehaviour {
     /// <param name="offsetMin"></param>
     /// <param name="offsetMax"></param>
     /// <param name="position"></param>
-    private void BuildRoom(IntVector3 offsetMin, IntVector3 offsetMax, IntVector3 position) {
+    private void LayoutRoom(IntVector3 offsetMin, IntVector3 offsetMax, IntVector3 position) {
         IntVector3 dimensionsMin = new IntVector3();
         IntVector3 dimensionsMax = new IntVector3();
         dimensionsMin.x = position.x - offsetMin.x;
@@ -132,10 +153,37 @@ public class LevelBuilder : MonoBehaviour {
         dimensionsMax.z = position.z + offsetMax.z;
         // TODO: BUILD ROOM BY BLUEPRINT
 
+        // HACK
+        RoomBlueprint roomBlueprint = _roomBlueprints[0];
+
         for (int i = dimensionsMin.x; i <= dimensionsMax.x; i++) {
             for (int j = dimensionsMin.y; j <= dimensionsMax.y; j++) {
-                for (int k = dimensionsMin.z; j <= dimensionsMax.z; k++) {
+                for (int k = dimensionsMin.z; k <= dimensionsMax.z; k++) {
                     // Instantiate TileData here
+                    // Debug.Log(i + ", " + j + ", " + k);
+                    IntVector3 tilePosition = new IntVector3(i, j, k);
+                    TileData.MapPieceType piece = roomBlueprint.GetTileTypeAtPosition(dimensionsMin, dimensionsMax, tilePosition);
+                    _gameMap[i][j][k] = new TileData(position.x, position.y, position.z, piece, 0);
+                }
+            }
+        }
+    }
+
+    private void BuildMap() {
+        for(int i = 0; i < _gameMap.Length; i++) {
+            for(int j = 0; j < _gameMap[0].Length; j++) {
+                for(int k = 0; k < _gameMap[0][0].Length; k++) {
+                    IntVector3 gridPos = new IntVector3(i, j, k);
+                    Vector3 worldPos = LevelBuildHelper.GridToWorldCoordinates(gridPos, TileScale, mapX, mapY, mapZ);
+                    Debug.Log(_gameMap[i][j][k].TileType);
+                    if((_gameMap[i][j][k].TileType & TileData.MapPieceType.FLOOR) != 0) {
+                        Tile newTile = Instantiate(floorPrefab, worldPos, Quaternion.identity);
+                        newTile.TileData = _gameMap[i][j][k];
+                    }
+                    if((_gameMap[i][j][k].TileType & TileData.MapPieceType.WALL) != 0) {
+                        Tile newTile = Instantiate(wallPrefab, worldPos, Quaternion.identity);
+                        newTile.TileData = _gameMap[i][j][k];
+                    }
                 }
             }
         }

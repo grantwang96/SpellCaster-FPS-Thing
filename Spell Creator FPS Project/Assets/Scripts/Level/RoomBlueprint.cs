@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "RoomBlueprint/base")]
 /// <summary>
 /// Parent class for how rooms may be built
 /// </summary>
@@ -17,6 +18,8 @@ public class RoomBlueprint : ScriptableObject {
         TileData.MapPieceType pieceType = TileData.MapPieceType.NONE;
         if(tilePosition.y == dimensionsMin.y) {
             pieceType = TileData.MapPieceType.FLOOR;
+        } else if(tilePosition.y == dimensionsMax.y) {
+            pieceType = TileData.MapPieceType.CEILING;
         }
         if (tilePosition.x == dimensionsMin.x || tilePosition.x == dimensionsMax.x ||
            tilePosition.z == dimensionsMin.z || tilePosition.z == dimensionsMax.z) {

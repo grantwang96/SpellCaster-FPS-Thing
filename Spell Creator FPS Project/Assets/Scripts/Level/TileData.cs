@@ -5,10 +5,17 @@ using UnityEngine;
 /// <summary>
 /// Contains information about the current tile
 /// </summary>
+/// 
+[System.Serializable]
 public class TileData {
     
     public enum MapPieceType {
-        NONE, FLOOR, WALL, CEILING, DOOR, PILLAR
+        NONE,
+        FLOOR,
+        WALL,
+        CEILING,
+        DOOR,
+        PILLAR
     }
     public MapPieceType TileType { get; private set; }
 

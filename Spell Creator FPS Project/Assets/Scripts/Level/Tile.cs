@@ -9,10 +9,15 @@ public class Tile : MonoBehaviour {
     // This MIGHT store 3D array indices in case it needs them later on
 
     public TileData TileData;
+    public string TileType;
 
     [SerializeField] private MeshFilter _meshFilter;
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private Collider _collider;
+
+    private void Start() {
+        TileType = TileData.TileType.ToString();
+    }
 
     public void Initialize() {
         
