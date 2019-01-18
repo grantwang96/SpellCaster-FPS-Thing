@@ -12,6 +12,12 @@ public class LevelBuilder : MonoBehaviour {
 
     public static LevelBuilder Instance;
     public const float TileScale = 5f; // this is for translating theoretical coordinates to world coordinates
+    public const float TileScaleOffset = .5f;
+    public float ModifiedTileScale {
+        get {
+            return (TileScale / 2f) - TileScaleOffset;
+        }
+    }
 
     [SerializeField] private int mapX;
     [SerializeField] private int mapY;
@@ -28,20 +34,29 @@ public class LevelBuilder : MonoBehaviour {
     };
     [SerializeField] private RoomBlueprint[] _roomBlueprints;
 
-    // HACK
-    public int offsetXMin;
-    public int offsetXMax;
-    public int offsetYMin;
-    public int offsetYMax;
-    public int offsetZMin;
-    public int offsetZMax;
+    public const string RoomID = "ROOM_{0}";
 
-    public int x;
-    public int y;
-    public int z;
+    #region HACKED AF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private bool processingCoroutine;
 
-    public Tile floorPrefab;
-    public Tile wallPrefab;
+    public int MinimumOffsetXLowerBound;
+    public int MaximumOffsetXUpperBound;
+    public int MinimumOffsetYLowerBound;
+    public int MaximumOffsetYUpperBound;
+    public int MinimumOffsetZLowerBound;
+    public int MaximumOffsetZUpperBound;
+
+    private int RoomNumber = 0;
+
+    public int levelStartX;
+    public int levelStartY;
+    public int levelStartZ;
+    #endregion
+
+    public Tile _tilePrefab;
+    public GameObject floorPrefab;
+    public GameObject wallPrefab;
+    public GameObject doorPrefab;
 
     void Awake() {
         Instance = this;
@@ -49,12 +64,7 @@ public class LevelBuilder : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        InitializeGameMap();
-        IntVector3 offsetMin = new IntVector3(offsetXMin, offsetYMin, offsetZMin);
-        IntVector3 offsetMax = new IntVector3(offsetXMax, offsetYMax, offsetZMax);
-        IntVector3 position = new IntVector3(x, y, z);
-        LayoutRoom(offsetMin, offsetMax, position);
-        BuildMap();
+        StartCoroutine(BuildLevelRoutine());
 	}
 	
 	// Update is called once per frame
@@ -69,7 +79,7 @@ public class LevelBuilder : MonoBehaviour {
             for(int j = 0; j < mapY; j++) {
                 _gameMap[i][j] = new TileData[mapZ];
                 for(int k = 0; k < mapZ; k++) {
-                    _gameMap[i][j][k] = new TileData(i, j, k, TileData.MapPieceType.NONE, 0);
+                    _gameMap[i][j][k] = new TileData(i, j, k, TileData.MapPieceType.NONE, 0, string.Empty);
                 }
             }
         }
@@ -77,11 +87,23 @@ public class LevelBuilder : MonoBehaviour {
 
     // TODO
     private IEnumerator BuildLevelRoutine() {
-        yield return null;
+        InitializeGameMap();
+        IntVector3 offsetMin = new IntVector3(MinimumOffsetXLowerBound, MinimumOffsetYLowerBound, MinimumOffsetZLowerBound);
+        IntVector3 offsetMax = new IntVector3(MaximumOffsetXUpperBound, MaximumOffsetYUpperBound, MaximumOffsetZUpperBound);
+        IntVector3 position = new IntVector3(levelStartX, levelStartY, levelStartZ);
+        StartCoroutine(LayoutRoom(offsetMin, offsetMax, position));
+        while (processingCoroutine) {
+            yield return null;
+        }
+        StartCoroutine(BuildMap());
+        while (processingCoroutine) {
+            yield return null;
+        }
+        Debug.Log("Done!");
     }
 
     // TODO
-    private List<TileData> GetSpecificArea(IntVector3 startPos, TileData.MapPieceType mapPieceType, int maxDistance) {
+    private List<TileData> GetSpecificAreaByTileType(IntVector3 startPos, TileData.MapPieceType mapPieceType, int maxDistance) {
         List<TileData> tileDatas = new List<TileData>();
         Queue<MapVertex> vertices = new Queue<MapVertex>();
         MapVertex current = new MapVertex(startPos);
@@ -92,7 +114,7 @@ public class LevelBuilder : MonoBehaviour {
             int distance = current.Distance + 1;
             if(distance > maxDistance) { continue; }
             for (int i = 0; i < Directions.Length; i++) {
-                IntVector3 neighborPosition = LevelBuildHelper.IntVector3Sum(current.Position, Directions[i]);
+                IntVector3 neighborPosition = current.Position + Directions[i];
                 if (!IsWithinMap(neighborPosition)) {
                     continue;
                 }
@@ -107,6 +129,44 @@ public class LevelBuilder : MonoBehaviour {
             }
         }
         return tileDatas;
+    }
+
+    private List<TileData> GetSpecificAreaByRoomId(IntVector3 startPos, string roomId) {
+        List<TileData> tileDatas = new List<TileData>();
+        Queue<MapVertex> vertices = new Queue<MapVertex>();
+        MapVertex current = new MapVertex(startPos);
+        current.Distance = 0;
+        vertices.Enqueue(current);
+        while (vertices.Count != 0) {
+            current = vertices.Dequeue();
+            for (int i = 0; i < Directions.Length; i++) {
+                IntVector3 neighborPosition = current.Position + Directions[i];
+                if (!IsWithinMap(neighborPosition)) {
+                    continue;
+                }
+                TileData neighbor = GetTileData(neighborPosition.x, neighborPosition.y, neighborPosition.z);
+                if (neighbor.RoomID.Equals(roomId)) {
+                    if (!tileDatas.Contains(neighbor)) { tileDatas.Add(neighbor); }
+                    MapVertex next = new MapVertex(neighborPosition);
+                    next.Previous = current;
+                    vertices.Enqueue(next);
+                }
+            }
+        }
+        return tileDatas;
+    }
+
+    private IntVector3 GetLargestRectangularDimensions(List<TileData> tileDatas) {
+        IntVector3 dimensions = new IntVector3();
+        IntVector3 minimum = new IntVector3();
+        IntVector3 maximum = new IntVector3();
+
+        for(int i = 0; i < tileDatas.Count; i++) {
+
+        }
+
+
+        return dimensions;
     }
 
     public bool IsWithinMap(IntVector3 position) {
@@ -142,7 +202,9 @@ public class LevelBuilder : MonoBehaviour {
     /// <param name="offsetMin"></param>
     /// <param name="offsetMax"></param>
     /// <param name="position"></param>
-    private void LayoutRoom(IntVector3 offsetMin, IntVector3 offsetMax, IntVector3 position) {
+    private IEnumerator LayoutRoom(IntVector3 offsetMin, IntVector3 offsetMax, IntVector3 position) {
+        Debug.Log("Laying out room");
+        processingCoroutine = true;
         IntVector3 dimensionsMin = new IntVector3();
         IntVector3 dimensionsMax = new IntVector3();
         dimensionsMin.x = position.x - offsetMin.x;
@@ -155,37 +217,62 @@ public class LevelBuilder : MonoBehaviour {
 
         // HACK
         RoomBlueprint roomBlueprint = _roomBlueprints[0];
+        int entranceCount = roomBlueprint.EntranceCount;
+        int floorPerimeter = 2*((dimensionsMax.x - dimensionsMin.x) + (dimensionsMax.z - dimensionsMin.z));
 
+        string roomId = string.Format(RoomID, RoomNumber.ToString());
         for (int i = dimensionsMin.x; i <= dimensionsMax.x; i++) {
             for (int j = dimensionsMin.y; j <= dimensionsMax.y; j++) {
                 for (int k = dimensionsMin.z; k <= dimensionsMax.z; k++) {
-                    // Instantiate TileData here
-                    // Debug.Log(i + ", " + j + ", " + k);
                     IntVector3 tilePosition = new IntVector3(i, j, k);
-                    TileData.MapPieceType piece = roomBlueprint.GetTileTypeAtPosition(dimensionsMin, dimensionsMax, tilePosition);
-                    _gameMap[i][j][k] = new TileData(position.x, position.y, position.z, piece, 0);
+                    TileData.MapPieceType piece = roomBlueprint.GetBaseTileTypeAtPosition(dimensionsMin, dimensionsMax, tilePosition);
+
+                    if (IntVector3Builder.IntVector3Equals(tilePosition, position)) {
+                        piece |= TileData.MapPieceType.FLOOR;
+                        piece &= ~TileData.MapPieceType.WALL;
+                        piece |= TileData.MapPieceType.DOOR;
+                        entranceCount--;
+                    }
+                    if(entranceCount > 0 && (piece & TileData.MapPieceType.FLOOR) != 0 && (piece & TileData.MapPieceType.WALL) != 0) {
+                        float doorChance = 1f / floorPerimeter;
+                        piece = roomBlueprint.TryEstablishDoor(piece, out entranceCount, entranceCount, doorChance);
+                        floorPerimeter--;
+                    }
+
+                    _gameMap[i][j][k] = new TileData(i, j, k, piece, 0, roomId);
+                    yield return null;
                 }
             }
         }
+        processingCoroutine = false;
     }
 
-    private void BuildMap() {
+    private void EstablishRoomWithinArea(List<TileData> tileDatas) {
+
+    }
+
+    private IEnumerator BuildMap() {
+        Debug.Log("Building map...");
+        processingCoroutine = true;
         for(int i = 0; i < _gameMap.Length; i++) {
-            for(int j = 0; j < _gameMap[0].Length; j++) {
-                for(int k = 0; k < _gameMap[0][0].Length; k++) {
-                    IntVector3 gridPos = new IntVector3(i, j, k);
-                    Vector3 worldPos = LevelBuildHelper.GridToWorldCoordinates(gridPos, TileScale, mapX, mapY, mapZ);
-                    Debug.Log(_gameMap[i][j][k].TileType);
-                    if((_gameMap[i][j][k].TileType & TileData.MapPieceType.FLOOR) != 0) {
-                        Tile newTile = Instantiate(floorPrefab, worldPos, Quaternion.identity);
-                        newTile.TileData = _gameMap[i][j][k];
-                    }
-                    if((_gameMap[i][j][k].TileType & TileData.MapPieceType.WALL) != 0) {
-                        Tile newTile = Instantiate(wallPrefab, worldPos, Quaternion.identity);
-                        newTile.TileData = _gameMap[i][j][k];
-                    }
+            for(int j = 0; j < _gameMap[i].Length; j++) {
+                for(int k = 0; k < _gameMap[i][j].Length; k++) {
+                    BuildMapPiece(i, j, k);
                 }
             }
+            yield return null;
+        }
+        processingCoroutine = false;
+    }
+
+    private void BuildMapPiece(int x, int y, int z) {
+        TileData currentTileData = _gameMap[x][y][z];
+        IntVector3 gridPos = new IntVector3(x, y, z);
+        Vector3 worldPos = IntVector3Builder.GridToWorldCoordinates(gridPos, TileScale, mapX, mapY, mapZ);
+
+        if(currentTileData.TileType != TileData.MapPieceType.NONE) {
+            Tile newTile = Instantiate(_tilePrefab, worldPos, Quaternion.identity);
+            newTile.InitializeData(currentTileData);
         }
     }
 }

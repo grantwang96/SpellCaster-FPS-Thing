@@ -11,5 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f91ef96ab28ddf4ba23275152496023, type: 3}
   m_Name: Basic Room Blueprint
   m_EditorClassIdentifier: 
-  _entranceCount: 2
+  _entranceCount: 4
   _pillarCount: 2
+  _preferredWidth: 0
+  _preferredLength: 0
+  _preferredHeight: 0
