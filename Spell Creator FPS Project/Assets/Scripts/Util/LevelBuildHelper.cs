@@ -45,7 +45,35 @@ public static class IntVector3Builder {
         return distance;
     }
 
-    public static IntVector3 GetLargestHistArea(List<IntVector3> intVector3s) {
+    public static IntVector3[] GetLargestHistArea(List<IntVector3> intVector3s) {
+
+        IntVector3[] corners = new IntVector3[2];
+
+        // TODO
+        // figure out rectangular area below
+
+        HistVert[][][] histVerts = GetHistGraph(intVector3s);
+        int max = 0;
+        for(int i = 0; i < histVerts.Length; i++) {
+            for(int j = 0; j < histVerts[i].Length; j++) {
+                int temp = 0;
+                for(int k = 0; k < histVerts[i][j].Length; k++) {
+                    temp += histVerts[i][j][k].Value;
+                }
+                if(temp > max) {
+                    max = temp;
+                } else if(temp == max) {
+                    
+                }
+            }
+        }
+        
+
+        return corners;
+    }
+
+    private static HistVert[][][] GetHistGraph(List<IntVector3> intVector3s) {
+        
         IntVector3 lowest = new IntVector3();
         IntVector3 highest = new IntVector3();
         lowest.x = LowestXWithinIntVector3List(intVector3s);
@@ -55,32 +83,41 @@ public static class IntVector3Builder {
         highest.y = HighestYWithinIntVector3List(intVector3s);
         highest.z = HighestZWithinIntVector3List(intVector3s);
 
-        // TODO
-        // figure out rectangular area below
+        int offsetX = highest.x - lowest.x;
+        int offsetY = highest.y - lowest.y;
+        int offsetZ = highest.z - lowest.z;
 
-        HistVert[][][] histVerts = new HistVert[highest.x - lowest.x][][];
+        HistVert[][][] histVerts = new HistVert[offsetX][][];
 
-        for(int x = lowest.x; x <= highest.x; x++) {
-            if(histVerts[x] == null) {
-                histVerts[x] = new HistVert[highest.y - lowest.y][];
+        for (int x = lowest.x; x <= highest.x; x++) {
+            if (histVerts[x] == null) {
+                histVerts[x] = new HistVert[offsetY][];
             }
-            for(int y = lowest.y; y <= highest.y; y++) {
-                if(histVerts[y] == null) {
-                    histVerts[y] = new HistVert[highest.z - lowest.z][];
+            for (int y = lowest.y; y <= highest.y; y++) {
+                if (histVerts[y] == null) {
+                    histVerts[y] = new HistVert[offsetZ][];
                 }
-                for(int z = lowest.z; z <= highest.z; z++) {
-                    HistVert histVert = new HistVert();
-                    histVert.position = new IntVector3(x, y, z);
-                    histVerts[x][y][z] = histVert;
+                for (int z = lowest.z; z <= highest.z; z++) {
+                    HistVert histVert = new HistVert {
+                        x = x,
+                        y = y,
+                        z = z
+                    };
+                    IntVector3 position = new IntVector3(x, y, z);
+                    if (intVector3s.Contains(position)) {
+                        histVert.Value = 1;
+                    }
+                    histVerts[x - offsetX][y - offsetY][z - offsetZ] = histVert;
                 }
             }
         }
-
-        return lowest;
+        return histVerts;
     }
 
     private class HistVert {
-        public IntVector3 position;
+        public int x;
+        public int y;
+        public int z;
         public int Value;
     }
 

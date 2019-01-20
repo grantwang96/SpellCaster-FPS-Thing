@@ -103,8 +103,8 @@ public class LevelBuilder : MonoBehaviour {
     }
 
     // TODO
-    private List<TileData> GetSpecificAreaByTileType(IntVector3 startPos, TileData.MapPieceType mapPieceType, int maxDistance) {
-        List<TileData> tileDatas = new List<TileData>();
+    private List<IntVector3> GetSpecificAreaByTileType(IntVector3 startPos, TileData.MapPieceType mapPieceType, int maxDistance) {
+        List<IntVector3> positions = new List<IntVector3>();
         Queue<MapVertex> vertices = new Queue<MapVertex>();
         MapVertex current = new MapVertex(startPos);
         current.Distance = 0;
@@ -120,7 +120,7 @@ public class LevelBuilder : MonoBehaviour {
                 }
                 TileData neighbor = GetTileData(neighborPosition.x, neighborPosition.y, neighborPosition.z);
                 if(neighbor.TileType == mapPieceType) {
-                    if (!tileDatas.Contains(neighbor)) { tileDatas.Add(neighbor); }
+                    if (!positions.Contains(neighborPosition)) { positions.Add(neighborPosition); }
                     MapVertex next = new MapVertex(neighborPosition);
                     next.Distance = distance;
                     next.Previous = current;
@@ -128,11 +128,11 @@ public class LevelBuilder : MonoBehaviour {
                 }
             }
         }
-        return tileDatas;
+        return positions;
     }
 
-    private List<TileData> GetSpecificAreaByRoomId(IntVector3 startPos, string roomId) {
-        List<TileData> tileDatas = new List<TileData>();
+    private List<IntVector3> GetSpecificAreaByRoomId(IntVector3 startPos, string roomId) {
+        List<IntVector3> positions = new List<IntVector3>();
         Queue<MapVertex> vertices = new Queue<MapVertex>();
         MapVertex current = new MapVertex(startPos);
         current.Distance = 0;
@@ -146,22 +146,20 @@ public class LevelBuilder : MonoBehaviour {
                 }
                 TileData neighbor = GetTileData(neighborPosition.x, neighborPosition.y, neighborPosition.z);
                 if (neighbor.RoomID.Equals(roomId)) {
-                    if (!tileDatas.Contains(neighbor)) { tileDatas.Add(neighbor); }
+                    if (!positions.Contains(neighborPosition)) { positions.Add(neighborPosition); }
                     MapVertex next = new MapVertex(neighborPosition);
                     next.Previous = current;
                     vertices.Enqueue(next);
                 }
             }
         }
-        return tileDatas;
+        return positions;
     }
 
-    private IntVector3 GetLargestRectangularDimensions(List<TileData> tileDatas) {
+    private IntVector3 GetLargestRectangularDimensions(List<IntVector3> positions) {
         IntVector3 dimensions = new IntVector3();
-        IntVector3 minimum = new IntVector3();
-        IntVector3 maximum = new IntVector3();
 
-        for(int i = 0; i < tileDatas.Count; i++) {
+        for(int i = 0; i < positions.Count; i++) {
 
         }
 
