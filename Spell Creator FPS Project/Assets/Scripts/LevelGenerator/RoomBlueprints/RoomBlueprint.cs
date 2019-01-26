@@ -13,9 +13,19 @@ public class RoomBlueprint : ScriptableObject {
     [SerializeField] protected int _pillarCount; // odd number will result in even spread with one pillar in center
     public int PillarCount { get { return _pillarCount; } }
 
+    [SerializeField] protected int _minimumWidth;
+    public int MinimumWidth { get { return _minimumWidth; } }
+    [SerializeField] protected int _minimumLength;
+    public int MinimumLength { get { return _minimumLength; } }
+    [SerializeField] protected int _minimumHeight;
+    public int MinimumHeight { get { return _minimumHeight; } }
+
     [SerializeField] protected int _preferredWidth; // x
+    public int PreferredWidth { get { return _preferredWidth; } }
     [SerializeField] protected int _preferredLength; // z
+    public int PreferredLength { get { return _preferredHeight; } }
     [SerializeField] protected int _preferredHeight; // y
+    public int PreferredHeight { get { return _preferredHeight; } }
 
     public virtual TileData.MapPieceType GetBaseTileTypeAtPosition(IntVector3 dimensionsMin, IntVector3 dimensionsMax, IntVector3 tilePosition) {
         TileData.MapPieceType pieceType = TileData.MapPieceType.NONE;

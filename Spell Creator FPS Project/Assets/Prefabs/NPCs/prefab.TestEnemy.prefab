@@ -271,6 +271,7 @@ GameObject:
   - component: {fileID: 114523559414975430}
   - component: {fileID: 114429234477140432}
   - component: {fileID: 114054650324297972}
+  - component: {fileID: 114491486296416152}
   m_Layer: 11
   m_Name: prefab.TestEnemy
   m_TagString: Untagged
@@ -769,7 +770,7 @@ Animator:
   m_GameObject: {fileID: 1458797453024466}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 527a1ab7885f39448a1c5c22ac8e9dc9, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7158fc27835389449a482e5505b461a1, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -839,6 +840,45 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentDamageable: {fileID: 0}
   _health: 100
+--- !u!114 &114491486296416152
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1683000733614232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76eb6a63a5d4c7d4f88f84b8cdb0d105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anim: {fileID: 0}
+  bodyRoot: {fileID: 0}
+  accelerationTiltCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  tiltLimit: 0
+  tiltEnabled: 0
 --- !u!114 &114523559414975430
 MonoBehaviour:
   m_ObjectHideFlags: 1

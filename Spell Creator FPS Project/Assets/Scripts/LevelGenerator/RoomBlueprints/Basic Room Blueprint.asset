@@ -13,6 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _entranceCount: 4
   _pillarCount: 2
-  _preferredWidth: 0
-  _preferredLength: 0
-  _preferredHeight: 0
+  _minimumWidth: 1
+  _minimumLength: 1
+  _minimumHeight: 1
+  _preferredWidth: 4
+  _preferredLength: 3
+  _preferredHeight: 2

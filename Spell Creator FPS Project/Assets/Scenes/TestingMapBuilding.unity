@@ -408,9 +408,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8406ffbd24ac7e24f9c55d70a5de759c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapX: 20
-  mapY: 20
-  mapZ: 20
+  _mapX: 20
+  _mapY: 20
+  _mapZ: 20
+  _floorCount: 0
+  _levelData: {fileID: 11400000, guid: ef032c15dfe1a7048936a6a7d2bdfc5f, type: 2}
   _roomBlueprints:
   - {fileID: 11400000, guid: d2faa9c0df1e28b4aa3b11fb9fb4d9a5, type: 2}
   MinimumOffsetXLowerBound: 2
