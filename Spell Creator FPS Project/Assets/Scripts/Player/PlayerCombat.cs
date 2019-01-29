@@ -5,12 +5,29 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     [SerializeField] private int _mana;
-    public int mana {
+    public int Mana {
         get {
             return _mana;
         }
+        private set {
+            _mana = value;
+            OnManaChanged?.Invoke(_mana);
+        }
     }
-    public ActiveSpell ActiveSpell { get; private set; }
+    [SerializeField] private int _maxMana;
+    public int MaxMana {
+        get {
+            return _maxMana;
+        }
+    }
+    private ActiveSpell _activeSpell;
+    public ActiveSpell ActiveSpell { get { return _activeSpell; } }
+
+    [SerializeField] private float _manaRechargeDelay;
+    [SerializeField] private int _manaRechargeRate; // mana recovered per second
+    public delegate void ManaChanged(int newMana);
+    public event ManaChanged OnManaChanged;
+    private Coroutine _manaRegeneration;
 
     [SerializeField] private Transform _gunBarrel;
     public Transform GunBarrel { get { return _gunBarrel; } }
@@ -49,47 +66,111 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private void OnFire1Pressed() {
         Spell selectedSpell = SelectedSpell;
-        if(GunBarrel != null && SelectedSpell != null) {
-            // Attempt to fire currently equipped spell
-            ActiveSpell = new ActiveSpell() {
-                holdTime = 0f,
-                interval = selectedSpell.IntervalTime,
-                maxHoldTime = selectedSpell.MaxChargeTime
-            };
-            selectedSpell.OnStartCastSpell(this);
+        if(GunBarrel == null || SelectedSpell == null) {
+            return;
+        }
+        Debug.Log("Creating active spell...");
+        _activeSpell = new ActiveSpell() {
+            holdTime = 0f,
+            interval = selectedSpell.IntervalTime,
+            maxHoldTime = selectedSpell.MaxChargeTime,
+            baseManaCost = selectedSpell.ManaCost
+        };
+        if (_mana < selectedSpell.ManaCost) {
+            Debug.Log("Not enough mana!");
+            return;
+        }
+        if (_manaRegeneration != null) {
+            StopCoroutine(_manaRegeneration);
+        }
+        // Attempt to fire currently equipped spell
+        bool successfullyCast = selectedSpell.OnStartCastSpell(this);
+        if (successfullyCast) {
+            FinishedCastSpell(ActiveSpell.baseManaCost);
         }
     }
 
     private void OnFire1Held() {
         Spell selectedSpell = SelectedSpell;
-        if (GunBarrel != null && SelectedSpell != null) {
-            // Attempt to fire currently equipped spell
-            UpdateActiveSpell();
-            selectedSpell.OnHoldCastSpell(this);
+        if (GunBarrel == null || SelectedSpell == null) {
+            return;
         }
-    }
-
-    private void UpdateActiveSpell() {
-        ActiveSpell activeSpell = ActiveSpell;
-        activeSpell.holdTime += Time.deltaTime;
-        activeSpell.holdIntervalTime += Time.deltaTime;
-        if(activeSpell.holdTime > activeSpell.maxHoldTime) {
-            activeSpell.holdTime = activeSpell.maxHoldTime;
+        if(_activeSpell == null) {
+            _activeSpell = new ActiveSpell() {
+                holdTime = 0f,
+                interval = selectedSpell.IntervalTime,
+                maxHoldTime = selectedSpell.MaxChargeTime,
+                baseManaCost = selectedSpell.ManaCost
+            };
         }
-        if(activeSpell.holdIntervalTime > activeSpell.interval) {
-            activeSpell.holdIntervalTime = 0f;
+        UpdateActiveSpell();
+        if (_mana < selectedSpell.ManaCost) {
+            return;
         }
-        ActiveSpell = activeSpell;
+        // Attempt to fire currently equipped spell
+        bool successfullyCast = selectedSpell.OnHoldCastSpell(this);
+        if (successfullyCast) {
+            FinishedCastSpell(ActiveSpell.baseManaCost);
+        }
     }
 
     private void OnFire1Released() {
         Spell selectedSpell = SelectedSpell;
-        if (GunBarrel != null && SelectedSpell != null) {
-            // Attempt to fire currently equipped spell
-            selectedSpell.OnEndCastSpell(this);
-            ActiveSpell = new ActiveSpell();
+        if (GunBarrel == null || SelectedSpell == null) {
+            return;
         }
+        if(_mana < selectedSpell.ManaCost) {
+            _activeSpell = new ActiveSpell();
+            return;
+        }
+        // Attempt to fire currently equipped spell
+        bool successfullyCast = selectedSpell.OnEndCastSpell(this);
+        if (successfullyCast) {
+            FinishedCastSpell(ActiveSpell.totalManaCost);
+        }
+        _activeSpell = null;
     }
+
+    private void UpdateActiveSpell() {
+        if(_mana > _activeSpell.totalManaCost) {
+            _activeSpell.holdTime += Time.deltaTime;
+        }
+        _activeSpell.holdIntervalTime += Time.deltaTime;
+        if(ActiveSpell.holdTime > ActiveSpell.maxHoldTime) {
+            _activeSpell.holdTime = _activeSpell.maxHoldTime;
+        }
+        if(ActiveSpell.holdIntervalTime > ActiveSpell.interval) {
+            _activeSpell.holdIntervalTime = 0f;
+        }
+
+        _activeSpell.totalManaCost = CalculateTotalManaCost(_activeSpell.baseManaCost, _activeSpell.holdTime);
+    }
+
+    private int CalculateTotalManaCost(int baseManaCost, float holdTime) {
+        return Mathf.RoundToInt(baseManaCost * (1f + holdTime));
+    }
+
+    private void FinishedCastSpell(int lostMana) {
+        Mana -= lostMana;
+        if(_manaRegeneration != null) { StopCoroutine(_manaRegeneration); }
+        _manaRegeneration = StartCoroutine(RegenerateMana());
+    }
+
+    private IEnumerator RegenerateMana() {
+        yield return new WaitForSeconds(_manaRechargeDelay);
+        float time = 0f;
+        while(_mana < _maxMana) {
+            float waitTime = 1f / _manaRechargeRate;
+            time += Time.deltaTime;
+            if(time >= waitTime) {
+                Mana++;
+                time = 0f;
+            }
+            yield return null;
+        }
+        _manaRegeneration = null;
+    }
+
 
     public void PickUpSpell(Spell newSpell) {
         if(spellsList.Count >= spellInventoryLimit) {

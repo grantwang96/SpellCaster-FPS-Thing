@@ -4,6 +4,14 @@ using UnityEngine;
 
 public abstract class IDamageable : MonoBehaviour {
 
+    public abstract int Health { get; }
+    public abstract int MaxHealth { get; }
+    public abstract bool IsDead { get; }
+
+    public delegate void HealthChanged(int health);
+    public event HealthChanged OnHealthChanged;
+    public event HealthChanged OnMaxHealthChanged;
+
     public IDamageable parentDamageable;
     protected List<ActiveStatusEffect> _activeStatusEffects = new List<ActiveStatusEffect>();
 
@@ -15,6 +23,13 @@ public abstract class IDamageable : MonoBehaviour {
     public abstract void TakeDamage(int power, Vector3 velocity);
     public abstract void TakeDamage(int power, StatusEffect statusEffect);
     public abstract void TakeDamage(int power, Vector3 velocity, StatusEffect statusEffect);
+
+    protected void FireHealthUpdateEvent() {
+        OnHealthChanged?.Invoke(Health);
+    }
+    protected void FireMaxHealthUpdatedEvent() {
+        OnMaxHealthChanged?.Invoke(MaxHealth);
+    }
 
     protected virtual void AddStatusEffect(StatusEffect statusEffect, int power) {
         ActiveStatusEffect newActiveStatus =

@@ -11,6 +11,12 @@ public class CastingMethod_SpreadShot : Spell_CastingMethod {
     [SerializeField] private int _count;
     [SerializeField] private float _spread;
 
+    public override int ManaCost {
+        get {
+            return manaCost * _count;
+        }
+    }
+
 	protected override void CastSpell(ISpellCaster caster, Spell spell) {
         Vector3 startPosition = caster.GunBarrel.position;
         for (int i = 0; i < _count; i++) {

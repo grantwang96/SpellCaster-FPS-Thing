@@ -5,8 +5,20 @@ using UnityEngine;
 public class TestDummyDamageable : IDamageable {
 
     [SerializeField] private int _health;
-    public int Health { get { return _health; } }
-    
+    public override int Health { get { return _health; } }
+    [SerializeField] private int _maxHealth;
+    public override int MaxHealth {
+        get {
+            return _maxHealth;
+        }
+    }
+    [SerializeField] private bool _isDead;
+    public override bool IsDead {
+        get {
+            return _isDead;
+        }
+    }
+
     CharacterMoveController moveController;
 
 	// Use this for initialization

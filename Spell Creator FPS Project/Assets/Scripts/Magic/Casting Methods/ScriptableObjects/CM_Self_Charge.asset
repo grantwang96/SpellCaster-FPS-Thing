@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726495f58158d544db77aa9017f342bb, type: 3}
   m_Name: CM_Self_Charge
   m_EditorClassIdentifier: 
-  manaCost: 0
+  manaCost: 10
   spellTiming: 02000000

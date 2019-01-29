@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f37206ecdd3c8fb4e8902bb860b9307f, type: 3}
   m_Name: CM_SingleShot_Charge
   m_EditorClassIdentifier: 
-  manaCost: 0
+  manaCost: 10
   spellTiming: 02000000
   _magicProjectilePrefab: {fileID: 114823502820549128, guid: 2b21930a973bd2848894605410560b6c,
     type: 2}

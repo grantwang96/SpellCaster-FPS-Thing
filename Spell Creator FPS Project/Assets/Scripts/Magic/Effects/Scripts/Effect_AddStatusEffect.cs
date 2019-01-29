@@ -11,11 +11,13 @@ public class Effect_AddStatusEffect : Spell_Effect {
         caster.Damageable.TakeDamage(power, _statusEffect);
     }
 
-    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster, int power) {
+    public override void TriggerEffect(ISpellCaster caster, int power, IDamageable damageable = null) {
+        if (caster.Damageable == damageable || damageable == null) { return; }
         damageable.TakeDamage(power, _statusEffect);
     }
 
-    public override void TriggerEffect(IDamageable damageable, ISpellCaster caster, Vector3 velocity, int power) {
+    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, IDamageable damageable = null) {
+        if (caster.Damageable == damageable || damageable == null) { return; }
         damageable.TakeDamage(power, _statusEffect);
     }
 }

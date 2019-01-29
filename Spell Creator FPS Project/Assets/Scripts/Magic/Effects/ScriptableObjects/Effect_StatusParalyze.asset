@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9868e58e752564b85afa1d78600584, type: 3}
   m_Name: Effect_StatusParalyze
   m_EditorClassIdentifier: 
-  _manaCost: 0
+  _manaCost: 4
   _chargeTime: 5
   _intervalTime: 0.5
   _basePower: 1

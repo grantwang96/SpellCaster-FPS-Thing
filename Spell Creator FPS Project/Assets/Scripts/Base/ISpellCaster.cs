@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ISpellCaster {
 
-    int mana { get; }
+    int Mana { get; }
     ActiveSpell ActiveSpell { get; }
 
     Transform GunBarrel { get; }

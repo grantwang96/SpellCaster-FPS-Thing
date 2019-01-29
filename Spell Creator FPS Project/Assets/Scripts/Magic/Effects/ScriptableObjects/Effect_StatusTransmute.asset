@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9868e58e752564b85afa1d78600584, type: 3}
   m_Name: Effect_StatusTransmute
   m_EditorClassIdentifier: 
-  _manaCost: 0
+  _manaCost: 6
   _chargeTime: 4
   _intervalTime: 1
   _basePower: 1

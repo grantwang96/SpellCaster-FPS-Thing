@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract class Spell_CastingMethod : ScriptableObject {
 
     [SerializeField] protected int manaCost;
-    public int ManaCost { get { return manaCost; } }
+    public virtual int ManaCost { get { return manaCost; } }
     public enum SpellTiming {
         Instant, Continuous, Charge
     }

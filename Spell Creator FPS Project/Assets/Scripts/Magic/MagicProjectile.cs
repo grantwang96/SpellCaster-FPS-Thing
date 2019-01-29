@@ -30,7 +30,7 @@ public class MagicProjectile : MonoBehaviour {
 
     public void InitializeMagicModifiers(SpellModifier[] modifiers) {
         for(int i = 0; i < modifiers.Length; i++) {
-            modifiers[i].SetupProjectile(this);
+            modifiers[i]?.SetupProjectile(this);
         }
     }
 
@@ -93,11 +93,11 @@ public class MagicProjectile : MonoBehaviour {
 
         if (damageable != null) {
             if (damageable == spellCaster.Damageable) { return; }
-            ApplyEffects(damageable, dir.normalized * force);
+            ApplyEffects(dir.normalized * force, damageable);
         } else if(other.attachedRigidbody != null) {
             other.attachedRigidbody.AddForce(dir.normalized * force, ForceMode.Impulse);
         } else {
-            ApplyEffects();
+            ApplyEffects(dir.normalized * force);
         }
 
         Die();
@@ -123,15 +123,9 @@ public class MagicProjectile : MonoBehaviour {
         return _rigidBody.position;
     }
 
-    private void ApplyEffects() {
-        foreach(Spell_Effect effect in Effects) {
-            effect.TriggerEffect(spellCaster, _power);
-        }
-    }
-
-    private void ApplyEffects(IDamageable damageable, Vector3 force) {
+    private void ApplyEffects(Vector3 force, IDamageable damageable = null) {
         foreach (Spell_Effect effect in Effects) {
-            effect.TriggerEffect(damageable, spellCaster, force, _power);
+            effect?.TriggerEffect(spellCaster, force, _power, damageable);
         }
     }
 }

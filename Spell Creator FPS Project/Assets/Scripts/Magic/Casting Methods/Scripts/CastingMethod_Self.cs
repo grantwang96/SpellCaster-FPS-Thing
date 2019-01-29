@@ -9,7 +9,7 @@ public class CastingMethod_Self : Spell_CastingMethod {
         for (int i = 0; i < spell.Effects.Length; i++) {
             IDamageable damageable = caster.Damageable;
             if (damageable != null) {
-                spell.Effects[i].TriggerEffect(damageable, caster, spell.Effects[i].BasePower);
+                spell.Effects[i].TriggerEffect(caster, spell.Effects[i].BasePower, damageable);
             }
         }
     }

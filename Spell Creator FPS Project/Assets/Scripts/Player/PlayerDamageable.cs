@@ -5,17 +5,21 @@ using UnityEngine;
 public class PlayerDamageable : IDamageable {
 
     [SerializeField] private int _health;
-    public int Health { get { return _health; } }
+    public override int Health { get { return _health; } }
+    [SerializeField] private int _maxHealth;
+    public override int MaxHealth { get { return _maxHealth; } }
 
     private bool _isDead;
-    public bool IsDead { get { return _isDead; } }
+    public override bool IsDead { get { return _isDead; } }
 
     private CharacterMoveController moveController;
 
     public override void TakeDamage(int damage) {
         if (_isDead) { return; }
         _health -= damage;
+        Debug.Log($"Player has taken {damage} damage!");
         if(_health < 0) { Die(); }
+        FireHealthUpdateEvent();
     }
 
     public override void TakeDamage(int damage, Vector3 velocity) {
@@ -32,6 +36,7 @@ public class PlayerDamageable : IDamageable {
     }
 
     private void Die() {
+        _health = 0;
         _isDead = true;
     }
 
