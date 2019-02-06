@@ -6,6 +6,11 @@ public abstract partial class NPCBlueprint : ScriptableObject {
 
     [SerializeField] protected int _totalHealth;
     public int TotalHealth { get { return _totalHealth; } }
+    [SerializeField] protected StatusEffect[] _statResistances;
+    public StatusEffect[] StatResistances => _statResistances;
+    [SerializeField] protected StatusEffect[] _statWeaknesses;
+    public StatusEffect[] StatWeaknesses => _statWeaknesses;
+
     [SerializeField] protected float _walkSpeed;
     public float WalkSpeed { get { return _walkSpeed; } }
     [SerializeField] protected float _runSpeed;

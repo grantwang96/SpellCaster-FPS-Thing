@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDamageable : IDamageable {
+public class PlayerDamageable : Damageable {
 
     [SerializeField] private int _health;
     public override int Health { get { return _health; } }

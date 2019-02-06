@@ -15,5 +15,5 @@ MonoBehaviour:
   spellTiming: 02000000
   _magicProjectilePrefab: {fileID: 114823502820549128, guid: 2b21930a973bd2848894605410560b6c,
     type: 2}
-  _projectileSpeed: 60
+  _projectileSpeed: 30
   _lifeTime: 5

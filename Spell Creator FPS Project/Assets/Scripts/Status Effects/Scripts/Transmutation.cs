@@ -5,10 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Status Effect/Transmutation")]
 public class Transmutation : StatusEffect {
 
-    [SerializeField] private IDamageable replacementObjectPrefab;
+    [SerializeField] private Damageable replacementObjectPrefab;
     private const string ReplacementObjectName = "TransmuteObject";
 
-    public override void OnAddEffect(IDamageable damageable, int power) {
+    public override void OnAddEffect(Damageable damageable, int power) {
 
         if(damageable.name == ReplacementObjectName) {
             return;
@@ -34,13 +34,13 @@ public class Transmutation : StatusEffect {
                 rigidbody.useGravity = false;
             }
         }
-        IDamageable replacementObject = Instantiate(replacementObjectPrefab, damageable.transform.position, damageable.transform.rotation);
+        Damageable replacementObject = Instantiate(replacementObjectPrefab, damageable.transform.position, damageable.transform.rotation);
         replacementObject.parentDamageable = damageable;
         replacementObject.gameObject.name = ReplacementObjectName;
         replacementObject.transform.parent = damageable.transform;
     }
 
-    public override void OnRemoveEffect(IDamageable damageable) {
+    public override void OnRemoveEffect(Damageable damageable) {
 
         Transform transmuteObject = damageable.transform.Find(ReplacementObjectName);
         if (transmuteObject) {

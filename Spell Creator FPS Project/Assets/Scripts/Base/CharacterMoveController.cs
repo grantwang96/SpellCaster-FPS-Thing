@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public abstract class CharacterMoveController : MonoBehaviour { // Handles character movement
 
     [SerializeField] protected float _baseSpeed;
+    [SerializeField] protected float _maxSpeed;
     [SerializeField] protected float _mass;
     [SerializeField] protected float _linearDrag;
     [SerializeField] protected bool _performingAction;

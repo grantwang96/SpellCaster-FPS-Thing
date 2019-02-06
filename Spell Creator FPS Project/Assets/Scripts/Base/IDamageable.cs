@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class IDamageable : MonoBehaviour {
+public abstract class Damageable : MonoBehaviour {
 
     public abstract int Health { get; }
     public abstract int MaxHealth { get; }
@@ -11,8 +11,10 @@ public abstract class IDamageable : MonoBehaviour {
     public delegate void HealthChanged(int health);
     public event HealthChanged OnHealthChanged;
     public event HealthChanged OnMaxHealthChanged;
+    public delegate void DeathEvent(bool isDead);
+    public event DeathEvent OnDeath;
 
-    public IDamageable parentDamageable;
+    public Damageable parentDamageable;
     protected List<ActiveStatusEffect> _activeStatusEffects = new List<ActiveStatusEffect>();
 
     protected virtual void Update() {

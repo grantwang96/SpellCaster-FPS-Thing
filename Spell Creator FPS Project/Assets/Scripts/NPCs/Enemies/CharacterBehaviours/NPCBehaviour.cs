@@ -6,12 +6,11 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(NPCMoveController))]
 public class NPCBehaviour : CharacterBehaviour, IVision {
-
-    [SerializeField] protected int _health;
-    public int Health { get { return _health; } }
-
+    
     [SerializeField] protected NPCMoveController _charMove;
     public NPCMoveController CharMove { get { return _charMove; } }
+    [SerializeField] protected Damageable _damageable;
+    public Damageable Damageable { get; }
     [SerializeField] protected NPCBlueprint blueprint; // blueprint to derive data from
     public NPCBlueprint Blueprint { get { return blueprint; } }
     protected BrainState currentBrainState; // current state of AI State Machine
@@ -54,6 +53,7 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
     protected override void Awake() {
         base.Awake();
         _charMove = GetComponent<NPCMoveController>();
+        _damageable = GetComponent<Damageable>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.updateRotation = false;
@@ -65,7 +65,6 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
             Debug.LogError(name + " doesn't have a blueprint!");
             return;
         }
-        _health = blueprint.TotalHealth;
         BaseSpeed = blueprint.WalkSpeed;
         MaxSpeed = blueprint.RunSpeed;
     }
@@ -190,6 +189,10 @@ public class NPCBehaviour : CharacterBehaviour, IVision {
         if (knownCharacters.Contains(characterBehaviour)) {
             knownCharacters.Remove(characterBehaviour);
         }
+    }
+
+    protected virtual void OnDeath(bool isDead) {
+
     }
 }
 

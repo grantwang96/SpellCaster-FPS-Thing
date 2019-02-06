@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manager class that loads and handles spell generation
+/// </summary>
 public class SpellManager : MonoBehaviour {
 
     public static SpellManager Instance;

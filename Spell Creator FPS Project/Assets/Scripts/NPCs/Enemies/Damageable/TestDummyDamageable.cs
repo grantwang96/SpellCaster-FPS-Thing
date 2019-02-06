@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestDummyDamageable : IDamageable {
+public class TestDummyDamageable : Damageable {
 
     [SerializeField] private int _health;
     public override int Health { get { return _health; } }
@@ -19,7 +19,7 @@ public class TestDummyDamageable : IDamageable {
         }
     }
 
-    CharacterMoveController moveController;
+    private CharacterMoveController moveController;
 
 	// Use this for initialization
 	void Start () {

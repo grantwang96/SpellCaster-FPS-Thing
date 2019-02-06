@@ -32,6 +32,6 @@ public abstract class Spell_Effect : ScriptableObject {
     /// Applies effect to given damageable
     /// </summary>
     /// <param name="damageable"></param>
-    public abstract void TriggerEffect(ISpellCaster caster, int power, IDamageable damageable = null);
-    public abstract void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, IDamageable damageable = null);
+    public abstract void TriggerEffect(ISpellCaster caster, int power, Damageable damageable = null);
+    public abstract void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Damageable damageable = null);
 }

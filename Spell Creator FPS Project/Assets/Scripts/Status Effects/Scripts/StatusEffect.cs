@@ -9,7 +9,7 @@ public abstract class StatusEffect : ScriptableObject {
     [SerializeField] private float _interval;
     public float Interval { get { return _interval; } }
 
-    public virtual void OnAddEffect(IDamageable damageable, int power) { }
-    public virtual void ApplyEffect(IDamageable damageable, int power) { }
-    public virtual void OnRemoveEffect(IDamageable damageable) { }
+    public virtual void OnAddEffect(Damageable damageable, int power) { }
+    public virtual void ApplyEffect(Damageable damageable, int power) { }
+    public virtual void OnRemoveEffect(Damageable damageable) { }
 }

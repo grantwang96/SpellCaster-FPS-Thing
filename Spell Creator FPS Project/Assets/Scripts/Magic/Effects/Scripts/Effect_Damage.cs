@@ -15,13 +15,13 @@ public class Effect_Damage : Spell_Effect {
         
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, IDamageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, int power, Damageable damageable = null) {
         if(caster.Damageable == damageable) { return; }
         Debug.Log("Applied damage: " + power);
         damageable.TakeDamage(power);
     }
 
-    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, IDamageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Damageable damageable = null) {
         if (caster.Damageable == damageable) { return; }
         Debug.Log("Applied damage: " + power);
         velocity.y += _upwardForce;

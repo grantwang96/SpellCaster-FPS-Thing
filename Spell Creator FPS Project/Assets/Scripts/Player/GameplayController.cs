@@ -13,6 +13,8 @@ public class GameplayController : CharacterBehaviour {
         MouseKeyboard, Controller
     }
     [SerializeField] private ControlScheme _controlScheme;
+    public ControlScheme controlScheme => _controlScheme;
+    [SerializeField] private bool _uiPanelsEmpty;
 
     [SerializeField] protected Vector2 _lookVector; // Vector that saves camera controls input
     public Vector2 LookVector { get { return _lookVector; } }
@@ -35,6 +37,8 @@ public class GameplayController : CharacterBehaviour {
     private PlayerCamera_FPS playerCamera; // component that controls the camera
     private PlayerCombat playerCombat;
 
+    [SerializeField] private UIPanel _menuPrefab;
+
     protected override void Awake() {
         Instance = this;
         base.Awake();
@@ -43,11 +47,13 @@ public class GameplayController : CharacterBehaviour {
     // Use this for initialization
     void Start () {
         SetMouseEnabled(false);
+        UIManager.Instance.OnPanelsUpdated += OnUIPanelsUpdated;
         InitializeComponents();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (!_uiPanelsEmpty) { return; }
         ProcessInputs();
 	}
 
@@ -117,6 +123,10 @@ public class GameplayController : CharacterBehaviour {
         if (Input.GetButtonDown("Fire1")) { Shoot1Pressed(); }
         else if (Input.GetButton("Fire1")) { Shoot1Held(); }
         else if (Input.GetButtonUp("Fire1")) { Shoot1Released(); }
+
+        if (Input.GetButtonDown("Cancel")) {
+            MenuPressed();
+        }
     }
 
     private void Jump() {
@@ -157,5 +167,20 @@ public class GameplayController : CharacterBehaviour {
 
     private void Shoot1Released() {
         OnFire1End.Invoke();
+    }
+
+    private void MenuPressed() {
+        UIManager.Instance.OpenUIPanel(_menuPrefab);
+    }
+
+    // event that is called when UIManager updates its panels
+    private void OnUIPanelsUpdated(bool panelsEmpty) {
+        _uiPanelsEmpty = panelsEmpty;
+        Cursor.lockState = panelsEmpty ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !panelsEmpty;
+        _walkVector.x = panelsEmpty ? _walkVector.x : 0f;
+        _walkVector.z = panelsEmpty ? _walkVector.z : 0f;
+        _lookVector.x = panelsEmpty ? _lookVector.x : 0f;
+        _lookVector.y = panelsEmpty ? _lookVector.y : 0f;
     }
 }

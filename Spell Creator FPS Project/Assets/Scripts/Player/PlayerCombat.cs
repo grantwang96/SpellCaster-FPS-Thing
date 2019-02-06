@@ -31,7 +31,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     [SerializeField] private Transform _gunBarrel;
     public Transform GunBarrel { get { return _gunBarrel; } }
-    public IDamageable Damageable { get; private set; }
+    public Damageable Damageable { get; private set; }
     public CharacterBehaviour CharacterBehaviour { get; private set; }
 
     [SerializeField] private List<Spell> spellsList;
@@ -48,7 +48,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     void Awake() {
-        Damageable = GetComponent<IDamageable>();
+        Damageable = GetComponent<Damageable>();
         CharacterBehaviour = GetComponent<CharacterBehaviour>();
     }
 

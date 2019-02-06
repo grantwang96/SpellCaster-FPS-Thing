@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class WeaponCollider : MonoBehaviour {
 
-    [SerializeField] private IDamageable _owner;
+    [SerializeField] private Damageable _owner;
     [SerializeField] private int _power;
 
 	// Use this for initialization
@@ -19,7 +19,7 @@ public class WeaponCollider : MonoBehaviour {
 	}
 
     void OnTriggerEnter(Collider other) {
-        IDamageable damageable = other.GetComponent<IDamageable>();
+        Damageable damageable = other.GetComponent<Damageable>();
         if (damageable != null && damageable != _owner) {
             damageable.TakeDamage(_power);
         }

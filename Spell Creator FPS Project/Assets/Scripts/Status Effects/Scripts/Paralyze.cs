@@ -5,14 +5,14 @@ using UnityEngine;
 [CreateAssetMenu(menuName ="Status Effect/Paralyze")]
 public class Paralyze : StatusEffect {
 
-    public override void OnAddEffect(IDamageable damageable, int power) {
+    public override void OnAddEffect(Damageable damageable, int power) {
         CharacterMoveController characterMove = damageable.GetComponent<CharacterMoveController>();
         if (characterMove != null) {
             characterMove.enabled = false;
         }
     }
 
-    public override void OnRemoveEffect(IDamageable damageable) {
+    public override void OnRemoveEffect(Damageable damageable) {
         CharacterMoveController characterMove = damageable.GetComponent<CharacterMoveController>();
         if (characterMove != null) {
             characterMove.enabled = true;

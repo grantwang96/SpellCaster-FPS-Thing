@@ -11,12 +11,12 @@ public class Effect_Dummy : Spell_Effect {
         Debug.Log(caster + " performed spell!");
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, IDamageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, int power, Damageable damageable = null) {
         if (caster.Damageable == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
     }
 
-    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, IDamageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Damageable damageable = null) {
         if (caster.Damageable == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
         velocity.y += _upwardForce;

@@ -87,7 +87,7 @@ public class MagicProjectile : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        IDamageable damageable = other.transform.GetComponent<IDamageable>();
+        Damageable damageable = other.transform.GetComponent<Damageable>();
         Vector3 dir = other.transform.position - _rigidBody.position;
         float force = _rigidBody.velocity.magnitude * _rigidBody.mass;
 
@@ -123,7 +123,7 @@ public class MagicProjectile : MonoBehaviour {
         return _rigidBody.position;
     }
 
-    private void ApplyEffects(Vector3 force, IDamageable damageable = null) {
+    private void ApplyEffects(Vector3 force, Damageable damageable = null) {
         foreach (Spell_Effect effect in Effects) {
             effect?.TriggerEffect(spellCaster, force, _power, damageable);
         }

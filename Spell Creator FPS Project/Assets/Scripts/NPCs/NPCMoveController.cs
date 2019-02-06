@@ -5,11 +5,18 @@ using UnityEngine;
 public class NPCMoveController : CharacterMoveController {
 
     [SerializeField] protected float _turnSpeed;
-    protected CharacterBehaviour characterBehaviour; // gain read access from character's brain
+    protected NPCBehaviour npcBehaviour; // gain read access from character's brain
 
     protected override void Awake() {
         base.Awake();
-        characterBehaviour = GetComponent<CharacterBehaviour>();
+        npcBehaviour = GetComponent<NPCBehaviour>();
+    }
+
+    protected override void Start() {
+        base.Start();
+
+        _baseSpeed = npcBehaviour.Blueprint.WalkSpeed;
+        _maxSpeed = npcBehaviour.Blueprint.RunSpeed;
     }
 
     // move the character at this speed in this direction
@@ -29,7 +36,7 @@ public class NPCMoveController : CharacterMoveController {
 
     // sets the rotation of the character
     public virtual void SetRotation(Vector3 target) {
-        Vector3 lookDirection = target - characterBehaviour.Head.position;
+        Vector3 lookDirection = target - npcBehaviour.Head.position;
         Vector3 lookDirectionBody = lookDirection;
         lookDirectionBody.y = 0;
 

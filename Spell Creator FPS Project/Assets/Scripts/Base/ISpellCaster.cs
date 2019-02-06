@@ -8,7 +8,7 @@ public interface ISpellCaster {
     ActiveSpell ActiveSpell { get; }
 
     Transform GunBarrel { get; }
-    IDamageable Damageable { get; }
+    Damageable Damageable { get; }
     CharacterBehaviour CharacterBehaviour { get; }
 
     void PickUpSpell(Spell newSpell);
