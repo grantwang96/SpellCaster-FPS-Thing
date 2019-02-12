@@ -26,8 +26,12 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    public void OpenUIPanel(UIPanel uiPanelPrefab) {
+    public void OpenUIPanel(UIPanel uiPanelPrefab, UIPanelInitData initData = null) {
         _currentScenePanel = Instantiate(uiPanelPrefab, transform);
+        if(initData != null) {
+            Debug.Log("Initializing UI Panel");
+            _currentScenePanel.Initialize(initData);
+        }
         _uiPanels.Push(_currentScenePanel);
         ActivateCurrentPanel();
         OnPanelsUpdated?.Invoke(_uiPanels.Count == 0);

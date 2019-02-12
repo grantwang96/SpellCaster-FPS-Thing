@@ -6,4 +6,6 @@ public class SpellCraftManager {
 
     [SerializeField] private List<Spell_CastingMethod> _loadedCastingMethods;
     [SerializeField] private List<Spell_Effect> _loadedSpellEffects;
+    [SerializeField] private List<SpellModifier> _loadedSpellModifiers;
+    
 }

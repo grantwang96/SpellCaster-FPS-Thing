@@ -14,6 +14,7 @@ public class SpellBook : MonoBehaviour, IInteractable {
     }
 
     [SerializeField] private bool _interactable = true;
+    public bool Interactable { get { return _interactable; } }
 
     // Get Components here
     void Awake() {

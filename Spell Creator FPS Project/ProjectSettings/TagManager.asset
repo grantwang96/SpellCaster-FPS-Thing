@@ -17,7 +17,7 @@ TagManager:
   - Player
   - Spell
   - Enemy
-  - Book
+  - Pickupable
   - DetectionRadius
   - Weapon
   - 

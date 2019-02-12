@@ -69,7 +69,6 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if(GunBarrel == null || SelectedSpell == null) {
             return;
         }
-        Debug.Log("Creating active spell...");
         _activeSpell = new ActiveSpell() {
             holdTime = 0f,
             interval = selectedSpell.IntervalTime,
