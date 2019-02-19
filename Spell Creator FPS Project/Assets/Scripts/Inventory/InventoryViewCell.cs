@@ -12,20 +12,37 @@ public class InventoryViewCell : MonoBehaviour {
     [SerializeField] private int _itemCount;
     public int ItemCount { get { return _itemCount; } }
 
+    public int GridX;
+    public int GridY;
+
+    [SerializeField] private RectTransform _content;
     [SerializeField] private Image _icon;
     [SerializeField] private Text _count;
 
-    public void Initialize(string itemId, int itemCount = 0) {
+    private InventoryView _inventoryView;
+
+    public void Initialize(InventoryView inventoryView, int x, int y, string itemId, int itemCount = 0) {
+        _inventoryView = inventoryView;
+        GridX = x;
+        GridY = y;
         _itemId = itemId;
         _itemCount = itemCount;
         _count.text = _itemCount.ToString();
 
-        if (_itemId.Equals("NONE")) {
+        if (_itemId.Equals(GameplayValues.EmptyInventoryItemId)) {
             _icon.enabled = false;
             return;
         }
         _icon.enabled = true;
         IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(itemId);
         _icon.sprite = storable.Sprite;
+    }
+
+    public void Highlight() {
+        _content.localScale = Vector3.one * 1.25f;
+    }
+
+    public void Dehighlight() {
+        _content.localScale = Vector3.one;
     }
 }

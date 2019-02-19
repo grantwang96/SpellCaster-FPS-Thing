@@ -40,6 +40,7 @@ public class PlayerInventory : MonoBehaviour, IInventory{
         if(_playerInventory[id] <= 0) {
             _playerInventory.Remove(id);
         }
+        Debug.Log($"Removing {id}...");
         OnInventoryDataUpdated?.Invoke();
         return true;
     }

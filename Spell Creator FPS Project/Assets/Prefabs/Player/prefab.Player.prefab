@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 114419468601579986}
   - component: {fileID: 114820299144877070}
   - component: {fileID: 114216178686495076}
+  - component: {fileID: 114493796648254484}
   m_Layer: 9
   m_Name: prefab.Player
   m_TagString: Untagged
@@ -1131,7 +1132,7 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1236,6 +1237,17 @@ MonoBehaviour:
   maxVerticalLookRotation: 60
   _body: {fileID: 4107163916722246}
   _head: {fileID: 4739983236925610}
+--- !u!114 &114493796648254484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1125936217374846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30f80bb207b9da948bc78d4a2dd6268a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114566212241519018
 MonoBehaviour:
   m_ObjectHideFlags: 1
