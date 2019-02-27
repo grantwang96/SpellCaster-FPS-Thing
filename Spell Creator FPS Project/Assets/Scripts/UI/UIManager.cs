@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour {
         }
         _uiPanels.Push(_currentScenePanel);
         ActivateCurrentPanel();
+        Debug.Log(_uiPanels.Count);
         OnPanelsUpdated?.Invoke(_uiPanels.Count == 0);
     }
 
@@ -46,6 +47,7 @@ public class UIManager : MonoBehaviour {
             _currentScenePanel = _uiPanels.Peek();
             ActivateCurrentPanel();
         }
+        Debug.Log(_uiPanels.Count);
         OnPanelsUpdated?.Invoke(_uiPanels.Count == 0);
     }
 

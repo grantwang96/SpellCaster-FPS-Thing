@@ -130,43 +130,31 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void Jump() {
-        OnJumpPressed.Invoke();
+        OnJumpPressed?.Invoke();
     }
 
     private void InteractPressed() {
-        if (OnInteractPressed == null) {
-            Debug.LogError("Interact Pressed event is empty!");
-            return;
-        }
-        OnInteractPressed.Invoke();
+        OnInteractPressed?.Invoke();
     }
 
     private void InteractHeld() {
-        if (OnInteractHeld == null) {
-            Debug.LogError("Interact Hold event is empty!");
-            return;
-        }
-        OnInteractHeld.Invoke();
+        OnInteractHeld?.Invoke();
     }
 
     private void InteractReleased() {
-        if(OnInteractReleased == null) {
-            Debug.LogError("Interact Released event is empty!");
-            return;
-        }
-        OnInteractReleased.Invoke();
+        OnInteractReleased?.Invoke();
     }
 
     private void Shoot1Pressed() {
-        OnFire1Pressed.Invoke();
+        OnFire1Pressed?.Invoke();
     }
 
     private void Shoot1Held() {
-        OnFire1Held.Invoke();
+        OnFire1Held?.Invoke();
     }
 
     private void Shoot1Released() {
-        OnFire1End.Invoke();
+        OnFire1End?.Invoke();
     }
 
     private void MenuPressed() {

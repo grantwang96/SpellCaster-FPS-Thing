@@ -43,6 +43,20 @@ public abstract class UIPanel : MonoBehaviour {
     }
 }
 
+public abstract class UISubPanelParent : UIPanel {
+
+    public delegate void SubPanelChanged();
+    public event SubPanelChanged OnSubPanelChanged;
+
+    public virtual void ChangePanel(IntVector3 dir) {
+
+    }
+
+    protected void InvokeSubPanelChanged() {
+        OnSubPanelChanged?.Invoke();
+    }
+}
+
 // Helper class used to initialize panel data
 public class UIPanelInitData {
 

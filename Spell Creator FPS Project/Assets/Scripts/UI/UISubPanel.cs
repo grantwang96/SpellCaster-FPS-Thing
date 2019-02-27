@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UISubPanel : MonoBehaviour {
 
-    [SerializeField] protected UIPanel _parentPanel;
+    [SerializeField] protected UISubPanelParent _parentPanel;
     public bool ActiveSubPanel;
 
     public delegate void MouseHover();
@@ -26,6 +26,21 @@ public class UISubPanel : MonoBehaviour {
     }
 
     public virtual void Initialize(UIPanelInitData initData) {
+        _parentPanel.OnSubPanelChanged += OnSubPanelChanged;
+    }
+
+    protected virtual void OnDestroy() {
+        _parentPanel.OnSubPanelChanged -= OnSubPanelChanged;
+    }
+
+    protected virtual void OnSubPanelChanged() {
 
     }
+}
+
+public interface UIDirectionInput {
+
+    float Horizontal { get; }
+    float Vertical { get; }
+    float IntervalHoldTime { get; }
 }

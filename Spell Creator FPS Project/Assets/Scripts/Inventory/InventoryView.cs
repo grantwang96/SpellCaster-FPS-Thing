@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// NOTE: current cell x and y are reversed here
+// i.e. viewCell[_currentCellY][_currentCellX].Highlight()
 public class InventoryView : UISubPanel {
 
     [SerializeField] private RectTransform _content;
@@ -45,10 +47,13 @@ public class InventoryView : UISubPanel {
     public void Initialize(IInventory inventory) {
         Debug.Log("Initializing inventory view...");
         Inventory = inventory;
+
         Inventory.OnInventoryDataUpdated += OnItemsUpdated;
+        _parentPanel.OnSubPanelChanged += OnSubPanelChanged;
+
         GenerateViewCells();
         OnItemsUpdated();
-        UpdateHighlightedViewCell();
+        UpdateHighlightedViewCell(0, 0);
     }
 
     private void OnDisable() {
@@ -95,13 +100,25 @@ public class InventoryView : UISubPanel {
         
         int x = _currentCellX + Mathf.RoundToInt(_horizontal);
         int y = _currentCellY - Mathf.RoundToInt(_vertical);
-        if(x < 0) { x = _rowSize - 1; }
-        if(x >= _rowSize) { x = 0; }
-        if(y < 0) { y = _columnSize - 1; }
-        if(y >= _columnSize) { y = 0; }
-        _currentCellX = x;
-        _currentCellY = y;
-        UpdateHighlightedViewCell();
+        
+        if(x < 0) {
+            _parentPanel.ChangePanel(new IntVector3(-1, 0, 0));
+            return;
+        }
+        if(x >= _rowSize) {
+            _parentPanel.ChangePanel(new IntVector3(1, 0, 0));
+            return;
+        }
+        if(y < 0) {
+            _parentPanel.ChangePanel(new IntVector3(0, -1, 0));
+            return;
+        }
+        if(y >= _columnSize) {
+            _parentPanel.ChangePanel(new IntVector3(0, 1, 0));
+            return;
+        }
+
+        UpdateHighlightedViewCell(x, y);
     }
 
     private void SelectPressed() {
@@ -112,17 +129,21 @@ public class InventoryView : UISubPanel {
         }
     }
 
-    private void UpdateHighlightedViewCell() {
-        for(int i = 0; i < _columnSize; i++) {
-            for(int j = 0; j < _rowSize; j++) {
+    private void UpdateHighlightedViewCell(int x, int y) {
+        // viewCells[_currentCellY][_currentCellX].Unhighlight();
+        _currentCellX = x;
+        _currentCellY = y;
+        for (int i = 0; i < viewCells.Length; i++) {
+            for(int j = 0; j < viewCells[i].Length; j++) {
                 if(j == _currentCellX && i == _currentCellY) {
-                    viewCells[i][j].Highlight();
-                    HighlightedItemId = viewCells[i][j].ItemId;
+                    viewCells[_currentCellY][_currentCellX].Highlight();
                     continue;
                 }
-                viewCells[i][j].Dehighlight();
+                viewCells[i][j].Unhighlight();
             }
         }
+        // viewCells[y][x].Highlight();
+        HighlightedItemId = viewCells[y][x].ItemId;
     }
 
     private void GenerateViewCells() {
@@ -155,14 +176,30 @@ public class InventoryView : UISubPanel {
             int columnMod = _columnSize * i;
             for(int j = 0; j < _rowSize; j++) {
                 int itemIndex = columnMod + j;
+                InventoryViewCellInitData initData = new InventoryViewCellInitData {
+                    inventoryView = this,
+                    x = i,
+                    y = j,
+                    itemId = GameplayValues.EmptyInventoryItemId
+                };
                 if (itemIndex + startingIndex >= _items.Count) {
-                    viewCells[i][j].Initialize(this, i, j, GameplayValues.EmptyInventoryItemId);
+                    viewCells[i][j].Initialize(initData);
                     continue;
                 }
                 KeyValuePair<string, int> currentItem = _items[itemIndex + startingIndex];
-                viewCells[i][j].Initialize(this, i, j, currentItem.Key, currentItem.Value);
+                initData.itemId = currentItem.Key;
+                initData.itemCount = currentItem.Value;
+                viewCells[i][j].Initialize(initData);
             }
         }
-        UpdateHighlightedViewCell();
+        UpdateHighlightedViewCell(_currentCellY, _currentCellX);
+    }
+
+    protected override void OnSubPanelChanged() {
+        if (!ActiveSubPanel) {
+            viewCells[_currentCellY][_currentCellX].Unhighlight();
+        } else {
+            viewCells[_currentCellY][_currentCellX].Highlight();
+        }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Class that contains the actual data of the object
 /// </summary>
-public class InventoryViewCell : MonoBehaviour {
+public class InventoryViewCell : UIViewCell {
 
     [SerializeField] private string _itemId;
     public string ItemId { get { return _itemId; } }
@@ -21,12 +21,18 @@ public class InventoryViewCell : MonoBehaviour {
 
     private InventoryView _inventoryView;
 
-    public void Initialize(InventoryView inventoryView, int x, int y, string itemId, int itemCount = 0) {
-        _inventoryView = inventoryView;
-        GridX = x;
-        GridY = y;
-        _itemId = itemId;
-        _itemCount = itemCount;
+    public override void Initialize(ViewCellInitData initData) {
+        InventoryViewCellInitData inventoryVCInitData = initData as InventoryViewCellInitData;
+        if(inventoryVCInitData == null) {
+            Debug.LogError("Init data passed was not InventoryViewCellInitData!");
+            return;
+        }
+
+        _inventoryView = inventoryVCInitData.inventoryView;
+        GridX = inventoryVCInitData.x;
+        GridY = inventoryVCInitData.y;
+        _itemId = inventoryVCInitData.itemId;
+        _itemCount = inventoryVCInitData.itemCount;
         _count.text = _itemCount.ToString();
 
         if (_itemId.Equals(GameplayValues.EmptyInventoryItemId)) {
@@ -34,15 +40,23 @@ public class InventoryViewCell : MonoBehaviour {
             return;
         }
         _icon.enabled = true;
-        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(itemId);
+        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_itemId);
         _icon.sprite = storable.Sprite;
     }
 
-    public void Highlight() {
+    public override void Highlight() {
         _content.localScale = Vector3.one * 1.25f;
     }
 
-    public void Dehighlight() {
+    public override void Unhighlight() {
         _content.localScale = Vector3.one;
     }
+}
+
+public class InventoryViewCellInitData : ViewCellInitData {
+
+    public InventoryView inventoryView;
+    public int x;
+    public int y;
+    public int itemCount = 0;
 }

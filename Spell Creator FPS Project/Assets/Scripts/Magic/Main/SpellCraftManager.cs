@@ -2,7 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellCraftManager {
+public delegate void CastingMethodChanged(Spell_CastingMethod castingMethod);
+public delegate void SpellEffectChanged(Spell_Effect spellEffect);
+public delegate void SpellModifierChanged(SpellModifier modifier);
+
+public interface ISpellCraftManager {
+    event CastingMethodChanged OnCastingMethodChanged;
+    event SpellEffectChanged OnSpellEffectAdded;
+    event SpellModifierChanged OnSpellModifierAdded;
+    event SpellEffectChanged OnSpellEffectRemoved;
+    event SpellModifierChanged OnSpellModifierRemoved;
+}
+
+public class SpellCraftManager : ISpellCraftManager {
 
     [SerializeField] private Spell_CastingMethod _loadedCastingMethod;
     public Spell_CastingMethod LoadedCastingMethod {
@@ -23,15 +35,23 @@ public class SpellCraftManager {
         }
     }
 
+    public event CastingMethodChanged OnCastingMethodChanged;
+    public event SpellEffectChanged OnSpellEffectAdded;
+    public event SpellEffectChanged OnSpellEffectRemoved;
+    public event SpellModifierChanged OnSpellModifierAdded;
+    public event SpellModifierChanged OnSpellModifierRemoved;
+
     [SerializeField] private int _loadedSpellManaCost;
 
     public void SetCastingMethod(Spell_CastingMethod castingMethod) {
         _loadedCastingMethod = castingMethod;
+        OnCastingMethodChanged?.Invoke(castingMethod);
     }
 
     public void AddSpellEffect(Spell_Effect spellEffect) {
         if (!_loadedSpellEffects.Contains(spellEffect)) {
             _loadedSpellEffects.Add(spellEffect);
+            OnSpellEffectAdded?.Invoke(spellEffect);
             UpdateSpellManaCost();
         }
     }
@@ -39,6 +59,7 @@ public class SpellCraftManager {
     public void AddSpellModifier(SpellModifier spellModifier) {
         if (!_loadedSpellModifiers.Contains(spellModifier)) {
             _loadedSpellModifiers.Add(spellModifier);
+            OnSpellModifierAdded?.Invoke(spellModifier);
         }
     }
 
@@ -47,17 +68,20 @@ public class SpellCraftManager {
         Spell_CastingMethod castingMethod = storable as Spell_CastingMethod;
         if (castingMethod != null) {
             _loadedCastingMethod = null;
+            OnCastingMethodChanged?.Invoke(castingMethod);
             return;
         }
         Spell_Effect spellEffect = storable as Spell_Effect;
         if (spellEffect != null) {
             _loadedSpellEffects.Remove(spellEffect);
             UpdateSpellManaCost();
+            OnSpellEffectRemoved?.Invoke(spellEffect);
             return;
         }
         SpellModifier spellModifier = storable as SpellModifier;
         if (spellModifier != null) {
             _loadedSpellModifiers.Remove(spellModifier);
+            OnSpellModifierRemoved?.Invoke(spellModifier);
             return;
         }
     }

@@ -238,4 +238,8 @@ public struct IntVector3 {
     public int x;
     public int y;
     public int z;
+
+    public override string ToString() {
+        return $"IntVector3({x}, {y}, {z})";
+    }
 }
