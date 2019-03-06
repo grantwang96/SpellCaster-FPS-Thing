@@ -24,6 +24,8 @@ public class UISpellCraftMenu : UISubPanelParent {
         }
         _inventoryView.ActiveSubPanel = true;
         _inventoryView.OnInventoryItemSelected += OnInventoryItemSelected;
+        _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
+        _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
         _spellStagingArea.Initialize();
 
         // add on hover events here(maybe limit if we're on PC or not)
@@ -104,7 +106,26 @@ public class UISpellCraftMenu : UISubPanelParent {
         }
     }
 
-    private void OnStagingAreaItemSelected() {
+    private void OnStagingAreaItemSelected(string itemId) {
+        IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(itemId);
+        if(inventoryStorable == null) {
+            Debug.LogError("Spell component slot contains an invalid inventory itemId!");
+            return;
+        }
+        _inventoryView.Inventory.AddItem(itemId, 1);
+        _spellCraftManager.RemoveComponentFromSpell(itemId);
+        _spellStagingArea.RemoveHighlightedSpellSlot();
+    }
 
+    private void GenerateSpell() {
+        if(_spellCraftManager.LoadedCastingMethod == null) {
+            return;
+        }
+        if(_spellCraftManager.LoadedSpellEffects.Count == 0) {
+            return;
+        }
+        if(_spellCraftManager.LoadedSpellModifiers.Count == 0) {
+            return;
+        }
     }
 }

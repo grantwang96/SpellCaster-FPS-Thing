@@ -11,6 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 726495f58158d544db77aa9017f342bb, type: 3}
   m_Name: CM_Self_Continuous
   m_EditorClassIdentifier: 
+  _itemType: 1
   _id: CAST_METHOD_SELF_AUTOMATIC
+  _icon: {fileID: 0}
   manaCost: 1
   spellTiming: 01000000

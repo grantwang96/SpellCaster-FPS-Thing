@@ -20,7 +20,12 @@ public class SpellCraftingStation : MonoBehaviour, IInteractable {
             return;
         }
         InventoryPanelInitData initData = new InventoryPanelInitData() {
-            Inventory = inventory
+            Inventory = inventory,
+            Filter = new InventoryItemType[] {
+                InventoryItemType.CASTINGMETHOD,
+                InventoryItemType.SPELLEFFECT,
+                InventoryItemType.SPELLMODIFIER
+            }
         };
         UIManager.Instance.OpenUIPanel(_spellCraftingStationPanel, initData);
     }

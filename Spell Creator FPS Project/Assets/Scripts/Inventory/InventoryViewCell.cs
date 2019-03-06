@@ -21,6 +21,30 @@ public class InventoryViewCell : UIViewCell {
 
     private InventoryView _inventoryView;
 
+    public override void Initialize(UIInteractableInitData initData) {
+        InventoryViewCellInitData inventoryVCInitData = initData as InventoryViewCellInitData;
+        if (inventoryVCInitData == null) {
+            Debug.LogError("Init data passed was not InventoryViewCellInitData!");
+            return;
+        }
+
+        _inventoryView = inventoryVCInitData.inventoryView;
+        GridX = inventoryVCInitData.x;
+        GridY = inventoryVCInitData.y;
+        _itemId = inventoryVCInitData.itemId;
+        _itemCount = inventoryVCInitData.itemCount;
+        _count.text = _itemCount.ToString();
+
+        if (_itemId.Equals(GameplayValues.EmptyInventoryItemId)) {
+            _icon.enabled = false;
+            return;
+        }
+        _icon.enabled = true;
+        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_itemId);
+        _icon.sprite = storable.Icon;
+    }
+
+    /*
     public override void Initialize(ViewCellInitData initData) {
         InventoryViewCellInitData inventoryVCInitData = initData as InventoryViewCellInitData;
         if(inventoryVCInitData == null) {
@@ -41,8 +65,9 @@ public class InventoryViewCell : UIViewCell {
         }
         _icon.enabled = true;
         IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_itemId);
-        _icon.sprite = storable.Sprite;
+        _icon.sprite = storable.Icon;
     }
+    */
 
     public override void Highlight() {
         _content.localScale = Vector3.one * 1.25f;

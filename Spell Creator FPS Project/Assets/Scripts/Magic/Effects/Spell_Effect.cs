@@ -5,18 +5,14 @@ using UnityEngine;
 /// <summary>
 /// What happens when the spell hits
 /// </summary>
-public abstract class Spell_Effect : ScriptableObject, IInventoryStorable {
-
-    [SerializeField] private string _id;
-    public string Id { get { return _id; } }
+public abstract class Spell_Effect : SpellComponent {
+    
     [SerializeField] private int _manaCost; // how much will this effect cost
     public int ManaCost {
         get {
             return _manaCost;
         }
     }
-    [SerializeField] private Sprite _sprite;
-    public Sprite Sprite { get { return _sprite; } }
     [SerializeField] private float _chargeTime;
     public float ChargeTime { get {
             return _chargeTime;

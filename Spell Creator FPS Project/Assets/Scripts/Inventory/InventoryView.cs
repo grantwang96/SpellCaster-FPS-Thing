@@ -12,6 +12,7 @@ public class InventoryView : UISubPanel {
 
     private InventoryViewCell[][] viewCells;
 
+    private InventoryItemType[] _filter;
     private List<KeyValuePair<string, int>> _items = new List<KeyValuePair<string, int>>();
     public IInventory Inventory { get; private set; }
 
@@ -38,6 +39,7 @@ public class InventoryView : UISubPanel {
     public override void Initialize(UIPanelInitData initData) {
         InventoryPanelInitData inventoryInit = initData as InventoryPanelInitData;
         if(inventoryInit != null) {
+            _filter = inventoryInit.Filter;
             Initialize(inventoryInit.Inventory);
             return;
         }
@@ -130,19 +132,10 @@ public class InventoryView : UISubPanel {
     }
 
     private void UpdateHighlightedViewCell(int x, int y) {
-        // viewCells[_currentCellY][_currentCellX].Unhighlight();
+        viewCells[_currentCellY][_currentCellX].Unhighlight();
         _currentCellX = x;
         _currentCellY = y;
-        for (int i = 0; i < viewCells.Length; i++) {
-            for(int j = 0; j < viewCells[i].Length; j++) {
-                if(j == _currentCellX && i == _currentCellY) {
-                    viewCells[_currentCellY][_currentCellX].Highlight();
-                    continue;
-                }
-                viewCells[i][j].Unhighlight();
-            }
-        }
-        // viewCells[y][x].Highlight();
+        viewCells[y][x].Highlight();
         HighlightedItemId = viewCells[y][x].ItemId;
     }
 

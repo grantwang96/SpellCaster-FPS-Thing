@@ -20,7 +20,7 @@ public class Spell {
 
     public int Power { get; private set; }
 
-    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers) {
+    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers = null) {
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;
@@ -28,14 +28,16 @@ public class Spell {
         for(int i = 0; i < _effects.Length; i++) {
             ManaCost += _effects[i]?.ManaCost ?? 0;
         }
-        for(int i = 0; i < spellModifiers.Length; i++) {
-            _spellModifiers[i]?.SetupSpell(this);
+        if(spellModifiers != null) {
+            for (int i = 0; i < spellModifiers.Length; i++) {
+                _spellModifiers[i]?.SetupSpell(this);
+            }
         }
         IntervalTime = .25f;
         MaxChargeTime = 3f;
     }
 
-    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers, float maxChargeTime, float intervalTime, int power, string name) {
+    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, float maxChargeTime, float intervalTime, int power, string name, SpellModifier[] spellModifiers = null) {
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;
@@ -43,8 +45,10 @@ public class Spell {
         for (int i = 0; i < _effects.Length; i++) {
             ManaCost += _effects[i]?.ManaCost ?? 0;
         }
-        for(int i = 0; i < spellModifiers.Length; i++) {
-            _spellModifiers[i]?.SetupSpell(this);
+        if(spellModifiers != null) {
+            for (int i = 0; i < spellModifiers.Length; i++) {
+                _spellModifiers[i]?.SetupSpell(this);
+            }
         }
         MaxChargeTime = maxChargeTime;
         IntervalTime = intervalTime;
@@ -76,4 +80,26 @@ public class ActiveSpell {
     public float maxHoldTime;
     public int baseManaCost;
     public int totalManaCost;
+}
+
+/// <summary>
+/// This is the inventory view version of the spell and should be persisted
+/// </summary>
+[System.Serializable]
+public class StorableSpell : IInventoryStorable {
+
+    public InventoryItemType ItemType { get; private set; }
+    public string Id { get; private set; }
+    public Sprite Icon { get; private set; }
+
+    private string _castingMethodId;
+    private string[] _spellEffectIds;
+    private string[] _spellModifierIds;
+
+    public StorableSpell(string id, string castingMethodId, string[] spellEffectIds, string[] spellModifierIds) {
+        Id = id;
+        _castingMethodId = castingMethodId;
+        _spellEffectIds = spellEffectIds;
+        _spellModifierIds = spellModifierIds;
+    }
 }

@@ -64,4 +64,5 @@ public class UIPanelInitData {
 
 public class InventoryPanelInitData : UIPanelInitData {
     public IInventory Inventory;
+    public InventoryItemType[] Filter;
 }

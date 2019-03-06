@@ -5,14 +5,10 @@ using UnityEngine;
 /// <summary>
 /// This is the base class for how spells are cast
 /// </summary>
-public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable {
-
-    [SerializeField] private string _id;
-    public string Id { get { return _id; } }
+public abstract class Spell_CastingMethod : SpellComponent {
+    
     [SerializeField] protected int manaCost;
     public virtual int ManaCost { get { return manaCost; } }
-    [SerializeField] private Sprite _sprite;
-    public Sprite Sprite { get { return _sprite; } }
     public enum SpellTiming {
         Instant, Continuous, Charge
     }

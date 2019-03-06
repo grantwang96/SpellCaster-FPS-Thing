@@ -7,10 +7,12 @@ public delegate void InventoryDataUpdated();
 public interface IInventory {
 
     void AddItem(string id, int count);
+    void AddItem(IInventoryStorable storable);
     bool RemoveItem(string id, int count);
     bool HasItem(string id);
     bool HasItemQuantity(string id, int count);
     List<KeyValuePair<string, int>> RetrieveAllItems();
+    List<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter);
 
     event InventoryDataUpdated OnInventoryDataUpdated;
 }
@@ -24,12 +26,17 @@ public class PlayerInventory : MonoBehaviour, IInventory{
     public void AddItem(string id, int count) {
         if (_playerInventory.ContainsKey(id)) {
             _playerInventory[id] += count;
+            OnInventoryDataUpdated?.Invoke();
             return;
         }
         _playerInventory.Add(id, count);
         OnInventoryDataUpdated?.Invoke();
         Debug.Log($"Player Inventory added: {id} by {count}!");
         Debug.Log($"New Quantity for {id} is {_playerInventory[id]}");
+    }
+
+    public void AddItem(IInventoryStorable storable) {
+
     }
 
     public bool RemoveItem(string id, int count) {
@@ -57,6 +64,20 @@ public class PlayerInventory : MonoBehaviour, IInventory{
         List<KeyValuePair<string, int>> items = new List<KeyValuePair<string, int>>();
         foreach (KeyValuePair<string, int> pair in _playerInventory) {
             items.Add(pair);
+        }
+        return items;
+    }
+
+    public List<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter) {
+        if(filter == null || filter.Length == 0) {
+            return RetrieveAllItems();
+        }
+        List<KeyValuePair<string, int>> items = new List<KeyValuePair<string, int>>();
+        foreach (KeyValuePair<string, int> pair in _playerInventory) {
+            IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(pair.Key);
+            if(ArrayHelper.Contains(filter, inventoryStorable.ItemType)) {
+                items.Add(pair);
+            }
         }
         return items;
     }
