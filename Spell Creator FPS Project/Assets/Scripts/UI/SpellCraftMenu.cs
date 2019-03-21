@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UISpellCraftMenu : UISubPanelParent {
+public class SpellCraftMenu : UISubPanelParent {
 
     [SerializeField] private bool _isSpellCraftMode;
 
     [SerializeField] private Button _dropdownMenuButtonPrefab;
     [SerializeField] private RectTransform _dropdownMenuContent;
 
-    [SerializeField] private InventoryView _inventoryView;
+    [SerializeField] private UIInventoryView _inventoryView;
     [SerializeField] private UISpellStagingArea _spellStagingArea;
 
     public ISpellCraftManager SpellCraftManager => _spellCraftManager;
@@ -22,11 +22,12 @@ public class UISpellCraftMenu : UISubPanelParent {
         if(inventoryInit != null) {
             _inventoryView.Initialize(inventoryInit.Inventory);
         }
-        _inventoryView.ActiveSubPanel = true;
+        _spellStagingArea.Initialize();
+        _inventoryView.SetActive(true, IntVector3.Zero);
+        _spellStagingArea.SetActive(false, IntVector3.Zero);
         _inventoryView.OnInventoryItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
-        _spellStagingArea.Initialize();
 
         // add on hover events here(maybe limit if we're on PC or not)
     }
@@ -55,19 +56,11 @@ public class UISpellCraftMenu : UISubPanelParent {
         base.CloseUIPanel();
     }
 
-    public override void ChangePanel(IntVector3 dir) {
-        switch (dir.x) {
-            case 1:
-                _inventoryView.ActiveSubPanel = true;
-                _spellStagingArea.ActiveSubPanel = false;
-                break;
-            case -1:
-                _inventoryView.ActiveSubPanel = false;
-                _spellStagingArea.ActiveSubPanel = true;
-                break;
-        }
-        InvokeSubPanelChanged();
+    public override void ChangePanel(UISubPanel neighbor, IntVector3 dir) {
+        _inventoryView.SetActive(_inventoryView == neighbor, dir);
+        _spellStagingArea.SetActive(_spellStagingArea == neighbor, dir);
     }
+
 
     private void OnInventoryItemSelected() {
         IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(_inventoryView.HighlightedItemId);
@@ -113,6 +106,7 @@ public class UISpellCraftMenu : UISubPanelParent {
             return;
         }
         _inventoryView.Inventory.AddItem(itemId, 1);
+
         _spellCraftManager.RemoveComponentFromSpell(itemId);
         _spellStagingArea.RemoveHighlightedSpellSlot();
     }
@@ -127,5 +121,9 @@ public class UISpellCraftMenu : UISubPanelParent {
         if(_spellCraftManager.LoadedSpellModifiers.Count == 0) {
             return;
         }
+        StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
+        PlayerInventory.SpellInventory.AddSpell(storableSpell);
+        _spellCraftManager.ClearSpellComponents();
+        _spellStagingArea.ClearSpellComponentSlots();
     }
 }

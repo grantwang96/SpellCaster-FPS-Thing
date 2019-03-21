@@ -4,35 +4,73 @@ using UnityEngine;
 
 public delegate void InventoryDataUpdated();
 
-public interface IInventory {
+public interface IRunicInventory {
 
     void AddItem(string id, int count);
     void AddItem(IInventoryStorable storable);
     bool RemoveItem(string id, int count);
     bool HasItem(string id);
     bool HasItemQuantity(string id, int count);
-    List<KeyValuePair<string, int>> RetrieveAllItems();
-    List<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter);
+    IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems();
+    IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter);
 
-    event InventoryDataUpdated OnInventoryDataUpdated;
+    event InventoryDataUpdated OnRunicInventoryDataUpdated;
 }
 
-public class PlayerInventory : MonoBehaviour, IInventory{
+public interface ISpellInventory {
 
-    private Dictionary<string, int> _playerInventory = new Dictionary<string, int>(); // the actual data structure
+    void AddSpell(StorableSpell spell);
+    void RemoveSpell(StorableSpell spell);
+    IReadOnlyList<StorableSpell> RetrieveAllSpells();
 
-    public event InventoryDataUpdated OnInventoryDataUpdated;
+    event InventoryDataUpdated OnSpellInventoryDataUpdated;
+}
 
+public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
+
+    public static IRunicInventory RunicInventory;
+    public static ISpellInventory SpellInventory;
+
+    private Dictionary<string, int> _runicInventory = new Dictionary<string, int>();
+    private List<StorableSpell> _storableSpells = new List<StorableSpell>();
+
+    public event InventoryDataUpdated OnRunicInventoryDataUpdated;
+    public event InventoryDataUpdated OnSpellInventoryDataUpdated;
+
+    private void Awake() {
+        RunicInventory = this;
+        SpellInventory = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start() {
+        InitializeRuneInventory();
+        InitializeSpellInventory();
+    }
+
+    private void InitializeRuneInventory() {
+        _runicInventory.Clear();
+        List<InventoryRune> runeInventory = GameManager.Instance.GetRuneInventory();
+        for(int i = 0; i < runeInventory.Count; i++) {
+            _runicInventory.Add(runeInventory[i].Id, runeInventory[i].Count);
+        }
+    }
+
+    private void InitializeSpellInventory() {
+        _storableSpells = GameManager.Instance.GetSpellsInventory();
+    }
+
+    #region Runes Inventory Methods
     public void AddItem(string id, int count) {
-        if (_playerInventory.ContainsKey(id)) {
-            _playerInventory[id] += count;
-            OnInventoryDataUpdated?.Invoke();
+        if (_runicInventory.ContainsKey(id)) {
+            _runicInventory[id] += count;
+            OnRunicInventoryDataUpdated?.Invoke();
             return;
         }
-        _playerInventory.Add(id, count);
-        OnInventoryDataUpdated?.Invoke();
+        _runicInventory.Add(id, count);
+        OnRunicInventoryDataUpdated?.Invoke();
         Debug.Log($"Player Inventory added: {id} by {count}!");
-        Debug.Log($"New Quantity for {id} is {_playerInventory[id]}");
+        Debug.Log($"New Quantity for {id} is {_runicInventory[id]}");
     }
 
     public void AddItem(IInventoryStorable storable) {
@@ -40,40 +78,40 @@ public class PlayerInventory : MonoBehaviour, IInventory{
     }
 
     public bool RemoveItem(string id, int count) {
-        if (!_playerInventory.ContainsKey(id)) {
+        if (!_runicInventory.ContainsKey(id)) {
             return false;
         }
-        _playerInventory[id] -= count;
-        if(_playerInventory[id] <= 0) {
-            _playerInventory.Remove(id);
+        _runicInventory[id] -= count;
+        if(_runicInventory[id] <= 0) {
+            _runicInventory.Remove(id);
         }
         Debug.Log($"Removing {id}...");
-        OnInventoryDataUpdated?.Invoke();
+        OnRunicInventoryDataUpdated?.Invoke();
         return true;
     }
 
     public bool HasItem(string id) {
-        return _playerInventory.ContainsKey(id);
+        return _runicInventory.ContainsKey(id);
     }
 
     public bool HasItemQuantity(string id, int count) {
-        return _playerInventory.ContainsKey(id) && _playerInventory[id] >= count;
+        return _runicInventory.ContainsKey(id) && _runicInventory[id] >= count;
     }
 
-    public List<KeyValuePair<string, int>> RetrieveAllItems() {
+    public IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems() {
         List<KeyValuePair<string, int>> items = new List<KeyValuePair<string, int>>();
-        foreach (KeyValuePair<string, int> pair in _playerInventory) {
+        foreach (KeyValuePair<string, int> pair in _runicInventory) {
             items.Add(pair);
         }
         return items;
     }
 
-    public List<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter) {
+    public IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter) {
         if(filter == null || filter.Length == 0) {
             return RetrieveAllItems();
         }
         List<KeyValuePair<string, int>> items = new List<KeyValuePair<string, int>>();
-        foreach (KeyValuePair<string, int> pair in _playerInventory) {
+        foreach (KeyValuePair<string, int> pair in _runicInventory) {
             IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(pair.Key);
             if(ArrayHelper.Contains(filter, inventoryStorable.ItemType)) {
                 items.Add(pair);
@@ -81,4 +119,19 @@ public class PlayerInventory : MonoBehaviour, IInventory{
         }
         return items;
     }
+    #endregion
+
+    #region Spells Inventory Methods
+    public void AddSpell(StorableSpell spell) {
+        _storableSpells.Add(spell);
+    }
+
+    public void RemoveSpell(StorableSpell spell) {
+        _storableSpells.Remove(spell);
+    }
+
+    public IReadOnlyList<StorableSpell> RetrieveAllSpells() {
+        return _storableSpells;
+    }
+    #endregion
 }

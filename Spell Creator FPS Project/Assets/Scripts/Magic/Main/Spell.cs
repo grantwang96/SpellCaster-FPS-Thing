@@ -86,18 +86,13 @@ public class ActiveSpell {
 /// This is the inventory view version of the spell and should be persisted
 /// </summary>
 [System.Serializable]
-public class StorableSpell : IInventoryStorable {
-
-    public InventoryItemType ItemType { get; private set; }
-    public string Id { get; private set; }
-    public Sprite Icon { get; private set; }
-
+public class StorableSpell {
+    
     private string _castingMethodId;
     private string[] _spellEffectIds;
     private string[] _spellModifierIds;
 
-    public StorableSpell(string id, string castingMethodId, string[] spellEffectIds, string[] spellModifierIds) {
-        Id = id;
+    public StorableSpell(string castingMethodId, string[] spellEffectIds, string[] spellModifierIds) {
         _castingMethodId = castingMethodId;
         _spellEffectIds = spellEffectIds;
         _spellModifierIds = spellModifierIds;

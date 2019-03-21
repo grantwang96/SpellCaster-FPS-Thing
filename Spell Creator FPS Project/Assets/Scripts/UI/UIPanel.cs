@@ -44,16 +44,9 @@ public abstract class UIPanel : MonoBehaviour {
 }
 
 public abstract class UISubPanelParent : UIPanel {
+    
+    public virtual void ChangePanel(UISubPanel subPanel, IntVector3 dir) {
 
-    public delegate void SubPanelChanged();
-    public event SubPanelChanged OnSubPanelChanged;
-
-    public virtual void ChangePanel(IntVector3 dir) {
-
-    }
-
-    protected void InvokeSubPanelChanged() {
-        OnSubPanelChanged?.Invoke();
     }
 }
 
@@ -63,6 +56,6 @@ public class UIPanelInitData {
 }
 
 public class InventoryPanelInitData : UIPanelInitData {
-    public IInventory Inventory;
+    public IRunicInventory Inventory;
     public InventoryItemType[] Filter;
 }

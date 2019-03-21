@@ -93,13 +93,32 @@ public class SpellCraftManager : ISpellCraftManager {
         }
     }
 
-    public void GenerateSpell() {
+    public StorableSpell GenerateSpell() {
         if(_loadedCastingMethod == null || _loadedSpellEffects.Count == 0) {
-            return;
+            return null;
         }
-        Spell_Effect[] confirmedEffects = _loadedSpellEffects.ToArray();
-        SpellModifier[] confirmedModifiers = _loadedSpellModifiers.ToArray();
-        Spell newSpell = new Spell(_loadedCastingMethod, confirmedEffects, confirmedModifiers);
-        // give spell to user
+        string[] spellEffectIds = new string[_loadedSpellEffects.Count];
+        for(int i = 0; i < _loadedSpellEffects.Count; i++) {
+            spellEffectIds[i] = _loadedSpellEffects[i].Id;
+        }
+        string[] spellModifierIds = new string[_loadedSpellModifiers.Count];
+        for(int i = 0; i < _loadedSpellModifiers.Count; i++) {
+            spellModifierIds[i] = _loadedSpellModifiers[i].Id;
+        }
+        StorableSpell newSpell = new StorableSpell(_loadedCastingMethod.Id, spellEffectIds, spellModifierIds);
+        return newSpell;
+    }
+
+    public void ClearSpellComponents() {
+        _loadedCastingMethod = null;
+        OnCastingMethodChanged?.Invoke(null);
+        for(int i = 0; i < _loadedSpellEffects.Count; i++) {
+            OnSpellEffectRemoved?.Invoke(_loadedSpellEffects[i]);
+        }
+        _loadedSpellEffects.Clear();
+        for(int i = 0; i < _loadedSpellModifiers.Count; i++) {
+            OnSpellModifierRemoved?.Invoke(_loadedSpellModifiers[i]);
+        }
+        _loadedSpellModifiers.Clear();
     }
 }

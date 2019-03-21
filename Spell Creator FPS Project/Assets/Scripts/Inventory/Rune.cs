@@ -26,11 +26,10 @@ public class Rune : MonoBehaviour, IInteractable {
 
     public void Interact(CharacterBehaviour character) {
         if (!Interactable) { return; }
-        IInventory characterInventory = character.GetComponent<IInventory>();
-        if(characterInventory != null) {
+        if(character == GameplayController.Instance) {
             _interactable = false;
-            characterInventory.AddItem(_itemId, 1);
-            Destroy(this.gameObject);
+            PlayerInventory.RunicInventory.AddItem(_itemId, 1);
+            Destroy(gameObject);
         }
     }
 

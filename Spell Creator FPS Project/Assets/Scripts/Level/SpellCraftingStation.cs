@@ -15,12 +15,8 @@ public class SpellCraftingStation : MonoBehaviour, IInteractable {
 
     public void Interact(CharacterBehaviour character) {
         Debug.Log($"You are interacting with spell craft station: {this.name}");
-        IInventory inventory = character.GetComponent<IInventory>();
-        if(inventory == null) {
-            return;
-        }
         InventoryPanelInitData initData = new InventoryPanelInitData() {
-            Inventory = inventory,
+            Inventory = PlayerInventory.RunicInventory,
             Filter = new InventoryItemType[] {
                 InventoryItemType.CASTINGMETHOD,
                 InventoryItemType.SPELLEFFECT,

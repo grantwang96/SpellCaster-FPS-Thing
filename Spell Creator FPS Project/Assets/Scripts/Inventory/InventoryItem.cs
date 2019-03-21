@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
-/// <summary>
-/// Parent class for inventory items(casting methods, effects, modifiers, etc.)
-/// </summary>
-public abstract class InventoryItem<T> {
 
-    public int Id { get; protected set; }
+[System.Serializable]
+public class InventoryRune {
+    public string Id { get; protected set; }
     public int Count { get; protected set; }
+
+    public InventoryRune(string id, int count) {
+        Id = id;
+        Count = count;
+    }
 }
 
 public enum InventoryItemType {

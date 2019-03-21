@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UISpellStagingArea : UISubPanel {
+public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     // the 3 rects that will contain the images
 
@@ -11,211 +12,130 @@ public class UISpellStagingArea : UISubPanel {
     [SerializeField] private RectTransform _imageTarget;
     [SerializeField] private UICustomButton _craftSpellButton;
 
+    [SerializeField] private int[] _spellComponentsViewRowLengths;
+    [SerializeField] private int[] _craftButtonViewRowLengths;
+
     private UISpellComponentSlot[][] _spellComponentSlots;
+
+    [SerializeField] private UIViewGrid _spellComponentsView;
+    [SerializeField] private UIViewGrid _craftButtonView;
     
-    [SerializeField] private UISpellComponentSlot _componentSlotPrefab;
-    [SerializeField] private RectTransform _componentListPrefab;
-    [SerializeField] private RectTransform _imageTargetPrefab;
-
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldThreshold;
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldFreq;
-
-    private float _horizontal;
-    private float _vertical;
-    private float _intervalHoldTime;
-    private float _holdTime;
-    private bool _directionButtonsPressed;
-
-    [SerializeField] private int _currentItemX;
-    [SerializeField] private int _currentItemY;
-
     public delegate void SpellSlotSelected(string itemId);
     public event SpellSlotSelected OnSpellSlotSelected;
     public delegate void CraftSpellEvent();
     public event CraftSpellEvent OnCraftSpellPressed;
+    public event UpdateActiveGrid OnUpdateActiveGrid;
 
-    public override void Initialize(UIPanelInitData initData = null) {
-        // clear any remaining elements in the components list
-        _spellComponentSlots = new UISpellComponentSlot[3][];
-        for(int i = 0; i < _spellComponentSlots.Length; i++) {
-            switch (i) {
-                case 0:
-                    _spellComponentSlots[i] = new UISpellComponentSlot[GameplayValues.MaximumSpellCastingMethods];
-                    break;
-                case 1:
-                    _spellComponentSlots[i] = new UISpellComponentSlot[GameplayValues.MaximumSpellEffects];
-                    break;
-                default:
-                    _spellComponentSlots[i] = new UISpellComponentSlot[GameplayValues.MaximumSpellModifiers];
-                    break;
-            }
-            for(int j = 0; j < _spellComponentSlots[i].Length; j++) {
-                UISpellComponentSlot newSlot = Instantiate(_componentSlotPrefab, _componentsLists[i]);
-                SpellComponentInitData slotInitData = SpellComponentInitData.Default;
-                slotInitData.ImageParent = _imageTarget;
-                newSlot.Initialize(slotInitData);
-                _spellComponentSlots[i][j] = newSlot;
-            }
-        }
-        _parentPanel.OnSubPanelChanged += OnSubPanelChanged;
-        _craftSpellButton.onClick.AddListener(CraftSpell);
-        _currentItemX = 0;
-        _currentItemY = 0;
-        // register events
+    public void Initialize() {
+        UIViewGridInitData spellComponentsInit = new UIViewGridInitData();
+        spellComponentsInit.RowLengths = _spellComponentsViewRowLengths;
+        _spellComponentsView.Initialize(spellComponentsInit);
+        _spellComponentsView.OnSelectPressed += OnSpellComponentSelected;
+
+        UIViewGridInitData craftButtonInit = new UIViewGridInitData();
+        craftButtonInit.RowLengths = _craftButtonViewRowLengths;
+        _craftButtonView.Initialize(craftButtonInit);
+        _craftButtonView.OnSelectPressed += OnCraftSpellButtonSelected;
     }
 
-    protected override void ProcessInputs() {
-        base.ProcessInputs();
-        DirectionalInputs();
-        SelectPressed();
+    public void UpdateActiveGrid(UIViewGrid newGrid) {
+        _craftButtonView.Active = newGrid == _craftButtonView;
+        if (_craftButtonView.Active) {
+            _craftButtonView.UpdateHighlightedViewCell(0, 0);
+        }
+        _spellComponentsView.Active = newGrid == _spellComponentsView;
+        if (_spellComponentsView.Active) {
+            _spellComponentsView.UpdateHighlightedViewCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
+        }
     }
 
-    private void DirectionalInputs() {
-        _horizontal = Input.GetAxisRaw("Horizontal");
-        _vertical = Input.GetAxisRaw("Vertical");
-
-        // if no buttons are being pressed, reset values and carry on.
-        if (_horizontal == 0 && _vertical == 0) {
-            _holdTime = 0f;
-            _intervalHoldTime = 0f;
-            _directionButtonsPressed = false;
+    public void OutOfBounds(IntVector3 dir) {
+        UISubPanel neighbor;
+        if (dir == IntVector3.Up) {
+            neighbor = _upNeighbor;
+        } else if (dir == IntVector3.Right) {
+            neighbor = _rightNeighbor;
+        } else if (dir == IntVector3.Down) {
+            neighbor = _downNeighbor;
+        } else {
+            neighbor = _leftNeighbor;
+        }
+        if (neighbor == null) {
             return;
         }
-
-        // if the button is being held
-        if (_directionButtonsPressed) {
-            if (_holdTime < _directionHoldThreshold) { // check if they're waiting to do continuous movement
-                _holdTime += Time.deltaTime;
-                return;
-            }
-            if (_intervalHoldTime < _directionHoldFreq) { // check if they're waiting on interval
-                _intervalHoldTime += Time.deltaTime;
-                return;
-            }
-        }
-
-        // Process the actual movement;
-        _directionButtonsPressed = true;
-        _intervalHoldTime = 0f;
-
-        int x = _currentItemX + Mathf.RoundToInt(_horizontal);
-        int y = _currentItemY - Mathf.RoundToInt(_vertical);
-
-        if (x < 0) {
-            _parentPanel.ChangePanel(new IntVector3(-1, 0, 0));
-            return;
-        }
-        else if (x >= _spellComponentSlots.Length) {
-            _parentPanel.ChangePanel(new IntVector3(1, 0, 0));
-            return;
-        }
-        if(y >= _spellComponentSlots[x].Length) {
-            y = _spellComponentSlots[x].Length - 1;
-        }
-
-        if (y < 0) {
-            _spellComponentSlots[_currentItemX][_currentItemY].Unhighlight();
-            // highlight button
-            return;
-        }
-        else if (y >= _spellComponentSlots[x].Length) {
-            y = _spellComponentSlots[x].Length - 1;
-        }
-
-        UpdateHighlightedViewCell(x, y);
+        _craftButtonView.Active = false;
+        _craftButtonView.UnhighlightCell(_craftButtonView.CurrentItemX, _craftButtonView.CurrentItemY);
+        _spellComponentsView.Active = false;
+        _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
+        _parentPanel.ChangePanel(neighbor, dir);
     }
 
-    private void UpdateHighlightedViewCell(int x, int y) {
-        _spellComponentSlots[_currentItemX][_currentItemY].Unhighlight();
-        _currentItemX = x;
-        _currentItemY = y;
-        _spellComponentSlots[_currentItemX][_currentItemY].Highlight();
-    }
-
-    private void SelectPressed() {
-        if (Input.GetButtonDown("Submit")) {
-            UISpellComponentSlot selected = _spellComponentSlots[_currentItemX][_currentItemY];
-            OnSpellSlotSelected?.Invoke(selected.ItemId);
-        }
+    public override void OnPointerEnter(PointerEventData eventData) {
+        _parentPanel.ChangePanel(this, IntVector3.Zero);
     }
 
     public void SetUICastingMethod(Spell_CastingMethod castingMethod) {
-        SpellComponentInitData initData = new SpellComponentInitData() {
-            Name = castingMethod.Id,
-            itemId = castingMethod.Id,
-            Text = castingMethod.name,
-            ImageParent = _imageTarget
-        };
-        _spellComponentSlots[0][0].Initialize(initData);
+        SpellComponentData componentData = new SpellComponentData(0, 0);
+        // temp
+        componentData.itemId = castingMethod.Id;
+        componentData.Name = castingMethod.name;
+        componentData.Text = castingMethod.name;
+
+        _spellComponentsView.AddInteractableItemToRow(0, componentData);
     }
 
     public void AddUISpellEffect(Spell_Effect spell_Effect) {
-        for(int i = 0; i < _spellComponentSlots[1].Length; i++) {
-            if (_spellComponentSlots[1][i].ItemId.Equals(GameplayValues.EmptyInventoryItemId)) {
-                SpellComponentInitData initData = new SpellComponentInitData() {
-                    Name = spell_Effect.Id,
-                    itemId = spell_Effect.Id,
-                    Text = spell_Effect.name,
-                    ImageParent = _imageTarget
-                };
-                _spellComponentSlots[1][i].Initialize(initData);
-                return;
-            }
-        }
-        Debug.Log("Spell Effect slots are full!");
+        SpellComponentData componentData = new SpellComponentData(1, 0);
+        componentData.itemId = spell_Effect.Id;
+        componentData.Name = spell_Effect.name;
+        componentData.Text = spell_Effect.name;
+
+        _spellComponentsView.AddInteractableItemToRow(1, componentData);
     }
 
-    public void AddUISpellModifier(SpellModifier modifier) {
-        for (int i = 0; i < _spellComponentSlots[2].Length; i++) {
-            if (_spellComponentSlots[2][i].ItemId.Equals(GameplayValues.EmptyInventoryItemId)) {
-                SpellComponentInitData initData = new SpellComponentInitData() {
-                    Name = modifier.Id,
-                    itemId = modifier.Id,
-                    Text = modifier.name,
-                    ImageParent = _imageTarget
-                };
-                _spellComponentSlots[2][i].Initialize(initData);
-                return;
-            }
-        }
-        Debug.Log("Spell Effect slots are full!");
+    public void AddUISpellModifier(SpellModifier spellModifier) {
+        SpellComponentData componentData = new SpellComponentData(2, 0);
+        componentData.itemId = spellModifier.Id;
+        componentData.Name = spellModifier.name;
+        componentData.Text = spellModifier.name;
+
+        _spellComponentsView.AddInteractableItemToRow(2, componentData);
     }
 
     public void RemoveHighlightedSpellSlot() {
-        UISpellComponentSlot highlighted = _spellComponentSlots[_currentItemX][_currentItemY];
-        for(int i = _currentItemY; i < _spellComponentSlots[_currentItemX].Length; i++) {
-            int next = i + 1;
-            SpellComponentInitData initData;
-            if(next > _spellComponentSlots[_currentItemX].Length - 1) {
-                initData = SpellComponentInitData.Default;
-                _spellComponentSlots[_currentItemX][i].Initialize(initData);
-                continue;
+        int x = _spellComponentsView.CurrentItemX;
+        int y = _spellComponentsView.CurrentItemY;
+        _spellComponentsView.RemoveInteractableFromRow(x, y);
+    }
+
+    public void ClearSpellComponentSlots() {
+        for (int i = 0; i < _spellComponentsViewRowLengths.Length; i++) {
+            for(int j = 0; j < _spellComponentsViewRowLengths[i]; j++) {
+                _spellComponentsView.RemoveInteractableFromRow(i, j);
             }
-            initData = new SpellComponentInitData() {
-                itemId = _spellComponentSlots[_currentItemX][next].ItemId,
-                Text = _spellComponentSlots[_currentItemX][next].Text,
-                Name = _spellComponentSlots[_currentItemX][next].name,
-                ImageParent = _imageTarget
-            };
-            _spellComponentSlots[_currentItemX][i].Initialize(initData);
         }
     }
 
-    private void CraftSpell() {
+    private void OnSpellComponentSelected(IUIInteractable interactable) {
+        string id = interactable.Id;
+        if (id.Equals(GameplayValues.EmptyInventoryItemId)) {
+            return;
+        }
+        OnSpellSlotSelected?.Invoke(id);
+    }
+
+    private void OnCraftSpellButtonSelected(IUIInteractable interactable) {
         OnCraftSpellPressed?.Invoke();
     }
 
-    protected override void OnSubPanelChanged() {
-        if (!ActiveSubPanel) {
-            _spellComponentSlots[_currentItemX][_currentItemY].Unhighlight();
-            return;
+    public override void SetActive(bool active, IntVector3 dir) {
+        _spellComponentsView.Active = active;
+        if (active) {
+            _spellComponentsView.SetCurrentAtBound(dir);
+            _spellComponentsView.UpdateHighlightedViewCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
+        } else {
+            _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
+            _craftButtonView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
         }
-        _spellComponentSlots[_currentItemX][_currentItemY].Highlight();
     }
-}
-
-public static partial class GameplayValues {
-
-    public const string EmptySpellStageText = "-----";
-    public const string EmptyUIElementId = "EMPTY_UI_ELEMENT";
 }
