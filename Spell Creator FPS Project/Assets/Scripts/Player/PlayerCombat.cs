@@ -20,8 +20,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             return _maxMana;
         }
     }
-    private ActiveSpell _activeSpell;
-    public ActiveSpell ActiveSpell { get { return _activeSpell; } }
+    public ActiveSpell ActiveSpell { get; private set; }
+
 
     [SerializeField] private float _manaRechargeDelay;
     [SerializeField] private int _manaRechargeRate; // mana recovered per second
@@ -69,7 +69,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if(GunBarrel == null || SelectedSpell == null) {
             return;
         }
-        _activeSpell = new ActiveSpell() {
+        ActiveSpell = new ActiveSpell() {
             holdTime = 0f,
             interval = selectedSpell.IntervalTime,
             maxHoldTime = selectedSpell.MaxChargeTime,
@@ -94,8 +94,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if (GunBarrel == null || SelectedSpell == null) {
             return;
         }
-        if(_activeSpell == null) {
-            _activeSpell = new ActiveSpell() {
+        if(ActiveSpell == null) {
+            ActiveSpell = new ActiveSpell() {
                 holdTime = 0f,
                 interval = selectedSpell.IntervalTime,
                 maxHoldTime = selectedSpell.MaxChargeTime,
@@ -119,7 +119,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             return;
         }
         if(_mana < selectedSpell.ManaCost) {
-            _activeSpell = new ActiveSpell();
+            ActiveSpell = new ActiveSpell();
             return;
         }
         // Attempt to fire currently equipped spell
@@ -127,22 +127,22 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if (successfullyCast) {
             FinishedCastSpell(ActiveSpell.totalManaCost);
         }
-        _activeSpell = null;
+        ActiveSpell = null;
     }
 
     private void UpdateActiveSpell() {
-        if(_mana > _activeSpell.totalManaCost) {
-            _activeSpell.holdTime += Time.deltaTime;
+        if(_mana > ActiveSpell.totalManaCost) {
+            ActiveSpell.holdTime += Time.deltaTime;
         }
-        _activeSpell.holdIntervalTime += Time.deltaTime;
+        ActiveSpell.holdIntervalTime += Time.deltaTime;
         if(ActiveSpell.holdTime > ActiveSpell.maxHoldTime) {
-            _activeSpell.holdTime = _activeSpell.maxHoldTime;
+            ActiveSpell.holdTime = ActiveSpell.maxHoldTime;
         }
         if(ActiveSpell.holdIntervalTime > ActiveSpell.interval) {
-            _activeSpell.holdIntervalTime = 0f;
+            ActiveSpell.holdIntervalTime = 0f;
         }
 
-        _activeSpell.totalManaCost = CalculateTotalManaCost(_activeSpell.baseManaCost, _activeSpell.holdTime);
+        ActiveSpell.totalManaCost = CalculateTotalManaCost(ActiveSpell.baseManaCost, ActiveSpell.holdTime);
     }
 
     private int CalculateTotalManaCost(int baseManaCost, float holdTime) {

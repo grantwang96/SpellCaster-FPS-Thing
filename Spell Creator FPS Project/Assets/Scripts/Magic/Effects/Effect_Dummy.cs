@@ -7,16 +7,16 @@ public class Effect_Dummy : Spell_Effect {
 
     [SerializeField] private float _upwardForce;
 
-    public override void TriggerEffect(ISpellCaster caster, int power) {
+    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell) {
         Debug.Log(caster + " performed spell!");
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Damageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Damageable damageable = null) {
         if (caster.Damageable == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
     }
 
-    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Damageable damageable = null) {
+    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Spell castedSpell, Vector3 position, Damageable damageable = null) {
         if (caster.Damageable == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
         velocity.y += _upwardForce;

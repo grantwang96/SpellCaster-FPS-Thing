@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MagicProjectile : MonoBehaviour {
 
-    public Spell_Effect[] Effects { get; private set; }
+    public Spell Spell { get; private set; }
     public ISpellCaster spellCaster { get; private set; }
 
     [SerializeField] private MeshFilter _meshFilter;
@@ -23,12 +23,13 @@ public class MagicProjectile : MonoBehaviour {
 
     private int _power;
 
-    public void InitializeMagic(ISpellCaster caster, Spell_Effect[] effects) {
+    public void InitializeMagic(ISpellCaster caster, Spell spell) {
         spellCaster = caster;
-        Effects = effects;
+        Spell = spell;
+        InitializeMagicModifiers(Spell.SpellModifiers);
     }
 
-    public void InitializeMagicModifiers(SpellModifier[] modifiers) {
+    private void InitializeMagicModifiers(SpellModifier[] modifiers) {
         for(int i = 0; i < modifiers.Length; i++) {
             modifiers[i]?.SetupProjectile(this);
         }
@@ -46,13 +47,14 @@ public class MagicProjectile : MonoBehaviour {
         _power = power;
     }
 
-    public void Initialize(ISpellCaster caster, Spell_Effect[] effects, Vector3 startPosition, Vector3 direction, float speed, float lifeTime) {
+    public void Initialize(ISpellCaster caster, Spell spell, Vector3 startPosition, Vector3 direction, float speed, float lifeTime) {
         spellCaster = caster;
-        Effects = effects;
+        Spell = spell;
         transform.position = startPosition;
         transform.forward = direction;
         _speed = speed;
         _lifeTime = lifeTime;
+        InitializeMagicModifiers(Spell.SpellModifiers);
     }
 
     private void Awake() {
@@ -94,11 +96,12 @@ public class MagicProjectile : MonoBehaviour {
         if (damageable != null) {
             if (damageable == spellCaster.Damageable) { return; }
             ApplyEffects(dir.normalized * force, damageable);
+            Die();
+            return;
         } else if(other.attachedRigidbody != null) {
             other.attachedRigidbody.AddForce(dir.normalized * force, ForceMode.Impulse);
-        } else {
-            ApplyEffects(dir.normalized * force);
         }
+        ApplyEffects(dir.normalized * force);
 
         Die();
     }
@@ -124,8 +127,8 @@ public class MagicProjectile : MonoBehaviour {
     }
 
     private void ApplyEffects(Vector3 force, Damageable damageable = null) {
-        foreach (Spell_Effect effect in Effects) {
-            effect?.TriggerEffect(spellCaster, force, _power, damageable);
+        foreach (Spell_Effect effect in Spell.Effects) {
+            effect?.TriggerEffect(spellCaster, force, _power, Spell, transform.position, damageable);
         }
     }
 }

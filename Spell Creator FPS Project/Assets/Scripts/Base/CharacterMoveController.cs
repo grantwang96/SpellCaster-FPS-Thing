@@ -13,17 +13,17 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     [SerializeField] protected bool _performingAction;
     public bool performingAction { get { return _performingAction; } }
 
-    protected CharacterController characterController; // accesses the character controller on the character
-    public CharacterController CharacterController { get { return characterController; } }
+    protected CharacterController _characterController; // accesses the character controller on the character
+    public CharacterController CharacterController { get { return _characterController; } }
 
-    [SerializeField] protected Vector3 movementVelocity;
-    public Vector3 MovementVelocity { get { return movementVelocity; } }
+    [SerializeField] protected Vector3 _movementVelocity;
+    public Vector3 MovementVelocity { get { return _movementVelocity; } }
 
-    protected Coroutine busyAnimation; // coroutine that prevents other actions from being taken
-    protected Coroutine externalForces; // coroutine that prevents movement due to external forces
+    protected Coroutine _busyAnimation; // coroutine that prevents other actions from being taken
+    protected Coroutine _externalForces; // coroutine that prevents movement due to external forces
 
     protected virtual void Awake() {
-        characterController = GetComponent<CharacterController>();
+        _characterController = GetComponent<CharacterController>();
     }
 
     protected virtual void Start() {
@@ -35,8 +35,8 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual void FixedUpdate() {
-        movementVelocity = ProcessGravity(movementVelocity);
-        characterController.Move(movementVelocity * Time.deltaTime);
+        _movementVelocity = ProcessGravity(_movementVelocity);
+        _characterController.Move(_movementVelocity * Time.deltaTime);
     }
 
     protected virtual Vector3 ProcessGravity(Vector3 vector) {
@@ -47,28 +47,28 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     public virtual void AddForce(Vector3 velocity) {
-        if(externalForces != null) {
-            StopCoroutine(externalForces);
+        if(_externalForces != null) {
+            StopCoroutine(_externalForces);
         }
-        externalForces = StartCoroutine(ExternalForceRoutine(velocity));
+        _externalForces = StartCoroutine(ExternalForceRoutine(velocity));
     }
 
     protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce) {
-        movementVelocity = externalForce / _mass;
+        _movementVelocity = externalForce / _mass;
         float magnitude = externalForce.magnitude;
-        characterController.Move(movementVelocity * Time.deltaTime);
+        _characterController.Move(_movementVelocity * Time.deltaTime);
         yield return new WaitForFixedUpdate();
         Vector3 start = externalForce;
-        while (!characterController.isGrounded) {
+        while (!_characterController.isGrounded) {
             yield return null;
         }
         float time = 0f;
-        while (movementVelocity.x != 0 && movementVelocity.z != 0) {
+        while (_movementVelocity.x != 0 && _movementVelocity.z != 0) {
             time += Time.deltaTime * _linearDrag;
-            movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
-            movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
+            _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
+            _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
             yield return null;
         }
-        externalForces = null;
+        _externalForces = null;
     }
 }

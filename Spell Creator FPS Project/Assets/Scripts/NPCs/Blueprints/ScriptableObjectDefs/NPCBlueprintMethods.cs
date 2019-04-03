@@ -19,13 +19,13 @@ public abstract partial class NPCBlueprint : ScriptableObject {
 
     }
     public virtual void OnMoveExecute(NPCBehaviour npc, float speed, Vector3 target) {
-        npc.CheckVision();
-        Vector3 dir = npc.currentDestination - npc.transform.position;
-        dir.y = 0;
-        npc.CharMove.Move(dir, target, speed);
+        // npc.CheckVision();
+        // Vector3 dir = npc.CurrentDestination - npc.transform.position;
+        // dir.y = 0;
+        // npc.CharMove.Move(dir, target, speed);
     }
     public virtual void OnMoveExit(NPCBehaviour npc) {
-        npc.CharMove.Stop();
+        // npc.CharMove.Stop();
     }
 
     public virtual void OnChaseEnter(NPCBehaviour npc) {
@@ -34,15 +34,15 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public virtual void OnChaseExecute(NPCBehaviour npc, Vector3 target) {
         Vector3 dir = target - npc.transform.position;
         dir.y = 0;
-        npc.CharMove.Move(dir, target, RunSpeed);
+        // npc.CharMove.Move(dir, target, RunSpeed);
     }
     public virtual void OnChaseExit(NPCBehaviour npc) {
-        npc.CharMove.Stop();
+        // npc.CharMove.Stop();
     }
 
     public virtual void OnAttackEnter(NPCBehaviour npc) {
-        npc.CharMove.Stop();
-        npc.CharMove.SetRotation(npc.CurrentTarget.transform.position);
+        // npc.CharMove.Stop();
+        // npc.CharMove.SetRotation(npc.CurrentTarget.transform.position);
     }
     public virtual void OnAttackExecute(NPCBehaviour npc) {
 

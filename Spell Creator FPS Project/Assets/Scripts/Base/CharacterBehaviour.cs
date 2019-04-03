@@ -13,8 +13,8 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     /// <summary>
     /// The "intended" vector that the character wants to move
     /// </summary>
-    [SerializeField] protected Vector3 _walkVector;
-    public Vector3 walkVector { get { return _walkVector; } }
+    [SerializeField] protected Vector3 _moveVector;
+    public Vector3 MoveVector { get { return _moveVector; } }
     [SerializeField] public float BaseSpeed { get; protected set; }
     [SerializeField] public float MaxSpeed { get; protected set; }
     public abstract float GetMoveMagnitude();
@@ -46,6 +46,6 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     }
 
     protected void InvokeChangeAnimationState(string stateName) {
-        ChangeAnimationState.Invoke(stateName);
+        ChangeAnimationState?.Invoke(stateName);
     }
 }

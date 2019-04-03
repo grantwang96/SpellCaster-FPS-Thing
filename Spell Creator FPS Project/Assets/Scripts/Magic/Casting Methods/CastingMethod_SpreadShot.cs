@@ -26,8 +26,7 @@ public class CastingMethod_SpreadShot : Spell_CastingMethod {
 
             MagicProjectile magicProjectile = Instantiate(_magicProjectilePrefab, startPosition, caster.GunBarrel.rotation);
             magicProjectile.transform.forward = forward;
-            magicProjectile.InitializeMagic(caster, spell.Effects);
-            magicProjectile.InitializeMagicModifiers(spell.SpellModifiers);
+            magicProjectile.InitializeMagic(caster, spell);
             magicProjectile.InitializePosition(startPosition, forward);
 
             int power = 1;

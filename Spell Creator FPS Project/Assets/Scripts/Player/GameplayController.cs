@@ -101,8 +101,8 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void MouseKeyboardInputs() {
-        _walkVector.x = Input.GetAxis("Horizontal");
-        _walkVector.z = Input.GetAxis("Vertical");
+        _moveVector.x = Input.GetAxis("Horizontal");
+        _moveVector.z = Input.GetAxis("Vertical");
 
         _lookVector.x = Input.GetAxis("Mouse X");
         _lookVector.y = Input.GetAxis("Mouse Y");
@@ -166,8 +166,8 @@ public class GameplayController : CharacterBehaviour {
         _uiPanelsEmpty = panelsEmpty;
         Cursor.lockState = panelsEmpty ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !panelsEmpty;
-        _walkVector.x = panelsEmpty ? _walkVector.x : 0f;
-        _walkVector.z = panelsEmpty ? _walkVector.z : 0f;
+        _moveVector.x = panelsEmpty ? _moveVector.x : 0f;
+        _moveVector.z = panelsEmpty ? _moveVector.z : 0f;
         _lookVector.x = panelsEmpty ? _lookVector.x : 0f;
         _lookVector.y = panelsEmpty ? _lookVector.y : 0f;
     }

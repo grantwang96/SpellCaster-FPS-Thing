@@ -28,12 +28,8 @@ public class SpellManager : MonoBehaviour {
         int index = Random.Range(0, castingMethodsLength);
         Spell_CastingMethod castingMethod = _castingMethods[index];
         index = Random.Range(0, spellEffectsLength);
-        Spell_Effect[] effects = new Spell_Effect[1];
-        Spell_Effect spellEffect = _spellEffects[index];
-        effects[0] = spellEffect;
-        SpellModifier[] spellModifiers = new SpellModifier[1];
-        index = Random.Range(0, spellModifiersLength);
-        spellModifiers[0] = _spellModifiers[index];
+        Spell_Effect[] effects = _spellEffects;
+        SpellModifier[] spellModifiers = _spellModifiers;
         return new Spell(castingMethod, effects, spellModifiers);
     }
 

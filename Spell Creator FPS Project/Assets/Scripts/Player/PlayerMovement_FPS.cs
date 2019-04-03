@@ -17,45 +17,45 @@ public class PlayerMovement_FPS : CharacterMoveController {
 
     // Update is called once per frame
     protected override void Update () {
-        movementVelocity = ProcessGravity(movementVelocity);
-        if(externalForces == null) {
+        _movementVelocity = ProcessGravity(_movementVelocity);
+        if(_externalForces == null) {
             ProcessWalkInput();
         }
 	}
 
     protected override void FixedUpdate() {
-        characterController.Move(movementVelocity * Time.deltaTime);
+        _characterController.Move(_movementVelocity * Time.deltaTime);
     }
 
     private void ProcessWalkInput() {
-        Vector3 inputVector = GameplayController.Instance.walkVector;
+        Vector3 inputVector = GameplayController.Instance.MoveVector;
         Vector3 newMoveVector = new Vector3();
         newMoveVector += transform.right * inputVector.x;
         newMoveVector += transform.forward * inputVector.z;
-        movementVelocity.x = newMoveVector.x * _baseSpeed;
-        movementVelocity.z = newMoveVector.z * _baseSpeed;
+        _movementVelocity.x = newMoveVector.x * _baseSpeed;
+        _movementVelocity.z = newMoveVector.z * _baseSpeed;
     }
 
     private void OnJump() {
-        if (characterController.isGrounded) {
-            movementVelocity.y = jumpForce;
+        if (_characterController.isGrounded) {
+            _movementVelocity.y = jumpForce;
         }
     }
 
     protected override IEnumerator ExternalForceRoutine(Vector3 externalForce) {
-        movementVelocity = externalForce;
+        _movementVelocity = externalForce;
         yield return new WaitForEndOfFrame();
         Vector3 start = externalForce;
-        while (!characterController.isGrounded && (characterController.velocity.x != 0 || characterController.velocity.z != 0)) {
+        while (!_characterController.isGrounded && (_characterController.velocity.x != 0 || _characterController.velocity.z != 0)) {
             yield return null;
         }
         float time = 0f;
-        while(movementVelocity.x != 0 && movementVelocity.z != 0) {
+        while(_movementVelocity.x != 0 && _movementVelocity.z != 0) {
             time += Time.deltaTime;
-            movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
-            movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
+            _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
+            _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
             yield return null;
         }
-        externalForces = null;
+        _externalForces = null;
     }
 }

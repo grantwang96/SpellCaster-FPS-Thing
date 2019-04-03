@@ -13,8 +13,7 @@ public class CastingMethod_SingleShot : Spell_CastingMethod {
         Vector3 startPosition = caster.GunBarrel.position;
         Vector3 direction = caster.GunBarrel.forward;
         MagicProjectile magicProjectile = Instantiate(_magicProjectilePrefab, startPosition, caster.GunBarrel.rotation);
-        magicProjectile.InitializeMagic(caster, spell.Effects);
-        magicProjectile.InitializeMagicModifiers(spell.SpellModifiers);
+        magicProjectile.InitializeMagic(caster, spell);
         magicProjectile.InitializePosition(startPosition, direction);
 
         int power = 1;
@@ -22,6 +21,6 @@ public class CastingMethod_SingleShot : Spell_CastingMethod {
             power += Mathf.FloorToInt(caster.ActiveSpell.holdTime);
         }
 
-        magicProjectile.InitializeStats(_projectileSpeed, _lifeTime, power); // wip
+        magicProjectile.InitializeStats(_projectileSpeed, _lifeTime, power); // wip: Object pooling not implemented yet
     }
 }

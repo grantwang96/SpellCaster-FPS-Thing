@@ -4,8 +4,5 @@ using UnityEngine;
 
 public class EnemyBehaviour : NPCBehaviour {
 
-    protected override void Start() {
-        base.Start();
-        ChangeBrainState(new IdleState(blueprint.GetNewIdleTime));
-    }
+    
 }
