@@ -9,6 +9,8 @@ public abstract class Spell_CastingMethod : SpellComponent {
     
     [SerializeField] protected int manaCost;
     public virtual int ManaCost { get { return manaCost; } }
+    [SerializeField] protected float _intervalTime;
+    public float IntervalTime { get { return _intervalTime; } }
     public enum SpellTiming {
         Instant, Continuous, Charge
     }

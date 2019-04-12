@@ -6,8 +6,17 @@ public class ScanState : BrainState {
 
     [SerializeField] private BrainState _onEnemySeenState;
 
-	public override void Execute() {
-        if (_npcBehaviour.CheckVision()) {
+    private IVision _vision;
+
+    private void Awake() {
+        _vision = _npcBehaviour.GetComponent<IVision>();
+        if(_vision == null) {
+            Debug.LogError($"{name}'s Scan State did not find IVision component!");
+        }
+    }
+
+    public override void Execute() {
+        if (_vision.CheckVision()) {
             _npcBehaviour.ChangeBrainState(_onEnemySeenState);
         }
     }

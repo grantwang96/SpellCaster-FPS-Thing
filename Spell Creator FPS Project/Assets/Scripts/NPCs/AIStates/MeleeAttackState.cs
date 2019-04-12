@@ -25,8 +25,8 @@ public class MeleeAttackState : AttackState {
         }
     }
 
-    public override void Enter(NPCBehaviour behaviour) {
-        base.Enter(behaviour);
+    public override void Enter(BrainState overrideBrainState = null) {
+        base.Enter(overrideBrainState);
         if (_attackComboIndex >= _npcBehaviour.Blueprint.AttackComboMax) { _attackComboIndex = 0; }
         _animController.SetIntParameter("AttackComboIndex", _attackComboIndex);
         _moveController.Stop();
@@ -53,7 +53,6 @@ public class MeleeAttackState : AttackState {
 
     public override void Exit() {
         Debug.Log("Exiting Melee Attack State");
-        _npcBehaviour.Blueprint.OnAttackExit(_npcBehaviour);
         HitBoxesActive = false;
     }
 

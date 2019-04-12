@@ -19,17 +19,9 @@ public class NPCBehaviour : CharacterBehaviour {
     public delegate void BrainStateChangeDelegate(string newStateName);
     public event BrainStateChangeDelegate OnBrainStateChanged;
     
-    // characters this NPC is aware of
-    [SerializeField] protected List<CharacterBehaviour> knownCharacters = new List<CharacterBehaviour>();
-    public List<CharacterBehaviour> KnownCharacters { get { return knownCharacters; } }
-    [SerializeField] protected List<CharacterBehaviour> enemyCharacters = new List<CharacterBehaviour>();
-    public List<CharacterBehaviour> EnemyCharacters { get { return enemyCharacters; } }
     // if the NPC is tracking another Character, this is the target they are tracking
     protected CharacterBehaviour _currentTarget;
     public CharacterBehaviour CurrentTarget { get { return _currentTarget; } }
-    
-    // HACK: REMOVE/MODIFY LATER
-    public Vector3 targetDestination;
 
     protected override void Awake() {
         base.Awake();
@@ -44,6 +36,7 @@ public class NPCBehaviour : CharacterBehaviour {
         }
         BaseSpeed = _blueprint.WalkSpeed;
         MaxSpeed = _blueprint.RunSpeed;
+        
         ChangeBrainState(_startingState);
     }
 
@@ -61,79 +54,20 @@ public class NPCBehaviour : CharacterBehaviour {
     /// Changes the current state in the AI State Machine
     /// </summary>
     /// <param name="brainState"></param>
-    public virtual void ChangeBrainState(BrainState brainState) {
+    public virtual void ChangeBrainState(BrainState brainState, BrainState overrideBrainState = null) {
         // perform any exit operations from the previous state
-        if (_currentBrainState != null) { _currentBrainState.Exit(); }
+        _currentBrainState?.Exit();
 
         // save the new brain state and enter
         _currentBrainState = brainState;
-        _currentBrainState.Enter(this);
+        _currentBrainState?.Enter(overrideBrainState);
 
-        string stateName = _currentBrainState.TriggerName;
+        string stateName = _currentBrainState?.TriggerName ?? string.Empty;
         InvokeChangeAnimationState(stateName);
     }
 
-    // funtion to raycast out to known characters
-    public virtual bool CheckVision() {
-        // TODO: IMPLEMENT THIS FUNCTION
-        for(int i = 0; i < KnownCharacters.Count; i++) {
-            CharacterBehaviour knownCharacter = KnownCharacters[i];
-            float distance = Vector3.Distance(knownCharacter.transform.position, transform.position);
-            float angle = Vector3.Angle(transform.forward, knownCharacter.transform.position - transform.position);
-            if(distance <= Blueprint.VisionRange && angle <= Blueprint.VisionAngle) {
-                Vector3 dir = knownCharacter.Head.position - Head.position;
-                RaycastHit hit;
-                Debug.DrawRay(Head.position, dir, Color.red);
-                if (Physics.Raycast(Head.position, dir, out hit, _blueprint.VisionRange, _blueprint.VisionMask)) {
-                    Debug.Log(hit.transform);
-                    CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                    if (otherCB != null && knownCharacters.Contains(otherCB) && enemyCharacters.Contains(otherCB)) {
-                        _currentTarget = otherCB;
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    public virtual bool CanSeeTarget(Vector3 target) {
-        float distance = Vector3.Distance(target, Head.position);
-        Vector3 targetDir = target - Head.position;
-        Vector3 headForward = Head.forward;
-        headForward.y = 0f;
-        if (distance < Blueprint.VisionRange) {
-            RaycastHit hit;
-            if(Physics.Raycast(Head.position, targetDir, out hit, distance, Blueprint.VisionMask)) {
-                if(hit.transform == CurrentTarget.transform) { return true; }
-            }
-        }
-        return false;
-    }
-
-    public virtual bool IsPathObstructedToTarget(Vector3 target) {
-        NavMeshHit hit;
-        return NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas);
-    }
-
-    public virtual void ClearCurrentTarget() {
-        _currentTarget = null;
-    }
-
-    public virtual void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (!knownCharacters.Contains(characterBehaviour)) {
-            knownCharacters.Add(characterBehaviour);
-        }
-    }
-
-    public virtual void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (knownCharacters.Contains(characterBehaviour)) {
-            knownCharacters.Remove(characterBehaviour);
-        }
-    }
-
     protected virtual void OnDeath(bool isDead) {
-
+        ChangeBrainState(null);
     }
 }
 

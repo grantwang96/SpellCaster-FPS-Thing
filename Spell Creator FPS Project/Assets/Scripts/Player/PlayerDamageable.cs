@@ -8,6 +8,8 @@ public class PlayerDamageable : Damageable {
     public override int Health { get { return _health; } }
     [SerializeField] private int _maxHealth;
     public override int MaxHealth { get { return _maxHealth; } }
+    [SerializeField] private Transform _body;
+    public override Transform Body => _body;
 
     private bool _isDead;
     public override bool IsDead { get { return _isDead; } }

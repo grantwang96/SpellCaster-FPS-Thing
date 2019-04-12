@@ -11,8 +11,8 @@ public class IdleState : BrainState {
 
     private float idleStartTime;
 
-    public override void Enter(NPCBehaviour behaviour) {
-        base.Enter(behaviour);
+    public override void Enter(BrainState overrideBrainState = null) {
+        base.Enter(overrideBrainState);
         idleStartTime = Time.time;
         _npcBehaviour.CharMove.Stop();
         // _npcBehaviour.Blueprint.OnIdleEnter(behaviour);

@@ -26,3 +26,6 @@ MonoBehaviour:
     m_Bits: 2561
   _attackRange: 2
   _attackComboMax: 2
+  _unitTags: []
+  _enemyTags:
+  - PLAYER_UNIT

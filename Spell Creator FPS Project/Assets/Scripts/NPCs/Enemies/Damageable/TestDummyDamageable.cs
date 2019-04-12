@@ -18,6 +18,8 @@ public class TestDummyDamageable : Damageable {
             return _isDead;
         }
     }
+    [SerializeField] private Transform _body;
+    public override Transform Body => _body;
 
     private CharacterMoveController moveController;
 

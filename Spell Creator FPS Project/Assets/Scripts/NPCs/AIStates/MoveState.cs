@@ -13,13 +13,13 @@ public class MoveState : BrainState {
     private bool _pathCalculated;
     private bool _facingTarget;
 
-    public override void Enter(NPCBehaviour behaviour) {
-        base.Enter(behaviour);
-        _npcBehaviour.targetDestination = _moveController.GetNextDestination();
+    public override void Enter(BrainState overrideBrainState = null) {
+        base.Enter(overrideBrainState);
+        Vector3 targetDestination = _moveController.GetNextDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
         _pathCalculated = false;
         // _npcBehaviour.Blueprint.OnMoveEnter(_npcBehaviour);
-        if (!_moveController.SetDestination(_npcBehaviour.targetDestination)) {
+        if (!_moveController.SetDestination(targetDestination)) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedState);
             return;
         }
@@ -51,7 +51,6 @@ public class MoveState : BrainState {
     }
     
     public override void Exit() {
-        _npcBehaviour.Blueprint.OnMoveExit(_npcBehaviour);
         _moveController.OnPathCalculated -= OnPathCalculated;
         _moveController.OnArrivedDestination -= OnArriveDestination;
         base.Exit();

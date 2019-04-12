@@ -34,4 +34,8 @@ public abstract class Spell_Effect : SpellComponent {
     /// <param name="damageable"></param>
     public abstract void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Damageable damageable = null);
     public abstract void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Spell castedSpell, Vector3 position, Damageable damageable = null);
+
+    public virtual void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Collider collider) {
+
+    }
 }

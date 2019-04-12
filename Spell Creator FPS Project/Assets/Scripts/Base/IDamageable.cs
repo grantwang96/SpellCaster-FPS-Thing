@@ -7,6 +7,7 @@ public abstract class Damageable : MonoBehaviour {
     public abstract int Health { get; }
     public abstract int MaxHealth { get; }
     public abstract bool IsDead { get; }
+    public abstract Transform Body { get; } // center of the Damageable object
 
     public delegate void HealthChanged(int health);
     public event HealthChanged OnHealthChanged;

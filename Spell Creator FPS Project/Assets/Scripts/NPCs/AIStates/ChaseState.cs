@@ -5,32 +5,37 @@ using UnityEngine.AI;
 
 // movement specifically during combat
 public class ChaseState : MoveState {
-    
+
     [SerializeField] private BrainState _onTargetSeenState;
     [SerializeField] private BrainState _onTargetOutOfSightState;
     [SerializeField] private BrainState _onTargetLostState;
 
+    private IVision _vision;
     private Vector3 targetLastKnownPosition;
 
-    public override void Enter(NPCBehaviour behaviour) {
-        targetLastKnownPosition = behaviour.CurrentTarget.transform.position;
-        _npcBehaviour.targetDestination = targetLastKnownPosition;
+    private void Awake() {
+        _vision = _npcBehaviour.GetComponent<IVision>();
+    }
+
+    public override void Enter(BrainState overrideBrainState = null) {
+        targetLastKnownPosition = _vision.CurrentTarget.transform.position;
         _moveController.OnPathCalculated += OnPathCalculated;
         _moveController.OnArrivedDestination += OnArriveDestination;
-        if (_npcBehaviour.CurrentTarget == null) {
+        if (_vision.CurrentTarget == null) {
+            Debug.Log("Target was null!");
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }
     }
 
     public override void Execute() {
-        bool canSeeTarget = _npcBehaviour.CanSeeTarget(_npcBehaviour.CurrentTarget.GetBodyPosition());
+        bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour)) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedState);
         }
-        _npcBehaviour.CharMove.SetRotation(targetLastKnownPosition);
+        _moveController.SetRotation(targetLastKnownPosition);
         if (canSeeTarget) {
-            targetLastKnownPosition = _npcBehaviour.CurrentTarget.transform.position;
+            targetLastKnownPosition = _vision.CurrentTarget.transform.position;
             _moveController.SetDestination(targetLastKnownPosition);
         }
     }
@@ -43,7 +48,7 @@ public class ChaseState : MoveState {
     }
 
     protected override void OnArriveDestination() {
-        bool canSeeTarget = _npcBehaviour.CanSeeTarget(_npcBehaviour.CurrentTarget.GetBodyPosition());
+        bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedState);
             return;

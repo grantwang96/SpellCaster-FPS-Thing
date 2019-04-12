@@ -10,6 +10,8 @@ public class NPCDamageable : Damageable {
     public override int MaxHealth => _maxHealth;
     [SerializeField] private bool _isDead;
     public override bool IsDead => _isDead;
+    [SerializeField] private Transform _body;
+    public override Transform Body => _body;
 
     private NPCMoveController moveController;
     private NPCBehaviour npcBehaviour;
@@ -28,7 +30,6 @@ public class NPCDamageable : Damageable {
             parentDamageable.TakeDamage(damage);
             return;
         }
-        Debug.Log(name + " has received " + damage + " damage!");
         _health -= damage;
     }
 

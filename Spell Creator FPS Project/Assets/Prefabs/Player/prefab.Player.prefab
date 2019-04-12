@@ -1060,11 +1060,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feda22a22abb1fd4db22bbffc7d23cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _walkVector: {x: 0, y: 0, z: 0}
+  _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4107163916722246}
   _headTransform: {fileID: 4739983236925610}
   _animHandler: {fileID: 0}
-  _friendly: 1
+  _unitTags:
+  - PLAYER_UNIT
   _controlScheme: 0
   _uiPanelsEmpty: 1
   _lookVector: {x: 0, y: 0}
@@ -1086,7 +1087,7 @@ MonoBehaviour:
   _mass: 1
   _linearDrag: 0.5
   _performingAction: 0
-  movementVelocity: {x: 0, y: 0, z: 0}
+  _movementVelocity: {x: 0, y: 0, z: 0}
   lookSpeed: 150
   jumpForce: 8
 --- !u!114 &114216178686495076
@@ -1210,7 +1211,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 31
     m_FontStyle: 3
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 3
     m_MaxSize: 40
     m_Alignment: 5
@@ -1362,7 +1363,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 31
     m_FontStyle: 3
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 3
     m_MaxSize: 40
     m_Alignment: 5

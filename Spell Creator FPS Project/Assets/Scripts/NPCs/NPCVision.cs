@@ -6,7 +6,7 @@ public class NPCVision : MonoBehaviour, IVision{
 
     private List<CharacterBehaviour> _knownCharacters = new List<CharacterBehaviour>();
     public List<CharacterBehaviour> KnownCharacters => _knownCharacters;
-    private List<CharacterBehaviour> _enemyCharacters = new List<CharacterBehaviour>();
+    private List<CharacterBehaviour> _enemyCharacters = new List<CharacterBehaviour>(); // WE SHOULD PHASE THIS OUT AND USE BLUEPRINT TO CHECK IF ENEMY TARGET(tag system?)
     public List<CharacterBehaviour> EnemyCharacters => _enemyCharacters;
     private CharacterBehaviour _currentTarget;
     public CharacterBehaviour CurrentTarget => _currentTarget;
@@ -18,7 +18,6 @@ public class NPCVision : MonoBehaviour, IVision{
     }
 
     public virtual bool CheckVision() {
-        // TODO: IMPLEMENT THIS FUNCTION
         for (int i = 0; i < KnownCharacters.Count; i++) {
             CharacterBehaviour knownCharacter = KnownCharacters[i];
             float distance = Vector3.Distance(knownCharacter.transform.position, transform.position);
@@ -26,11 +25,9 @@ public class NPCVision : MonoBehaviour, IVision{
             if (distance <= _npcBehaviour.Blueprint.VisionRange && angle <= _npcBehaviour.Blueprint.VisionAngle) {
                 Vector3 dir = knownCharacter.Head.position - _npcBehaviour.Head.position;
                 RaycastHit hit;
-                Debug.DrawRay(_npcBehaviour.Head.position, dir, Color.red);
                 if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
-                    Debug.Log(hit.transform);
                     CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                    if (otherCB != null && _knownCharacters.Contains(otherCB) && _enemyCharacters.Contains(otherCB)) {
+                    if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.Blueprint.IsEnemy(otherCB)) {
                         _currentTarget = otherCB;
                         return true;
                     }
@@ -76,6 +73,7 @@ public class NPCVision : MonoBehaviour, IVision{
 /// </summary>
 public interface IVision {
     // WIP: these should return values
+    CharacterBehaviour CurrentTarget { get; }
 
     bool CheckVision(); // checks general vision and returns first custom object it sees
     bool CanSeeTarget(Vector3 target); // checks to see if this target is viewable(if it has one)

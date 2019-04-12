@@ -25,15 +25,18 @@ public class Spell {
         _effects = effects;
         _spellModifiers = spellModifiers;
         ManaCost = _castingMethod.ManaCost;
+        IntervalTime = _castingMethod.IntervalTime;
         for(int i = 0; i < _effects.Length; i++) {
+            IntervalTime += _effects[i]?.IntervalTime ?? 0;
             ManaCost += _effects[i]?.ManaCost ?? 0;
+            Power += _effects[i]?.BasePower ?? 0;
         }
         if(spellModifiers != null) {
             for (int i = 0; i < spellModifiers.Length; i++) {
                 _spellModifiers[i]?.SetupSpell(this);
             }
         }
-        IntervalTime = .25f;
+        IntervalTime = Mathf.Clamp(IntervalTime, 0f, 100f);
         MaxChargeTime = 3f;
     }
 
@@ -80,6 +83,7 @@ public class ActiveSpell {
     public float maxHoldTime;
     public int baseManaCost;
     public int totalManaCost;
+    public Vector3 initialHitPoint;
 }
 
 /// <summary>

@@ -38,8 +38,8 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     public delegate void ChangeAnimationStateCallback(string stateName, params int[] args);
     public event ChangeAnimationStateCallback ChangeAnimationState;
 
-    [SerializeField] protected bool _friendly;
-    public bool Friendly { get { return _friendly; } }
+    [SerializeField] protected List<string> _unitTags = new List<string>(); // can dynamically change what type of tags exist on this character
+    public List<string> UnitTags => _unitTags;
     
     protected virtual void Awake() {
         _animHandler = GetComponent<CharacterAnimationHandler>();

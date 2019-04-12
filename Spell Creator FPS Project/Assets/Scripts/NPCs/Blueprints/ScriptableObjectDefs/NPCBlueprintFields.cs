@@ -31,4 +31,10 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public float AttackRange { get { return _attackRange; } }
     [SerializeField] protected int _attackComboMax;
     public int AttackComboMax { get { return _attackComboMax; } }
+
+    [SerializeField] private string[] _unitTags;
+    public string[] UnitTags => _unitTags;
+
+    [SerializeField] private string[] _enemyTags;
+    public string[] EnemyTags => _enemyTags;
 }

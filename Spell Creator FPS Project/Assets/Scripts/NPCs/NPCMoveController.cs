@@ -47,15 +47,19 @@ public class NPCMoveController : CharacterMoveController {
         base.Start();
         _baseSpeed = _npcBehaviour.Blueprint.WalkSpeed;
         _maxSpeed = _npcBehaviour.Blueprint.RunSpeed;
+        _destinationArrivalDistance = _npcBehaviour.Blueprint.AttackRange;
     }
 
     protected override void Update() {
-        // move character towards current destination
+        ProcessMovement();
+    }
+
+    // move character towards current destination if traveling
+    protected virtual void ProcessMovement() {
         if (_traveling) {
             Move();
             CheckArrivedDestination();
-        }
-        else{
+        } else {
             SlowDown();
         }
     }
@@ -115,6 +119,12 @@ public class NPCMoveController : CharacterMoveController {
         NavMeshHit hit;
         return NavMesh.Raycast(transform.position, target, out hit, NavMesh.AllAreas);
     }
+
+    public virtual void ClearCurrentDestination() {
+        _path.ClearCorners();
+        _pathIndex = 0;
+        _traveling = false;
+    }
     
     // move the character at this speed in this direction
     protected virtual void Move() {
@@ -127,8 +137,6 @@ public class NPCMoveController : CharacterMoveController {
 
     public virtual void Stop() {
         _traveling = false;
-        // _movementVelocity.x = 0f;
-        // _movementVelocity.z = 0f;
     }
 
     private void SlowDown() {
