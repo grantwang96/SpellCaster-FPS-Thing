@@ -4,9 +4,9 @@ using UnityEngine;
 
 public abstract partial class NPCBlueprint : ScriptableObject {
 
-    public virtual bool CanAttack(NPCBehaviour npc) {
-        if(npc.CurrentTarget == null) { return false; }
-        float distance = Vector3.Distance(npc.transform.position, npc.CurrentTarget.transform.position);
+    public virtual bool CanAttack(NPCBehaviour npc, CharacterBehaviour currentTarget) {
+        if(currentTarget == null) { return false; }
+        float distance = Vector3.Distance(npc.transform.position, currentTarget.transform.position);
         return distance <= AttackRange;
     }
 

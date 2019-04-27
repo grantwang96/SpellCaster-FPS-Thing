@@ -18,4 +18,6 @@ MonoBehaviour:
   _chargeTime: 0
   _intervalTime: 0
   _basePower: 1
-  _holdPowerModifier: 10
+  _baseHoldRange: 7.5
+  _holdPowerModifier: 20
+  _colliderHoldPowerModifier: 5

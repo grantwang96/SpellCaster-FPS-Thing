@@ -24,6 +24,8 @@ MonoBehaviour:
   _visionMask:
     serializedVersion: 2
     m_Bits: 2561
+  _attackPhases:
+  - _normalAttack: 1
   _attackRange: 2
   _attackComboMax: 2
   _unitTags: []

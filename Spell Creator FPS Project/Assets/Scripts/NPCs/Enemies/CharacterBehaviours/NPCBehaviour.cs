@@ -18,10 +18,6 @@ public class NPCBehaviour : CharacterBehaviour {
     [SerializeField] protected BrainState _startingState; // how the NPC should behave at start (usually idle)
     public delegate void BrainStateChangeDelegate(string newStateName);
     public event BrainStateChangeDelegate OnBrainStateChanged;
-    
-    // if the NPC is tracking another Character, this is the target they are tracking
-    protected CharacterBehaviour _currentTarget;
-    public CharacterBehaviour CurrentTarget { get { return _currentTarget; } }
 
     protected override void Awake() {
         base.Awake();

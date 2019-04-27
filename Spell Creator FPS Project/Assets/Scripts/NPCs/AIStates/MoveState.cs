@@ -15,10 +15,9 @@ public class MoveState : BrainState {
 
     public override void Enter(BrainState overrideBrainState = null) {
         base.Enter(overrideBrainState);
-        Vector3 targetDestination = _moveController.GetNextDestination();
+        Vector3 targetDestination = _moveController.GetNextIdleDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
         _pathCalculated = false;
-        // _npcBehaviour.Blueprint.OnMoveEnter(_npcBehaviour);
         if (!_moveController.SetDestination(targetDestination)) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedState);
             return;
@@ -27,12 +26,7 @@ public class MoveState : BrainState {
 
     public override void Execute() {
         if (!_pathCalculated) { Debug.Log(_npcBehaviour.name + " path is pending..."); return; }
-
-        _facingTarget = _npcBehaviour.CurrentTarget != null;
         Vector3 lookTarget = _moveController.CurrentPathCorner;
-        if (_facingTarget) {
-            lookTarget = _npcBehaviour.CurrentTarget.transform.position;
-        }
         _npcBehaviour.CharMove.SetRotation(lookTarget);
         base.Execute();
     }

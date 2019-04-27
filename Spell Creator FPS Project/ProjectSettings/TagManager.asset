@@ -17,10 +17,10 @@ TagManager:
   - Player
   - Spell
   - Enemy
-  - Pickupable
+  - Pickup
   - DetectionRadius
   - Weapon
-  - 
+  - Prop
   - 
   - 
   - 

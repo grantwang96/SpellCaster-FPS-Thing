@@ -9,4 +9,5 @@ using UnityEngine;
 public abstract class AttackState : BrainState {
     
     [SerializeField] protected float _duration;
+    [SerializeField] protected NPCVision _npcVision;
 }

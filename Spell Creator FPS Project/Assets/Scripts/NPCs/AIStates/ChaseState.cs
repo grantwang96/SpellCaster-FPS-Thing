@@ -30,7 +30,7 @@ public class ChaseState : MoveState {
 
     public override void Execute() {
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
-        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour)) {
+        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedState);
         }
         _moveController.SetRotation(targetLastKnownPosition);

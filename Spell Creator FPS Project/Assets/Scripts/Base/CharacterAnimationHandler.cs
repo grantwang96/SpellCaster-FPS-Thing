@@ -32,6 +32,18 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
             bodyRoot.localEulerAngles.x, bodyRoot.localEulerAngles.y, -val * tiltLimit);
     }
 
+    public virtual void PlayAnimation(string animName) {
+        anim.Play(animName);
+    }
+
+    public virtual void StopCurrentAnimation() {
+        anim.StopPlayback();
+    }
+
+    public virtual void SetTrigger(string triggerName) {
+        anim.SetTrigger(triggerName);
+    }
+
     public virtual bool IsStateByName(string name) {
         return anim.GetCurrentAnimatorStateInfo(0).IsName(name);
     }

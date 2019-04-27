@@ -11,4 +11,6 @@ public static partial class GameplayValues {
     public const string PlayerUnitTag = "PLAYER_UNIT";
     public const string PlayerFriendlyUnitTag = "PLAYER_FRIENDLY_UNIT";
     public const string PlayerEnemyUnitTag = "PLAYER_ENEMY_UNIT";
+
+    public const string NPCContinueComboAttackId = "CONTINUE_COMBO_ATTACK";
 }

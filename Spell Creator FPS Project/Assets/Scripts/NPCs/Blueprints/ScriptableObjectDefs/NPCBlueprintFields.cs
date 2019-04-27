@@ -27,6 +27,8 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     [SerializeField] protected LayerMask _visionMask;
     public LayerMask VisionMask { get { return _visionMask; } }
 
+    [SerializeField] protected AttackPhase[] _attackPhases;
+    public AttackPhase[] AttackPhases => _attackPhases;
     [SerializeField] protected float _attackRange;
     public float AttackRange { get { return _attackRange; } }
     [SerializeField] protected int _attackComboMax;
@@ -37,4 +39,15 @@ public abstract partial class NPCBlueprint : ScriptableObject {
 
     [SerializeField] private string[] _enemyTags;
     public string[] EnemyTags => _enemyTags;
+}
+
+[System.Serializable]
+public class AttackPhase { // determines odds of selecting what type of attack to use
+    [Range(0f, 1f)] [SerializeField] protected float _normalAttack;
+    public float NormalAttack => _normalAttack;
+    [SerializeField] public float SpecialMove {
+        get {
+            return 1f - _normalAttack;
+        }
+    }
 }
