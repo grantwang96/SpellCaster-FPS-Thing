@@ -48,10 +48,6 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         return anim.GetCurrentAnimatorStateInfo(0).length;
     }
 
-    public virtual string GetCurrentAnimationStateName() {
-        return anim.GetCurrentAnimatorStateInfo(0).ToString();
-    }
-
     public virtual void SetIntParameter(string parameter, int num) {
         if (anim.GetInteger(parameter) != -1) {
             anim.SetInteger(parameter, num);

@@ -19,7 +19,7 @@ MonoBehaviour:
   _runSpeed: 5
   _idleTimeMinimum: 4
   _idleTimeMaximum: 6
-  _visionRange: 10
+  _visionRange: 30
   _visionAngle: 80
   _visionMask:
     serializedVersion: 2

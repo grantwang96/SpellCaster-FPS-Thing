@@ -1600,6 +1600,11 @@ Prefab:
       propertyPath: _hitBoxes.Array.data[0]
       value: 
       objectReference: {fileID: 315487716}
+    - target: {fileID: 135508433163298396, guid: 57cd213c353e74c4988cb1f23da16a0b,
+        type: 2}
+      propertyPath: m_Radius
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57cd213c353e74c4988cb1f23da16a0b, type: 2}
   m_IsPrefabAsset: 0
