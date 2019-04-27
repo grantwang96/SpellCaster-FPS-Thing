@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class MoveState : BrainState {
-
-    [SerializeField] protected BrainState _onTargetReachedState;
+    
+    // for the normal move state, you probably should just set "idle" as the one brain state in array
+    [SerializeField] protected BrainState[] _onTargetReachedStates;
     [SerializeField] private float _overrideCancelTime;
 
     [SerializeField] protected NPCMoveController _moveController;
@@ -15,31 +16,26 @@ public class MoveState : BrainState {
 
     public override void Enter(BrainState overrideBrainState = null) {
         base.Enter(overrideBrainState);
-        Vector3 targetDestination = _moveController.GetNextDestination();
+        Vector3 targetDestination = _moveController.GetNextIdleDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
         _pathCalculated = false;
         // _npcBehaviour.Blueprint.OnMoveEnter(_npcBehaviour);
         if (!_moveController.SetDestination(targetDestination)) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedState);
+            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[0]);
             return;
         }
     }
 
     public override void Execute() {
         if (!_pathCalculated) { Debug.Log(_npcBehaviour.name + " path is pending..."); return; }
-
-        _facingTarget = _npcBehaviour.CurrentTarget != null;
         Vector3 lookTarget = _moveController.CurrentPathCorner;
-        if (_facingTarget) {
-            lookTarget = _npcBehaviour.CurrentTarget.transform.position;
-        }
         _npcBehaviour.CharMove.SetRotation(lookTarget);
         base.Execute();
     }
 
     protected virtual void OnPathCalculated(NavMeshPathStatus status) {
         if(status == NavMeshPathStatus.PathInvalid) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedState);
+            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[0]);
             return;
         }
         _moveController.OnArrivedDestination += OnArriveDestination;
@@ -47,7 +43,7 @@ public class MoveState : BrainState {
     }
 
     protected virtual void OnArriveDestination() {
-        _npcBehaviour.ChangeBrainState(_onTargetReachedState);
+        _npcBehaviour.ChangeBrainState(_onTargetReachedStates[0]);
     }
     
     public override void Exit() {

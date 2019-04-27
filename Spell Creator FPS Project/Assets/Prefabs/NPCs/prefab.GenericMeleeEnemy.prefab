@@ -404,6 +404,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1767324195382670
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4407388368904692}
+  - component: {fileID: 114911393473976966}
+  m_Layer: 11
+  m_Name: MeleeAttack_0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1780209797702460
 GameObject:
   m_ObjectHideFlags: 1
@@ -476,7 +492,7 @@ GameObject:
   - component: {fileID: 4487071711983486}
   - component: {fileID: 114648719597348348}
   m_Layer: 11
-  m_Name: AttackState
+  m_Name: MeleeAttack_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -695,6 +711,19 @@ Transform:
   m_Father: {fileID: 4454256516488214}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4407388368904692
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767324195382670}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4465758820062802}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4425764811352246
 Transform:
   m_ObjectHideFlags: 1
@@ -754,6 +783,7 @@ Transform:
   - {fileID: 4999387198712640}
   - {fileID: 4861305966922928}
   - {fileID: 4008029670839990}
+  - {fileID: 4407388368904692}
   - {fileID: 4487071711983486}
   m_Father: {fileID: 4425764811352246}
   m_RootOrder: 1
@@ -769,7 +799,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4642887142984244
 Transform:
@@ -1088,7 +1118,8 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 114565834472377426}
   _npcBehaviour: {fileID: 114862455297173096}
-  _onTargetReachedState: {fileID: 114743803374490666}
+  _onTargetReachedStates:
+  - {fileID: 114743803374490666}
   _overrideCancelTime: 5
   _moveController: {fileID: 114193879206027700}
 --- !u!114 &114107591437060838
@@ -1117,6 +1148,7 @@ MonoBehaviour:
   _health: 0
   _maxHealth: 0
   _isDead: 0
+  _body: {fileID: 4094145307567022}
 --- !u!114 &114193879206027700
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1205,7 +1237,8 @@ MonoBehaviour:
   _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
-  _onTargetReachedState: {fileID: 114648719597348348}
+  _onTargetReachedStates:
+  - {fileID: 114911393473976966}
   _overrideCancelTime: 0
   _moveController: {fileID: 114193879206027700}
   _onTargetSeenState: {fileID: 114640306952357054}
@@ -1226,13 +1259,14 @@ MonoBehaviour:
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
   _duration: 1
-  _onTargetInRangeState: {fileID: 114648719597348348}
+  _npcVision: {fileID: 114107591437060838}
+  _onTargetInRangeState: {fileID: 114640306952357054}
   _onTargetOutOfRangeState: {fileID: 114640306952357054}
   _hitBoxes: []
   _timeActivateHitBoxes: 0.25
   _timeDeactivateHitBoxes: 0.75
-  _attackName: Attack
-  _attackComboIndex: 0
+  _attackName: 
+  _attackComboIndex: 1
   _animController: {fileID: 114087730851891354}
   _moveController: {fileID: 114193879206027700}
 --- !u!114 &114743803374490666
@@ -1275,6 +1309,31 @@ MonoBehaviour:
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 114743803374490666}
+--- !u!114 &114911393473976966
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767324195382670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 283fb30e867a997469beee061704f31f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerName: Attack
+  _childrenStates: []
+  _npcBehaviour: {fileID: 114862455297173096}
+  _duration: 1
+  _npcVision: {fileID: 114107591437060838}
+  _onTargetInRangeState: {fileID: 114648719597348348}
+  _onTargetOutOfRangeState: {fileID: 114640306952357054}
+  _hitBoxes: []
+  _timeActivateHitBoxes: 0.25
+  _timeDeactivateHitBoxes: 0.75
+  _attackName: 
+  _attackComboIndex: 0
+  _animController: {fileID: 114087730851891354}
+  _moveController: {fileID: 114193879206027700}
 --- !u!135 &135508433163298396
 SphereCollider:
   m_ObjectHideFlags: 1

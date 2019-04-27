@@ -4,9 +4,10 @@ using UnityEngine;
 
 
 /// <summary>
-/// Runs for the duration of an attack animation
+/// Each attack state should reference one attack
 /// </summary>
 public abstract class AttackState : BrainState {
     
     [SerializeField] protected float _duration;
+    [SerializeField] protected NPCVision _npcVision;
 }

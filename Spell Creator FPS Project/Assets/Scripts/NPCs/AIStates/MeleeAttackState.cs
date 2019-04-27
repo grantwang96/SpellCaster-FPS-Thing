@@ -27,8 +27,13 @@ public class MeleeAttackState : AttackState {
 
     public override void Enter(BrainState overrideBrainState = null) {
         base.Enter(overrideBrainState);
-        if (_attackComboIndex >= _npcBehaviour.Blueprint.AttackComboMax) { _attackComboIndex = 0; }
-        _animController.SetIntParameter("AttackComboIndex", _attackComboIndex);
+        if (string.IsNullOrEmpty(_attackName)) {
+            _animController.SetIntParameter(GameplayValues.Combat.NPCAttackComboIndexId, _attackComboIndex);
+            _animController.SetTrigger(GameplayValues.Combat.NPCNormalAttackTriggerId);
+        } else {
+            _animController.PlayAnimation(_attackName);
+        }
+        HitBoxesActive = false;
         _moveController.Stop();
     }
 
@@ -38,14 +43,13 @@ public class MeleeAttackState : AttackState {
             HitBoxesActive = true;
         } else if (currentTime > _timeDeactivateHitBoxes) {
             HitBoxesActive = false;
-            if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour)) {
-                _attackComboIndex++;
+            if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _npcVision.CurrentTarget)) {
                 _npcBehaviour.ChangeBrainState(_onTargetInRangeState);
                 return;
             }
         }
         if (currentTime >= 1f) {
-            _attackComboIndex = 0;
+            _animController.ResetTrigger("Attack");
             _npcBehaviour.ChangeBrainState(_onTargetOutOfRangeState);
         }
         base.Execute();
@@ -58,7 +62,7 @@ public class MeleeAttackState : AttackState {
 
     private void SetHitBoxesActive(bool active) {
         foreach(Collider hitBox in _hitBoxes) {
-            hitBox.enabled = active;
+            hitBox.gameObject.SetActive(active);
         }
     }
 }

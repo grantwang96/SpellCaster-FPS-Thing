@@ -24,9 +24,9 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
 
     public override void Initialize(int x, int y) {
         SpellComponentData componentData = new SpellComponentData(x, y) {
-            itemId = GameplayValues.EmptyInventoryItemId,
-            Name = GameplayValues.EmptyUIElementId,
-            Text = GameplayValues.EmptySpellStageText,
+            itemId = GameplayValues.UI.EmptyInventoryItemId,
+            Name = GameplayValues.UI.EmptyUIElementId,
+            Text = GameplayValues.UI.EmptySpellStageText,
         };
         SetValue(componentData);
     }
@@ -35,17 +35,17 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
         SpellComponentData componentData = initData as SpellComponentData;
         if (componentData == null) {
             componentData = new SpellComponentData(initData.X, initData.Y) {
-                itemId = GameplayValues.EmptyInventoryItemId,
-                Name = GameplayValues.EmptyUIElementId,
-                Text = GameplayValues.EmptySpellStageText,
+                itemId = GameplayValues.UI.EmptyInventoryItemId,
+                Name = GameplayValues.UI.EmptyUIElementId,
+                Text = GameplayValues.UI.EmptySpellStageText,
             };
         }
         xCoord = initData.X;
         yCoord = initData.Y;
         _id = componentData.itemId;
-        if (componentData.itemId == GameplayValues.EmptyInventoryItemId) {
-            _text.text = GameplayValues.EmptySpellStageText;
-            name = GameplayValues.EmptyUIElementId;
+        if (componentData.itemId == GameplayValues.UI.EmptyInventoryItemId) {
+            _text.text = GameplayValues.UI.EmptySpellStageText;
+            name = GameplayValues.UI.EmptyUIElementId;
             if (_image != null) {
                 Destroy(_image.gameObject);
             }

@@ -10,6 +10,6 @@ public class NPCAnimController : CharacterAnimationHandler {
     }
 
 	protected void OnNPCIdle() {
-        anim.SetTrigger("Attack");
+        // anim.SetTrigger("Attack");
     }
 }

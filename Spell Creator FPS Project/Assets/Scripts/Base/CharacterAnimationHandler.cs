@@ -58,10 +58,28 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         }
     }
 
+    public virtual void SetTrigger(string triggerName) {
+        anim.SetTrigger(triggerName);
+    }
+
+    public virtual void ResetTrigger(string triggerName) {
+        anim.ResetTrigger(triggerName);
+    }
+
+    public virtual void PlayAnimation(string animationName) {
+        anim.Play(animationName);
+    }
+
+    public virtual void StopAnimation() {
+        anim.StopPlayback();
+    }
+
     protected virtual void OnStateChange(string stateName, params int[] args) {
+        /*
         if(stateName == string.Empty) {
             return;
         }
         anim.SetTrigger(stateName);
+        */
     }
 }

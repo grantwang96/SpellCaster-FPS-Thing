@@ -17,8 +17,8 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
 
     public override void Initialize(int x, int y) {
         InventoryViewCellData inventoryVCInitData = new InventoryViewCellData(x, y) {
-            itemId = GameplayValues.EmptyInventoryItemId,
-            Name = GameplayValues.EmptyUIElementId
+            itemId = GameplayValues.UI.EmptyInventoryItemId,
+            Name = GameplayValues.UI.EmptyUIElementId
         };
         SetValue(inventoryVCInitData);
     }
@@ -31,8 +31,8 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         InventoryViewCellData inventoryVCInitData = data as InventoryViewCellData;
         if (inventoryVCInitData == null) {
             inventoryVCInitData = new InventoryViewCellData(data.X, data.Y) {
-                itemId = GameplayValues.EmptyInventoryItemId,
-                Name = GameplayValues.EmptyUIElementId
+                itemId = GameplayValues.UI.EmptyInventoryItemId,
+                Name = GameplayValues.UI.EmptyUIElementId
             };
         }
         _id = inventoryVCInitData.itemId;
@@ -41,7 +41,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         xCoord = inventoryVCInitData.X;
         yCoord = inventoryVCInitData.Y;
 
-        if (_id.Equals(GameplayValues.EmptyInventoryItemId)) {
+        if (_id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
             _icon.enabled = false;
             return;
         }

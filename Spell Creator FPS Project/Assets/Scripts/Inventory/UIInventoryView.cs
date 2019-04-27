@@ -89,7 +89,7 @@ public class UIInventoryView : UISubPanel, IUIViewGridParent {
             for(int j = 0; j < _columnSize; j++) {
                 int itemIndex = columnMod + j;
                 InventoryViewCellData initData = new InventoryViewCellData(i, j) {
-                    itemId = GameplayValues.EmptyInventoryItemId
+                    itemId = GameplayValues.UI.EmptyInventoryItemId
                 };
                 if (itemIndex + startingIndex >= _items.Count) {
                     _inventoryGrid.SetInteractableItem(i, j, initData);

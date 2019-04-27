@@ -30,8 +30,8 @@ public class ChaseState : MoveState {
 
     public override void Execute() {
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
-        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour)) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedState);
+        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
+            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
         }
         _moveController.SetRotation(targetLastKnownPosition);
         if (canSeeTarget) {
@@ -50,7 +50,7 @@ public class ChaseState : MoveState {
     protected override void OnArriveDestination() {
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedState);
+            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
             return;
         }
         _npcBehaviour.ChangeBrainState(_onTargetLostState);

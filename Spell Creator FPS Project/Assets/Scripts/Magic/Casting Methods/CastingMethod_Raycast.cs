@@ -14,10 +14,16 @@ public class CastingMethod_Raycast : Spell_CastingMethod {
 
     protected override void CastSpell(ISpellCaster caster, Spell spell) {
         RaycastHit hit;
-        if(Physics.SphereCast(caster.GunBarrel.position, _radius, caster.GunBarrel.forward, out hit, _maxEffectiveRange, _effectiveLayerMask, QueryTriggerInteraction.Ignore)) {
+        if (Physics.SphereCast(caster.GunBarrel.position, _radius, caster.GunBarrel.forward, out hit, _maxEffectiveRange, _effectiveLayerMask, QueryTriggerInteraction.Ignore)) {
             Damageable damageable = hit.transform.GetComponent<Damageable>();
-            for (int i = 0; i < spell.Effects.Length; i++) {
-                spell.Effects[i].TriggerEffect(caster, spell.Power, spell, damageable);
+            if (damageable != null) {
+                for (int i = 0; i < spell.Effects.Length; i++) {
+                    spell.Effects[i].TriggerEffect(caster, spell.Power, spell, damageable);
+                }
+            } else {
+                for (int i = 0; i < spell.Effects.Length; i++) {
+                    spell.Effects[i].TriggerEffect(caster, spell.Power, spell, hit.collider);
+                }
             }
         }
     }

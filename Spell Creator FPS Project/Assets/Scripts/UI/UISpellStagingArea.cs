@@ -118,7 +118,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     private void OnSpellComponentSelected(IUIInteractable interactable) {
         string id = interactable.Id;
-        if (id.Equals(GameplayValues.EmptyInventoryItemId)) {
+        if (id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
             return;
         }
         OnSpellSlotSelected?.Invoke(id);

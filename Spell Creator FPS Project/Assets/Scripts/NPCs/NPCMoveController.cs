@@ -25,8 +25,8 @@ public class NPCMoveController : CharacterMoveController {
     public delegate void ArrivedDestinationDelegate();
     public event ArrivedDestinationDelegate OnArrivedDestination;
 
-    protected NavMeshPath _path;
-    public Vector3[] Path { get { return _path.corners; } }
+    protected Vector3[] _path;
+    public Vector3[] Path { get { return _path; } }
     [SerializeField] protected int _pathIndex;
 
     public bool NextPathCorner() {
@@ -64,7 +64,7 @@ public class NPCMoveController : CharacterMoveController {
         }
     }
 
-    public virtual Vector3 GetNextDestination() {
+    public virtual Vector3 GetNextIdleDestination() {
         Vector3 randomLocation = transform.position + Random.onUnitSphere * 10f; // WIP: magic af number
         randomLocation.y = transform.position.y;
 
@@ -76,8 +76,15 @@ public class NPCMoveController : CharacterMoveController {
     }
 
     public virtual bool SetDestination(Vector3 target) {
+        // early out if we can directly path to the target here
+        NavMeshHit hit;
+        if (!NavMesh.Raycast(_agent.nextPosition, target, out hit, NavMesh.AllAreas)) {
+            OnPathSet(new Vector3[1] { target });
+            return true;
+        }
+
         if (_agent.pathPending) { StopCoroutine(CalculatePath()); }
-        _path = new NavMeshPath();
+        _path = null;
         _agent.nextPosition = transform.position;
         bool success = _agent.SetDestination(target);
         StartCoroutine(CalculatePath());
@@ -86,10 +93,14 @@ public class NPCMoveController : CharacterMoveController {
 
     private IEnumerator CalculatePath() {
         _pathPending = true;
-        while (_agent.pathPending) { yield return null; }
+        while (_agent.pathPending) { yield return new WaitForEndOfFrame(); }
         _pathPending = false;
+        OnPathSet(_agent.path.corners);
+    }
+
+    private void OnPathSet(Vector3[] newPath) {
         _agent.isStopped = true;
-        _path = _agent.path;
+        _path = newPath;
         _pathIndex = 0;
         NextPathCorner();
         _currentPathCorner = Path[_pathIndex];
@@ -108,7 +119,7 @@ public class NPCMoveController : CharacterMoveController {
         if (!NextPathCorner()) {
             _traveling = false;
             _movementVelocity = Vector3.zero;
-            _path.ClearCorners();
+            _path = null;
             OnArrivedDestination?.Invoke();
             return;
         }
@@ -121,7 +132,7 @@ public class NPCMoveController : CharacterMoveController {
     }
 
     public virtual void ClearCurrentDestination() {
-        _path.ClearCorners();
+        _path = null;
         _pathIndex = 0;
         _traveling = false;
     }
@@ -140,12 +151,12 @@ public class NPCMoveController : CharacterMoveController {
     }
 
     private void SlowDown() {
-        // BUG: NEED TO ACCOUNT FOR GRAVITY
-        if(Mathf.Approximately(_movementVelocity.magnitude, 0f)) {
-            _movementVelocity = Vector3.zero;
+        float gravity = _movementVelocity.y;
+        if (Mathf.Approximately(_movementVelocity.magnitude, 0f)) {
+            _movementVelocity = Vector3.down * gravity;
             return;
         }
-        _movementVelocity = Vector3.Lerp(_movementVelocity, Vector3.zero, 0.5f);
+        _movementVelocity = Vector3.Lerp(_movementVelocity, Vector3.down * gravity, 0.5f);
     }
 
     // sets the rotation of the character

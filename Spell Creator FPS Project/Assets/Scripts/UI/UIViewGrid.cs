@@ -235,7 +235,7 @@ public class UIViewGrid : MonoBehaviour {
 
     public void AddInteractableItemToRow(int x, IUIInteractableData data) {
         for(int i = 0; i < _interactableGrid[x].Length; i++) {
-            if (_interactableGrid[x][i].Id.Equals(GameplayValues.EmptyInventoryItemId)) {
+            if (_interactableGrid[x][i].Id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
                 data.X = x;
                 data.Y = i;
                 _interactableGrid[x][i].SetValue(data);
@@ -247,7 +247,7 @@ public class UIViewGrid : MonoBehaviour {
 
     public void AddInteractableItemToColumn(int y, IUIInteractableData data) {
         for(int i = 0; i < _interactableGrid.Length; i++) {
-            if (_interactableGrid[i][y].Id.Equals(GameplayValues.EmptyInventoryItemId)) {
+            if (_interactableGrid[i][y].Id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
                 data.X = i;
                 data.Y = y;
                 _interactableGrid[i][y].SetValue(data);
