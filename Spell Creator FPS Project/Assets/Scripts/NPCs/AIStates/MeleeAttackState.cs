@@ -10,11 +10,7 @@ public class MeleeAttackState : AttackState {
     [SerializeField] private Collider[] _hitBoxes; // hit boxes to activate and deactivate on attacks
     [SerializeField] private float _timeActivateHitBoxes; // when to activate hitboxes
     [SerializeField] private float _timeDeactivateHitBoxes; // when to deactivate hitboxes
-    [SerializeField] private string _attackName; // this should reflect the name of the actual animation state
     [SerializeField] private int _attackComboIndex = -1;
-
-    [SerializeField] private NPCAnimController _animController;
-    [SerializeField] private NPCMoveController _moveController;
 
     private bool _hitBoxesActive;
     private bool HitBoxesActive {
@@ -45,15 +41,15 @@ public class MeleeAttackState : AttackState {
     }
 
     public override void Execute() {
+        base.Execute();
+        // wait for animation to start
         if (!_animController.IsStateByName(_attackName)) {
-            Debug.Log("Waiting to play animation...");
             return;
         }
         float currentTime = _animController.GetCurrentAnimationTime();
-        Debug.Log(currentTime);
-        if(currentTime >= _timeActivateHitBoxes  && currentTime < _timeDeactivateHitBoxes && !HitBoxesActive) {
+        if(currentTime >= _timeActivateHitBoxes && currentTime < _timeDeactivateHitBoxes && !HitBoxesActive) {
             HitBoxesActive = true;
-        } else if (currentTime > _timeDeactivateHitBoxes) {
+        } else if (currentTime > _timeDeactivateHitBoxes && HitBoxesActive) {
             HitBoxesActive = false;
             if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _npcVision.CurrentTarget)) {
                 _npcBehaviour.ChangeBrainState(_onTargetInRangeState);
@@ -63,7 +59,6 @@ public class MeleeAttackState : AttackState {
         if (currentTime >= 1f) {
             _npcBehaviour.ChangeBrainState(_onTargetOutOfRangeState);
         }
-        base.Execute();
     }
 
     public override void Exit() {

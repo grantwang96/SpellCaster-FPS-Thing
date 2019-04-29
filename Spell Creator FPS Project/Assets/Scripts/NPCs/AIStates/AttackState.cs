@@ -10,4 +10,8 @@ public abstract class AttackState : BrainState {
     
     [SerializeField] protected float _duration;
     [SerializeField] protected NPCVision _npcVision;
+    [SerializeField] protected string _attackName; // this should reflect the name of the actual animation state
+
+    [SerializeField] protected NPCAnimController _animController;
+    [SerializeField] protected NPCMoveController _moveController;
 }
