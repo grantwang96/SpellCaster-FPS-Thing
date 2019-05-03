@@ -2,26 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MagicProjectile : MonoBehaviour {
+public class MagicProjectile : Projectile {
 
     public Spell Spell { get; private set; }
     public ISpellCaster spellCaster { get; private set; }
-
-    [SerializeField] private MeshFilter _meshFilter;
-    public MeshFilter MeshFilter { get { return _meshFilter; } }
-    private Rigidbody _rigidBody;
-    public Rigidbody Rigidbody { get { return _rigidBody; } }
-    private Collider _collider;
-    public Collider Collider { get { return _collider; } }
-
-    private Vector3 _previousPosition;
-    [SerializeField] private LayerMask _collisionMask;
-
-    private float _lifeTime;
-    private float _startTime;
-    private float _speed;
-
-    private int _power;
 
     public void InitializeMagic(ISpellCaster caster, Spell spell) {
         spellCaster = caster;
@@ -36,7 +20,6 @@ public class MagicProjectile : MonoBehaviour {
     }
 
     public void InitializePosition(Vector3 startPosition, Vector3 direction) {
-
         transform.position = startPosition;
         transform.forward = direction;
     }
@@ -70,25 +53,18 @@ public class MagicProjectile : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () {
 		if(Time.time - _startTime >= _lifeTime) {
             Die();
         }
+        base.Update();
 	}
 
-    private void FixedUpdate() {
-        _previousPosition = _rigidBody.position;
-    }
-
-    private void LateUpdate() {
-        CheckClipping();
-    }
-
-    private void Die() {
+    protected override void Die() {
         Destroy(this.gameObject);
     }
 
-    private void OnTriggerEnter(Collider other) {
+    protected override void OnTriggerEnter(Collider other) {
         Damageable damageable = other.transform.GetComponent<Damageable>();
         Vector3 dir = other.transform.position - _rigidBody.position;
         float force = _rigidBody.velocity.magnitude * _rigidBody.mass;
@@ -104,26 +80,6 @@ public class MagicProjectile : MonoBehaviour {
         ApplyEffects(dir.normalized * force);
 
         Die();
-    }
-
-    private void CheckClipping() {
-        RaycastHit hit;
-        Vector3 dir = _rigidBody.position - _previousPosition;
-        if (Physics.Raycast(_previousPosition, dir, out hit, Vector3.Distance(_previousPosition, _rigidBody.position), _collisionMask)) {
-            _rigidBody.position = hit.point;
-            _collider.SendMessage("OnTriggerEnter", hit.collider);
-        }
-    }
-
-    private Vector3 CalculateContactPosition(Collider other) {
-        RaycastHit hit;
-        Vector3 dir = _rigidBody.position - _previousPosition;
-        if(Physics.Raycast(_previousPosition, dir, out hit, Vector3.Distance(_previousPosition, _rigidBody.position), _collisionMask)) {
-            if (hit.collider == other) {
-                return hit.point;
-            }
-        }
-        return _rigidBody.position;
     }
 
     private void ApplyEffects(Vector3 force, Damageable damageable = null) {

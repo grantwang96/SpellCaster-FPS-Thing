@@ -11,10 +11,8 @@ public class SpellManager : MonoBehaviour {
 
     [SerializeField] private Spell_CastingMethod[] _castingMethods;
     public int castingMethodsLength { get { return _castingMethods.Length; } }
-
     [SerializeField] private Spell_Effect[] _spellEffects;
     public int spellEffectsLength { get { return _spellEffects.Length; } }
-
     [SerializeField] private SpellModifier[] _spellModifiers;
     public int spellModifiersLength { get { return _spellModifiers.Length; } }
 
@@ -41,5 +39,10 @@ public class SpellManager : MonoBehaviour {
     public void GenerateSpellBook(Spell spell, Vector3 location, Quaternion rotation) {
         // create a spellbook with this spell inside
         SpellBook newSpellBook = Instantiate(spellBookPrefab, location, rotation);
+    }
+
+    // TODO: when chests are implemented, use this to build a spell based on ID
+    public Spell GenerateSpellFromChestId(string id) {
+        return GenerateRandomSpell();
     }
 }

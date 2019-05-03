@@ -19,8 +19,7 @@ public class ChaseState : MoveState {
 
     public override void Enter(BrainState overrideBrainState = null) {
         targetLastKnownPosition = _vision.CurrentTarget.transform.position;
-        _moveController.OnPathCalculated += OnPathCalculated;
-        _moveController.OnArrivedDestination += OnArriveDestination;
+        base.Enter(overrideBrainState);
         if (_vision.CurrentTarget == null) {
             Debug.Log("Target was null!");
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
@@ -28,16 +27,34 @@ public class ChaseState : MoveState {
         }
     }
 
+    protected override Vector3 GetDestination() {
+        return _vision.CurrentTarget.transform.position;
+    }
+
     public override void Execute() {
-        bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
-        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
-        }
+        if (TryAttack()) { return; }
+        SetRotation();
+        SetDestination();
+    }
+
+    protected override void SetRotation() {
         _moveController.SetRotation(targetLastKnownPosition);
+    }
+
+    private void SetDestination() {
+        bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
             targetLastKnownPosition = _vision.CurrentTarget.transform.position;
             _moveController.SetDestination(targetLastKnownPosition);
         }
+    }
+
+    private bool TryAttack() {
+        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
+            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
+            return true;
+        }
+        return false;
     }
 
     protected override void OnPathCalculated(NavMeshPathStatus status) {

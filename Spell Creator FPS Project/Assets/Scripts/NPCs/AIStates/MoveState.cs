@@ -16,7 +16,7 @@ public class MoveState : BrainState {
 
     public override void Enter(BrainState overrideBrainState = null) {
         base.Enter(overrideBrainState);
-        Vector3 targetDestination = _moveController.GetNextIdleDestination();
+        Vector3 targetDestination = GetDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
         _pathCalculated = false;
         // _npcBehaviour.Blueprint.OnMoveEnter(_npcBehaviour);
@@ -26,11 +26,19 @@ public class MoveState : BrainState {
         }
     }
 
+    protected virtual Vector3 GetDestination() {
+        return _moveController.GetNextIdleDestination();
+    }
+
     public override void Execute() {
         if (!_pathCalculated) { Debug.Log(_npcBehaviour.name + " path is pending..."); return; }
+        SetRotation();
+        base.Execute();
+    }
+
+    protected virtual void SetRotation() {
         Vector3 lookTarget = _moveController.CurrentPathCorner;
         _npcBehaviour.CharMove.SetRotation(lookTarget);
-        base.Execute();
     }
 
     protected virtual void OnPathCalculated(NavMeshPathStatus status) {

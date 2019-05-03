@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// This is the spellbook that is found in world space
 /// </summary>
-public class SpellBook : MonoBehaviour, IInteractable {
+public class SpellBook : PooledObject, IInteractable {
 
     [SerializeField] private Spell _heldSpell;
     public Spell HeldSpell {
@@ -28,6 +28,15 @@ public class SpellBook : MonoBehaviour, IInteractable {
 
     private void Initialize() {
         Spell newSpell = SpellManager.Instance.GenerateRandomSpell();
+        _heldSpell = newSpell;
+    }
+
+    /// <summary>
+    /// Chest should call this if spawning a new spellbook
+    /// </summary>
+    /// <param name="id"></param>
+    public void InitializeFromChest(string id) {
+        Spell newSpell = SpellManager.Instance.GenerateSpellFromChestId(id);
         _heldSpell = newSpell;
     }
 
