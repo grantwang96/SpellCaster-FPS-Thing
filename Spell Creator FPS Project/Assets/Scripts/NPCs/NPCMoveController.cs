@@ -170,4 +170,13 @@ public class NPCMoveController : CharacterMoveController {
         Vector3 newLook = Vector3.RotateTowards(transform.forward, lookDirectionBody, radStep, 0f);
         transform.rotation = Quaternion.LookRotation(newLook);
     }
+
+    public virtual void SetRotation(Vector3 target, float value) {
+        Vector3 lookDirection = target - _npcBehaviour.Head.position;
+        Vector3 lookDirectionBody = lookDirection;
+        lookDirectionBody.y = 0;
+
+        Vector3 newLook = Vector3.Lerp(transform.forward, lookDirectionBody, value);
+        transform.rotation = Quaternion.LookRotation(newLook);
+    }
 }

@@ -8,11 +8,11 @@ using UnityEngine.AI;
 public class NPCBehaviour : CharacterBehaviour {
     
     [SerializeField] protected NPCMoveController _charMove;
-    public NPCMoveController CharMove { get { return _charMove; } }
+    public NPCMoveController CharMove => _charMove;
     [SerializeField] protected Damageable _damageable;
-    public Damageable Damageable { get; }
+    public Damageable Damageable => _damageable;
     [SerializeField] protected NPCBlueprint _blueprint; // blueprint to derive data from
-    public NPCBlueprint Blueprint { get { return _blueprint; } }
+    public NPCBlueprint Blueprint => _blueprint;
 
     [SerializeField] protected BrainState _currentBrainState; // current state of AI State Machine
     [SerializeField] protected BrainState _startingState; // how the NPC should behave at start (usually idle)

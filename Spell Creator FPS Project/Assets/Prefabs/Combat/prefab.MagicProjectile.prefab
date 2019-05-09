@@ -272,7 +272,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61cc95e4be484a45a735aa0bf0c7e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inUse: 0
+  _owner: {fileID: 0}
+  _onHitEffects: {fileID: 0}
+  _rigidBody: {fileID: 0}
+  _collider: {fileID: 0}
   _meshFilter: {fileID: 33625863036091494}
+  _statusEffect: {fileID: 0}
   _collisionMask:
     serializedVersion: 2
     m_Bits: 2561

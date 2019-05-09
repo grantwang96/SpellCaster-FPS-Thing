@@ -13,7 +13,6 @@ public class Projectile : PooledObject {
     [SerializeField] protected Collider _collider;
     [SerializeField] protected MeshFilter _meshFilter;
     [SerializeField] protected StatusEffect _statusEffect;
-    [SerializeField] protected Transform _container;
 
     public MeshFilter MeshFilter { get { return _meshFilter; } }
     public Rigidbody Rigidbody { get { return _rigidBody; } }
@@ -33,17 +32,29 @@ public class Projectile : PooledObject {
         _rigidBody = GetComponent<Rigidbody>();
     }
 
-    public void FireProjectile(Vector3 vector) {
+    public void InitializeOwner(Damageable damageable) {
+        _owner = damageable;
+    }
+
+    // initialize projectile's stats like power, gravity, and velocity
+    public void FireProjectile(int power, bool useGravity, Vector3 vector, float lifeTime) {
         _isLive = true;
-        transform.SetParent(null);
+        _power = power;
+        transform.SetParent(ObjectPool.Instance.transform);
         transform.forward = vector;
+        _rigidBody.useGravity = useGravity;
         _rigidBody.velocity = vector;
+        _lifeTime = lifeTime;
         _collider.enabled = true;
+        _startTime = Time.time;
     }
 	
 	protected virtual void Update () {
         transform.forward = _rigidBody.velocity;
-	}
+        if (_isLive && Time.time - _startTime >= _lifeTime) {
+            DeactivatePooledObject();
+        }
+    }
 
     protected virtual void FixedUpdate() {
         _previousPosition = _rigidBody.position;
@@ -54,13 +65,23 @@ public class Projectile : PooledObject {
     }
 
     protected virtual void OnTriggerEnter(Collider coll) {
-        OnHit();
+        Debug.Log(coll.gameObject);
+        Debug.Log(_owner);
+        Damageable dam = coll.GetComponent<Damageable>();
+        if(dam == _owner) {
+            return;
+        }
+        OnHit(dam);
+        // if it collides with a wall
     }
 
     // what happens when this collides with something?
     protected virtual void OnHit(Damageable damageable = null) {
+        if(damageable != null) {
+            // handle effects
+        }
         _isLive = false;
-        StartCoroutine(Effects());
+        DeactivatePooledObject();
     }
 
     protected void CheckClipping() {
@@ -91,10 +112,18 @@ public class Projectile : PooledObject {
         Die();
     }
 
-    protected virtual void Die() {
+    public override void ActivatePooledObject() {
+        gameObject.SetActive(true);
+    }
+
+    public override void DeactivatePooledObject() {
+        StartCoroutine(Effects());
+    }
+
+    private void Die() {
+        Debug.Log($"Deactivating object");
         gameObject.SetActive(false);
-        transform.SetParent(_container);
-        transform.position = _container.position;
-        _collider.enabled = false;
+        transform.SetParent(ObjectPool.Instance?.transform);
+        ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
     }
 }

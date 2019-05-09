@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// this will likely become a parent class for more ranged attacks
 public class RangedAttackState : AttackState {
 
     [SerializeField] private BrainState _targetInRangeState;
     [SerializeField] private BrainState _targetOutOfRangeState;
     [SerializeField] private BrainState _targetMeleeRangeState;
 
-    // pool of projectiles you can fire from
-    [SerializeField] private Projectile[] _projectilePool;
+    // configurable data for projectiles
+    [SerializeField] protected string _projectilePrefabId;
+    [SerializeField] protected int _power;
+    [SerializeField] protected bool _useGravity;
+
     [SerializeField] private float _spawnProjectileTime;
     [SerializeField] private float _fireProjectileTime;
     [SerializeField] private Transform _hand;
     [SerializeField] private Vector3 _handLocalPosition;
     [SerializeField] protected float _forwardForce;
     [SerializeField] protected float _verticalForce;
+    [SerializeField] protected float _lifeTime;
 
     private bool _projectileSpawned;
     private Projectile _currentProjectile;
@@ -23,6 +28,7 @@ public class RangedAttackState : AttackState {
     public override void Enter(BrainState overrideBrainState = null) {
         base.Enter(overrideBrainState);
         _animController.PlayAnimation(_attackName);
+        _moveController.SetRotation(_npcVision.CurrentTarget.transform.position, .9f);
     }
 
     public override void Execute() {
@@ -32,33 +38,45 @@ public class RangedAttackState : AttackState {
             return;
         }
         float currentTime = _animController.GetCurrentAnimationTime();
-        if (currentTime >= 1f) {
+        if (currentTime >= 1f && !_npcVision.CanSeeTarget(_npcVision.CurrentTarget.BodyTransform.position)) {
             _npcBehaviour.ChangeBrainState(_targetOutOfRangeState);
         }
         if (currentTime > _fireProjectileTime) {
             // throw projectile
+            FireProjectile();
         } else if(currentTime > _spawnProjectileTime  && !_projectileSpawned) {
             // create projectile and place in hand
             PrepareProjectile();
         }
     }
 
+    public override void Exit() {
+        base.Exit();
+        _projectileSpawned = false;
+    }
+
     // prepare projectile
-    private void PrepareProjectile() {
+    protected virtual void PrepareProjectile() {
         // spawn projectile
-        _currentProjectile = _projectilePool[Random.Range(0, _projectilePool.Length)];
-        _currentProjectile.gameObject.SetActive(true);
+        PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(_projectilePrefabId);
+        _currentProjectile = pooledObject as Projectile;
+        if(_currentProjectile == null) {
+            Debug.LogError($"Object {pooledObject} retrieved with ID \"{_projectilePrefabId}\" is not of type Projectile");
+            return;
+        }
         // place in appropriate location
+        _currentProjectile.InitializeOwner(_npcBehaviour.Damageable);
         _currentProjectile.transform.parent = _hand;
         _currentProjectile.transform.localPosition = _handLocalPosition;
+        _currentProjectile.ActivatePooledObject();
 
         _projectileSpawned = true;
     }
 
     // launches projectile at given vector
-    private void FireProjectile() {
-        Transform body = _npcBehaviour.BodyTransform;
-        Vector3 velocity = body.forward * _forwardForce + body.up * _verticalForce;
-        _currentProjectile.FireProjectile(velocity);
+    protected virtual void FireProjectile() {
+        Vector3 velocity = _npcBehaviour.transform.forward * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
+        // TODO: Calculate the velocity required to send the object directly at the target
+        _currentProjectile.FireProjectile(_power, _useGravity, velocity, _lifeTime);
     }
 }

@@ -7,6 +7,10 @@ public class MagicProjectile : Projectile {
     public Spell Spell { get; private set; }
     public ISpellCaster spellCaster { get; private set; }
 
+    public override void ActivatePooledObject() {
+        gameObject.SetActive(true);
+    }
+
     public void InitializeMagic(ISpellCaster caster, Spell spell) {
         spellCaster = caster;
         Spell = spell;
@@ -47,22 +51,11 @@ public class MagicProjectile : Projectile {
 
     // Use this for initialization
     void Start () {
+        _isLive = true; 
         _startTime = Time.time;
         _rigidBody.velocity = transform.forward * _speed;
         _previousPosition = _rigidBody.position;
 	}
-	
-	// Update is called once per frame
-	protected override void Update () {
-		if(Time.time - _startTime >= _lifeTime) {
-            Die();
-        }
-        base.Update();
-	}
-
-    protected override void Die() {
-        Destroy(this.gameObject);
-    }
 
     protected override void OnTriggerEnter(Collider other) {
         Damageable damageable = other.transform.GetComponent<Damageable>();
@@ -72,14 +65,14 @@ public class MagicProjectile : Projectile {
         if (damageable != null) {
             if (damageable == spellCaster.Damageable) { return; }
             ApplyEffects(dir.normalized * force, damageable);
-            Die();
+            DeactivatePooledObject();
             return;
         } else if(other.attachedRigidbody != null) {
             other.attachedRigidbody.AddForce(dir.normalized * force, ForceMode.Impulse);
         }
         ApplyEffects(dir.normalized * force);
 
-        Die();
+        DeactivatePooledObject();
     }
 
     private void ApplyEffects(Vector3 force, Damageable damageable = null) {

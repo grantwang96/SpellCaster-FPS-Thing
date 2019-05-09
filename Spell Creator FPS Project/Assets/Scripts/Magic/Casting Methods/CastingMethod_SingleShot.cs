@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu (menuName = "Spell Casting Method/Single Shot")]
-public class CastingMethod_SingleShot : Spell_CastingMethod {
-
-    [SerializeField] private MagicProjectile _magicProjectilePrefab;
-    [SerializeField] private float _projectileSpeed;
-    [SerializeField] private float _lifeTime;
+public class CastingMethod_SingleShot : CastingMethod_MagicProjectile {
 
     protected override void CastSpell(ISpellCaster caster, Spell spell) {
         Vector3 startPosition = caster.GunBarrel.position;
         Vector3 direction = caster.GunBarrel.forward;
-        MagicProjectile magicProjectile = Instantiate(_magicProjectilePrefab, startPosition, caster.GunBarrel.rotation);
-        magicProjectile.InitializeMagic(caster, spell);
-        magicProjectile.InitializePosition(startPosition, direction);
+
+        MagicProjectile magicProjectile = GetMagicProjectile();
+        if(magicProjectile == null) { return; }
+        
+        // initialize magic projectile
+        InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
 
         int power = 1;
         if(ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
