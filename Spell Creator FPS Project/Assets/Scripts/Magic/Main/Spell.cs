@@ -9,8 +9,8 @@ public class Spell {
     public Spell_CastingMethod CastingMethod {
         get { return _castingMethod; }
     }
-    [SerializeField] private Spell_Effect[] _effects;
-    public Spell_Effect[] Effects { get { return _effects; } }
+    [SerializeField] private Effect[] _effects;
+    public Effect[] Effects { get { return _effects; } }
     [SerializeField] private SpellModifier[] _spellModifiers;
     public SpellModifier[] SpellModifiers { get { return _spellModifiers; } }
 
@@ -20,7 +20,7 @@ public class Spell {
 
     public int Power { get; private set; }
 
-    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers = null) {
+    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers = null) {
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;
@@ -40,7 +40,7 @@ public class Spell {
         MaxChargeTime = 3f;
     }
 
-    public Spell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, float maxChargeTime, float intervalTime, int power, string name, SpellModifier[] spellModifiers = null) {
+    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, float maxChargeTime, float intervalTime, int power, string name, SpellModifier[] spellModifiers = null) {
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;

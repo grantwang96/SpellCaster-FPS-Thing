@@ -2,8 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * THIS WHOLE EFFECT NEEDS TO BE REFACTORED SOMEHOW ANYWAYS
+ * 
+ * 
+ */
+
 [CreateAssetMenu(menuName = "Spell Effect/Hold")]
-public class Effect_Hold : Spell_Effect {
+public class Effect_Hold : Effect {
 
     [SerializeField] private float _baseHoldRange;
     [SerializeField] private float _holdPowerModifier; // hack af
@@ -12,35 +18,35 @@ public class Effect_Hold : Spell_Effect {
     [SerializeField] private float _risingDuration;
     [SerializeField] private float _baseDuration;
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell) {
+    public override void TriggerEffect(Damageable caster, int power, List<Effect> effects = null) {
         // Can't really hold yourself, can you? Can you?
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Damageable damageable = null) {
+    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
         if(damageable == null) {
             return;
         }
         Debug.Log($"Holding {damageable.name}...");
         // calculate distance at which the object is being held
-        float distance = Vector3.Distance(caster.GunBarrel.position, damageable.Body.position);
+        float distance = Vector3.Distance(caster.transform.position, damageable.Body.position);
         // get position according to where caster is looking
-        Vector3 targetPosition = caster.GunBarrel.position + caster.GunBarrel.forward * distance;
+        Vector3 targetPosition = caster.transform.position + caster.transform.forward * distance;
         // apply external forces while maintaining its distance from the caster
         Vector3 directionToTargetPosition = targetPosition - damageable.Body.position;
         damageable.AddForce(directionToTargetPosition * _holdPowerModifier);
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Collider collider) {
+    public override void TriggerEffect(Damageable caster, int power, Collider collider, List<Effect> effects = null) {
         // calculate distance at which the object is being held
-        float distance = Vector3.Distance(caster.GunBarrel.position, collider.transform.position);
+        float distance = Vector3.Distance(caster.transform.position, collider.transform.position);
         // get position according to where caster is looking
-        Vector3 targetPosition = caster.GunBarrel.position + caster.GunBarrel.forward * distance;
+        Vector3 targetPosition = caster.transform.position + caster.transform.forward * distance;
         // apply external forces while maintaining its distance from the caster
         Vector3 directionToTargetPosition = targetPosition - collider.transform.position;
         collider.attachedRigidbody?.AddForce(directionToTargetPosition, ForceMode.VelocityChange);
     }
 
-    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Spell castedSpell, Vector3 position, Damageable damageable = null) {
+    public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         damageable?.StartCoroutine(RisingHold(power, damageable));
     }
 

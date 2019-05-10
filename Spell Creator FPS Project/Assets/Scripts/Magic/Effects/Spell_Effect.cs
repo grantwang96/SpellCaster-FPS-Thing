@@ -3,10 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// What happens when the spell hits
+/// Applies an effect(could be spell, weapon, or projectile)
 /// </summary>
-public abstract class Spell_Effect : SpellComponent {
-    
+public abstract class Effect : ScriptableObject, IInventoryStorable {
+
+    [SerializeField] protected InventoryItemType _itemType;
+    public InventoryItemType ItemType => _itemType;
+    [SerializeField] protected string _id;
+    public string Id => _id;
+    [SerializeField] protected Sprite _icon;
+    public Sprite Icon => _icon;
+
     [SerializeField] private int _manaCost; // how much will this effect cost
     public int ManaCost {
         get {
@@ -27,15 +34,15 @@ public abstract class Spell_Effect : SpellComponent {
     [SerializeField] private int _basePower;
     public int BasePower { get { return _basePower; } }
 
-    public abstract void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell);
+    public abstract void TriggerEffect(Damageable caster, int power, List<Effect> additionalEffects = null);
     /// <summary>
     /// Applies effect to given damageable
     /// </summary>
     /// <param name="damageable"></param>
-    public abstract void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Damageable damageable = null);
-    public abstract void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Spell castedSpell, Vector3 position, Damageable damageable = null);
+    public abstract void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> additionalEffects = null);
+    public abstract void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null);
 
-    public virtual void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Collider collider) {
+    public virtual void TriggerEffect(Damageable caster, int power, Collider collider, List<Effect> additionalEffects = null) {
 
     }
 }

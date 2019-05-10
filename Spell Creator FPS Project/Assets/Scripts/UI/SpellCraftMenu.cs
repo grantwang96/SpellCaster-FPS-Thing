@@ -45,7 +45,7 @@ public class SpellCraftMenu : UISubPanelParent {
         if(_spellCraftManager.LoadedCastingMethod != null) {
             _inventoryView.Inventory.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
         }
-        foreach(Spell_Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
+        foreach(Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
             _inventoryView.Inventory.AddItem(spellEffect.Id, 1);
         }
         foreach(SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
@@ -74,7 +74,7 @@ public class SpellCraftMenu : UISubPanelParent {
             _spellStagingArea.SetUICastingMethod(castingMethod);
             return;
         }
-        Spell_Effect spellEffect = inventoryStorable as Spell_Effect;
+        Effect spellEffect = inventoryStorable as Effect;
         if(spellEffect != null) {
             if (_spellCraftManager.LoadedSpellEffects.Contains(spellEffect)) {
                 // do failed effect here

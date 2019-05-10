@@ -6,7 +6,7 @@ using UnityEngine;
 /// Creates an area of effect that applies the rest of the effects upon hit
 /// </summary>
 [CreateAssetMenu(menuName = "Spell Effect/Explosion")]
-public class Effect_Explosion : Spell_Effect {
+public class Effect_Explosion : Effect {
 
     [SerializeField] private float _radius;
     [SerializeField] private float _force;
@@ -14,19 +14,18 @@ public class Effect_Explosion : Spell_Effect {
 
     [SerializeField] private MagicExplosion magicExplosionPrefab;
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell) {
+    public override void TriggerEffect(Damageable caster, int power, List<Effect> effects = null) {
         throw new System.NotImplementedException();
     }
 
-    public override void TriggerEffect(ISpellCaster caster, int power, Spell castedSpell, Damageable damageable = null) {
+    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
         throw new System.NotImplementedException();
     }
 
-    public override void TriggerEffect(ISpellCaster caster, Vector3 velocity, int power, Spell castedSpell, Vector3 position, Damageable damageable = null) {
-        List<Spell_Effect> effects = new List<Spell_Effect>(castedSpell.Effects);
-        effects.Remove(this);
-        Spell newCastedSpell = new Spell(castedSpell.CastingMethod, effects.ToArray(), castedSpell.SpellModifiers);
+    public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
+        List<Effect> newEffects = effects == null ? new List<Effect>() : new List<Effect>(effects);
+        newEffects.Remove(this);
         MagicExplosion explosion = Instantiate(magicExplosionPrefab, position, Quaternion.identity);
-        explosion.Initialize(newCastedSpell, _radius, _force, _time, castedSpell.Power, caster, damageable);
+        explosion.Initialize(newEffects, _radius, _force, _time, power, caster, damageable);
     }
 }

@@ -8,11 +8,11 @@ using UnityEngine;
 public class Projectile : PooledObject {
 
     [SerializeField] protected Damageable _owner;
-    [SerializeField] protected GameObject _onHitEffects;
+    [SerializeField] protected GameObject _onHitVFX;
     [SerializeField] protected Rigidbody _rigidBody;
     [SerializeField] protected Collider _collider;
     [SerializeField] protected MeshFilter _meshFilter;
-    [SerializeField] protected StatusEffect _statusEffect;
+    [SerializeField] protected Effect[] _effects;
 
     public MeshFilter MeshFilter { get { return _meshFilter; } }
     public Rigidbody Rigidbody { get { return _rigidBody; } }
@@ -81,6 +81,10 @@ public class Projectile : PooledObject {
             // handle effects
         }
         _isLive = false;
+        // apply effects here
+        for(int i = 0; i < _effects.Length; i++) {
+            _effects[i].TriggerEffect(_owner, _power, damageable);
+        }
         DeactivatePooledObject();
     }
 

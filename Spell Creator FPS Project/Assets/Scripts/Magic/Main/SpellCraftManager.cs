@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public delegate void CastingMethodChanged(Spell_CastingMethod castingMethod);
-public delegate void SpellEffectChanged(Spell_Effect spellEffect);
+public delegate void SpellEffectChanged(Effect spellEffect);
 public delegate void SpellModifierChanged(SpellModifier modifier);
 
 public interface ISpellCraftManager {
@@ -22,8 +22,8 @@ public class SpellCraftManager : ISpellCraftManager {
             return _loadedCastingMethod;
         }
     }
-    [SerializeField] private List<Spell_Effect> _loadedSpellEffects = new List<Spell_Effect>();
-    public List<Spell_Effect> LoadedSpellEffects {
+    [SerializeField] private List<Effect> _loadedSpellEffects = new List<Effect>();
+    public List<Effect> LoadedSpellEffects {
         get {
             return _loadedSpellEffects;
         }
@@ -48,7 +48,7 @@ public class SpellCraftManager : ISpellCraftManager {
         OnCastingMethodChanged?.Invoke(castingMethod);
     }
 
-    public void AddSpellEffect(Spell_Effect spellEffect) {
+    public void AddSpellEffect(Effect spellEffect) {
         if (!_loadedSpellEffects.Contains(spellEffect)) {
             _loadedSpellEffects.Add(spellEffect);
             OnSpellEffectAdded?.Invoke(spellEffect);
@@ -71,7 +71,7 @@ public class SpellCraftManager : ISpellCraftManager {
             OnCastingMethodChanged?.Invoke(castingMethod);
             return;
         }
-        Spell_Effect spellEffect = storable as Spell_Effect;
+        Effect spellEffect = storable as Effect;
         if (spellEffect != null) {
             _loadedSpellEffects.Remove(spellEffect);
             UpdateSpellManaCost();

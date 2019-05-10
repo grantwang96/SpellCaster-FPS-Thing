@@ -84,7 +84,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _spellComponentsView.AddInteractableItemToRow(0, componentData);
     }
 
-    public void AddUISpellEffect(Spell_Effect spell_Effect) {
+    public void AddUISpellEffect(Effect spell_Effect) {
         SpellComponentData componentData = new SpellComponentData(1, 0);
         componentData.itemId = spell_Effect.Id;
         componentData.Name = spell_Effect.name;

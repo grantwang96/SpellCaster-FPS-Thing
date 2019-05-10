@@ -9,7 +9,7 @@ public class RuneManager : MonoBehaviour {
     [SerializeField] private string _spellCastingMethodResourcesLocation;
     private Dictionary<string, Spell_CastingMethod> _spellCastingMethods = new Dictionary<string, Spell_CastingMethod>();
     [SerializeField] private string _spellEffectsResourcesLocation;
-    private Dictionary<string, Spell_Effect> _spellEffects = new Dictionary<string, Spell_Effect>();
+    private Dictionary<string, Effect> _spellEffects = new Dictionary<string, Effect>();
     [SerializeField] private string _spellModifiersResourcesLocation;
     private Dictionary<string, SpellModifier> _spellModifiers = new Dictionary<string, SpellModifier>();
 
@@ -29,9 +29,9 @@ public class RuneManager : MonoBehaviour {
     }
 
     private void LoadAllSpellEffects() {
-        Object[] spellEffects = Resources.LoadAll(_spellEffectsResourcesLocation, typeof(Spell_Effect));
+        Object[] spellEffects = Resources.LoadAll(_spellEffectsResourcesLocation, typeof(Effect));
         foreach(var obj in spellEffects) {
-            Spell_Effect effect = obj as Spell_Effect;
+            Effect effect = obj as Effect;
             if (!effect) {
                 Debug.LogError($"Object {obj} is not a spell effect! Skipping...");
                 continue;

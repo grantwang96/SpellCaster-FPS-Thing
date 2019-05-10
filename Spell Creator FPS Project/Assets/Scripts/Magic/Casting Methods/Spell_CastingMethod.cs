@@ -5,8 +5,15 @@ using UnityEngine;
 /// <summary>
 /// This is the base class for how spells are cast
 /// </summary>
-public abstract class Spell_CastingMethod : SpellComponent {
-    
+public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable {
+
+    [SerializeField] protected InventoryItemType _itemType;
+    public InventoryItemType ItemType => _itemType;
+    [SerializeField] protected string _id;
+    public string Id => _id;
+    [SerializeField] protected Sprite _icon;
+    public Sprite Icon => _icon;
+
     [SerializeField] protected int manaCost;
     public virtual int ManaCost { get { return manaCost; } }
     [SerializeField] protected float _intervalTime;

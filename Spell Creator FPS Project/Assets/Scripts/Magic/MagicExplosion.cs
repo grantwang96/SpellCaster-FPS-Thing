@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class MagicExplosion : MonoBehaviour {
 
-    private Spell _spell;
+    private List<Effect> _effects;
     private float _radius;
     private float _force;
     private float _totalTime;
     private float _time;
     private int _power;
-    private ISpellCaster _spellCaster;
+    private Damageable _owner;
 
     [SerializeField] private SphereCollider _collider;
     [SerializeField] private MeshFilter _meshFilter;
 
     private List<Collider> _ignoredColliders = new List<Collider>();
 
-    public void Initialize(Spell spell, float radius, float force, float time, int power, ISpellCaster spellCaster, Damageable damageable = null) {
-        _spell = spell;
+    public void Initialize(List<Effect> effects, float radius, float force, float time, int power, Damageable owner, Damageable damageable = null) {
+        _effects = effects;
         _radius = radius;
         _totalTime = time;
         _time = 0f;
         _power = power;
-        _spellCaster = spellCaster;
+        _owner = owner;
 
         transform.localScale = Vector3.zero;
     }
@@ -51,8 +51,8 @@ public class MagicExplosion : MonoBehaviour {
 
     private void ApplyEffects(Damageable damageable) {
         Vector3 dir = (damageable.transform.position - transform.position).normalized;
-        foreach (Spell_Effect effect in _spell.Effects) {
-            effect?.TriggerEffect(_spellCaster, dir * _force, _power, _spell, transform.position, damageable);
+        foreach (Effect effect in _effects) {
+            effect?.TriggerEffect(_owner, dir * _force, _power, transform.position, damageable, _effects);
         }
     }
 }

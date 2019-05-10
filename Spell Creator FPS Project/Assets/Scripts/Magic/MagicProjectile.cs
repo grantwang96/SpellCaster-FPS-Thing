@@ -76,8 +76,8 @@ public class MagicProjectile : Projectile {
     }
 
     private void ApplyEffects(Vector3 force, Damageable damageable = null) {
-        foreach (Spell_Effect effect in Spell.Effects) {
-            effect?.TriggerEffect(spellCaster, force, _power, Spell, transform.position, damageable);
+        foreach (Effect effect in Spell.Effects) {
+            effect?.TriggerEffect(spellCaster.Damageable, force, _power, transform.position, damageable);
         }
     }
 }

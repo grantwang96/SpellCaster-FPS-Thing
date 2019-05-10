@@ -11,7 +11,7 @@ public class SpellManager : MonoBehaviour {
 
     [SerializeField] private Spell_CastingMethod[] _castingMethods;
     public int castingMethodsLength { get { return _castingMethods.Length; } }
-    [SerializeField] private Spell_Effect[] _spellEffects;
+    [SerializeField] private Effect[] _spellEffects;
     public int spellEffectsLength { get { return _spellEffects.Length; } }
     [SerializeField] private SpellModifier[] _spellModifiers;
     public int spellModifiersLength { get { return _spellModifiers.Length; } }
@@ -26,12 +26,12 @@ public class SpellManager : MonoBehaviour {
         int index = Random.Range(0, castingMethodsLength);
         Spell_CastingMethod castingMethod = _castingMethods[index];
         index = Random.Range(0, spellEffectsLength);
-        Spell_Effect[] effects = _spellEffects;
+        Effect[] effects = _spellEffects;
         SpellModifier[] spellModifiers = _spellModifiers;
         return new Spell(castingMethod, effects, spellModifiers);
     }
 
-    public Spell GenerateSpell(Spell_CastingMethod castingMethod, Spell_Effect[] effects, SpellModifier[] spellModifiers) {
+    public Spell GenerateSpell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers) {
         Spell newSpell = new Spell(castingMethod, effects, spellModifiers);
         return newSpell;
     }
