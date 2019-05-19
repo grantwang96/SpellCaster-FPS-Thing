@@ -27,6 +27,7 @@ public class Projectile : PooledObject {
 
     protected int _power;
     protected bool _isLive; // can things collider with this projectile still?
+    public bool IsLive => _isLive;
 
     private void Awake() {
         _rigidBody = GetComponent<Rigidbody>();
@@ -37,7 +38,7 @@ public class Projectile : PooledObject {
     }
 
     // initialize projectile's stats like power, gravity, and velocity
-    public void FireProjectile(int power, bool useGravity, Vector3 vector, float lifeTime) {
+    public void FireProjectile(int power, bool useGravity, Vector3 vector, float lifeTime, Effect[] effects) {
         _isLive = true;
         _power = power;
         transform.SetParent(ObjectPool.Instance.transform);
@@ -47,6 +48,7 @@ public class Projectile : PooledObject {
         _lifeTime = lifeTime;
         _collider.enabled = true;
         _startTime = Time.time;
+        _effects = effects;
     }
 	
 	protected virtual void Update () {
@@ -129,5 +131,6 @@ public class Projectile : PooledObject {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
         ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
+        _isLive = false;
     }
 }

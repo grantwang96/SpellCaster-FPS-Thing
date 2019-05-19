@@ -13,6 +13,7 @@ public class RangedAttackState : AttackState {
     [SerializeField] protected string _projectilePrefabId;
     [SerializeField] protected int _power;
     [SerializeField] protected bool _useGravity;
+    [SerializeField] protected Effect[] _effects;
 
     [SerializeField] private float _spawnProjectileTime;
     [SerializeField] private float _fireProjectileTime;
@@ -75,8 +76,11 @@ public class RangedAttackState : AttackState {
 
     // launches projectile at given vector
     protected virtual void FireProjectile() {
-        Vector3 velocity = _npcBehaviour.transform.forward * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
+        if(_currentProjectile == null || _currentProjectile.IsLive) { return; }
+        Vector3 forward = _npcVision.CurrentTarget.GetBodyPosition() - _hand.position;
+        Vector3 velocity = forward.normalized * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
         // TODO: Calculate the velocity required to send the object directly at the target
-        _currentProjectile.FireProjectile(_power, _useGravity, velocity, _lifeTime);
+        _currentProjectile?.FireProjectile(_power, _useGravity, velocity, _lifeTime, _effects);
+        _currentProjectile = null;
     }
 }

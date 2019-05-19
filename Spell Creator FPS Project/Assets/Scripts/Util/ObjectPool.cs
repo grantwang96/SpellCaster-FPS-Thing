@@ -29,6 +29,7 @@ public class ObjectPool : MonoBehaviour {
         List<PooledObject> objectPool;
         if(!_availablePooledObjects.TryGetValue(initData.Prefab.name, out objectPool)) {
             Debug.LogError($"Unable to retrieve object pool list for Prefab ID: {initData.Prefab.name}");
+            return;
         }
         for(int i = 0; i < initData.PoolSize; i++) {
             PooledObject obj = Instantiate(initData.Prefab, transform);
@@ -53,6 +54,7 @@ public class ObjectPool : MonoBehaviour {
             }
             // TOOD: DEACTIVATE AND RE INITIALIZE OBJECT
             _inUsePooledObjects[id][0].DeactivatePooledObject();
+            ReturnUsedPooledObject(id, _inUsePooledObjects[id][0]);
             return _inUsePooledObjects[id][0];
         }
         // move the object from available to in use

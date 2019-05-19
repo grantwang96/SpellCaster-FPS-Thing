@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73cd4d2e0f858ca4b8878e684d7cb10d, type: 3}
+  m_Name: data.ChestConfig
+  m_EditorClassIdentifier: 
+  _chestTypes:
+  - _chestType: 0
+    _whiteTierRange:
+      _min: 0
+      _max: 0
+    _greenTierRange:
+      _min: 0
+      _max: 0
+    _purpleTierRange:
+      _min: 0
+      _max: 0
+    _goldTierRange:
+      _min: 0
+      _max: 0
+  - _chestType: 1
+    _whiteTierRange:
+      _min: 0
+      _max: 0
+    _greenTierRange:
+      _min: 0
+      _max: 0
+    _purpleTierRange:
+      _min: 0
+      _max: 0
+    _goldTierRange:
+      _min: 0
+      _max: 0
+  - _chestType: 2
+    _whiteTierRange:
+      _min: 0
+      _max: 0
+    _greenTierRange:
+      _min: 0
+      _max: 0
+    _purpleTierRange:
+      _min: 0
+      _max: 0
+    _goldTierRange:
+      _min: 0
+      _max: 0
+  - _chestType: 3
+    _whiteTierRange:
+      _min: 0
+      _max: 0
+    _greenTierRange:
+      _min: 0
+      _max: 0
+    _purpleTierRange:
+      _min: 0
+      _max: 0
+    _goldTierRange:
+      _min: 0
+      _max: 0

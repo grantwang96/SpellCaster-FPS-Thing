@@ -1276,6 +1276,8 @@ MonoBehaviour:
   _projectilePrefabId: prefab.Projectile
   _power: 5
   _useGravity: 0
+  _effects:
+  - {fileID: 11400000, guid: e92ee71d1e9316a4c8c2a30c02c611e6, type: 2}
   _spawnProjectileTime: 0.1
   _fireProjectileTime: 0.2
   _hand: {fileID: 4342875679828852}

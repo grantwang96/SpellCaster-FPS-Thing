@@ -25,6 +25,10 @@ public interface IInventoryStorable {
     Sprite Icon { get; }
 }
 
+public interface ILootableItem {
+
+}
+
 public abstract class SpellComponent : ScriptableObject, IInventoryStorable {
     [SerializeField] protected InventoryItemType _itemType;
     public InventoryItemType ItemType => _itemType;

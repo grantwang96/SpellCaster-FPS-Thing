@@ -11,11 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 908928b947395bd4995c537ff3540049, type: 3}
   m_Name: CM_SpreadShot_SemiAutomatic
   m_EditorClassIdentifier: 
+  _itemType: 0
   _id: CAST_METHOD_SPREADSHOT_SEMIAUTO
+  _icon: {fileID: 0}
   manaCost: 1
+  _intervalTime: 0
   spellTiming: 00000000
-  _magicProjectilePrefab: {fileID: 114823502820549128, guid: 2b21930a973bd2848894605410560b6c,
-    type: 2}
+  _magicProjectilePrefabId: prefab.MagicProjectile
   _projectileSpeed: 40
   _lifeTime: 5
   _count: 8

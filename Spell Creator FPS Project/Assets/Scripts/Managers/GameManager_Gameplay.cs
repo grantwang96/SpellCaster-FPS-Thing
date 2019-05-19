@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Included in scene. Handles gameplay events that affect inventory and on screen enemies
+/// </summary>
 public class GameManager_Gameplay : GameManager {
 
     protected override void Initialize() {
@@ -34,12 +37,7 @@ public class GameManager_Gameplay : GameManager {
     }
 
     // Use this for initialization
-    void Start () {
+    private void Start () {
         Initialize();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

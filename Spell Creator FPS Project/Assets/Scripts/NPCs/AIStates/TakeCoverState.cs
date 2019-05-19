@@ -22,11 +22,6 @@ public class TakeCoverState : MoveState {
         Vector3 position = _moveController.transform.position + -targetDir.normalized * _searchRadiusOuter;
         NavMeshHit hit;
         if (NavMesh.FindClosestEdge(position, out hit, NavMesh.AllAreas)) {
-            /*
-            float dotProd = Vector3.Dot(targetDir, hit.normal);
-            if (dotProd <= 0f) {
-            }
-            */
             destination = hit.position;
         }
         return destination;
@@ -34,5 +29,11 @@ public class TakeCoverState : MoveState {
 
     protected override void SetRotation() {
         _moveController.SetRotation(_vision.CurrentTarget.transform.position);
+    }
+
+    protected override void OnArriveDestination() {
+        // select a state
+        BrainState nextState = _onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)];
+        _npcBehaviour.ChangeBrainState(nextState);
     }
 }

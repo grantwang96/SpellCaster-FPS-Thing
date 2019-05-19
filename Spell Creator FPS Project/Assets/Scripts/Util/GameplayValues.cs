@@ -28,3 +28,11 @@ public static partial class GameplayValues {
         public const string NPCAttackComboIndexId = "AttackComboIndex";
     }
 }
+
+public static partial class GameplayValues {
+    public static class ObjectPooling {
+        public const string RecoveryOrbPrefabId = "prefab.RecoveryOrb";
+        public const string ProjectilePrefabId = "prefab.Projectile";
+        public const string MagicalPrefabId = "prefab.MagicProjectile";
+    }
+}

@@ -6,7 +6,7 @@ public abstract class GameManager : MonoBehaviour {
 
     public static GameManager Instance;
     protected static Game _currentGame;
-    
+
     protected virtual void Awake() {
         Instance = this;
         _currentGame = SaveLoad.ReadFromDisk();

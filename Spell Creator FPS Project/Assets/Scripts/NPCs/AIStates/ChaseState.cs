@@ -13,7 +13,7 @@ public class ChaseState : MoveState {
     private IVision _vision;
     private Vector3 targetLastKnownPosition;
 
-    private void Awake() {
+    private void Start() {
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
