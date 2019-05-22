@@ -10,9 +10,28 @@ public class ObjectPool : MonoBehaviour {
     private Dictionary<string, List<PooledObject>> _availablePooledObjects = new Dictionary<string, List<PooledObject>>();
     private Dictionary<string, List<PooledObject>> _inUsePooledObjects = new Dictionary<string, List<PooledObject>>();
 
+    // HACK LAND WONDERLAND
+    public string CheatPrefabId;
+
 	private void Awake() {
         Instance = this;
         InitializePooledObjects();
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.U)) {
+            CheatSpawnPooledObject();
+        }
+    }
+
+    private void CheatSpawnPooledObject() {
+        PooledObject pooledObject = UsePooledObject(CheatPrefabId);
+        pooledObject.transform.position = Vector3.up * 2f;
+        pooledObject.ActivatePooledObject();
+        RecoveryOrb orb = pooledObject as RecoveryOrb;
+        if(orb != null) {
+            orb.Initialize(RecoveryOrbType.Mana);
+        }
     }
 
     private void InitializePooledObjects() {

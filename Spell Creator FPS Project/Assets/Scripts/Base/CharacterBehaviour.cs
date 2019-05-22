@@ -29,6 +29,7 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     [SerializeField] protected Transform _headTransform;
     public Transform Head { get { return _headTransform; } }
 
+    public abstract Damageable Damageable { get; }
     [SerializeField] protected CharacterAnimationHandler _animHandler;
     public CharacterAnimationHandler CharacterAnimationHandler {
         get {

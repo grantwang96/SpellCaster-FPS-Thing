@@ -36,3 +36,10 @@ public static partial class GameplayValues {
         public const string MagicalPrefabId = "prefab.MagicProjectile";
     }
 }
+
+public static partial class GameplayValues {
+    public static class World {
+        public const int HealthOrbValue = 3;
+        public const int ManaOrbValue = 100;
+    }
+}

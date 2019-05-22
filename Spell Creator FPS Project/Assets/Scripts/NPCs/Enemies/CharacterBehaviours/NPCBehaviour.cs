@@ -10,7 +10,7 @@ public class NPCBehaviour : CharacterBehaviour {
     [SerializeField] protected NPCMoveController _charMove;
     public NPCMoveController CharMove => _charMove;
     [SerializeField] protected Damageable _damageable;
-    public Damageable Damageable => _damageable;
+    public override Damageable Damageable => _damageable;
     [SerializeField] protected NPCBlueprint _blueprint; // blueprint to derive data from
     public NPCBlueprint Blueprint => _blueprint;
 

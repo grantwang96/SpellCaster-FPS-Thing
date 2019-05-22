@@ -19,7 +19,7 @@ public class GameplayController : CharacterBehaviour {
     [SerializeField] protected Vector2 _lookVector; // Vector that saves camera controls input
     public Vector2 LookVector { get { return _lookVector; } }
     public override Vector3 GetBodyPosition() {
-        return _bodyTransform.position + playerMovement.CharacterController.center;
+        return _bodyTransform.position + _playerMovement.CharacterController.center;
     }
 
     public delegate void BasicBtnEvent(); // for button presses that don't need to pass information
@@ -33,9 +33,12 @@ public class GameplayController : CharacterBehaviour {
     public event BasicBtnEvent OnFire1Held;
     public event BasicBtnEvent OnFire1End;
 
-    private PlayerMovement_FPS playerMovement; // component that moves the player
-    private PlayerCamera_FPS playerCamera; // component that controls the camera
-    private PlayerCombat playerCombat;
+    private PlayerMovement_FPS _playerMovement; // component that moves the player
+    private PlayerCamera_FPS _playerCamera; // component that controls the camera
+    private PlayerCombat _playerCombat;
+    public ISpellCaster PlayerCombat => _playerCombat;
+    private PlayerDamageable _playerDamageable;
+    public override Damageable Damageable => _playerDamageable;
 
     [SerializeField] private UIPanel _menuPrefab;
 
@@ -58,7 +61,7 @@ public class GameplayController : CharacterBehaviour {
 	}
 
     public override float GetMoveMagnitude() {
-        Vector3 vel = playerMovement.CharacterController.velocity;
+        Vector3 vel = _playerMovement.CharacterController.velocity;
         vel.y = 0f;
         return vel.magnitude;
     }
@@ -75,11 +78,12 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void InitializeComponents() {
-        playerMovement = GetComponent<PlayerMovement_FPS>();
-        playerCamera = GetComponent<PlayerCamera_FPS>();
-        playerCamera.Head = Head;
-        playerCamera.Body = transform;
-        playerCombat = GetComponent<PlayerCombat>();
+        _playerMovement = GetComponent<PlayerMovement_FPS>();
+        _playerCamera = GetComponent<PlayerCamera_FPS>();
+        _playerCamera.Head = Head;
+        _playerCamera.Body = transform;
+        _playerCombat = GetComponent<PlayerCombat>();
+        _playerDamageable = GetComponent<PlayerDamageable>();
     }
 
     private void ProcessInputs() {

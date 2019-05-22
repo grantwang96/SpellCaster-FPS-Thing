@@ -13,4 +13,5 @@ public interface ISpellCaster {
     CharacterBehaviour CharacterBehaviour { get; }
 
     void PickUpSpell(Spell newSpell);
+    void RecoverMana(int mana);
 }

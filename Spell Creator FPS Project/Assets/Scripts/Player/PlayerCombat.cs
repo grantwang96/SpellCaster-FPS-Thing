@@ -168,6 +168,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             yield return null;
         }
         _manaRegeneration = null;
+        Mana = _maxMana;
     }
 
 
@@ -179,6 +180,14 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         } else {
             spellsList.Add(newSpell);
         }
+    }
+
+    public void RecoverMana(int mana) {
+        if(_mana + mana > MaxMana) {
+            Mana = MaxMana;
+            return;
+        }
+        Mana += mana;
     }
 
     private void Drop(Spell spell, Vector3 location, Quaternion rotation) {

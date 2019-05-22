@@ -87,7 +87,7 @@ public class Projectile : PooledObject {
         for(int i = 0; i < _effects.Length; i++) {
             _effects[i].TriggerEffect(_owner, _power, damageable);
         }
-        DeactivatePooledObject();
+        Die();
     }
 
     protected void CheckClipping() {
@@ -115,7 +115,7 @@ public class Projectile : PooledObject {
         // wait for effects to finished
         yield return new WaitForEndOfFrame();
         // deactivate and return object to pool
-        Die();
+        DeactivatePooledObject();
     }
 
     public override void ActivatePooledObject() {
@@ -123,14 +123,13 @@ public class Projectile : PooledObject {
     }
 
     public override void DeactivatePooledObject() {
-        StartCoroutine(Effects());
-    }
-
-    private void Die() {
-        Debug.Log($"Deactivating object");
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
         ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
         _isLive = false;
+    }
+
+    private void Die() {
+        StartCoroutine(Effects());
     }
 }
