@@ -23,7 +23,7 @@ public class CastingMethod_Raycast : Spell_CastingMethod {
                 }
             } else {
                 for (int i = 0; i < spell.Effects.Length; i++) {
-                    spell.Effects[i].TriggerEffect(caster.Damageable, spell.Power, hit.collider, effects);
+                    spell.Effects[i].TriggerEffect(caster.Damageable, spell.Power, hit.point, hit.collider, effects);
                 }
             }
         }

@@ -12,6 +12,7 @@ public class RecoveryOrb : PooledObject {
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Collider _colliderInner;
     [SerializeField] private Collider _colliderOuter;
+    [SerializeField] private SeparateColliderBroadcaster _triggerArea;
     [SerializeField] private float _flySpeed;
     [SerializeField] private float _spawnSpread;
     [SerializeField] private float _spawnForce;
@@ -39,7 +40,7 @@ public class RecoveryOrb : PooledObject {
 
 	// Use this for initialization
 	void Start () {
-		
+        _triggerArea.TriggerEnter += OnRecoveryOrbAreaEntered;
 	}
 	
 	// Update is called once per frame
@@ -47,16 +48,20 @@ public class RecoveryOrb : PooledObject {
 		
 	}
 
-    private void OnTriggerEnter(Collider other) {
+    private void OnDestroy() {
+        _triggerArea.TriggerEnter -= OnRecoveryOrbAreaEntered;
+    }
+
+    private void OnRecoveryOrbAreaEntered(Collider other) {
         if (!_interactable) { return; }
         if (_type == RecoveryOrbType.Health) {
             Damageable dam = other.GetComponent<Damageable>();
-            if(dam == GameplayController.Instance.Damageable) {
+            if (dam == GameplayController.Instance.Damageable) {
                 TryHeal(dam);
             }
         } else {
             ISpellCaster caster = other.GetComponent<ISpellCaster>();
-            if(caster == GameplayController.Instance.PlayerCombat) {
+            if (caster == GameplayController.Instance.PlayerCombat) {
                 TryRestoreMana(caster);
             }
         }

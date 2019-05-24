@@ -26,7 +26,7 @@ public class Projectile : PooledObject {
     protected float _speed;
 
     protected int _power;
-    protected bool _isLive; // can things collider with this projectile still?
+    [SerializeField] protected bool _isLive; // can things collider with this projectile still?
     public bool IsLive => _isLive;
 
     private void Awake() {
@@ -38,17 +38,20 @@ public class Projectile : PooledObject {
     }
 
     // initialize projectile's stats like power, gravity, and velocity
-    public void FireProjectile(int power, bool useGravity, Vector3 vector, float lifeTime, Effect[] effects) {
-        _isLive = true;
+    public void InitializeProjectile(int power, float lifeTime, Effect[] effects) {
         _power = power;
+        _lifeTime = lifeTime;
+        _effects = effects;
+    }
+
+    public virtual void FireProjectile(bool useGravity, Vector3 vector) {
+        _isLive = true;
         transform.SetParent(ObjectPool.Instance.transform);
         transform.forward = vector;
         _rigidBody.useGravity = useGravity;
-        _rigidBody.velocity = vector;
-        _lifeTime = lifeTime;
+        _rigidBody.AddForce(vector, ForceMode.VelocityChange);
         _collider.enabled = true;
         _startTime = Time.time;
-        _effects = effects;
     }
 	
 	protected virtual void Update () {
@@ -67,22 +70,35 @@ public class Projectile : PooledObject {
     }
 
     protected virtual void OnTriggerEnter(Collider coll) {
-        Debug.Log(coll.gameObject);
-        Debug.Log(_owner);
         Damageable dam = coll.GetComponent<Damageable>();
-        if(dam == _owner) {
+        if (dam == _owner) {
             return;
         }
-        OnHit(dam);
+        if (dam == null) {
+            OnHitCollider(coll);
+            return;
+        }
+        OnHitDamageable(dam);
         // if it collides with a wall
     }
 
-    // what happens when this collides with something?
-    protected virtual void OnHit(Damageable damageable = null) {
-        if(damageable != null) {
-            // handle effects
+    protected virtual void OnHitCollider(Collider coll) {
+        // handle non damageable situation
+        Vector3 dir = coll.transform.position - transform.position;
+        dir = dir.normalized;
+        float force = _rigidBody.velocity.magnitude * _rigidBody.mass;
+        if(coll.attachedRigidbody != null) {
+            coll.attachedRigidbody.AddForce(dir * force, ForceMode.Impulse);
         }
-        _isLive = false;
+
+        for (int i = 0; i < _effects.Length; i++) {
+            _effects[i].TriggerEffect(_owner, _power, transform.position, coll);
+        }
+        Die();
+    }
+
+    // what happens when this collides with something?
+    protected virtual void OnHitDamageable(Damageable damageable) {
         // apply effects here
         for(int i = 0; i < _effects.Length; i++) {
             _effects[i].TriggerEffect(_owner, _power, damageable);
@@ -126,10 +142,10 @@ public class Projectile : PooledObject {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
         ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
-        _isLive = false;
     }
 
     private void Die() {
+        _isLive = false;
         StartCoroutine(Effects());
     }
 }

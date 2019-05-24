@@ -70,6 +70,7 @@ public class RangedAttackState : AttackState {
         _currentProjectile.transform.parent = _hand;
         _currentProjectile.transform.localPosition = _handLocalPosition;
         _currentProjectile.ActivatePooledObject();
+        _currentProjectile?.InitializeProjectile(_power, _lifeTime, _effects);
 
         _projectileSpawned = true;
     }
@@ -80,7 +81,6 @@ public class RangedAttackState : AttackState {
         Vector3 forward = _npcVision.CurrentTarget.GetBodyPosition() - _hand.position;
         Vector3 velocity = forward.normalized * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
         // TODO: Calculate the velocity required to send the object directly at the target
-        _currentProjectile?.FireProjectile(_power, _useGravity, velocity, _lifeTime, _effects);
         _currentProjectile = null;
     }
 }

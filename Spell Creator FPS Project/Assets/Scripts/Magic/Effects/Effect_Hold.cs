@@ -36,7 +36,7 @@ public class Effect_Hold : Effect {
         damageable.AddForce(directionToTargetPosition * _holdPowerModifier);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Collider collider, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Collider collider, List<Effect> effects = null) {
         // calculate distance at which the object is being held
         float distance = Vector3.Distance(caster.transform.position, collider.transform.position);
         // get position according to where caster is looking

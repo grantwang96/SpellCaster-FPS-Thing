@@ -27,14 +27,13 @@ public class CastingMethod_SpreadShot : CastingMethod_MagicProjectile {
                 Debug.LogError($"Object \"{pooledObject}\" retrieved with ID \"{_magicProjectilePrefabId}\" was not of type MagicProjectile.");
                 return;
             }
-            InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
-
             int power = 1;
             if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
                 power += Mathf.FloorToInt(caster.ActiveSpell.holdTime);
             }
-
-            magicProjectile.InitializeStats(_projectileSpeed, _lifeTime, power); // wip
+            magicProjectile.InitializeProjectile(power, _lifeTime, spell.Effects);
+            InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
+            magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
         }
     }
 }

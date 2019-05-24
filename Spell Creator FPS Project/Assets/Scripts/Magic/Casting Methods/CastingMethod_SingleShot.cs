@@ -10,16 +10,16 @@ public class CastingMethod_SingleShot : CastingMethod_MagicProjectile {
         Vector3 direction = caster.GunBarrel.forward;
 
         MagicProjectile magicProjectile = GetMagicProjectile();
-        if(magicProjectile == null) { return; }
-        
-        // initialize magic projectile
-        InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
+        if (magicProjectile == null) { return; }
 
         int power = 1;
-        if(ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
+        if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
             power += Mathf.FloorToInt(caster.ActiveSpell.holdTime);
         }
 
-        magicProjectile.InitializeStats(_projectileSpeed, _lifeTime, power); // wip: Object pooling not implemented yet
+        // initialize magic projectile
+        magicProjectile.InitializeProjectile(power, _lifeTime, spell.Effects);
+        InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
+        magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
     }
 }

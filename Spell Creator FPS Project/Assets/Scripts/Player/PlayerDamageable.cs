@@ -19,6 +19,7 @@ public class PlayerDamageable : Damageable {
     public override void TakeDamage(int damage) {
         if (_isDead) { return; }
         _health -= damage;
+        if(_health > MaxHealth) { _health = MaxHealth; }
         if(_health < 0) { Die(); }
         FireHealthUpdateEvent();
     }

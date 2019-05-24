@@ -328,6 +328,6 @@ MonoBehaviour:
   meshRenderer:
   - {fileID: 23022578774774878}
   - {fileID: 23866698802535348}
-  _openAngle: 60
+  _openAngle: -60
   _hinge: {fileID: 4048849584200420}
   _rewardsSpawn: {fileID: 4619086173182484}
