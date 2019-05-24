@@ -13,6 +13,8 @@ public class RecoveryOrb : PooledObject {
     [SerializeField] private Collider _colliderInner;
     [SerializeField] private Collider _colliderOuter;
     [SerializeField] private float _flySpeed;
+    [SerializeField] private float _spawnSpread;
+    [SerializeField] private float _spawnForce;
 
     private RecoveryOrbType _type;
     private bool _interactable = true;
@@ -24,6 +26,15 @@ public class RecoveryOrb : PooledObject {
         _rigidbody.useGravity = true;
         _colliderInner.enabled = true;
         _colliderOuter.enabled = true;
+
+        Spawn();
+    }
+
+    private void Spawn() {
+        Vector3 offset = Random.insideUnitCircle * _spawnSpread;
+        offset = new Vector3(offset.x, 0f, offset.y);
+        Vector3 dir = Vector3.up + offset;
+        _rigidbody.AddForce(dir.normalized * _spawnForce, ForceMode.Impulse);
     }
 
 	// Use this for initialization

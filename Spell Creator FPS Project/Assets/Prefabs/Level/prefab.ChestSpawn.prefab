@@ -20,7 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4059228786078986}
   - component: {fileID: 114195076912924962}
-  m_Layer: 0
+  - component: {fileID: 65576272070534614}
+  m_Layer: 12
   m_Name: prefab.Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4916136396702894}
   - component: {fileID: 114021813279698196}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: prefab.ChestSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -51,7 +52,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4048849584200420}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Hinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4619086173182484}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: ObjectSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,6 +276,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1587375831051848}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &65576272070534614
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1179145542462926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!65 &65644264308185404
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -315,3 +328,6 @@ MonoBehaviour:
   meshRenderer:
   - {fileID: 23022578774774878}
   - {fileID: 23866698802535348}
+  _openAngle: 60
+  _hinge: {fileID: 4048849584200420}
+  _rewardsSpawn: {fileID: 4619086173182484}

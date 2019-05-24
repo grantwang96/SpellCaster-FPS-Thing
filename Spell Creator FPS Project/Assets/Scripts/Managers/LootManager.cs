@@ -24,10 +24,13 @@ public interface ILootManager {
 public class LootManager : MonoBehaviour, ILootManager {
 
     private const string ChestIdPrefix = "FunBoxProbablyFullOfCokeAndHookers_";
+    private const string ResourceLocation = "Config/data.ChestConfig";
     private const int ChestIdLength = 20;
 
     private static LootManager _instance;
     public static ILootManager Instance => _instance;
+
+    public ChestConfig ChestConfig { get; private set; }
 
     // list of all chests that appear in the level
     private Dictionary<string, ChestInfo> _chests = new Dictionary<string, ChestInfo>();
@@ -43,7 +46,20 @@ public class LootManager : MonoBehaviour, ILootManager {
 	// Use this for initialization
 	private void Awake () {
         _instance = this;
+        LoadConfig();
 	}
+
+    private void Start() {
+        PopulateLevel();
+    }
+
+    private void LoadConfig() {
+        Object obj = Resources.Load(ResourceLocation, typeof(ChestConfig));
+        ChestConfig = obj as ChestConfig;
+        if(ChestConfig != null) {
+            Debug.Log("Successfully loaded chest config!");
+        }
+    }
 
     // TODO: Get list of all locations for chest in level data
     // called at start. Populates the level with chests based on location type and rarity
@@ -71,11 +87,12 @@ public class LootManager : MonoBehaviour, ILootManager {
     private RewardsSet GenerateChestRewards(ChestType chestType) {
         List<string> inventoryRewards = new List<string>();
         // get each loot tier amount using config scriptable object
-        ChestTypeData[] chestTypes = ChestConfig.Instance.ChestTypes;
+        ChestTypeData[] chestTypes = ChestConfig.ChestTypes;
         ChestTypeData data = null;
         for(int i = 0; i < chestTypes.Length; i++) {
             if(chestTypes[i].ChestType == chestType) {
                 data = chestTypes[i];
+                continue;
             }
         }
         if(data == null) {

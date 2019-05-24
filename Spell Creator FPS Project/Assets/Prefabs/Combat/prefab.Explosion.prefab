@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23740080811742800}
   - component: {fileID: 135182671967368718}
   - component: {fileID: 114289610310409278}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: prefab.Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,6 +13,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chestTypes:
   - _chestType: 0
+    _healthOrbReward:
+      _min: 3
+      _max: 6
+    _manaOrbReward:
+      _min: 2
+      _max: 4
     _whiteTierRange:
       _min: 0
       _max: 0
@@ -26,6 +32,12 @@ MonoBehaviour:
       _min: 0
       _max: 0
   - _chestType: 1
+    _healthOrbReward:
+      _min: 0
+      _max: 0
+    _manaOrbReward:
+      _min: 0
+      _max: 0
     _whiteTierRange:
       _min: 0
       _max: 0
@@ -39,6 +51,12 @@ MonoBehaviour:
       _min: 0
       _max: 0
   - _chestType: 2
+    _healthOrbReward:
+      _min: 0
+      _max: 0
+    _manaOrbReward:
+      _min: 0
+      _max: 0
     _whiteTierRange:
       _min: 0
       _max: 0
@@ -52,6 +70,12 @@ MonoBehaviour:
       _min: 0
       _max: 0
   - _chestType: 3
+    _healthOrbReward:
+      _min: 0
+      _max: 0
+    _manaOrbReward:
+      _min: 0
+      _max: 0
     _whiteTierRange:
       _min: 0
       _max: 0

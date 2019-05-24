@@ -19,7 +19,6 @@ public class PlayerDamageable : Damageable {
     public override void TakeDamage(int damage) {
         if (_isDead) { return; }
         _health -= damage;
-        Debug.Log($"Player has taken {damage} damage!");
         if(_health < 0) { Die(); }
         FireHealthUpdateEvent();
     }
