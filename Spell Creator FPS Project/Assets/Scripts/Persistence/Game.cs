@@ -2,6 +2,6 @@
 
 [System.Serializable]
 public class Game {
-    public List<InventoryRune> PlayerRunesInventory = new List<InventoryRune>();
+    public List<StorableInventoryRune> PlayerRunesInventory = new List<StorableInventoryRune>();
     public List<StorableSpell> PlayerSpellsInventory = new List<StorableSpell>();
 }

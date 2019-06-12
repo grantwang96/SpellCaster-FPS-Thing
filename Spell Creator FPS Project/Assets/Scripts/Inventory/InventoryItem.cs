@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class InventoryRune {
+public class StorableInventoryRune {
     public string Id { get; protected set; }
     public int Count { get; protected set; }
 
-    public InventoryRune(string id, int count) {
+    public StorableInventoryRune(string id, int count) {
         Id = id;
         Count = count;
     }

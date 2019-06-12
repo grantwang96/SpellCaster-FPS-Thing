@@ -11,7 +11,7 @@ public abstract class GameManager : MonoBehaviour {
         Instance = this;
         _currentGame = SaveLoad.ReadFromDisk();
     }
-
+    
     protected abstract void Initialize();
 
     protected abstract void SubscribeToInventoryEvents();
@@ -20,8 +20,8 @@ public abstract class GameManager : MonoBehaviour {
         SaveLoad.Save(_currentGame);
     }
 
-    public virtual List<InventoryRune> GetRuneInventory() {
-        return new List<InventoryRune>(_currentGame.PlayerRunesInventory);
+    public virtual List<StorableInventoryRune> GetRuneInventory() {
+        return new List<StorableInventoryRune>(_currentGame.PlayerRunesInventory);
     }
 
     public virtual List<StorableSpell> GetSpellsInventory() {

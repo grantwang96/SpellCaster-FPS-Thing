@@ -44,6 +44,7 @@ public class UIViewGrid : MonoBehaviour {
     [Range(0f, 1f)] [SerializeField] private float _directionHoldFreq;
     [SerializeField] private bool _inverted;
 
+    private bool _isBuilt = false;
     private float _horizontal;
     private float _vertical;
     private float _intervalHoldTime;
@@ -54,16 +55,24 @@ public class UIViewGrid : MonoBehaviour {
     public event SelectPressed OnSelectPressed;
 
     public virtual void Initialize(UIViewGridInitData viewGridInitData) {
-        _parentPanel = _parentPanelGameObject.GetComponent<IUIViewGridParent>();
-        _interactableGrid = new IUIInteractable[viewGridInitData.RowLengths.Length][];
-        for(int i = 0; i < viewGridInitData.RowLengths.Length; i++) {
+        if(_parentPanel == null) {
+            _parentPanel = _parentPanelGameObject.GetComponent<IUIViewGridParent>();
+        }
+        InitializeInteractableGrid(viewGridInitData.RowLengths);
+    }
+    
+    private void InitializeInteractableGrid(int[] rows) {
+        if (_isBuilt) {
+            return;
+        }
+        _interactableGrid = new IUIInteractable[rows.Length][];
+        for (int i = 0; i < rows.Length; i++) {
             RectTransform row = Instantiate(_rowPrefab, _content);
             row.gameObject.SetActive(true);
-            _interactableGrid[i] = new IUIInteractable[viewGridInitData.RowLengths[i]];
-            for (int j = 0; j < _interactableGrid[i].Length; j++){
-                GameObject newCell = Instantiate(_cellPrefab, row);
-                IUIInteractable uIInteractable = newCell.GetComponent<IUIInteractable>();
-                if(uIInteractable != null) {
+            _interactableGrid[i] = new IUIInteractable[rows[i]];
+            for (int j = 0; j < rows[i]; j++) {
+                IUIInteractable uIInteractable = GenerateViewCell(row);
+                if (uIInteractable != null) {
                     _interactableGrid[i][j] = uIInteractable;
                     uIInteractable.Initialize(i, j);
                     _interactableGrid[i][j].OnSelected += OnSelect;
@@ -71,8 +80,18 @@ public class UIViewGrid : MonoBehaviour {
                 }
             }
         }
+        _isBuilt = true;
     }
-    
+
+    private IUIInteractable GenerateViewCell(Transform row) {
+        GameObject newCell = Instantiate(_cellPrefab, row);
+        IUIInteractable uIInteractable = newCell.GetComponent<IUIInteractable>();
+        if(uIInteractable != null) {
+            return uIInteractable;
+        }
+        return null;
+    }
+
 	// Use this for initialization
 	void Start () {
 		

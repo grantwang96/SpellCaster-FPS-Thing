@@ -17,7 +17,7 @@ public enum ChestType {
 }
 
 public interface ILootManager {
-
+    
     RewardsSet OpenChest(string chestId);
 }
 

@@ -68,12 +68,12 @@ public class RecoveryOrb : PooledObject {
     }
 
     private void TryHeal(Damageable dam) {
-        dam.TakeDamage(-GameplayValues.World.HealthOrbValue);
+        dam.TakeDamage(-GameplayValues.Level.HealthOrbValue);
         StartCoroutine(FlyToTarget(dam.Body));
     }
 
     private void TryRestoreMana(ISpellCaster caster) {
-        caster.RecoverMana(GameplayValues.World.ManaOrbValue);
+        caster.RecoverMana(GameplayValues.Level.ManaOrbValue);
         StartCoroutine(FlyToTarget(caster.Damageable.Body));
     }
 

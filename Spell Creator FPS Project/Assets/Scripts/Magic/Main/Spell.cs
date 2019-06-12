@@ -4,6 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class Spell {
     public string Name { get; private set; }
+    public string InstanceId { get; private set; }
+    public bool Favorite { get; private set; }
 
     [SerializeField] private Spell_CastingMethod _castingMethod;
     public Spell_CastingMethod CastingMethod {
@@ -21,6 +23,11 @@ public class Spell {
     public int Power { get; private set; }
 
     public Spell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers = null) {
+        
+        InstanceId = StorableSpell.GenerateInstanceId();
+        // TODO: GENERATE DEFAULT NAME IF NAME ISN'T GIVEN
+        Name = $"NoNameSadLife_{StringGenerator.RandomString(5)}";
+
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;
@@ -96,9 +103,59 @@ public class StorableSpell {
     private string[] _spellEffectIds;
     private string[] _spellModifierIds;
 
-    public StorableSpell(string castingMethodId, string[] spellEffectIds, string[] spellModifierIds) {
+    public string InstanceId { get; private set; }
+    public string Name { get; private set; }
+    public bool Favorite { get; private set; }
+
+    public StorableSpell(string castingMethodId, string[] spellEffectIds, string[] spellModifierIds, bool favorite = false) {
         _castingMethodId = castingMethodId;
         _spellEffectIds = spellEffectIds;
         _spellModifierIds = spellModifierIds;
+
+        InstanceId = GenerateInstanceId();
+        Name = ""; // TODO: GENERATE DEFAULT NAME FROM SPELL COMPONENTS
+        Favorite = favorite;
+    }
+
+    public void SetName(string newName) {
+        Name = newName;
+    }
+
+    public void SetFavorite(bool favorite) {
+        Favorite = favorite;
+    }
+
+    public static string GenerateInstanceId() {
+        return $"{GameplayValues.Magic.StorableSpellInstanceIdPrefix}_{StringGenerator.RandomString(GameplayValues.Magic.StorableSpellInstanceIdSize)}";
+    }
+
+    public Spell ConvertToSpell() {
+        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_castingMethodId);
+        Spell_CastingMethod castingMethod = storable as Spell_CastingMethod;
+        if (castingMethod == null) {
+            Debug.LogError($"Unable to retrieve Casting Method object from ID: {_castingMethodId}");
+            return null;
+        }
+        Effect[] effects = new Effect[_spellModifierIds.Length];
+        for(int i = 0; i < _spellEffectIds.Length; i++) {
+            storable = InventoryRegistry.Instance.GetItemById(_spellEffectIds[i]);
+            Effect effect = storable as Effect;
+            if(effect == null) {
+                Debug.LogError($"Unable to retrieve Effect object from ID: {_spellEffectIds[i]}");
+                return null;
+            }
+            effects[i] = effect;
+        }
+        SpellModifier[] modifiers = new SpellModifier[_spellModifierIds.Length];
+        for(int i = 0; i < _spellModifierIds.Length; i++) {
+            storable = InventoryRegistry.Instance.GetItemById(_spellModifierIds[i]);
+            SpellModifier modifier = storable as SpellModifier;
+            if(modifier == null) {
+                Debug.LogError($"Unable to retrieve Spell Modifier object from ID: {_spellModifierIds[i]}");
+                return null;
+            }
+            modifiers[i] = modifier;
+        }
+        return new Spell(castingMethod, effects, modifiers); ;
     }
 }

@@ -34,18 +34,25 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     public Damageable Damageable { get; private set; }
     public CharacterBehaviour CharacterBehaviour { get; private set; }
 
-    [SerializeField] private List<Spell> spellsList;
-    public List<Spell> SpellsList { get { return spellsList; } }
+    [SerializeField] private List<Spell> _spellsList;
+    public List<Spell> SpellsList { get { return _spellsList; } }
+    private List<SpellSlotInfo> _spellSlotInfos = new List<SpellSlotInfo>();
 
-    [SerializeField] private int spellInventoryLimit;
-    [SerializeField] private int selectedSpellIndex;
+    private const int _spellInventoryLimit = 3;
+    public int SpellInventoryLimit => _spellInventoryLimit;
+    [SerializeField] private int _selectedSpellIndex;
     private Spell SelectedSpell {
         get {
-            if(spellsList.Count == 0) { return null; }
-            if(selectedSpellIndex >= spellsList.Count) { selectedSpellIndex = 0; }
-            return spellsList[selectedSpellIndex];
+            if(_spellsList.Count == 0) { return null; }
+            if(_selectedSpellIndex >= _spellsList.Count) { _selectedSpellIndex = 0; }
+            return _spellsList[_selectedSpellIndex];
         }
     }
+
+    public delegate void SelectedSpellUpdatedDelegate(int index);
+    public delegate void SpellInventoryUpdatedDelegate(List<SpellSlotInfo> infos);
+    public event SelectedSpellUpdatedDelegate OnSelectedSpellUpdated;
+    public event SpellInventoryUpdatedDelegate OnSpellsInventoryUpdated;
 
     void Awake() {
         Damageable = GetComponent<Damageable>();
@@ -173,13 +180,24 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
 
     public void PickUpSpell(Spell newSpell) {
-        if(spellsList.Count >= spellInventoryLimit) {
-            Spell dropSpell = spellsList[selectedSpellIndex];
-            spellsList[selectedSpellIndex] = newSpell;
-            Drop(dropSpell, transform.position + transform.forward, transform.rotation);
+        if(_spellsList.Count >= _spellInventoryLimit) {
+            Spell dropSpell = _spellsList[_selectedSpellIndex];
+            _spellsList[_selectedSpellIndex] = newSpell;
+            DropSpell(dropSpell, transform.position + transform.forward, transform.rotation);
         } else {
-            spellsList.Add(newSpell);
+            _spellsList.Add(newSpell);
         }
+        // add to spell slot infos
+        Sprite[] effectIcons = new Sprite[newSpell.Effects.Length];
+        for(int i = 0; i < effectIcons.Length; i++) {
+            effectIcons[i] = newSpell.Effects[i].Icon;
+        }
+        Sprite[] modifierIcons = new Sprite[newSpell.SpellModifiers.Length];
+        for(int i = 0; i < modifierIcons.Length; i++) {
+            modifierIcons[i] = newSpell.SpellModifiers[i].Icon;
+        }
+        _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.Icon, effectIcons, modifierIcons));
+        OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
 
     public void RecoverMana(int mana) {
@@ -190,9 +208,11 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         Mana += mana;
     }
 
-    private void Drop(Spell spell, Vector3 location, Quaternion rotation) {
-        if (spellsList.Contains(spell)) {
-            spellsList.Remove(spell);
+    private void DropSpell(Spell spell, Vector3 location, Quaternion rotation) {
+        int index = _spellsList.FindIndex(x => x == spell);
+        if(index > 0) {
+            _spellsList.RemoveAt(index);
+            _spellSlotInfos.RemoveAt(index);
         }
         SpellManager.Instance.GenerateSpellBook(spell, location, rotation);
     }

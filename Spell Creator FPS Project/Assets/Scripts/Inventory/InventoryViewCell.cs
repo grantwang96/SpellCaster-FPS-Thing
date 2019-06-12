@@ -17,7 +17,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
 
     public override void Initialize(int x, int y) {
         InventoryViewCellData inventoryVCInitData = new InventoryViewCellData(x, y) {
-            itemId = GameplayValues.UI.EmptyInventoryItemId,
+            Id = GameplayValues.UI.EmptyInventoryItemId,
             Name = GameplayValues.UI.EmptyUIElementId
         };
         SetValue(inventoryVCInitData);
@@ -31,11 +31,11 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         InventoryViewCellData inventoryVCInitData = data as InventoryViewCellData;
         if (inventoryVCInitData == null) {
             inventoryVCInitData = new InventoryViewCellData(data.X, data.Y) {
-                itemId = GameplayValues.UI.EmptyInventoryItemId,
+                Id = GameplayValues.UI.EmptyInventoryItemId,
                 Name = GameplayValues.UI.EmptyUIElementId
             };
         }
-        _id = inventoryVCInitData.itemId;
+        _id = inventoryVCInitData.Id;
         _itemCount = inventoryVCInitData.itemCount;
         _count.text = _itemCount.ToString();
         xCoord = inventoryVCInitData.X;
@@ -60,7 +60,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
 
     public override IUIInteractableData ExtractData() {
         InventoryViewCellData data = new InventoryViewCellData(xCoord, yCoord);
-        data.itemId = _id;
+        data.Id = _id;
         data.Name = name;
         data.itemCount = _itemCount;
         return data;

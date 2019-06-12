@@ -12,7 +12,6 @@ public abstract class UIPanel : MonoBehaviour {
 
 	// Use this for initialization
 	protected virtual void Start () {
-        Debug.Log("Add listener");
         _closeButton?.onClick.AddListener(CloseUIPanel);
     }
 
@@ -39,7 +38,6 @@ public abstract class UIPanel : MonoBehaviour {
 
     protected virtual void CloseUIPanel() {
         UIManager.Instance.CloseUIPanel();
-        _closeButton?.onClick.RemoveListener(CloseUIPanel);
     }
 }
 
@@ -53,9 +51,4 @@ public abstract class UISubPanelParent : UIPanel {
 // Helper class used to initialize panel data
 public class UIPanelInitData {
 
-}
-
-public class InventoryPanelInitData : UIPanelInitData {
-    public IRunicInventory Inventory;
-    public InventoryItemType[] Filter;
 }

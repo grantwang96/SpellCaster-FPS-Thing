@@ -40,7 +40,7 @@ public class GameplayController : CharacterBehaviour {
     private PlayerDamageable _playerDamageable;
     public override Damageable Damageable => _playerDamageable;
 
-    [SerializeField] private UIPanel _menuPrefab;
+    [SerializeField] private string _menuPrefabName;
 
     protected override void Awake() {
         Instance = this;
@@ -162,7 +162,7 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void MenuPressed() {
-        UIManager.Instance.OpenUIPanel(_menuPrefab);
+        UIManager.Instance.OpenUIPanel(_menuPrefabName);
     }
 
     // event that is called when UIManager updates its panels

@@ -24,7 +24,7 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
 
     public override void Initialize(int x, int y) {
         SpellComponentData componentData = new SpellComponentData(x, y) {
-            itemId = GameplayValues.UI.EmptyInventoryItemId,
+            Id = GameplayValues.UI.EmptyInventoryItemId,
             Name = GameplayValues.UI.EmptyUIElementId,
             Text = GameplayValues.UI.EmptySpellStageText,
         };
@@ -35,15 +35,15 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
         SpellComponentData componentData = initData as SpellComponentData;
         if (componentData == null) {
             componentData = new SpellComponentData(initData.X, initData.Y) {
-                itemId = GameplayValues.UI.EmptyInventoryItemId,
+                Id = GameplayValues.UI.EmptyInventoryItemId,
                 Name = GameplayValues.UI.EmptyUIElementId,
                 Text = GameplayValues.UI.EmptySpellStageText,
             };
         }
         xCoord = initData.X;
         yCoord = initData.Y;
-        _id = componentData.itemId;
-        if (componentData.itemId == GameplayValues.UI.EmptyInventoryItemId) {
+        _id = componentData.Id;
+        if (componentData.Id == GameplayValues.UI.EmptyInventoryItemId) {
             _text.text = GameplayValues.UI.EmptySpellStageText;
             name = GameplayValues.UI.EmptyUIElementId;
             if (_image != null) {
@@ -57,7 +57,7 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
         if (_image == null) {
             _image = Instantiate(_imagePrefab, componentData.ImageParent);
         }
-        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(componentData.itemId);
+        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(componentData.Id);
         _image.sprite = storable.Icon; // temp
     }
 
@@ -71,7 +71,7 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
 
     public override IUIInteractableData ExtractData() {
         SpellComponentData data = new SpellComponentData(xCoord, yCoord);
-        data.itemId = _id;
+        data.Id = _id;
         data.ImageParent = _imageParent;
         data.Text = _text.text;
         data.Name = name;

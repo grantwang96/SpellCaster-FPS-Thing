@@ -77,7 +77,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public void SetUICastingMethod(Spell_CastingMethod castingMethod) {
         SpellComponentData componentData = new SpellComponentData(0, 0);
         // temp
-        componentData.itemId = castingMethod.Id;
+        componentData.Id = castingMethod.Id;
         componentData.Name = castingMethod.name;
         componentData.Text = castingMethod.name;
 
@@ -86,7 +86,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     public void AddUISpellEffect(Effect spell_Effect) {
         SpellComponentData componentData = new SpellComponentData(1, 0);
-        componentData.itemId = spell_Effect.Id;
+        componentData.Id = spell_Effect.Id;
         componentData.Name = spell_Effect.name;
         componentData.Text = spell_Effect.name;
 
@@ -95,7 +95,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     public void AddUISpellModifier(SpellModifier spellModifier) {
         SpellComponentData componentData = new SpellComponentData(2, 0);
-        componentData.itemId = spellModifier.Id;
+        componentData.Id = spellModifier.Id;
         componentData.Name = spellModifier.name;
         componentData.Text = spellModifier.name;
 

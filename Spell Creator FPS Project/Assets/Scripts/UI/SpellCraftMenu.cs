@@ -10,66 +10,60 @@ public class SpellCraftMenu : UISubPanelParent {
     [SerializeField] private Button _dropdownMenuButtonPrefab;
     [SerializeField] private RectTransform _dropdownMenuContent;
 
-    [SerializeField] private UIInventoryView _inventoryView;
+    [SerializeField] private UIRunicInventoryGridContainer _runicInventoryView;
     [SerializeField] private UISpellStagingArea _spellStagingArea;
 
     public ISpellCraftManager SpellCraftManager => _spellCraftManager;
     private SpellCraftManager _spellCraftManager;
 
-    public override void Initialize(UIPanelInitData initData) {
+    public override void Initialize(UIPanelInitData initData = null) {
         _spellCraftManager = new SpellCraftManager();
-        InventoryPanelInitData inventoryInit = initData as InventoryPanelInitData;
-        if(inventoryInit != null) {
-            _inventoryView.Initialize(inventoryInit.Inventory);
-        }
         _spellStagingArea.Initialize();
-        _inventoryView.SetActive(true, IntVector3.Zero);
+        _runicInventoryView.Initialize(null);
+        _runicInventoryView.SetActive(true, IntVector3.Zero);
         _spellStagingArea.SetActive(false, IntVector3.Zero);
-        _inventoryView.OnInventoryItemSelected += OnInventoryItemSelected;
+        _runicInventoryView.OnInventoryItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
+        Debug.Log("Finished initializing spell craft menu");
 
         // add on hover events here(maybe limit if we're on PC or not)
-    }
-
-    private void OnDisable() {
-        _inventoryView.OnInventoryItemSelected -= OnInventoryItemSelected;
-    }
-
-    protected override void Update() {
-        base.Update();
     }
 
     protected override void CloseUIPanel() {
         // return any staged runes to the player
         if(_spellCraftManager.LoadedCastingMethod != null) {
-            _inventoryView.Inventory.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
+            _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
         }
         foreach(Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
-            _inventoryView.Inventory.AddItem(spellEffect.Id, 1);
+            _runicInventoryView.AddItem(spellEffect.Id, 1);
         }
         foreach(SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
-            _inventoryView.Inventory.AddItem(spellModifier.Id, 1);
+            _runicInventoryView.AddItem(spellModifier.Id, 1);
         }
 
         // close the panel
         base.CloseUIPanel();
+
+        // remove listeners
+        _runicInventoryView.OnInventoryItemSelected -= OnInventoryItemSelected;
+        _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
+        _spellStagingArea.OnCraftSpellPressed -= GenerateSpell;
     }
 
     public override void ChangePanel(UISubPanel neighbor, IntVector3 dir) {
-        _inventoryView.SetActive(_inventoryView == neighbor, dir);
+        _runicInventoryView.SetActive(_runicInventoryView == neighbor, dir);
         _spellStagingArea.SetActive(_spellStagingArea == neighbor, dir);
     }
 
-
     private void OnInventoryItemSelected() {
-        IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(_inventoryView.HighlightedItemId);
+        IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(_runicInventoryView.HighlightedItemId);
         Spell_CastingMethod castingMethod = inventoryStorable as Spell_CastingMethod;
         if(castingMethod != null) {
             if(_spellCraftManager.LoadedCastingMethod != null) {
-                _inventoryView.Inventory.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
+                _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
             }
-            _inventoryView.Inventory.RemoveItem(_inventoryView.HighlightedItemId, 1);
+            _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
             _spellCraftManager.SetCastingMethod(castingMethod);
             _spellStagingArea.SetUICastingMethod(castingMethod);
             return;
@@ -81,7 +75,7 @@ public class SpellCraftMenu : UISubPanelParent {
                 Debug.Log($"Already contains component {inventoryStorable.Id}");
                 return;
             }
-            _inventoryView.Inventory.RemoveItem(_inventoryView.HighlightedItemId, 1);
+            _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
             _spellCraftManager.AddSpellEffect(spellEffect);
             _spellStagingArea.AddUISpellEffect(spellEffect);
             return;
@@ -93,7 +87,7 @@ public class SpellCraftMenu : UISubPanelParent {
                 Debug.Log($"Already contains component {inventoryStorable.Id}");
                 return;
             }
-            _inventoryView.Inventory.RemoveItem(_inventoryView.HighlightedItemId, 1);
+            _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
             _spellCraftManager.AddSpellModifier(spellModifier);
             _spellStagingArea.AddUISpellModifier(spellModifier);
         }
@@ -105,7 +99,7 @@ public class SpellCraftMenu : UISubPanelParent {
             Debug.LogError("Spell component slot contains an invalid inventory itemId!");
             return;
         }
-        _inventoryView.Inventory.AddItem(itemId, 1);
+        _runicInventoryView.AddItem(itemId, 1);
 
         _spellCraftManager.RemoveComponentFromSpell(itemId);
         _spellStagingArea.RemoveHighlightedSpellSlot();

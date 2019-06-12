@@ -7,23 +7,14 @@ public class SpellCraftingStation : MonoBehaviour, IInteractable {
     [SerializeField] private bool _interactable = true;
     public bool Interactable { get { return _interactable; } }
 
-    [SerializeField] private UIPanel _spellCraftingStationPanel;
+    [SerializeField] private string _spellCraftingStationPrefabName;
 
     public void Detect() {
         
     }
 
     public void Interact(CharacterBehaviour character) {
-        Debug.Log($"You are interacting with spell craft station: {this.name}");
-        InventoryPanelInitData initData = new InventoryPanelInitData() {
-            Inventory = PlayerInventory.RunicInventory,
-            Filter = new InventoryItemType[] {
-                InventoryItemType.CASTINGMETHOD,
-                InventoryItemType.SPELLEFFECT,
-                InventoryItemType.SPELLMODIFIER
-            }
-        };
-        UIManager.Instance.OpenUIPanel(_spellCraftingStationPanel, initData);
+        UIManager.Instance.OpenUIPanel(_spellCraftingStationPrefabName);
     }
 
     private void OnPanelClosed() {

@@ -31,7 +31,7 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
 
 public class ViewCellData : IUIInteractableData{
     public string Name;
-    public string itemId;
+    public string Id;
 
     public int X { get; set; }
     public int Y { get; set; }

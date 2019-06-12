@@ -16,17 +16,15 @@ public class GameManager_Gameplay : GameManager {
         PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated += SpellInventory_OnSpellInventoryDataUpdated;
     }
 
-    private void SpellInventory_OnSpellInventoryDataUpdated() {
+    private void SpellInventory_OnSpellInventoryDataUpdated(IReadOnlyList<StorableSpell> spells) {
         _currentGame.PlayerSpellsInventory.Clear();
-        _currentGame.PlayerSpellsInventory.AddRange(PlayerInventory.SpellInventory.RetrieveAllSpells());
+        _currentGame.PlayerSpellsInventory.AddRange(spells);
     }
 
-    private void RunicInventory_OnRunicInventoryDataUpdated() {
+    private void RunicInventory_OnRunicInventoryDataUpdated(IReadOnlyDictionary<string, int> updatedInventory) {
         _currentGame.PlayerRunesInventory.Clear();
-        IReadOnlyList<KeyValuePair<string, int>> runicInventory = PlayerInventory.RunicInventory.RetrieveAllItems();
-        
-        for(int i = 0; i < runicInventory.Count; i++) {
-            InventoryRune newRune = new InventoryRune(runicInventory[i].Key, runicInventory[i].Value);
+        foreach(KeyValuePair<string, int> pair in updatedInventory) {
+            StorableInventoryRune newRune = new StorableInventoryRune(pair.Key, pair.Value);
             _currentGame.PlayerRunesInventory.Add(newRune);
         }
     }
