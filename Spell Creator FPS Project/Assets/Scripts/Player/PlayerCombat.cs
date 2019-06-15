@@ -38,8 +38,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     public List<Spell> SpellsList { get { return _spellsList; } }
     private List<SpellSlotInfo> _spellSlotInfos = new List<SpellSlotInfo>();
 
-    private const int _spellInventoryLimit = 3;
-    public int SpellInventoryLimit => _spellInventoryLimit;
+    private const int _spellInventoryLimit = GameplayValues.Magic.PlayerLoadoutMaxSize;
     [SerializeField] private int _selectedSpellIndex;
     private Spell SelectedSpell {
         get {
@@ -57,6 +56,35 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     void Awake() {
         Damageable = GetComponent<Damageable>();
         CharacterBehaviour = GetComponent<CharacterBehaviour>();
+    }
+
+    private void Start() {
+        PlayerInventory.SpellInventory.OnLoadoutDataUpdated += OnLoadoutUpdated;
+        InitializeLoadout();
+    }
+
+    private void InitializeLoadout() {
+        _spellsList = new List<Spell>();
+        OnLoadoutUpdated(PlayerInventory.SpellInventory.CurrentLoadout);
+    }
+
+    private void OnLoadoutUpdated(StorableSpell[] loadout) {
+        Debug.Log("Loadout updated!");
+        _spellsList.Clear();
+        _spellSlotInfos.Clear();
+        for(int i = 0; i < loadout.Length; i++) {
+            if(loadout[i] == null) {
+                continue;
+            }
+            Spell newSpell = loadout[i].ConvertToSpell();
+            if(newSpell == null) {
+                Debug.LogError($"[PlayerCombat] Spell derived from loadout index {i} is null!");
+                continue;
+            }
+            _spellsList.Add(newSpell);
+            // add to spell slot infos
+            AddSpellSlotInfo(newSpell);
+        }
     }
 
     void OnEnable() {
@@ -125,6 +153,9 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if (GunBarrel == null || SelectedSpell == null) {
             return;
         }
+        if(ActiveSpell == null) {
+            return;
+        }
         if(_mana < selectedSpell.ManaCost) {
             ActiveSpell = new ActiveSpell();
             return;
@@ -178,7 +209,20 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         Mana = _maxMana;
     }
 
+    private void AddSpellSlotInfo(Spell newSpell) {
+        Sprite[] effectIcons = new Sprite[newSpell.Effects.Length];
+        for (int j = 0; j < effectIcons.Length; j++) {
+            effectIcons[j] = newSpell.Effects[j].Icon;
+        }
+        Sprite[] modifierIcons = new Sprite[newSpell.SpellModifiers.Length];
+        for (int j = 0; j < modifierIcons.Length; j++) {
+            modifierIcons[j] = newSpell.SpellModifiers[j].Icon;
+        }
+        _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.Icon, effectIcons, modifierIcons));
+        OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
+    }
 
+    /*
     public void PickUpSpell(Spell newSpell) {
         if(_spellsList.Count >= _spellInventoryLimit) {
             Spell dropSpell = _spellsList[_selectedSpellIndex];
@@ -199,6 +243,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.Icon, effectIcons, modifierIcons));
         OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
+    */
 
     public void RecoverMana(int mana) {
         if(_mana + mana > MaxMana) {
@@ -208,6 +253,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         Mana += mana;
     }
 
+    /*
     private void DropSpell(Spell spell, Vector3 location, Quaternion rotation) {
         int index = _spellsList.FindIndex(x => x == spell);
         if(index > 0) {
@@ -216,4 +262,5 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         }
         SpellManager.Instance.GenerateSpellBook(spell, location, rotation);
     }
+    */
 }

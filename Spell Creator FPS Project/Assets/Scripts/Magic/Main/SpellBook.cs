@@ -4,6 +4,8 @@ using UnityEngine;
 
 /// <summary>
 /// This is the spellbook that is found in world space
+/// THIS CLASS HAS BEEN DEPRECATED. SPELLS CAN ONLY BE ACQUIRED THRU CRAFTING/LOADOUT SYSTEM
+/// FUTURE ITERATIONS MAY SEE SPELLBOOK RETURN IF MULTIPLAYER BECAME A THING
 /// </summary>
 public class SpellBook : PooledObject, IInteractable {
 
@@ -45,7 +47,7 @@ public class SpellBook : PooledObject, IInteractable {
         ISpellCaster caster = character.GetComponent<ISpellCaster>();
         if(caster != null) {
             _interactable = false;
-            caster.PickUpSpell(HeldSpell);
+            // caster.PickUpSpell(HeldSpell);
             Destroy(gameObject);
         }
     }

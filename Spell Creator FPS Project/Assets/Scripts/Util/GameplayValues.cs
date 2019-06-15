@@ -38,5 +38,6 @@ public static partial class GameplayValues {
     public static class Magic {
         public const string StorableSpellInstanceIdPrefix = "StoredSpell_";
         public const int StorableSpellInstanceIdSize = 20;
+        public const int PlayerLoadoutMaxSize = 3;
     }
 }

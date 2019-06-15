@@ -12,12 +12,12 @@ public class Effect_AddStatusEffect : Effect {
     }
 
     public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
-        if (caster == damageable || damageable == null) { return; }
+        if (caster == null || damageable == null) { return; }
         damageable.TakeDamage(power, _statusEffect);
     }
 
     public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
-        if (caster == damageable || damageable == null) { return; }
+        if (caster == null || damageable == null) { return; }
         damageable.TakeDamage(power, _statusEffect);
     }
 }

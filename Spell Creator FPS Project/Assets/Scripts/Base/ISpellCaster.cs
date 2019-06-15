@@ -12,6 +12,6 @@ public interface ISpellCaster {
     Damageable Damageable { get; }
     CharacterBehaviour CharacterBehaviour { get; }
 
-    void PickUpSpell(Spell newSpell);
+    // void PickUpSpell(Spell newSpell);
     void RecoverMana(int mana);
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public delegate void RunicInventoryDataUpdated(IReadOnlyDictionary<string, int> updatedInventory);
 public delegate void SpellInventoryDataUpdated(IReadOnlyList<StorableSpell> updatedSpells);
+public delegate void LoadoutDataUpdated(StorableSpell[] Loadout);
 
 public interface IRunicInventory {
 
@@ -22,12 +23,17 @@ public interface IRunicInventory {
 
 public interface ISpellInventory {
 
+    IReadOnlyList<StorableSpell> StoredSpells { get; }
+    StorableSpell[] CurrentLoadout { get; }
+
     void AddSpell(StorableSpell spell);
     void RemoveSpell(StorableSpell spell);
     StorableSpell GetSpellByInstanceId(string instanceId);
-    IReadOnlyList<StorableSpell> StoredSpells { get; }
+    void SetSpellInLoadout(string spellInstanceId, int index);
+    void RemoveSpellInLoadout(int index);
 
     event SpellInventoryDataUpdated OnSpellInventoryDataUpdated;
+    event LoadoutDataUpdated OnLoadoutDataUpdated;
 }
 
 public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
@@ -39,31 +45,35 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
     public IReadOnlyDictionary<string, int> StoredRunes => _storedRunes;
     private List<StorableSpell> _storableSpells = new List<StorableSpell>();
     public IReadOnlyList<StorableSpell> StoredSpells => _storableSpells;
+    public StorableSpell[] CurrentLoadout { get; private set; } = new StorableSpell[GameplayValues.Magic.PlayerLoadoutMaxSize];
 
     public event RunicInventoryDataUpdated OnRunicInventoryDataUpdated;
     public event SpellInventoryDataUpdated OnSpellInventoryDataUpdated;
+    public event LoadoutDataUpdated OnLoadoutDataUpdated;
 
     private void Awake() {
         RunicInventory = this;
         SpellInventory = this;
+        InitializeRuneInventory();
+        InitializeSpellInventory();
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start() {
-        InitializeRuneInventory();
-        InitializeSpellInventory();
+
     }
 
     private void InitializeRuneInventory() {
         _storedRunes.Clear();
-        List<StorableInventoryRune> runeInventory = GameManager.Instance.GetRuneInventory();
+        List<StorableInventoryRune> runeInventory = GameManager.Instance.GetSavedRuneInventory();
         for(int i = 0; i < runeInventory.Count; i++) {
             _storedRunes.Add(runeInventory[i].Id, runeInventory[i].Count);
         }
     }
 
     private void InitializeSpellInventory() {
-        _storableSpells = GameManager.Instance.GetSpellsInventory();
+        _storableSpells = GameManager.Instance.GetSavedSpellsInventory();
+        CurrentLoadout = GameManager.Instance.GetSavedLoadout();
     }
 
     #region Runes Inventory Methods
@@ -145,6 +155,24 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
             return null;
         }
         return _storableSpells[index];
+    }
+
+    public void SetSpellInLoadout(string spellInstanceId, int index) {
+        StorableSpell spell = GetSpellByInstanceId(spellInstanceId);
+        if(spell == null) {
+            return;
+        }
+        if(index > CurrentLoadout.Length || index < 0) {
+            Debug.LogError($"[{nameof(PlayerInventory)}] Index {index} out of bounds");
+            return;
+        }
+        CurrentLoadout[index] = spell;
+        OnLoadoutDataUpdated?.Invoke(CurrentLoadout);
+    }
+
+    public void RemoveSpellInLoadout(int index) {
+        CurrentLoadout[index] = null;
+        OnLoadoutDataUpdated?.Invoke(CurrentLoadout);
     }
     #endregion
 }

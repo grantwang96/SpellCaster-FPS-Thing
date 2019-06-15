@@ -31,10 +31,12 @@ public class PlayerDamageable : Damageable {
 
     public override void TakeDamage(int damage, StatusEffect statusEffect) {
         TakeDamage(damage);
+        AddStatusEffect(statusEffect, damage);
     }
 
     public override void TakeDamage(int damage, Vector3 velocity, StatusEffect statusEffect) {
         TakeDamage(damage, velocity);
+        AddStatusEffect(statusEffect, damage);
     }
 
     private void Die() {

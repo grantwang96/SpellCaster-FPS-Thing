@@ -14,6 +14,7 @@ public class GameManager_Gameplay : GameManager {
     protected override void SubscribeToInventoryEvents() {
         PlayerInventory.RunicInventory.OnRunicInventoryDataUpdated += RunicInventory_OnRunicInventoryDataUpdated;
         PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated += SpellInventory_OnSpellInventoryDataUpdated;
+        PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
     }
 
     private void SpellInventory_OnSpellInventoryDataUpdated(IReadOnlyList<StorableSpell> spells) {
@@ -29,9 +30,14 @@ public class GameManager_Gameplay : GameManager {
         }
     }
 
+    private void SpellInventory_OnLoadoutDataUpdated(StorableSpell[] currentLoadout) {
+        _currentGame.PlayerCurrentLoadout = currentLoadout;
+    }
+
     private void OnDestroy() {
         PlayerInventory.RunicInventory.OnRunicInventoryDataUpdated -= RunicInventory_OnRunicInventoryDataUpdated;
         PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated -= SpellInventory_OnSpellInventoryDataUpdated;
+        PlayerInventory.SpellInventory.OnLoadoutDataUpdated -= SpellInventory_OnLoadoutDataUpdated;
     }
 
     // Use this for initialization

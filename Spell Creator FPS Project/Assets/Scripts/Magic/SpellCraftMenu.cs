@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// This class handles crafting a spell for the player
+/// </summary>
 public class SpellCraftMenu : UISubPanelParent {
-
-    [SerializeField] private bool _isSpellCraftMode;
-
+    
     [SerializeField] private Button _dropdownMenuButtonPrefab;
     [SerializeField] private RectTransform _dropdownMenuContent;
 
@@ -22,7 +23,7 @@ public class SpellCraftMenu : UISubPanelParent {
         _runicInventoryView.Initialize(null);
         _runicInventoryView.SetActive(true, IntVector3.Zero);
         _spellStagingArea.SetActive(false, IntVector3.Zero);
-        _runicInventoryView.OnInventoryItemSelected += OnInventoryItemSelected;
+        _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
         Debug.Log("Finished initializing spell craft menu");
@@ -46,7 +47,7 @@ public class SpellCraftMenu : UISubPanelParent {
         base.CloseUIPanel();
 
         // remove listeners
-        _runicInventoryView.OnInventoryItemSelected -= OnInventoryItemSelected;
+        _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed -= GenerateSpell;
     }
@@ -119,5 +120,14 @@ public class SpellCraftMenu : UISubPanelParent {
         PlayerInventory.SpellInventory.AddSpell(storableSpell);
         _spellCraftManager.ClearSpellComponents();
         _spellStagingArea.ClearSpellComponentSlots();
+        
+        // add this to loadout if loadout is not full
+        for(int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
+            if(PlayerInventory.SpellInventory.CurrentLoadout[i] == null) {
+                PlayerInventory.SpellInventory.SetSpellInLoadout(storableSpell.InstanceId, i);
+                return;
+            }
+        }
+        // ask the player if they wish to use this spell now
     }
 }

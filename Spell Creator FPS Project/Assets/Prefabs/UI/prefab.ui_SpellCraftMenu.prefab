@@ -420,7 +420,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _closeButton: {fileID: 114503068646179016}
-  _isSpellCraftMode: 0
   _dropdownMenuButtonPrefab: {fileID: 0}
   _dropdownMenuContent: {fileID: 0}
   _runicInventoryView: {fileID: 114826518986668284}
@@ -840,15 +839,15 @@ MonoBehaviour:
   _rightNeighbor: {fileID: 0}
   _downNeighbor: {fileID: 0}
   _leftNeighbor: {fileID: 114092435569792750}
-  _content: {fileID: 224735786204307298}
-  _inventoryViewCellPrefab: {fileID: 114753334492418892, guid: ebcc297e8a29937449ce6b811bace38a,
-    type: 2}
-  _inventoryGrid: {fileID: 114541312620179998}
-  _filter: 020000000100000003000000
+  _mainInventoryGrid: {fileID: 114541312620179998}
   _rowSize: 5
   _columnSize: 9
   _currentPage: 0
   _totalPages: 1
+  _content: {fileID: 224735786204307298}
+  _inventoryViewCellPrefab: {fileID: 114753334492418892, guid: ebcc297e8a29937449ce6b811bace38a,
+    type: 2}
+  _filter: 020000000100000003000000
 --- !u!114 &114905927507941318
 MonoBehaviour:
   m_ObjectHideFlags: 1

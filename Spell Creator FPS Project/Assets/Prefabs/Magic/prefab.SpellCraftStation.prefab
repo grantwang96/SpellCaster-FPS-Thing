@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 23732707947871186}
   - component: {fileID: 65089087827069080}
   m_Layer: 0
-  m_Name: prefab.MagicTable
+  m_Name: prefab.SpellCraftStation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,5 +151,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactable: 1
-  _spellCraftingStationPanel: {fileID: 114190655735548430, guid: b2947a255bb019b468f298a59f08e25b,
-    type: 2}
+  _spellCraftingStationPrefabName: 
