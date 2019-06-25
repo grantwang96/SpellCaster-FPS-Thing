@@ -18,8 +18,11 @@ public class Effect_Explosion : Effect {
         throw new System.NotImplementedException();
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
-        throw new System.NotImplementedException();
+    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> additionalEffects = null) {
+        List<Effect> newEffects = additionalEffects == null ? new List<Effect>() : new List<Effect>(additionalEffects);
+        newEffects.Remove(this);
+        MagicExplosion explosion = Instantiate(magicExplosionPrefab, caster.Body.position, Quaternion.identity);
+        explosion.Initialize(newEffects, _radius, _force, _time, power, caster);
     }
 
     public override void TriggerEffect(Damageable caster, int power, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {

@@ -58,7 +58,7 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
             _image = Instantiate(_imagePrefab, componentData.ImageParent);
         }
         IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(componentData.Id);
-        _image.sprite = storable.Icon; // temp
+        _image.sprite = storable.SmallIcon; // temp
     }
 
     public override void Highlight() {

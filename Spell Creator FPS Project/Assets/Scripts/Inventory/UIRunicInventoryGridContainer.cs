@@ -22,7 +22,6 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
         base.Initialize(initData);
         if(Inventory == null) { Inventory = PlayerInventory.RunicInventory; }
         Inventory.OnRunicInventoryDataUpdated += OnItemsUpdated;
-        GenerateViewCells();
         OnItemsUpdated(Inventory.StoredRunes);
     }
     
@@ -37,7 +36,7 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
         Debug.Log("Updating inventory view items...");
         _items.Clear();
         foreach(KeyValuePair<string, int> pair in updatedInventory) {
-            Debug.Log(pair.Key);
+            Debug.Log($"{pair.Key}, {pair.Value}");
             _items.Add(pair);
         }
         UpdateViewCells();

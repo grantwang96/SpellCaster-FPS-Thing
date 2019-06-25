@@ -22,11 +22,11 @@ public class Spell {
 
     public int Power { get; private set; }
 
-    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers = null) {
+    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers = null, string name = "NoNameSadLife") {
         
         InstanceId = StorableSpell.GenerateInstanceId();
         // TODO: GENERATE DEFAULT NAME IF NAME ISN'T GIVEN
-        Name = $"NoNameSadLife_{StringGenerator.RandomString(5)}";
+        Name = name;
 
         _castingMethod = castingMethod;
         _effects = effects;
@@ -156,6 +156,7 @@ public class StorableSpell {
             }
             modifiers[i] = modifier;
         }
-        return new Spell(castingMethod, effects, modifiers); ;
+        Spell newSpell = new Spell(castingMethod, effects, modifiers);
+        return newSpell;
     }
 }

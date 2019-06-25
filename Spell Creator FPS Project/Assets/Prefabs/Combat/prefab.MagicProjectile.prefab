@@ -272,16 +272,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61cc95e4be484a45a735aa0bf0c7e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _prefabId: 
   _inUse: 0
   _owner: {fileID: 0}
-  _onHitEffects: {fileID: 0}
+  _onHitVFX: {fileID: 0}
   _rigidBody: {fileID: 0}
   _collider: {fileID: 0}
   _meshFilter: {fileID: 33625863036091494}
-  _statusEffect: {fileID: 0}
+  _effects: []
   _collisionMask:
     serializedVersion: 2
     m_Bits: 2561
+  _isLive: 0
+  _mainParticleSystem: {fileID: 198417632837241140}
 --- !u!135 &135801396194928522
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -858,7 +861,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 1000
+    maxNumParticles: 2000
     size3D: 0
     rotation3D: 0
     gravityModifier:
@@ -917,7 +920,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 5
     enabled: 1
-    type: 0
+    type: 6
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -929,7 +932,7 @@ ParticleSystem:
     placementMode: 1
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
-    m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+    m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     m_MeshRenderer: {fileID: 0}
     m_SkinnedMeshRenderer: {fileID: 0}
     m_Sprite: {fileID: 0}
@@ -1067,7 +1070,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 150
+      scalar: 800
       minScalar: 10
       maxCurve:
         serializedVersion: 2

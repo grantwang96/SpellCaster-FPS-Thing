@@ -51,8 +51,9 @@ public class UIViewGrid : MonoBehaviour {
     private float _holdTime;
     private bool _directionButtonsPressed;
 
-    public delegate void SelectPressed(IUIInteractable interactable);
-    public event SelectPressed OnSelectPressed;
+    public delegate void GridItemEvent(IUIInteractable interactable);
+    public event GridItemEvent OnHighlighted;
+    public event GridItemEvent OnSelectPressed;
 
     public virtual void Initialize(UIViewGridInitData viewGridInitData) {
         if(_parentPanel == null) {
@@ -201,6 +202,7 @@ public class UIViewGrid : MonoBehaviour {
         _currentItemX = x;
         _currentItemY = y;
         _interactableGrid[CurrentItemX][CurrentItemY].Highlight();
+        OnHighlighted?.Invoke(_interactableGrid[CurrentItemX][CurrentItemY]);
     }
 
     public void UnhighlightCell(int x, int y) {

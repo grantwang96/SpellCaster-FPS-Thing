@@ -80,6 +80,7 @@ public class RangedAttackState : AttackState {
         if(_currentProjectile == null || _currentProjectile.IsLive) { return; }
         Vector3 forward = _npcVision.CurrentTarget.GetBodyPosition() - _hand.position;
         Vector3 velocity = forward.normalized * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
+        _currentProjectile.FireProjectile(true, velocity);
         // TODO: Calculate the velocity required to send the object directly at the target
         _currentProjectile = null;
     }

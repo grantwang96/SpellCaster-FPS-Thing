@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 
 public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHandler {
 
-    private string _spellInstanceId;
-    private string _spellName;
-    private StorableSpell _spell;
+    [SerializeField] private string _spellInstanceId;
+    [SerializeField] private string _spellName;
+    [SerializeField] private StorableSpell _spell;
 
     [SerializeField] private RectTransform _content;
     [SerializeField] private Text _spellNameText;
@@ -44,6 +44,8 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
     }
 
     public override void SetValue(IUIInteractableData data) {
+        xCoord = data.X;
+        yCoord = data.Y;
         if(data == null) {
             Debug.LogError($"[{nameof(SpellViewCell)}] Initialization data received was null!");
             return;
@@ -55,13 +57,14 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
         }
         if(initData.StoredSpell == null) {
             _spellInstanceId = string.Empty;
-            _spellName = string.Empty;
-            gameObject.SetActive(false);
+            _spellName = "Empty Spell Slot";
+            UpdateUIValues();
             return;
         }
-        _spellInstanceId = initData.Id;
-        _spellName = initData.Name;
+        _spellInstanceId = initData.StoredSpell.InstanceId;
+        _spellName = initData.StoredSpell.Name;
         gameObject.SetActive(true);
+        UpdateUIValues();
     }
 
     private void UpdateUIValues() {

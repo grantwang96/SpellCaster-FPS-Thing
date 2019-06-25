@@ -25,7 +25,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
 
     public override void SetValue(IUIInteractableData data) {
         if(data == null) {
-            Debug.LogError("UIINteractable Data is null!");
+            Debug.LogError("UIInteractable Data is null!");
             return;
         }
         InventoryViewCellData inventoryVCInitData = data as InventoryViewCellData;
@@ -47,7 +47,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         }
         _icon.enabled = true;
         IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_id);
-        _icon.sprite = storable.Icon;
+        _icon.sprite = storable.SmallIcon;
     }
 
     public override void Highlight() {

@@ -34,13 +34,20 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
 
     private void Initialize(ISpellInventory inventory) {
         SpellsInventory = inventory;
-        SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
-        GenerateViewCells();
-        OnInventoryUpdated(SpellsInventory.StoredSpells);
     }
 
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
+
+        SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
+        OnInventoryUpdated(SpellsInventory.StoredSpells);
+    }
+
+    private void OnDisable() {
+        if (SpellsInventory != null) {
+            SpellsInventory.OnSpellInventoryDataUpdated -= OnInventoryUpdated;
+        }
+        _mainInventoryGrid.OnSelectPressed -= OnSelectPressed;
     }
 
     private void GenerateViewGrids() {
@@ -52,6 +59,7 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
             RowLengths = rows
         };
         _mainInventoryGrid.Initialize(spellsGridInitData);
+        _mainInventoryGrid.OnHighlighted += OnItemHighlighted;
         _mainInventoryGrid.OnSelectPressed += OnSelectPressed;
     }
 

@@ -6,7 +6,6 @@ using UnityEngine;
 public class CastingMethod_Self : Spell_CastingMethod {
 
     protected override void CastSpell(ISpellCaster caster, Spell spell) {
-        Debug.Log(caster.Damageable);
         List<Effect> effects = new List<Effect>(spell.Effects);
         for (int i = 0; i < spell.Effects.Length; i++) {
             Damageable damageable = caster.Damageable;

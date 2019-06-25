@@ -20,8 +20,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     [SerializeField] private UIViewGrid _spellComponentsView;
     [SerializeField] private UIViewGrid _craftButtonView;
     
-    public delegate void SpellSlotSelected(string itemId);
-    public event SpellSlotSelected OnSpellSlotSelected;
+    public delegate void SpellSlotEvent(string itemId);
+    public event SpellSlotEvent OnSpellSlotHighlighted;
+    public event SpellSlotEvent OnSpellSlotSelected;
     public delegate void CraftSpellEvent();
     public event CraftSpellEvent OnCraftSpellPressed;
     public event UpdateActiveGrid OnUpdateActiveGrid;
@@ -31,6 +32,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         spellComponentsInit.RowLengths = _spellComponentsViewRowLengths;
         _spellComponentsView.Initialize(spellComponentsInit);
         _spellComponentsView.OnSelectPressed += OnSpellComponentSelected;
+        _spellComponentsView.OnHighlighted += OnSpellComponentHighlighted;
 
         UIViewGridInitData craftButtonInit = new UIViewGridInitData();
         craftButtonInit.RowLengths = _craftButtonViewRowLengths;
@@ -81,7 +83,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         componentData.Name = castingMethod.name;
         componentData.Text = castingMethod.name;
 
-        _spellComponentsView.AddInteractableItemToRow(0, componentData);
+        // _spellComponentsView.AddInteractableItemToRow(0, componentData);
+        _spellComponentsView.SetInteractableItem(0, 0, componentData);
     }
 
     public void AddUISpellEffect(Effect spell_Effect) {
@@ -114,6 +117,15 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
                 _spellComponentsView.RemoveInteractableFromRow(i, j);
             }
         }
+    }
+
+    private void OnSpellComponentHighlighted(IUIInteractable interactable) {
+        string id = interactable.Id;
+        if (id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
+            OnSpellSlotHighlighted?.Invoke(id);
+            return;
+        }
+        OnSpellSlotHighlighted?.Invoke(id);
     }
 
     private void OnSpellComponentSelected(IUIInteractable interactable) {

@@ -4,6 +4,11 @@ public static partial class GameplayValues {
 }
 
 public static partial class GameplayValues {
+
+    public static class Inventory {
+        public const string UnknownInventoryItemId = "UNKNOWN_ITEM_ID";
+    }
+
     public static class UI {
         public const string EmptyInventoryItemId = "NONE";
         public const int MaximumSpellCastingMethods = 1;
@@ -27,7 +32,7 @@ public static partial class GameplayValues {
     public static class ObjectPooling {
         public const string RecoveryOrbPrefabId = "prefab.RecoveryOrb";
         public const string ProjectilePrefabId = "prefab.Projectile";
-        public const string MagicalPrefabId = "prefab.MagicProjectile";
+        public const string MagicalProjectilePrefabId = "prefab.MagicProjectile";
     }
 
     public static class Level {

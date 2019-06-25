@@ -12,8 +12,8 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
 
-        _rowSize = 1;
-        _columnSize = GameplayValues.Magic.PlayerLoadoutMaxSize;
+        // _rowSize = 1;
+        // _columnSize = GameplayValues.Magic.PlayerLoadoutMaxSize;
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
         GenerateViewCells();
         SpellInventory_OnLoadoutDataUpdated(PlayerInventory.SpellInventory.CurrentLoadout);
@@ -28,11 +28,11 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
 
     protected override void SetGridInteractableItem(int x, int y) {
         SpellViewCellData initData = new SpellViewCellData(x, y);
-        if (_loadout[y] == null) {
+        if (_loadout[x] == null) {
             _mainInventoryGrid.SetInteractableItem(x, y, initData);
             return;
         }
-        StorableSpell currentSpell = _loadout[y];
+        StorableSpell currentSpell = _loadout[x];
         initData.Id = currentSpell.InstanceId;
         initData.SetValue(currentSpell);
         _mainInventoryGrid.SetInteractableItem(x, y, initData);

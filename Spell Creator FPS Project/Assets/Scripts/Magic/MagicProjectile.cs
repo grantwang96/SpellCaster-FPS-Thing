@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MagicProjectile : Projectile {
+    
+    [SerializeField] private ParticleSystem _mainParticleSystem;
 
+    public MeshRenderer MeshRenderer { get; private set; }
+    public ParticleSystem MainParticleSystem => _mainParticleSystem;
     public Spell Spell { get; private set; }
     public ISpellCaster SpellCaster { get; private set; }
 
@@ -42,6 +46,8 @@ public class MagicProjectile : Projectile {
     private void Awake() {
         _rigidBody = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
+
+        MeshRenderer = _meshFilter.GetComponent<MeshRenderer>();
     }
 
     // Use this for initialization
@@ -56,5 +62,10 @@ public class MagicProjectile : Projectile {
         foreach (Effect effect in Spell.Effects) {
             effect?.TriggerEffect(SpellCaster.Damageable, dir.normalized * force, _power, transform.position, damageable);
         }
+    }
+
+    public void SetParticleSystemMesh(Mesh newMesh) {
+        var ParticleSystemShape = _mainParticleSystem.shape;
+        ParticleSystemShape.mesh = newMesh;
     }
 }

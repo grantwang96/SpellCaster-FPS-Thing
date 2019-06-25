@@ -86,7 +86,6 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
         _storedRunes.Add(id, count);
         OnRunicInventoryDataUpdated?.Invoke(StoredRunes);
         Debug.Log($"Player Inventory added: {id} by {count}!");
-        Debug.Log($"New Quantity for {id} is {_storedRunes[id]}");
     }
 
     public void AddItem(IInventoryStorable storable) {

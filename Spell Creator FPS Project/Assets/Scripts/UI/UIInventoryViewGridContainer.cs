@@ -16,8 +16,9 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
 
     public string HighlightedItemId { get; protected set; }
 
-    public delegate void GridItemSelected();
-    public event GridItemSelected OnGridItemSelected;
+    public delegate void GridItemEvent();
+    public event GridItemEvent OnGridItemHighlighted;
+    public event GridItemEvent OnGridItemSelected;
     public event UpdateActiveGrid OnUpdateActiveGrid;
 
     protected virtual void Awake() {
@@ -38,6 +39,11 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         OnGridItemSelected?.Invoke();
     }
 
+    protected void OnItemHighlighted(IUIInteractable interactable) {
+        HighlightedItemId = interactable.Id;
+        OnGridItemHighlighted?.Invoke();
+    }
+
     protected void GenerateViewCells() {
         int[] rowLengths = new int[_rowSize];
         for (int i = 0; i < rowLengths.Length; i++) {
@@ -47,6 +53,7 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
             RowLengths = rowLengths,
         };
         _mainInventoryGrid.Initialize(initData);
+        _mainInventoryGrid.OnHighlighted += OnItemHighlighted;
         _mainInventoryGrid.OnSelectPressed += OnSelectPressed;
     }
 
@@ -54,7 +61,6 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         int itemsPerPage = _rowSize * _columnSize;
         _totalPages = GetTotalPages(itemsPerPage);
         for (int i = 0; i < _rowSize; i++) {
-            int columnMod = _columnSize * i;
             for (int j = 0; j < _columnSize; j++) {
                 SetGridInteractableItem(i, j);
             }

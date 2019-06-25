@@ -15,9 +15,11 @@ public class LoadoutMenu : UISubPanelParent {
         SpellsInventoryViewInitData viewInitData = new SpellsInventoryViewInitData();
         _spellsInventoryView.Initialize(viewInitData);
         // _spellsDescriptionView.Initialize(initData);
+        _loadoutView.Initialize(null);
 
         _spellsInventoryView.SetActive(true, IntVector3.Zero);
         // _spellsDescriptionView.SetActive(false, IntVector3.Zero);
+        _loadoutView.SetActive(false, IntVector3.Zero);
 
         _spellsInventoryView.OnSpellSelected += OnInventorySpellSelected;
 
@@ -37,6 +39,11 @@ public class LoadoutMenu : UISubPanelParent {
     // when a spell has been selected on the loadout side of the panel
     private void OnLoadoutSpellSelected() {
 
+    }
+
+    public override void ChangePanel(UISubPanel subPanel, IntVector3 dir) {
+        _spellsInventoryView.SetActive(subPanel == _spellsInventoryView, dir);
+        _loadoutView.SetActive(subPanel == _loadoutView, dir);
     }
 
     protected override void CloseUIPanel() {

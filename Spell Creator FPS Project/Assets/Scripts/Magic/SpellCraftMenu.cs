@@ -13,6 +13,7 @@ public class SpellCraftMenu : UISubPanelParent {
 
     [SerializeField] private UIRunicInventoryGridContainer _runicInventoryView;
     [SerializeField] private UISpellStagingArea _spellStagingArea;
+    [SerializeField] private UISpellComponentDescView _spellComponentDescriptionView;
 
     public ISpellCraftManager SpellCraftManager => _spellCraftManager;
     private SpellCraftManager _spellCraftManager;
@@ -23,7 +24,9 @@ public class SpellCraftMenu : UISubPanelParent {
         _runicInventoryView.Initialize(null);
         _runicInventoryView.SetActive(true, IntVector3.Zero);
         _spellStagingArea.SetActive(false, IntVector3.Zero);
+        _runicInventoryView.OnGridItemHighlighted += OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
+        _spellStagingArea.OnSpellSlotHighlighted += OnStagingAreaItemHighlighted;
         _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
         Debug.Log("Finished initializing spell craft menu");
@@ -42,6 +45,7 @@ public class SpellCraftMenu : UISubPanelParent {
         foreach(SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
             _runicInventoryView.AddItem(spellModifier.Id, 1);
         }
+        _spellStagingArea.ClearSpellComponentSlots();
 
         // close the panel
         base.CloseUIPanel();
@@ -55,6 +59,10 @@ public class SpellCraftMenu : UISubPanelParent {
     public override void ChangePanel(UISubPanel neighbor, IntVector3 dir) {
         _runicInventoryView.SetActive(_runicInventoryView == neighbor, dir);
         _spellStagingArea.SetActive(_spellStagingArea == neighbor, dir);
+    }
+
+    private void OnInventoryItemHighlighted() {
+        _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
     }
 
     private void OnInventoryItemSelected() {
@@ -92,6 +100,10 @@ public class SpellCraftMenu : UISubPanelParent {
             _spellCraftManager.AddSpellModifier(spellModifier);
             _spellStagingArea.AddUISpellModifier(spellModifier);
         }
+    }
+
+    private void OnStagingAreaItemHighlighted(string itemId) {
+        _spellComponentDescriptionView.UpdateDescription(itemId);
     }
 
     private void OnStagingAreaItemSelected(string itemId) {

@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public static class SaveLoad {
 
     private static readonly string SavePath = Application.persistentDataPath + "/savedGames.gd";
+
+    private static List<Game> _games = new List<Game>();
     
     public static void Save(Game toBeSaved) {
         PersistFile(toBeSaved);

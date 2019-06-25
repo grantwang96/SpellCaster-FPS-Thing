@@ -13,5 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemType: 3
   _id: SPELL_MOD_MESHTOHUMAN
-  _icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  _smallIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  _largeIcon: {fileID: 0}
+  _name: Human Shaped Bolts
+  _shortDescription: People Shaped magical bolts
+  _longDescription: 
   _nextMesh: {fileID: 4300000, guid: 527a1ab7885f39448a1c5c22ac8e9dc9, type: 3}

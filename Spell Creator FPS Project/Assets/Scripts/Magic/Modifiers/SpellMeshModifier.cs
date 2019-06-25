@@ -12,7 +12,10 @@ public class SpellMeshModifier : SpellModifier {
     }
 
     public override void SetupProjectile(MagicProjectile projectile) {
-        MeshFilter meshFilter = projectile.MeshFilter;
-        meshFilter.mesh = _nextMesh;
+        Debug.Log("Setting up projectile...");
+        // MeshFilter meshFilter = projectile.MeshFilter;
+        // meshFilter.mesh = _nextMesh;
+       // projectile.MeshRenderer.enabled = true;
+        projectile.SetParticleSystemMesh(_nextMesh);
     }
 }

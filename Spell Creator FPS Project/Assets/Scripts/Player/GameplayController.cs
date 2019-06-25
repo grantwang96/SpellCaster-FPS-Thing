@@ -23,6 +23,7 @@ public class GameplayController : CharacterBehaviour {
     }
 
     public delegate void BasicBtnEvent(); // for button presses that don't need to pass information
+    public delegate void SlotBtnEvent(int number); // for numkey presses
     public event BasicBtnEvent OnJumpPressed;
 
     public event BasicBtnEvent OnInteractPressed;
@@ -32,6 +33,8 @@ public class GameplayController : CharacterBehaviour {
     public event BasicBtnEvent OnFire1Pressed;
     public event BasicBtnEvent OnFire1Held;
     public event BasicBtnEvent OnFire1End;
+
+    public event SlotBtnEvent OnSlotBtnPressed;
 
     private PlayerMovement_FPS _playerMovement; // component that moves the player
     private PlayerCamera_FPS _playerCamera; // component that controls the camera
@@ -110,6 +113,16 @@ public class GameplayController : CharacterBehaviour {
 
         _lookVector.x = Input.GetAxis("Mouse X");
         _lookVector.y = Input.GetAxis("Mouse Y");
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            OnSlotBtnPressed?.Invoke(1);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            OnSlotBtnPressed?.Invoke(2);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            OnSlotBtnPressed?.Invoke(3);
+        }
     }
 
     private void ControllerInputs() {

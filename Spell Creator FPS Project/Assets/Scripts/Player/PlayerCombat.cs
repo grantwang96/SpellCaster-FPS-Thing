@@ -20,9 +20,12 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             return _maxMana;
         }
     }
+    // Contains data for currently active spell(charge time, power, etc.)
     public ActiveSpell ActiveSpell { get; private set; }
+    // how long before spell can be fired again
+    private bool _coolingDown = false;
 
-
+    // mana recovery values
     [SerializeField] private float _manaRechargeDelay;
     [SerializeField] private int _manaRechargeRate; // mana recovered per second
     public delegate void ManaChanged(int newMana);
@@ -54,6 +57,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     public event SpellInventoryUpdatedDelegate OnSpellsInventoryUpdated;
 
     void Awake() {
+        // Initialize components
         Damageable = GetComponent<Damageable>();
         CharacterBehaviour = GetComponent<CharacterBehaviour>();
     }
@@ -91,81 +95,81 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         GameplayController.Instance.OnFire1Pressed += OnFire1Pressed;
         GameplayController.Instance.OnFire1Held += OnFire1Held;
         GameplayController.Instance.OnFire1End += OnFire1Released;
+        GameplayController.Instance.OnSlotBtnPressed += OnSlotButtonPressed;
     }
 
     void OnDisable() {
         GameplayController.Instance.OnFire1Pressed -= OnFire1Pressed;
         GameplayController.Instance.OnFire1Held -= OnFire1Held;
         GameplayController.Instance.OnFire1End -= OnFire1Released;
+        GameplayController.Instance.OnSlotBtnPressed -= OnSlotButtonPressed;
     }
 
     private void OnFire1Pressed() {
-        Spell selectedSpell = SelectedSpell;
-        if(GunBarrel == null || SelectedSpell == null) {
-            return;
-        }
-        ActiveSpell = new ActiveSpell() {
-            holdTime = 0f,
-            interval = selectedSpell.IntervalTime,
-            maxHoldTime = selectedSpell.MaxChargeTime,
-            baseManaCost = selectedSpell.ManaCost
-        };
-        if (_mana < selectedSpell.ManaCost) {
-            Debug.Log("Not enough mana!");
+        if (!CanFireSpell()) { return; }
+        InitializeActiveSpell();
+        if (_mana < SelectedSpell.ManaCost) {
             return;
         }
         if (_manaRegeneration != null) {
             StopCoroutine(_manaRegeneration);
         }
         // Attempt to fire currently equipped spell
-        bool successfullyCast = selectedSpell.OnStartCastSpell(this);
+        bool successfullyCast = SelectedSpell.OnStartCastSpell(this);
         if (successfullyCast) {
             FinishedCastSpell(ActiveSpell.baseManaCost);
         }
     }
 
     private void OnFire1Held() {
-        Spell selectedSpell = SelectedSpell;
-        if (GunBarrel == null || SelectedSpell == null) {
-            return;
-        }
-        if(ActiveSpell == null) {
-            ActiveSpell = new ActiveSpell() {
-                holdTime = 0f,
-                interval = selectedSpell.IntervalTime,
-                maxHoldTime = selectedSpell.MaxChargeTime,
-                baseManaCost = selectedSpell.ManaCost
-            };
+        if (!CanFireSpell()) { return; }
+        if (ActiveSpell == null) {
+            InitializeActiveSpell();
         }
         UpdateActiveSpell();
-        if (_mana < selectedSpell.ManaCost) {
+        if (_mana < SelectedSpell.ManaCost) {
             return;
         }
         // Attempt to fire currently equipped spell
-        bool successfullyCast = selectedSpell.OnHoldCastSpell(this);
+        bool successfullyCast = SelectedSpell.OnHoldCastSpell(this);
         if (successfullyCast) {
             FinishedCastSpell(ActiveSpell.baseManaCost);
         }
     }
 
     private void OnFire1Released() {
-        Spell selectedSpell = SelectedSpell;
-        if (GunBarrel == null || SelectedSpell == null) {
+        if (!CanFireSpell() || ActiveSpell == null) {
             return;
         }
-        if(ActiveSpell == null) {
-            return;
-        }
-        if(_mana < selectedSpell.ManaCost) {
+        if(_mana < SelectedSpell.ManaCost) {
             ActiveSpell = new ActiveSpell();
             return;
         }
         // Attempt to fire currently equipped spell
-        bool successfullyCast = selectedSpell.OnEndCastSpell(this);
+        bool successfullyCast = SelectedSpell.OnEndCastSpell(this);
         if (successfullyCast) {
             FinishedCastSpell(ActiveSpell.totalManaCost);
         }
         ActiveSpell = null;
+    }
+
+    private bool CanFireSpell() {
+        return GunBarrel != null && SelectedSpell != null && !_coolingDown;
+    }
+
+    private void InitializeActiveSpell() {
+        ActiveSpell = new ActiveSpell() {
+            holdTime = 0f,
+            interval = SelectedSpell.IntervalTime,
+            maxHoldTime = SelectedSpell.MaxChargeTime,
+            baseManaCost = SelectedSpell.ManaCost
+        };
+    }
+
+    private void OnSlotButtonPressed(int number) {
+        if(number < 0 || number >= _spellsList.Count) { return; }
+        _selectedSpellIndex = number - 1;
+        Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
     }
 
     private void UpdateActiveSpell() {
@@ -189,8 +193,20 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private void FinishedCastSpell(int lostMana) {
         Mana -= lostMana;
+        Debug.Log(ActiveSpell.interval);
+        StartCoroutine(CoolDownSpell(ActiveSpell.interval));
         if(_manaRegeneration != null) { StopCoroutine(_manaRegeneration); }
         _manaRegeneration = StartCoroutine(RegenerateMana());
+    }
+
+    private IEnumerator CoolDownSpell(float coolDownTime) {
+        _coolingDown = true;
+        float time = 0f;
+        while(time < coolDownTime) {
+            time += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        _coolingDown = false;
     }
 
     private IEnumerator RegenerateMana() {
@@ -212,13 +228,13 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void AddSpellSlotInfo(Spell newSpell) {
         Sprite[] effectIcons = new Sprite[newSpell.Effects.Length];
         for (int j = 0; j < effectIcons.Length; j++) {
-            effectIcons[j] = newSpell.Effects[j].Icon;
+            effectIcons[j] = newSpell.Effects[j].SmallIcon;
         }
         Sprite[] modifierIcons = new Sprite[newSpell.SpellModifiers.Length];
         for (int j = 0; j < modifierIcons.Length; j++) {
-            modifierIcons[j] = newSpell.SpellModifiers[j].Icon;
+            modifierIcons[j] = newSpell.SpellModifiers[j].SmallIcon;
         }
-        _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.Icon, effectIcons, modifierIcons));
+        _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.SmallIcon, effectIcons, modifierIcons));
         OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
 
