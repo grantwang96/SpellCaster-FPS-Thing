@@ -240,7 +240,7 @@ public class UIViewGrid : MonoBehaviour {
     private void SelectButtonPressed() {
         if (Input.GetButtonDown("Submit")) {
             IUIInteractable selected = _interactableGrid[CurrentItemX][CurrentItemY];
-            OnSelect(selected);
+            selected.InteractableSelect();
         }
     }
 
@@ -296,7 +296,10 @@ public class UIViewGrid : MonoBehaviour {
                 _interactableGrid[x][i].Initialize(x, y);
                 break;
             }
-            _interactableGrid[x][i].SetValue(_interactableGrid[x][i + 1].ExtractData());
+            IUIInteractableData data = _interactableGrid[x][i + 1].ExtractData();
+            data.X = x;
+            data.Y = y;
+            _interactableGrid[x][i].SetValue(data);
         }
     }
 

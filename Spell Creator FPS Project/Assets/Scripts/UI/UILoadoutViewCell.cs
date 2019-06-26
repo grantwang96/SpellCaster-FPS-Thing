@@ -23,4 +23,8 @@ public class UILoadoutViewCell : UIViewCell {
     public override void Unhighlight() {
         throw new System.NotImplementedException();
     }
+
+    public override void InteractableSelect() {
+        OnSelect();
+    }
 }

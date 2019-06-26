@@ -12,11 +12,16 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     [SerializeField] private RectTransform _imageTarget;
     [SerializeField] private UICustomButton _craftSpellButton;
 
+    [SerializeField] private string _cachedSpellName;
+    public string SpellName => _cachedSpellName;
+
+    [SerializeField] private int[] _spellNameEditorViewRowLengths;
     [SerializeField] private int[] _spellComponentsViewRowLengths;
     [SerializeField] private int[] _craftButtonViewRowLengths;
 
     private UISpellComponentSlot[][] _spellComponentSlots;
 
+    [SerializeField] private UIViewGrid _spellNameEditorView;
     [SerializeField] private UIViewGrid _spellComponentsView;
     [SerializeField] private UIViewGrid _craftButtonView;
     
@@ -28,6 +33,12 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public event UpdateActiveGrid OnUpdateActiveGrid;
 
     public void Initialize() {
+        UIViewGridInitData spellNameEditorInitData = new UIViewGridInitData();
+        spellNameEditorInitData.RowLengths = _spellNameEditorViewRowLengths;
+        _spellNameEditorView.Initialize(spellNameEditorInitData);
+        _spellNameEditorView.OnSelectPressed += OnSpellNameEditorSelected;
+        _spellNameEditorView.OnHighlighted += OnSpellNameEditorHighlighted;
+
         UIViewGridInitData spellComponentsInit = new UIViewGridInitData();
         spellComponentsInit.RowLengths = _spellComponentsViewRowLengths;
         _spellComponentsView.Initialize(spellComponentsInit);
@@ -42,13 +53,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
         _craftButtonView.Active = newGrid == _craftButtonView;
-        if (_craftButtonView.Active) {
-            _craftButtonView.UpdateHighlightedViewCell(0, 0);
-        }
         _spellComponentsView.Active = newGrid == _spellComponentsView;
-        if (_spellComponentsView.Active) {
-            _spellComponentsView.UpdateHighlightedViewCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
-        }
+        _spellNameEditorView.Active = newGrid == _spellNameEditorView;
+        newGrid.UpdateHighlightedViewCell(newGrid.CurrentItemX, newGrid.CurrentItemY);
     }
 
     public void OutOfBounds(IntVector3 dir) {
@@ -69,6 +76,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _craftButtonView.UnhighlightCell(_craftButtonView.CurrentItemX, _craftButtonView.CurrentItemY);
         _spellComponentsView.Active = false;
         _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
+        _spellNameEditorView.Active = false;
+        _spellNameEditorView.UnhighlightCell(_spellNameEditorView.CurrentItemX, _spellNameEditorView.CurrentItemY);
         _parentPanel.ChangePanel(neighbor, dir);
     }
 
@@ -80,8 +89,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         SpellComponentData componentData = new SpellComponentData(0, 0);
         // temp
         componentData.Id = castingMethod.Id;
-        componentData.Name = castingMethod.name;
-        componentData.Text = castingMethod.name;
+        componentData.Name = castingMethod.Name;
+        componentData.Text = castingMethod.Name;
 
         // _spellComponentsView.AddInteractableItemToRow(0, componentData);
         _spellComponentsView.SetInteractableItem(0, 0, componentData);
@@ -90,8 +99,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public void AddUISpellEffect(Effect spell_Effect) {
         SpellComponentData componentData = new SpellComponentData(1, 0);
         componentData.Id = spell_Effect.Id;
-        componentData.Name = spell_Effect.name;
-        componentData.Text = spell_Effect.name;
+        componentData.Name = spell_Effect.Name;
+        componentData.Text = spell_Effect.ShortDescription;
 
         _spellComponentsView.AddInteractableItemToRow(1, componentData);
     }
@@ -99,8 +108,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public void AddUISpellModifier(SpellModifier spellModifier) {
         SpellComponentData componentData = new SpellComponentData(2, 0);
         componentData.Id = spellModifier.Id;
-        componentData.Name = spellModifier.name;
-        componentData.Text = spellModifier.name;
+        componentData.Name = spellModifier.Name;
+        componentData.Text = spellModifier.ShortDescription;
 
         _spellComponentsView.AddInteractableItemToRow(2, componentData);
     }
@@ -117,6 +126,14 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
                 _spellComponentsView.RemoveInteractableFromRow(i, j);
             }
         }
+    }
+
+    private void OnSpellNameEditorHighlighted(IUIInteractable interactable) {
+
+    }
+
+    private void OnSpellNameEditorSelected(IUIInteractable interactable) {
+
     }
 
     private void OnSpellComponentHighlighted(IUIInteractable interactable) {

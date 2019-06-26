@@ -11,6 +11,7 @@ public interface IUIInteractable {
     void SetValue(IUIInteractableData data);
     void Highlight();
     void Unhighlight();
+    void InteractableSelect();
     IUIInteractableData ExtractData();
 
     event UIInteractableEvent OnSelected;

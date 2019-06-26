@@ -58,6 +58,10 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         _content.localScale = Vector3.one;
     }
 
+    public override void InteractableSelect() {
+        OnSelect();
+    }
+
     public override IUIInteractableData ExtractData() {
         InventoryViewCellData data = new InventoryViewCellData(xCoord, yCoord);
         data.Id = _id;

@@ -21,6 +21,10 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
         _content.localScale = Vector3.one;
     }
 
+    public override void InteractableSelect() {
+        OnSelect();
+    }
+
     public override IUIInteractableData ExtractData() {
         SpellViewCellData data = new SpellViewCellData(xCoord, yCoord);
         data.Name = _spellName;

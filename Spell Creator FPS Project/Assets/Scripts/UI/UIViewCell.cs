@@ -6,8 +6,8 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
 
     protected string _id;
     public string Id => _id;
-    protected int xCoord;
-    protected int yCoord;
+    [SerializeField] protected int xCoord;
+    [SerializeField] protected int yCoord;
     public int XCoord => xCoord;
     public int YCoord => yCoord;
 
@@ -16,6 +16,7 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
     public abstract void Highlight();
     public abstract void Unhighlight();
     public abstract IUIInteractableData ExtractData();
+    public abstract void InteractableSelect();
 
     protected void PointerClick() {
         OnSelected?.Invoke(this);
@@ -23,6 +24,10 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
 
     protected void PointerEnter() {
         OnHighlighted?.Invoke(this);
+    }
+
+    protected void OnSelect() {
+        OnSelected?.Invoke(this);
     }
 
     public event UIInteractableEvent OnSelected;

@@ -4,34 +4,36 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICustomButton : Button, IUIInteractable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
+public class UICustomInputField : InputField, IUIInteractable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
 
-    [SerializeField] private string _id;
+    [SerializeField] private string _id; // the idea of an item here. This field will likely not matter much
     public string Id => _id;
-
-    [SerializeField] private RectTransform _rect;
 
     public event UIInteractableEvent OnSelected;
     public event UIInteractableEvent OnHighlighted;
 
-    public void Initialize(int x, int y) {
-        _rect = GetComponent<RectTransform>();
-    }
-
-    public void SetValue(IUIInteractableData initData) {
-
+    public IUIInteractableData ExtractData() {
+        throw new System.NotImplementedException();
     }
 
     public void Highlight() {
-        _rect.localScale = Vector3.one * 1.25f;
+
+    }
+
+    public void Initialize(int x, int y) {
+
+    }
+
+    public void SetValue(IUIInteractableData data) {
+
     }
 
     public void Unhighlight() {
-        _rect.localScale = Vector3.one;
+
     }
 
     public void InteractableSelect() {
-        OnSelected?.Invoke(this);
+
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
@@ -44,17 +46,5 @@ public class UICustomButton : Button, IUIInteractable, IPointerClickHandler, IPo
         Debug.Log($"Hovering over {this.name}");
         base.OnPointerEnter(eventData);
         OnHighlighted?.Invoke(this);
-    }
-
-    // Use this for initialization
-
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
-
-    public IUIInteractableData ExtractData() {
-        throw new System.NotImplementedException();
     }
 }
