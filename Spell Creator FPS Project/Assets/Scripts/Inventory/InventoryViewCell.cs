@@ -50,11 +50,11 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
         _icon.sprite = storable.SmallIcon;
     }
 
-    public override void Highlight() {
+    public override void InteractableHighlight() {
         _content.localScale = Vector3.one * 1.25f;
     }
 
-    public override void Unhighlight() {
+    public override void InteractableUnhighlight() {
         _content.localScale = Vector3.one;
     }
 

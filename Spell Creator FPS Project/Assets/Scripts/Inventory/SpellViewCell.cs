@@ -13,11 +13,11 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
     [SerializeField] private RectTransform _content;
     [SerializeField] private Text _spellNameText;
 
-    public override void Highlight() {
+    public override void InteractableHighlight() {
         _content.localScale = Vector3.one * 1.25f;
     }
 
-    public override void Unhighlight() {
+    public override void InteractableUnhighlight() {
         _content.localScale = Vector3.one;
     }
 

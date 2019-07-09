@@ -39,11 +39,11 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
         IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(componentData.Id);
     }
 
-    public override void Highlight() {
+    public override void InteractableHighlight() {
         _text.rectTransform.localScale = Vector3.one * 1.25f;
     }
 
-    public override void Unhighlight() {
+    public override void InteractableUnhighlight() {
         _text.rectTransform.localScale = Vector3.one;
     }
 

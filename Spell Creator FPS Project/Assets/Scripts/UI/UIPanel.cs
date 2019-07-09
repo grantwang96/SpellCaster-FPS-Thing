@@ -31,6 +31,9 @@ public abstract class UIPanel : MonoBehaviour {
     }
 
     private void ProcessMenuButton() {
+        if(UIManager.Instance.CurrentPanel != this) {
+            return;
+        }
         if (Input.GetButtonDown("Cancel")) {
             CloseUIPanel();
         }

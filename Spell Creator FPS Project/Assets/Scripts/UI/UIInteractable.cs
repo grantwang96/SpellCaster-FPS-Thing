@@ -4,18 +4,20 @@ public delegate void UIInteractableEvent(IUIInteractable interactable);
 
 public interface IUIInteractable {
 
+    int XCoord { get; }
+    int YCoord { get; }
     string Id { get; }
     GameObject gameObject { get; }
 
     void Initialize(int x, int y);
     void SetValue(IUIInteractableData data);
-    void Highlight();
-    void Unhighlight();
+    void InteractableHighlight();
+    void InteractableUnhighlight();
     void InteractableSelect();
     IUIInteractableData ExtractData();
 
-    event UIInteractableEvent OnSelected;
-    event UIInteractableEvent OnHighlighted;
+    event UIInteractableEvent OnMousePointerClick;
+    event UIInteractableEvent OnMousePointerHighlight;
 }
 
 public interface IUIInteractableData {

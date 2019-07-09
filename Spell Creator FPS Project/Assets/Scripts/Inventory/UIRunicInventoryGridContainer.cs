@@ -13,6 +13,9 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     private List<KeyValuePair<string, int>> _items = new List<KeyValuePair<string, int>>();
     private IRunicInventory Inventory;
 
+    public delegate void InventoryUpdatedEvent();
+    public event InventoryUpdatedEvent OnInventoryUpdated;
+
     protected override void Awake() {
         Inventory = PlayerInventory.RunicInventory;
     }
@@ -40,6 +43,7 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
             _items.Add(pair);
         }
         UpdateViewCells();
+        OnInventoryUpdated?.Invoke();
     }
 
     protected override void SetGridInteractableItem(int x, int y) {

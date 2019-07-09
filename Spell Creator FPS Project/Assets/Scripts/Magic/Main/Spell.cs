@@ -136,7 +136,7 @@ public class StorableSpell {
             Debug.LogError($"Unable to retrieve Casting Method object from ID: {_castingMethodId}");
             return null;
         }
-        Effect[] effects = new Effect[_spellModifierIds.Length];
+        Effect[] effects = new Effect[_spellEffectIds.Length];
         for(int i = 0; i < _spellEffectIds.Length; i++) {
             storable = InventoryRegistry.Instance.GetItemById(_spellEffectIds[i]);
             Effect effect = storable as Effect;

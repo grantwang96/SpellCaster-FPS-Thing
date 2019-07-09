@@ -6,17 +6,20 @@ using UnityEngine.UI;
 
 public class UICustomInputField : InputField, IUIInteractable, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler {
 
+    public int XCoord { get; private set; }
+    public int YCoord { get; private set; }
+
     [SerializeField] private string _id; // the idea of an item here. This field will likely not matter much
     public string Id => _id;
 
-    public event UIInteractableEvent OnSelected;
-    public event UIInteractableEvent OnHighlighted;
+    public event UIInteractableEvent OnMousePointerClick;
+    public event UIInteractableEvent OnMousePointerHighlight;
 
     public IUIInteractableData ExtractData() {
         throw new System.NotImplementedException();
     }
 
-    public void Highlight() {
+    public void InteractableHighlight() {
 
     }
 
@@ -28,7 +31,7 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
 
     }
 
-    public void Unhighlight() {
+    public void InteractableUnhighlight() {
 
     }
 
@@ -39,12 +42,12 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
     public override void OnPointerClick(PointerEventData eventData) {
         Debug.Log($"Clicked on {this.name}");
         base.OnPointerClick(eventData);
-        OnSelected?.Invoke(this);
+        OnMousePointerClick?.Invoke(this);
     }
 
     public override void OnPointerEnter(PointerEventData eventData) {
         Debug.Log($"Hovering over {this.name}");
         base.OnPointerEnter(eventData);
-        OnHighlighted?.Invoke(this);
+        OnMousePointerHighlight?.Invoke(this);
     }
 }

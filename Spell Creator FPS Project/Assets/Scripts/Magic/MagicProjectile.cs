@@ -62,6 +62,7 @@ public class MagicProjectile : Projectile {
         foreach (Effect effect in Spell.Effects) {
             effect?.TriggerEffect(SpellCaster.Damageable, dir.normalized * force, _power, transform.position, damageable);
         }
+        Die();
     }
 
     public void SetParticleSystemMesh(Mesh newMesh) {

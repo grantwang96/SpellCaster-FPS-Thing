@@ -608,6 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _closeButton: {fileID: 114503068646179016}
+  _loadoutPrefabId: prefab.ui_LoadoutEdit
   _dropdownMenuButtonPrefab: {fileID: 0}
   _dropdownMenuContent: {fileID: 0}
   _runicInventoryView: {fileID: 114826518986668284}

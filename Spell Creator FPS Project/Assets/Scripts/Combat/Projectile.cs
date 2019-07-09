@@ -126,7 +126,7 @@ public class Projectile : PooledObject {
         return _rigidBody.position;
     }
 
-    private IEnumerator Effects() {
+    protected virtual IEnumerator Effects() {
         // start effects
         // wait for effects to finished
         yield return new WaitForEndOfFrame();
@@ -144,7 +144,7 @@ public class Projectile : PooledObject {
         ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
     }
 
-    private void Die() {
+    protected void Die() {
         _isLive = false;
         StartCoroutine(Effects());
     }

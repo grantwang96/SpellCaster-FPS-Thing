@@ -8,7 +8,7 @@ public class UILoadoutViewCell : UIViewCell {
         throw new System.NotImplementedException();
     }
 
-    public override void Highlight() {
+    public override void InteractableHighlight() {
         throw new System.NotImplementedException();
     }
 
@@ -20,7 +20,7 @@ public class UILoadoutViewCell : UIViewCell {
         throw new System.NotImplementedException();
     }
 
-    public override void Unhighlight() {
+    public override void InteractableUnhighlight() {
         throw new System.NotImplementedException();
     }
 

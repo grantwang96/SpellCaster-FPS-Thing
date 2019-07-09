@@ -7,6 +7,8 @@ using UnityEngine.UI;
 /// This class handles crafting a spell for the player
 /// </summary>
 public class SpellCraftMenu : UISubPanelParent {
+
+    [SerializeField] private string _loadoutPrefabId;
     
     [SerializeField] private Button _dropdownMenuButtonPrefab;
     [SerializeField] private RectTransform _dropdownMenuContent;
@@ -22,13 +24,15 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellCraftManager = new SpellCraftManager();
         _spellStagingArea.Initialize();
         _runicInventoryView.Initialize(null);
-        _runicInventoryView.SetActive(true, IntVector3.Zero);
-        _spellStagingArea.SetActive(false, IntVector3.Zero);
+        _runicInventoryView.SetActive(true, false, IntVector3.Zero);
+        _spellStagingArea.SetActive(false, false, IntVector3.Zero);
         _runicInventoryView.OnGridItemHighlighted += OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotHighlighted += OnStagingAreaItemHighlighted;
         _spellStagingArea.OnSpellSlotSelected += OnStagingAreaItemSelected;
-        _spellStagingArea.OnCraftSpellPressed += GenerateSpell;
+        _spellStagingArea.OnCraftSpellPressed += OnCraftSpellButtonPressed;
+        _runicInventoryView.OnInventoryUpdated += OnInventoryUpdated;
+        _spellStagingArea.OnSpellSlotsUpdated += OnSpellSlotsUpdated;
         Debug.Log("Finished initializing spell craft menu");
 
         // add on hover events here(maybe limit if we're on PC or not)
@@ -53,16 +57,30 @@ public class SpellCraftMenu : UISubPanelParent {
         // remove listeners
         _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
-        _spellStagingArea.OnCraftSpellPressed -= GenerateSpell;
+        _spellStagingArea.OnCraftSpellPressed -= OnCraftSpellButtonPressed;
     }
 
     public override void ChangePanel(UISubPanel neighbor, IntVector3 dir) {
-        _runicInventoryView.SetActive(_runicInventoryView == neighbor, dir);
-        _spellStagingArea.SetActive(_spellStagingArea == neighbor, dir);
+        _runicInventoryView.SetActive(_runicInventoryView == neighbor, false, dir);
+        _spellStagingArea.SetActive(_spellStagingArea == neighbor, false, dir);
     }
 
     private void OnInventoryItemHighlighted() {
         _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
+    }
+
+    private void OnInventoryUpdated() {
+        if (!_runicInventoryView.IsActive) {
+            return;
+        }
+        _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
+    }
+
+    private void OnSpellSlotsUpdated(string itemId) {
+        if (!_spellStagingArea.IsActive) {
+            return;
+        }
+        _spellComponentDescriptionView.UpdateDescription(itemId);
     }
 
     private void OnInventoryItemSelected() {
@@ -115,17 +133,14 @@ public class SpellCraftMenu : UISubPanelParent {
         _runicInventoryView.AddItem(itemId, 1);
 
         _spellCraftManager.RemoveComponentFromSpell(itemId);
-        _spellStagingArea.RemoveHighlightedSpellSlot();
+        _spellStagingArea.RemoveHighlightedSpellComponent();
     }
 
-    private void GenerateSpell() {
+    private void OnCraftSpellButtonPressed() {
         if(_spellCraftManager.LoadedCastingMethod == null) {
             return;
         }
         if(_spellCraftManager.LoadedSpellEffects.Count == 0) {
-            return;
-        }
-        if(_spellCraftManager.LoadedSpellModifiers.Count == 0) {
             return;
         }
         StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
@@ -141,5 +156,34 @@ public class SpellCraftMenu : UISubPanelParent {
             }
         }
         // ask the player if they wish to use this spell now
+        List<ButtonActionData> buttonActionDatas = new List<ButtonActionData>();
+        buttonActionDatas.Add(
+            new ButtonActionData() {
+                ButtonId = GameplayValues.UI.GenericButtonIdYes,
+                ButtonText = "Yes",
+                Action = OpenLoadoutEditor
+            }
+        );
+        buttonActionDatas.Add(
+            new ButtonActionData() {
+                ButtonId = GameplayValues.UI.GenericButtonIdNo,
+                ButtonText = "No",
+                Action = CloseUseSpellNowDialog
+            }
+        );
+        GenericMessageBoxInitData messageBoxData =
+            new GenericMessageBoxInitData("Use Spell Now?", "Would you like to use this spell in your current loadout?", buttonActionDatas);
+        UIManager.Instance.OpenUIPanel(UIManager.GenericMessageBoxPrefabId, messageBoxData);
+        // cut view grid input listening
+
+    }
+
+    private void OpenLoadoutEditor() {
+        UIManager.Instance.CloseUIPanel();
+        UIManager.Instance.OpenUIPanel(_loadoutPrefabId);
+    }
+
+    private void CloseUseSpellNowDialog() {
+        UIManager.Instance.CloseUIPanel();
     }
 }

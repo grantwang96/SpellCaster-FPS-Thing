@@ -23,7 +23,8 @@ public class UIViewGrid : MonoBehaviour {
 
     [SerializeField] private GameObject _parentPanelGameObject;
     private IUIViewGridParent _parentPanel;
-    public bool Active; // is this grid currently receiving inputs?
+    public bool Active { get; private set; } // is this grid currently receiving inputs?
+    public bool _hardLocked { get; private set; } // can the player leave this view grid
     private IUIInteractable[][] _interactableGrid; // the grid of interactable objects
 
     [SerializeField] private RectTransform _content; // where the main content will be held
@@ -76,8 +77,8 @@ public class UIViewGrid : MonoBehaviour {
                 if (uIInteractable != null) {
                     _interactableGrid[i][j] = uIInteractable;
                     uIInteractable.Initialize(i, j);
-                    _interactableGrid[i][j].OnSelected += OnSelect;
-                    _interactableGrid[i][j].OnHighlighted += OnViewCellHighlighted;
+                    _interactableGrid[i][j].OnMousePointerClick += OnSelect;
+                    _interactableGrid[i][j].OnMousePointerHighlight += OnViewCellHighlighted;
                 }
             }
         }
@@ -170,6 +171,9 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void TryChangeViewGrid(IntVector3 dir) {
+        if (_hardLocked) {
+            return;
+        }
         UIViewGrid nextGrid;
         if (dir == IntVector3.Left) {
             nextGrid = _left;
@@ -190,6 +194,10 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void OnViewCellHighlighted(IUIInteractable interactable) {
+        if (!Active) {
+            // Disallow if not active view grid
+            return;
+        }
         UIViewCell viewCell = interactable as UIViewCell;
         if(viewCell == null) {
             return;
@@ -198,15 +206,15 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     public void UpdateHighlightedViewCell(int x, int y) {
-        _interactableGrid[CurrentItemX][CurrentItemY].Unhighlight();
+        _interactableGrid[CurrentItemX][CurrentItemY].InteractableUnhighlight();
         _currentItemX = x;
         _currentItemY = y;
-        _interactableGrid[CurrentItemX][CurrentItemY].Highlight();
+        _interactableGrid[CurrentItemX][CurrentItemY].InteractableHighlight();
         OnHighlighted?.Invoke(_interactableGrid[CurrentItemX][CurrentItemY]);
     }
 
     public void UnhighlightCell(int x, int y) {
-        _interactableGrid[CurrentItemX][CurrentItemY]?.Unhighlight();
+        _interactableGrid[CurrentItemX][CurrentItemY]?.InteractableUnhighlight();
     }
 
     public void SetCurrentAtBound(IntVector3 dir) {
@@ -245,6 +253,9 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void OnSelect(IUIInteractable interactable) {
+        if (!Active) {
+            return;
+        }
         OnSelectPressed?.Invoke(interactable);
     }
 
@@ -303,8 +314,17 @@ public class UIViewGrid : MonoBehaviour {
         }
     }
 
-    private void OnActiveGridUpdated(int index) {
-        
+    public IUIInteractable GetInteractableAt(int x, int y) {
+        if(x < 0 || x > _interactableGrid.Length || y < 0 || y > _interactableGrid[x].Length) {
+            Debug.LogError($"[{nameof(UIViewGrid)}] Index {x}, {y} is out of bounds!");
+            return null;
+        }
+        return _interactableGrid[x][y];
+    }
+
+    public void SetActive(bool active, bool hardLock = false) {
+        Active = active;
+        // set whether player can leave this view grid
     }
 }
 

@@ -65,6 +65,8 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
                 SetGridInteractableItem(i, j);
             }
         }
+        IUIInteractable interactable = _mainInventoryGrid.GetInteractableAt(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
+        HighlightedItemId = interactable.Id;
     }
 
     protected virtual int GetTotalPages(int itemsPerPage) {
@@ -75,9 +77,10 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
 
     }
 
-    public override void SetActive(bool active, IntVector3 dir) {
-        _mainInventoryGrid.Active = active;
-        if (active) {
+    public override void SetActive(bool active, bool hardLocked, IntVector3 dir) {
+        base.SetActive(active, hardLocked, dir);
+        _mainInventoryGrid.SetActive(IsActive, hardLocked);
+        if (IsActive) {
             _mainInventoryGrid.SetCurrentAtBound(dir);
             _mainInventoryGrid.UpdateHighlightedViewCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
         } else {
@@ -86,7 +89,7 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
     }
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
-        _mainInventoryGrid.Active = newGrid == _mainInventoryGrid;
+        _mainInventoryGrid.SetActive(newGrid == _mainInventoryGrid) ;
     }
 
     public void OutOfBounds(IntVector3 dir) {
@@ -103,7 +106,7 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         if (neighbor == null) {
             return;
         }
-        _mainInventoryGrid.Active = false;
+        _mainInventoryGrid.SetActive(false);
         _mainInventoryGrid.UnhighlightCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
         _parentPanel.ChangePanel(neighbor, dir);
     }

@@ -16,6 +16,9 @@ public static partial class GameplayValues {
         public const int MaximumSpellModifiers = 5;
         public const string EmptySpellStageText = "-----";
         public const string EmptyUIElementId = "EMPTY_UI_ELEMENT";
+        public const string GenericButtonIdClose = "GENERIC_BUTTON_CLOSE";
+        public const string GenericButtonIdYes = "GENERIC_BUTTON_YES";
+        public const string GenericButtonIdNo = "GENERIC_BUTTON_NO";
     }
 
     public static class UnitTags {

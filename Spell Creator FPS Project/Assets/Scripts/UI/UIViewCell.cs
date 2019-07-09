@@ -13,25 +13,25 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
 
     public abstract void Initialize(int x, int y);
     public abstract void SetValue(IUIInteractableData data);
-    public abstract void Highlight();
-    public abstract void Unhighlight();
+    public abstract void InteractableHighlight();
+    public abstract void InteractableUnhighlight();
     public abstract IUIInteractableData ExtractData();
     public abstract void InteractableSelect();
-
+    
     protected void PointerClick() {
-        OnSelected?.Invoke(this);
+        OnMousePointerClick?.Invoke(this);
     }
 
     protected void PointerEnter() {
-        OnHighlighted?.Invoke(this);
+        OnMousePointerHighlight?.Invoke(this);
     }
 
     protected void OnSelect() {
-        OnSelected?.Invoke(this);
+        OnMousePointerClick?.Invoke(this);
     }
 
-    public event UIInteractableEvent OnSelected;
-    public event UIInteractableEvent OnHighlighted;
+    public event UIInteractableEvent OnMousePointerClick;
+    public event UIInteractableEvent OnMousePointerHighlight;
 }
 
 public class ViewCellData : IUIInteractableData{
