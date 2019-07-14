@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpellCraftingStation : MonoBehaviour, IInteractable {
-
-    [SerializeField] private bool _interactable = true;
-    public bool Interactable { get { return _interactable; } }
-
+public class SpellCraftingStation : InteractableStation {
+    
     [SerializeField] private string _spellCraftingStationPrefabName;
+    [SerializeField] private BoxCollider _collider;
 
-    public void Detect() {
-        
+    public override Vector3 InteractableCenter {
+        get {
+            return transform.position + _collider.center;
+        }
     }
 
-    public void Interact(CharacterBehaviour character) {
+    protected override void OnPlayerInteract() {
         UIManager.Instance.OpenUIPanel(_spellCraftingStationPrefabName);
-    }
-
-    private void OnPanelClosed() {
-        
     }
 }

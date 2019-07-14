@@ -16,7 +16,18 @@ public class SpellBook : PooledObject, IInteractable {
     }
 
     [SerializeField] private bool _interactable = true;
+    public Vector3 InteractableCenter => transform.position;
+
+    public event InteractEvent OnInteractAttempt;
+    public event InteractEvent OnInteractSuccess;
+
     public bool Interactable { get { return _interactable; } }
+
+    public string InteractableId {
+        get {
+            return "spellbook_DEPRECATED";
+        }
+    }
 
     // Get Components here
     void Awake() {

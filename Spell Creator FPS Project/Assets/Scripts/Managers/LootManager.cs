@@ -67,7 +67,7 @@ public class LootManager : MonoBehaviour, ILootManager {
         // for each possible location in the level
         for(int i = 0; i < LevelManager.Instance.ChestLocations.Count; i++) {
             ChestSpawn chestSpawn = LevelManager.Instance.ChestLocations[i];
-            string id = RegisterChest(chestSpawn.ChestType);
+            string id = RegisterChest(chestSpawn.ChestType, chestSpawn.OverrideId);
             chestSpawn.SpawnPrefab(id);
         }
     }
@@ -122,8 +122,8 @@ public class LootManager : MonoBehaviour, ILootManager {
     }
 
     // creates a chest based on tier and returns the Id
-    private string RegisterChest(ChestType chestType) {
-        string chestId = GenerateChestId();
+    private string RegisterChest(ChestType chestType, string overrideId) {
+        string chestId = overrideId == "" ? GenerateChestId() : overrideId;
         ChestInfo chestInfo = new ChestInfo(chestId, chestType);
         _chests.Add(chestId, chestInfo);
         return chestId;

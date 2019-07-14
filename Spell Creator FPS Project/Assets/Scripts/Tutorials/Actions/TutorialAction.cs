@@ -1,16 +1,25 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Status that the tutorial action should return when action code is finished executing
+/// </summary>
+public enum TutorialActionStatus {
+    Invalid,
+    Abort,
+    Incomplete,
+    Complete,
+}
+
 public abstract class TutorialAction : ScriptableObject{
 
-    public virtual void OnStartAction() {
+    public delegate void TutorialActionEvent();
+    public event TutorialActionEvent OnTutorialActionComplete;
 
+    public virtual TutorialActionStatus Execute() {
+        return TutorialActionStatus.Complete;
     }
 
-    public virtual void Execute() {
-
-    }
-
-    public virtual void OnFinishAction() {
-
+    protected virtual void TutorialActionCompleted() {
+        OnTutorialActionComplete?.Invoke();
     }
 }

@@ -41,6 +41,15 @@ public static partial class GameplayValues {
     public static class Level {
         public const int HealthOrbValue = 3;
         public const int ManaOrbValue = 100;
+
+        public const string RuneInstanceIdPrefix = "SpellComponentRune_";
+        public const int RuneInstanceIdSize = 20;
+
+        public const string SpellCraftStationInstanceIdPrefix = "SpellCraftStation_";
+        public const int SpellCraftStationInstanceIdSize = 20;
+
+        public const string LoadoutStationInstanceIdPrefix = "LoadoutStation_";
+        public const int LoadoutStationInstanceIdSize = 20;
     }
 
     public static class Magic {

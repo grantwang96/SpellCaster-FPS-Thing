@@ -10,16 +10,30 @@ public class Chest : MonoBehaviour, IInteractable {
     [SerializeField] private Transform _hinge;
     [SerializeField] private Transform _rewardsSpawn;
 
+    public event InteractEvent OnInteractAttempt;
+    public event InteractEvent OnInteractSuccess;
+
     public bool Interactable { get; private set; }
+    [SerializeField] private BoxCollider _collider;
+    public Vector3 InteractableCenter => transform.position + _collider.center;
+
+    [SerializeField] private string _overrideId;
+    public string OverrideId => _overrideId;
+    public string InteractableId => _chestId;
 
     public void Detect() {
         
     }
 
     public void Initialize(ChestType type, string chestId) {
-        _chestId = chestId;
+        if (!_overrideId.Equals(string.Empty)) {
+            _chestId = _overrideId;
+        } else {
+            _chestId = chestId;
+        }
         // TODO: edit chest visuals when initialized
         Interactable = true;
+        LevelManager.Instance.RegisterInteractable(this);
     }
 
     public void Interact(CharacterBehaviour character) {
@@ -29,6 +43,7 @@ public class Chest : MonoBehaviour, IInteractable {
     }
 
     private void Open() {
+        OnInteractAttempt?.Invoke();
         if (!Interactable) {
             return;
         }
@@ -39,6 +54,7 @@ public class Chest : MonoBehaviour, IInteractable {
         _hinge.eulerAngles = new Vector3(_openAngle, 0f, 0f);
 
         OnChestOpened(rewards); // temp until animations are in
+        OnInteractSuccess?.Invoke();
     }
 
     private void OnChestOpened(RewardsSet rewards) {
@@ -67,9 +83,4 @@ public class Chest : MonoBehaviour, IInteractable {
             recoveryOrb.transform.position = _rewardsSpawn.position;
         }
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
 }

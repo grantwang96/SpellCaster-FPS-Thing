@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05647462c69b0704eaa982520eb40686, type: 3}
+  m_Name: PointAtChest
+  m_EditorClassIdentifier: 
+  _targetId: TEST_TUTORIAL_CHEST
+  _onInteractSuccess: 0
+  _interactableMarkerPrefab: {fileID: 114372473019417922, guid: d664cc38d8f222a47840c875b134cf35,
+    type: 2}

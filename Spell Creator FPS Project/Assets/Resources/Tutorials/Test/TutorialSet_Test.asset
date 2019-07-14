@@ -9,10 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdef5b3a8b359fd4e9ee18fe3762a9eb, type: 3}
-  m_Name: TestTutorial_Set
+  m_Name: TutorialSet_Test
   m_EditorClassIdentifier: 
-  _tutorialId: 
+  _tutorialId: Test_Tutorial
   _repeatable: 0
   _conditions:
   - {fileID: 11400000, guid: 359c891cefadcbf4ba8731dc47e4ad1e, type: 2}
-  _actions: []
+  _actions:
+  - {fileID: 11400000, guid: 56b4478669658cc419b92267a37f50be, type: 2}

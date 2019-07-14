@@ -331,3 +331,5 @@ MonoBehaviour:
   _openAngle: -60
   _hinge: {fileID: 4048849584200420}
   _rewardsSpawn: {fileID: 4619086173182484}
+  _collider: {fileID: 65576272070534614}
+  _overrideId: TEST_TUTORIAL_CHEST

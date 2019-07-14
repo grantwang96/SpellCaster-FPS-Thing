@@ -9,6 +9,7 @@ using UnityEngine;
 public class TutorialSet : ScriptableObject {
 
     [SerializeField] private string _tutorialId; // the tutorial id to reference and set flags for
+    public string TutorialId => _tutorialId;
     [SerializeField] private bool _repeatable;
 
     [SerializeField] private List<TutorialCondition> _conditions = new List<TutorialCondition>();
@@ -35,11 +36,15 @@ public class TutorialSet : ScriptableObject {
     }
 
     public bool HasNextTutorialAction(int index) {
-        return index >= _actions.Count - 1;
+        return index < _actions.Count - 1;
     }
 
-    public virtual TutorialAction GetNextTutorialAction(int index) {
-        return null;
+    public virtual TutorialAction GetTutorialAction(int index) {
+        if(index < 0 || index >= _actions.Count) {
+            Debug.LogError($"[{name}] Tutorial Action index {index} out of range!");
+            return null;
+        }
+        return _actions[index];
     }
 
     public virtual void ExitTutorial() {

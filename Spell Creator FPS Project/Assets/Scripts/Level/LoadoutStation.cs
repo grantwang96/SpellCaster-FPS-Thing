@@ -2,30 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadoutStation : MonoBehaviour, IInteractable {
+public class LoadoutStation : InteractableStation {
 
     [SerializeField] private string _loadOutPanelPrefabName;
-    public bool Interactable { get; private set; }
+    [SerializeField] private BoxCollider _collider;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    public void Detect() {
-
+    public override Vector3 InteractableCenter {
+        get {
+            return transform.position + _collider.center;
+        }
     }
 
-    public void Interact(CharacterBehaviour character) {
+
+    protected override void OnPlayerInteract() {
         UIManager.Instance.OpenUIPanel(_loadOutPanelPrefabName);
-    }
-
-    private void OnPanelClosed() {
-
     }
 }
