@@ -109,6 +109,7 @@ public class TutorialManager : MonoBehaviour {
     }
 
     private void TutorialCompleted() {
+        _currentTutorial.ExitTutorial();
         _tutorialQueue.Dequeue();
         _tutorialActionIndex = 0;
         _currentTutorial = null;

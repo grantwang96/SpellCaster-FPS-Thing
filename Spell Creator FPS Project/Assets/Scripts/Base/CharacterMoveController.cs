@@ -10,6 +10,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     [SerializeField] protected float _maxSpeed;
     [SerializeField] protected float _mass;
     [SerializeField] protected float _linearDrag;
+    [SerializeField] protected float _headDistanceThreshold;
     [SerializeField] protected bool _performingAction;
     public bool performingAction { get { return _performingAction; } }
 
@@ -70,5 +71,18 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
             yield return null;
         }
         _externalForces = null;
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit) {
+        // check if head was hit
+        if (CollidedHead(hit.point) && !CharacterController.isGrounded &&
+            (CharacterController.collisionFlags & CollisionFlags.Above) == 0) {
+            _movementVelocity.y = 0f;
+        }
+    }
+
+    private bool CollidedHead(Vector3 point) {
+        Vector3 headPoint = transform.position + CharacterController.center + Vector3.up * CharacterController.height / 2f;
+        return Vector3.Distance(headPoint, point) <= _headDistanceThreshold;
     }
 }
