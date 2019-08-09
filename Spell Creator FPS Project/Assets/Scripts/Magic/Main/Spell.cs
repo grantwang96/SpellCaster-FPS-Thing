@@ -19,6 +19,7 @@ public class Spell {
     public int ManaCost { get; private set; }
     public float MaxChargeTime { get; private set; }
     public float IntervalTime { get; private set; }
+    public float HoldIntervalTime { get; private set; }
 
     public int Power { get; private set; }
 
@@ -91,6 +92,16 @@ public class ActiveSpell {
     public int baseManaCost;
     public int totalManaCost;
     public Vector3 initialHitPoint;
+
+    public void Clear() {
+        holdTime = 0f;
+        holdIntervalTime = 1f;
+        interval = 1f;
+        maxHoldTime = 1f;
+        baseManaCost = 0;
+        totalManaCost = 0;
+        initialHitPoint = Vector3.zero;
+    }
 }
 
 /// <summary>

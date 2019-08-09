@@ -1338,6 +1338,7 @@ MonoBehaviour:
   _maxSpeed: 5
   _mass: 1
   _linearDrag: 1
+  _headDistanceThreshold: 0
   _performingAction: 0
   _movementVelocity: {x: 0, y: 0, z: 0}
   _moveSpeed: 2
@@ -1447,16 +1448,16 @@ MonoBehaviour:
   _npcBehaviour: {fileID: 114862455297173096}
   _duration: 1
   _npcVision: {fileID: 114107591437060838}
+  _attackName: 
+  _animController: {fileID: 114087730851891354}
+  _moveController: {fileID: 114193879206027700}
   _onTargetInRangeState: {fileID: 114640306952357054}
   _onTargetOutOfRangeState: {fileID: 114640306952357054}
   _hitBoxes:
   - {fileID: 65479965506322814}
   _timeActivateHitBoxes: 0.25
   _timeDeactivateHitBoxes: 0.75
-  _attackName: 
   _attackComboIndex: 1
-  _animController: {fileID: 114087730851891354}
-  _moveController: {fileID: 114193879206027700}
 --- !u!114 &114743803374490666
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1502,14 +1503,17 @@ MonoBehaviour:
   _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4178212123154016}
   _headTransform: {fileID: 4171630530523984}
-  _animHandler: {fileID: 0}
+  _animHandler: {fileID: 114087730851891354}
   _unitTags:
   - PLAYER_ENEMY_UNIT
+  _id: Dingus
   _charMove: {fileID: 114193879206027700}
   _damageable: {fileID: 114120558083659074}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 114743803374490666}
+  _prefabId: Dingus
+  _inUse: 0
 --- !u!114 &114911393473976966
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1526,16 +1530,16 @@ MonoBehaviour:
   _npcBehaviour: {fileID: 114862455297173096}
   _duration: 1
   _npcVision: {fileID: 114107591437060838}
+  _attackName: 
+  _animController: {fileID: 114087730851891354}
+  _moveController: {fileID: 114193879206027700}
   _onTargetInRangeState: {fileID: 114648719597348348}
   _onTargetOutOfRangeState: {fileID: 114640306952357054}
   _hitBoxes:
   - {fileID: 65873801324365952}
   _timeActivateHitBoxes: 0.25
   _timeDeactivateHitBoxes: 0.75
-  _attackName: 
   _attackComboIndex: 0
-  _animController: {fileID: 114087730851891354}
-  _moveController: {fileID: 114193879206027700}
 --- !u!135 &135508433163298396
 SphereCollider:
   m_ObjectHideFlags: 1

@@ -26,7 +26,6 @@ public class ObjectPool : MonoBehaviour {
 
     private void CheatSpawnPooledObject() {
         PooledObject pooledObject = UsePooledObject(CheatPrefabId);
-        pooledObject.transform.position = Vector3.up * 2f;
         pooledObject.ActivatePooledObject();
         RecoveryOrb orb = pooledObject as RecoveryOrb;
         if(orb != null) {
@@ -39,20 +38,27 @@ public class ObjectPool : MonoBehaviour {
             RegisterObjectPool(_poolPrefabs[i]);
         }
     }
-    
+
+    // THIS FUNCTION MIGHT NEED TO BE HANDLED IN A LOADING COROUTINE TO REDUCE STUTTERS. GETCOMPONENT IS A THICC BOI
     private void RegisterObjectPool(ObjectPoolInitData initData) {
-        if (!_availablePooledObjects.ContainsKey(initData.Prefab.name)) {
-            _availablePooledObjects.Add(initData.Prefab.name, new List<PooledObject>());
-            _inUsePooledObjects.Add(initData.Prefab.name, new List<PooledObject>());
+        PooledObject prefab = initData.Prefab.GetComponent<PooledObject>();
+        if(prefab == null) {
+            Debug.LogError("WTF Bro?");
+            return;
+        }
+        if (!_availablePooledObjects.ContainsKey(prefab.PrefabId)) {
+            _availablePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
+            _inUsePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
         }
         List<PooledObject> objectPool;
-        if(!_availablePooledObjects.TryGetValue(initData.Prefab.name, out objectPool)) {
-            Debug.LogError($"Unable to retrieve object pool list for Prefab ID: {initData.Prefab.name}");
+        if(!_availablePooledObjects.TryGetValue(prefab.PrefabId, out objectPool)) {
+            Debug.LogError($"Unable to retrieve object pool list for Prefab ID: {prefab.PrefabId}");
             return;
         }
         for(int i = 0; i < initData.PoolSize; i++) {
-            PooledObject obj = Instantiate(initData.Prefab, transform);
-            obj.gameObject.SetActive(false);
+            GameObject clone = Instantiate(initData.Prefab, transform);
+            PooledObject obj = clone.GetComponent<PooledObject>();
+            clone.gameObject.SetActive(false);
             objectPool.Add(obj);
         }
     }
@@ -66,47 +72,39 @@ public class ObjectPool : MonoBehaviour {
         List<PooledObject> pool = _availablePooledObjects[id];
         // if all objects are in use at the moment
         if(pool.Count == 0) {
-            // if the in use list is also somehow empty(means you left the init data at 0, dingus)
-            if(_inUsePooledObjects[id].Count == 0) {
-                Debug.LogError($"In Use Pool for ID {id} is also empty, dingus!");
-                return null;
-            }
-            // TOOD: DEACTIVATE AND RE INITIALIZE OBJECT
-            _inUsePooledObjects[id][0].DeactivatePooledObject();
-            ReturnUsedPooledObject(id, _inUsePooledObjects[id][0]);
-            return _inUsePooledObjects[id][0];
+            // don't give anything
+            return null;
         }
         // move the object from available to in use
         PooledObject obj = pool[0];
         pool.RemoveAt(0);
-        obj.SetPooledObjectPrefabId(id);
         _inUsePooledObjects[id].Add(obj);
         return obj;
     }
 
-    public void ReturnUsedPooledObject(string id, PooledObject obj) {
+    public void ReturnUsedPooledObject(PooledObject obj) {
         // check to see if object id exists
-        if (!_inUsePooledObjects.ContainsKey(id)) {
-            Debug.LogError($"Trying to return pooled object with unknown ID: {id}!");
+        if (!_inUsePooledObjects.ContainsKey(obj.PrefabId)) {
+            Debug.LogError($"Trying to return pooled object with unknown ID: {obj.PrefabId}!");
             return;
         }
-        if (!_inUsePooledObjects[id].Contains(obj)) {
-            Debug.LogError($"Object {obj.name} not found in In-Use list of ID: {id}!");
+        if (!_inUsePooledObjects[obj.PrefabId].Contains(obj)) {
+            Debug.LogError($"Object {obj.PrefabId} not found in In-Use list of ID: {obj.PrefabId}!");
             return;
         }
-        _inUsePooledObjects[id].Remove(obj);
-        if (!_availablePooledObjects.ContainsKey(id)) {
-            Debug.LogError($"Unable to find pooled object list with ID: {id}");
+        _inUsePooledObjects[obj.PrefabId].Remove(obj);
+        if (!_availablePooledObjects.ContainsKey(obj.PrefabId)) {
+            Debug.LogError($"Unable to find pooled object list with ID: {obj.PrefabId}");
             return;
         }
         // move object from one list to another
-        _availablePooledObjects[id].Add(obj);
-        _inUsePooledObjects[id].Remove(obj);
+        _availablePooledObjects[obj.PrefabId].Add(obj);
+        _inUsePooledObjects[obj.PrefabId].Remove(obj);
     }
 }
 
 [System.Serializable]
 public class ObjectPoolInitData {
-    public PooledObject Prefab;
+    public GameObject Prefab;
     public int PoolSize;
 }

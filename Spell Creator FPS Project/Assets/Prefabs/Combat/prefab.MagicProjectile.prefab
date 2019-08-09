@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61cc95e4be484a45a735aa0bf0c7e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabId: 
+  _prefabId: MagicProjectile
   _inUse: 0
   _owner: {fileID: 0}
   _onHitVFX: {fileID: 0}

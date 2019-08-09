@@ -67,7 +67,7 @@ public class TestDummyDamageable : Damageable {
         gameObject.SetActive(false);
     }
 
-    public override void AddForce(Vector3 velocity) {
-        moveController.AddForce(velocity);
+    public override void AddForce(Vector3 velocity, float drag = 0f) {
+        moveController.AddForce(velocity, drag);
     }
 }

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05647462c69b0704eaa982520eb40686, type: 3}
-  m_Name: PointAtChest
+  m_Name: 01_PointAtChest
   m_EditorClassIdentifier: 
   _targetId: TEST_TUTORIAL_CHEST
   _onInteractSuccess: 0

@@ -63,7 +63,7 @@ public abstract class Damageable : MonoBehaviour {
         }
     }
 
-    public abstract void AddForce(Vector3 velocity);
+    public abstract void AddForce(Vector3 velocity, float drag = 0f);
 }
 
 [System.Serializable]

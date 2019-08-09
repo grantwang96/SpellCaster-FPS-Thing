@@ -6,7 +6,12 @@ public enum RecoveryOrbType {
     Health, Mana
 }
 
-public class RecoveryOrb : PooledObject {
+public class RecoveryOrb : MonoBehaviour, PooledObject {
+
+    [SerializeField] private string _prefabId;
+    public string PrefabId => _prefabId;
+    [SerializeField] private bool _inUse;
+    public bool InUse => _inUse;
 
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private Rigidbody _rigidbody;
@@ -92,15 +97,14 @@ public class RecoveryOrb : PooledObject {
         DeactivatePooledObject();
     }
 
-    public override void ActivatePooledObject() {
-        base.ActivatePooledObject();
+    public void ActivatePooledObject() {
         gameObject.SetActive(true);
     }
 
-    public override void DeactivatePooledObject() {
+    public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
-        ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
+        ObjectPool.Instance.ReturnUsedPooledObject(this);
         _interactable = false;
     }
 }

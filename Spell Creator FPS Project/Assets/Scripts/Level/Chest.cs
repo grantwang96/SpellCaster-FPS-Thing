@@ -36,10 +36,14 @@ public class Chest : MonoBehaviour, IInteractable {
         LevelManager.Instance.RegisterInteractable(this);
     }
 
-    public void Interact(CharacterBehaviour character) {
+    public void InteractPress(CharacterBehaviour character) {
         if(character == GameplayController.Instance) {
             Open();
         }
+    }
+
+    public void InteractHold(CharacterBehaviour character) {
+
     }
 
     private void Open() {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TutorialTrigger_BoxCollider : MonoBehaviour {
 
-    [SerializeField] private string _triggeredTutorialId;
+    [SerializeField] private string _tutorialTriggerId;
     [SerializeField] private bool _disableOnTrigger;
 
 	// Use this for initialization
@@ -24,7 +24,7 @@ public class TutorialTrigger_BoxCollider : MonoBehaviour {
             return;
         }
         // fire tutorial trigger
-        TutorialManager.Instance.TriggerTutorial(_triggeredTutorialId);
+        TutorialManager.Instance.FireTutorialTrigger(_tutorialTriggerId);
         gameObject.SetActive(!_disableOnTrigger);
     }
 }

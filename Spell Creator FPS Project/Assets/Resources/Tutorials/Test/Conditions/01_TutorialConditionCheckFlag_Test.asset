@@ -8,10 +8,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccf045ded1798724581c56f583150028, type: 3}
-  m_Name: Base Level Data
+  m_Script: {fileID: 11500000, guid: d2552e8971eb7264081c80495bac7ab3, type: 3}
+  m_Name: 01_TutorialConditionCheckFlag_Test
   m_EditorClassIdentifier: 
-  x: 0
-  y: 0
-  z: 0
-  roomBlueprintIndices: 0000000000000000000000000000000000000000
+  _flagName: Test_Flag_Set
+  _value: 0

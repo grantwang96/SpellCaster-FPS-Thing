@@ -17,11 +17,11 @@ TagManager:
   - Player
   - Spell
   - Enemy
-  - Interactable
+  - NoCollisionInteractable
   - DetectionRadius
   - Weapon
   - Pickupable
-  - 
+  - CollisionInteractable
   - 
   - 
   - 

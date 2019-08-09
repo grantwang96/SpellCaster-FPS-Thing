@@ -5,7 +5,12 @@ using UnityEngine;
 /// <summary>
 /// object that is thrown to deal damage/status effects
 /// </summary>
-public class Projectile : PooledObject {
+public class Projectile : MonoBehaviour, PooledObject {
+
+    [SerializeField] private string _prefabId;
+    public string PrefabId => _prefabId;
+    [SerializeField] private bool _inUse;
+    public bool InUse => _inUse;
 
     [SerializeField] protected Damageable _owner;
     [SerializeField] protected GameObject _onHitVFX;
@@ -24,8 +29,8 @@ public class Projectile : PooledObject {
     protected float _lifeTime;
     protected float _startTime;
     protected float _speed;
-
     protected int _power;
+
     [SerializeField] protected bool _isLive; // can things collider with this projectile still?
     public bool IsLive => _isLive;
 
@@ -134,14 +139,14 @@ public class Projectile : PooledObject {
         DeactivatePooledObject();
     }
 
-    public override void ActivatePooledObject() {
+    public virtual void ActivatePooledObject() {
         gameObject.SetActive(true);
     }
 
-    public override void DeactivatePooledObject() {
+    public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
-        ObjectPool.Instance.ReturnUsedPooledObject(PrefabId, this);
+        ObjectPool.Instance.ReturnUsedPooledObject(this);
     }
 
     protected void Die() {

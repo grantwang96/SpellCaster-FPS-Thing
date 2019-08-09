@@ -32,12 +32,17 @@ public abstract class InteractableStation : MonoBehaviour, IInteractable {
         LevelManager.Instance.RegisterInteractable(this);
     }
 
-    public virtual void Interact(CharacterBehaviour character) {
+    public virtual void InteractPress(CharacterBehaviour character) {
         OnInteractAttempt?.Invoke();
         if (character != GameplayController.Instance) {
             return;
         }
+        OnPlayerInteract();
         OnInteractSuccess?.Invoke();
+    }
+
+    public virtual void InteractHold(CharacterBehaviour character) {
+
     }
 
     protected abstract void OnPlayerInteract();

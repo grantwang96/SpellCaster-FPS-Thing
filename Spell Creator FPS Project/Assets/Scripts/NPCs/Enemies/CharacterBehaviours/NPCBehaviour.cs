@@ -6,6 +6,9 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(NPCMoveController))]
 public class NPCBehaviour : CharacterBehaviour {
+
+    [SerializeField] protected string _id;
+    public string Id => _id;
     
     [SerializeField] protected NPCMoveController _charMove;
     public NPCMoveController CharMove => _charMove;

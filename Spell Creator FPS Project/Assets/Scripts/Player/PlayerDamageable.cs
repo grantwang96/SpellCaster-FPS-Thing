@@ -14,7 +14,11 @@ public class PlayerDamageable : Damageable {
     private bool _isDead;
     public override bool IsDead { get { return _isDead; } }
 
-    private CharacterMoveController moveController;
+    private CharacterMoveController _moveController;
+
+    private void Awake() {
+        _moveController = GetComponent<CharacterMoveController>();
+    }
 
     public override void TakeDamage(int damage) {
         if (_isDead) { return; }
@@ -44,7 +48,7 @@ public class PlayerDamageable : Damageable {
         _isDead = true;
     }
 
-    public override void AddForce(Vector3 velocity) {
-        moveController.AddForce(velocity);
+    public override void AddForce(Vector3 velocity, float drag = 0f) {
+        _moveController.AddForce(velocity, drag);
     }
 }

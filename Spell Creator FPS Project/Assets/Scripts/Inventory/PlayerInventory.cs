@@ -59,10 +59,6 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start() {
-
-    }
-
     private void InitializeRuneInventory() {
         _storedRunes.Clear();
         List<StorableInventoryRune> runeInventory = GameManager.Instance.GetSavedRuneInventory();

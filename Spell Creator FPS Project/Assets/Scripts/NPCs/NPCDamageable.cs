@@ -13,16 +13,16 @@ public class NPCDamageable : Damageable {
     [SerializeField] private Transform _body;
     public override Transform Body => _body;
 
-    private NPCMoveController moveController;
-    private NPCBehaviour npcBehaviour;
+    private NPCMoveController _moveController;
+    private NPCBehaviour _npcBehaviour;
 
     // Use this for initialization
     void Start () {
-        moveController = GetComponent<NPCMoveController>();
-        npcBehaviour = GetComponent<NPCBehaviour>();
+        _moveController = GetComponent<NPCMoveController>();
+        _npcBehaviour = GetComponent<NPCBehaviour>();
 
-        _health = npcBehaviour.Blueprint.TotalHealth;
-        _maxHealth = npcBehaviour.Blueprint.TotalHealth;
+        _health = _npcBehaviour.Blueprint.TotalHealth;
+        _maxHealth = _npcBehaviour.Blueprint.TotalHealth;
     }
 	
     public override void TakeDamage(int damage) {
@@ -60,9 +60,9 @@ public class NPCDamageable : Damageable {
     }
 
     protected override void AddStatusEffect(StatusEffect statusEffect, int damage) {
-        if(ArrayHelper.Contains(npcBehaviour.Blueprint.StatResistances, statusEffect)) {
+        if(ArrayHelper.Contains(_npcBehaviour.Blueprint.StatResistances, statusEffect)) {
             return;
-        } else if(ArrayHelper.Contains(npcBehaviour.Blueprint.StatWeaknesses, statusEffect)) {
+        } else if(ArrayHelper.Contains(_npcBehaviour.Blueprint.StatWeaknesses, statusEffect)) {
             damage *= 2;
         }
         base.AddStatusEffect(statusEffect, damage);
@@ -72,7 +72,7 @@ public class NPCDamageable : Damageable {
         gameObject.SetActive(false);
     }
 
-    public override void AddForce(Vector3 velocity) {
-        moveController.AddForce(velocity);
+    public override void AddForce(Vector3 velocity, float drag = 0f) {
+        _moveController.AddForce(velocity, drag);
     }
 }

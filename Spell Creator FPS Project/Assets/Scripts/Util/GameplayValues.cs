@@ -32,10 +32,9 @@ public static partial class GameplayValues {
         public const string NPCAttackComboIndexId = "AttackComboIndex";
     }
 
+    // pooled objects that will only ever have one version
     public static class ObjectPooling {
-        public const string RecoveryOrbPrefabId = "prefab.RecoveryOrb";
-        public const string ProjectilePrefabId = "prefab.Projectile";
-        public const string MagicalProjectilePrefabId = "prefab.MagicProjectile";
+        public const string RecoveryOrbPrefabId = "RecoveryOrb";
     }
 
     public static class Level {

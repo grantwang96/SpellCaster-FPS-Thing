@@ -296,7 +296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1479532085378648
 GameObject:
   m_ObjectHideFlags: 1
@@ -940,7 +940,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1158338626366970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.6, y: 0, z: 5.2}
+  m_LocalPosition: {x: -6.47, y: 0, z: 2.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4572717353518604}
@@ -1212,6 +1212,7 @@ MonoBehaviour:
   _maxSpeed: 5
   _mass: 1
   _linearDrag: 1
+  _headDistanceThreshold: 0
   _performingAction: 0
   _movementVelocity: {x: 0, y: 0, z: 0}
   _moveSpeed: 2
@@ -1273,7 +1274,7 @@ MonoBehaviour:
   _targetInRangeState: {fileID: 114843615361421774}
   _targetOutOfRangeState: {fileID: 114472222764003254}
   _targetMeleeRangeState: {fileID: 114472222764003254}
-  _projectilePrefabId: prefab.Projectile
+  _projectilePrefabId: Projectile
   _power: 5
   _useGravity: 0
   _effects:
@@ -1302,11 +1303,14 @@ MonoBehaviour:
   _animHandler: {fileID: 0}
   _unitTags:
   - PLAYER_ENEMY_UNIT
+  _id: ThrowingDingus
   _charMove: {fileID: 114625353816454100}
   _damageable: {fileID: 114963092705066930}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 114373588043902638}
+  _prefabId: ThrowingDingus
+  _inUse: 0
 --- !u!114 &114963092705066930
 MonoBehaviour:
   m_ObjectHideFlags: 1

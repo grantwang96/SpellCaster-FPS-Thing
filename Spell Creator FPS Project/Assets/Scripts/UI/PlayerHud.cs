@@ -12,6 +12,7 @@ public class PlayerHud : MonoBehaviour {
 
     [SerializeField] private Text _healthTextDisplay;
     [SerializeField] private Text _manaTextDisplay;
+    [SerializeField] private Image _spellChargeBar;
 
     [SerializeField] private PlayerDamageable _playerDamageable;
     [SerializeField] private PlayerCombat _playerCombat;
@@ -25,37 +26,49 @@ public class PlayerHud : MonoBehaviour {
         _playerDamageable.OnHealthChanged += PlayerHealthChanged;
         _playerDamageable.OnMaxHealthChanged += PlayerMaxHealthChanged;
         _playerCombat.OnManaChanged += PlayerManaChanged;
+        _playerCombat.OnActiveSpellDataUpdated += OnActiveSpellDataUpdated;
 
-        UpdateHealthDisplay();
-        UpdateManaDisplay();
+        UpdateHealthDisplay(_health, _maxHealth);
+        UpdateManaDisplay(_mana, _maxMana);
 	}
 
     private void OnDestroy() {
         _playerDamageable.OnHealthChanged -= PlayerHealthChanged;
         _playerDamageable.OnMaxHealthChanged -= PlayerMaxHealthChanged;
         _playerCombat.OnManaChanged -= PlayerManaChanged;
+        _playerCombat.OnActiveSpellDataUpdated -= OnActiveSpellDataUpdated;
     }
 
     private void PlayerHealthChanged(int newHealth) {
         _health = newHealth;
-        UpdateHealthDisplay();
+        UpdateHealthDisplay(newHealth, _maxHealth);
     }
 
     private void PlayerMaxHealthChanged(int newMaxHealth) {
         _maxHealth = newMaxHealth;
-        UpdateHealthDisplay();
+        UpdateHealthDisplay(_health, newMaxHealth);
     }
 
-    private void UpdateHealthDisplay() {
-        _healthTextDisplay.text = $"{_health} / {_maxHealth} ";
+    private void UpdateHealthDisplay(int health, int maxHealth) {
+        _healthTextDisplay.text = $"{health} / {maxHealth} ";
     }
 
     private void PlayerManaChanged(int newMana) {
         _mana = newMana;
-        UpdateManaDisplay();
+        UpdateManaDisplay(newMana, _maxMana);
     }
 
-    private void UpdateManaDisplay() {
-        _manaTextDisplay.text = $"{_mana} / {_maxMana}";
+    private void UpdateManaDisplay(int mana, int maxMana) {
+        _manaTextDisplay.text = $"{mana} / {maxMana}";
+    }
+
+    private void OnActiveSpellDataUpdated() {
+        ActiveSpell activeSpell = _playerCombat.ActiveSpell;
+        if(activeSpell == null) {
+            _spellChargeBar.fillAmount = 0f;
+            return;
+        }
+        _spellChargeBar.fillAmount = activeSpell.holdTime / activeSpell.maxHoldTime;
+        UpdateManaDisplay(_mana - activeSpell.totalManaCost, _maxMana);
     }
 }

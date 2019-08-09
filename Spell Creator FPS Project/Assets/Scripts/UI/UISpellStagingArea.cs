@@ -44,14 +44,15 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         UIViewGridInitData spellComponentsInit = new UIViewGridInitData();
         spellComponentsInit.RowLengths = _spellComponentsViewRowLengths;
         _spellComponentsView.Initialize(spellComponentsInit);
+        _spellComponentsView.SetCurrentAtBound(IntVector3.Right);
         _spellComponentsView.OnSelectPressed += OnSpellComponentSelected;
         _spellComponentsView.OnHighlighted += OnSpellComponentHighlighted;
 
         UIViewGridInitData craftButtonInit = new UIViewGridInitData();
         craftButtonInit.RowLengths = _craftButtonViewRowLengths;
         _craftButtonView.Initialize(craftButtonInit);
-        _craftSpellButton.OnMousePointerHighlight += OnCraftSpellButtonHighlighted;
         _craftButtonView.OnSelectPressed += OnCraftSpellButtonSelected;
+        _craftButtonView.OnHighlighted += OnCraftSpellButtonHighlighted;
     }
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
@@ -135,8 +136,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnSpellNameEditorHighlighted(IUIInteractable interactable) {
-        _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
-        _craftButtonView.UnhighlightCell(_craftButtonView.CurrentItemX, _craftButtonView.CurrentItemY);
+        _craftButtonView.SetActive(false);
+        _spellComponentsView.SetActive(false);
+        _spellNameEditorView.SetActive(true);
     }
 
     private void OnSpellNameEditorSelected(IUIInteractable interactable) {
@@ -144,13 +146,10 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnSpellComponentHighlighted(IUIInteractable interactable) {
-        _spellNameEditorView.UnhighlightCell(_spellNameEditorView.CurrentItemX, _spellComponentsView.CurrentItemY);
-        _craftButtonView.UnhighlightCell(_craftButtonView.CurrentItemX, _craftButtonView.CurrentItemY);
+        _craftButtonView.SetActive(false);
+        _spellComponentsView.SetActive(true);
+        _spellNameEditorView.SetActive(false);
         string id = interactable.Id;
-        if (id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
-            OnSpellSlotHighlighted?.Invoke(id);
-            return;
-        }
         OnSpellSlotHighlighted?.Invoke(id);
     }
 
@@ -166,6 +165,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         Debug.Log($"Craft Spell Button Highlighted!");
         _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
         _spellNameEditorView.UnhighlightCell(_spellNameEditorView.CurrentItemX, _spellNameEditorView.CurrentItemY);
+        _craftButtonView.SetActive(true);
+        _spellComponentsView.SetActive(false);
+        _spellNameEditorView.SetActive(false);
     }
 
     private void OnCraftSpellButtonSelected(IUIInteractable interactable) {
@@ -173,13 +175,11 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     public override void SetActive(bool active, bool hardLocked, IntVector3 dir) {
-        _spellComponentsView.SetActive(active, hardLocked);
         if (active) {
             _spellComponentsView.SetCurrentAtBound(dir);
-            _spellComponentsView.UpdateHighlightedViewCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
-        } else {
-            _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
-            _craftButtonView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
         }
+        _spellComponentsView.SetActive(active, hardLocked);
+        _craftButtonView.SetActive(false, hardLocked);
+        _spellNameEditorView.SetActive(false, hardLocked);
     }
 }

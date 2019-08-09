@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rune : PooledObject, IInteractable, ILootable {
+public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
 
+    [SerializeField] private string _prefabId;
+    public string PrefabId => _prefabId;
+    [SerializeField] private bool _inUse;
+    public bool InUse => _inUse;
     [SerializeField] private bool _interactable = true;
     public bool Interactable { get { return _interactable; } }
     [SerializeField] private string _itemId; // item id contained in rune
@@ -43,7 +47,7 @@ public class Rune : PooledObject, IInteractable, ILootable {
         
     }
 
-    public void Interact(CharacterBehaviour character) {
+    public void InteractPress(CharacterBehaviour character) {
         OnInteractAttempt?.Invoke();
         if (!Interactable) { return; }
         if(character == GameplayController.Instance) {
@@ -54,6 +58,10 @@ public class Rune : PooledObject, IInteractable, ILootable {
         }
     }
 
+    public void InteractHold(CharacterBehaviour character) {
+
+    }
+
     public void Initialize() {
         
     }
@@ -62,13 +70,12 @@ public class Rune : PooledObject, IInteractable, ILootable {
         
     }
 
-    public override void ActivatePooledObject() {
+    public void ActivatePooledObject() {
         gameObject.SetActive(true);
         LevelManager.Instance.RegisterInteractable(this);
     }
 
-    public override void DeactivatePooledObject() {
-        base.DeactivatePooledObject();
+    public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         LevelManager.Instance.UnregisterInteractable(this);
     }

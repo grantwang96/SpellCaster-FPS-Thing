@@ -509,7 +509,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1795502510432786}
-  Active: 0
   _content: {fileID: 224523836470992826}
   _rowPrefab: {fileID: 224986717452082902}
   _cellPrefab: {fileID: 1738700963902730, guid: 6512ecf6b94c6d647bdaa46afe218da3,
@@ -519,7 +518,7 @@ MonoBehaviour:
   _up: {fileID: 114699235507296954}
   _right: {fileID: 0}
   _down: {fileID: 114514416492592954}
-  _left: {fileID: 0}
+  _left: {fileID: 114541312620179998}
   _directionHoldThreshold: 0.259
   _directionHoldFreq: 0.126
   _inverted: 0
@@ -1067,7 +1066,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1795502510432786}
-  Active: 0
   _content: {fileID: 224944728671402326}
   _rowPrefab: {fileID: 224986717452082902}
   _cellPrefab: {fileID: 1076789855440372, guid: efa941d2a884b2b439496bf3634957ff,
@@ -1093,7 +1091,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1231630351505722}
-  Active: 0
   _content: {fileID: 224735786204307298}
   _rowPrefab: {fileID: 224547965673883678}
   _cellPrefab: {fileID: 1822958647287054, guid: ebcc297e8a29937449ce6b811bace38a,
@@ -1146,7 +1143,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1795502510432786}
-  Active: 0
   _content: {fileID: 0}
   _rowPrefab: {fileID: 224986717452082902}
   _cellPrefab: {fileID: 1321617601338720}
@@ -2014,10 +2010,10 @@ RectTransform:
   m_Father: {fileID: 224494763190479034}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -189}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: -60, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224986717452082902
 RectTransform:

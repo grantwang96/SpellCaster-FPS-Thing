@@ -17,6 +17,25 @@ public class GameManager_Gameplay : GameManager {
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
     }
 
+    protected void SubscribeToPlayerDataEvents() {
+        PlayerDataManager.Instance.OnPlayerFlagsUpdated += PlayerDataManager_OnPlayerFlagsUpdated;
+        PlayerDataManager.Instance.OnPlayerCountersUpdated += PlayerDataManager_OnPlayerCountersUpdated;
+    }
+
+    private void PlayerDataManager_OnPlayerCountersUpdated(IReadOnlyDictionary<string, int> updatedCounters) {
+        _currentGame.PlayerDataCounters.Clear();
+        foreach(KeyValuePair<string, int> pair in updatedCounters) {
+            _currentGame.PlayerDataCounters.Add(pair.Key, pair.Value);
+        }
+    }
+
+    private void PlayerDataManager_OnPlayerFlagsUpdated(IReadOnlyDictionary<string, bool> updatedFlags) {
+        _currentGame.PlayerDataFlags.Clear();
+        foreach(KeyValuePair<string, bool> pair in updatedFlags) {
+            _currentGame.PlayerDataFlags.Add(pair.Key, pair.Value);
+        }
+    }
+
     private void SpellInventory_OnSpellInventoryDataUpdated(IReadOnlyList<StorableSpell> spells) {
         _currentGame.PlayerSpellsInventory.Clear();
         _currentGame.PlayerSpellsInventory.AddRange(spells);

@@ -42,19 +42,21 @@ public class PlayerMovement_FPS : CharacterMoveController {
         }
     }
 
-    protected override IEnumerator ExternalForceRoutine(Vector3 externalForce) {
+    protected override IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
         _movementVelocity = externalForce;
         yield return new WaitForEndOfFrame();
         Vector3 start = externalForce;
         while (!_characterController.isGrounded && (_characterController.velocity.x != 0 || _characterController.velocity.z != 0)) {
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         float time = 0f;
         while(_movementVelocity.x != 0 && _movementVelocity.z != 0) {
-            time += Time.deltaTime;
-            _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
-            _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
-            yield return null;
+            time += Time.deltaTime * drag;
+            Vector3 yVel = new Vector3(0f, _movementVelocity.y, 0f);
+            _movementVelocity = Vector3.Lerp(start, yVel, time);
+            // _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
+            // _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
+            yield return new WaitForFixedUpdate();
         }
         _externalForces = null;
     }

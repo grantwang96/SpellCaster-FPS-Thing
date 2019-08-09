@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class GameManager : MonoBehaviour {
 
     public static GameManager Instance;
-    protected static Game _currentGame;
+    protected static GameSave _currentGame;
 
     protected virtual void Awake() {
         Instance = this;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelBuilder : MonoBehaviour {
-
+    
     // list of all possible floors
     // list of all possible walls
     // list of all possible ceilings
@@ -19,9 +19,9 @@ public class LevelBuilder : MonoBehaviour {
         }
     }
 
-    [SerializeField] private int _mapX;
-    [SerializeField] private int _mapY;
-    [SerializeField] private int _mapZ;
+    private int _mapX;
+    private int _mapY;
+    private int _mapZ;
     [SerializeField] private int _floorCount;
 
     [SerializeField] private LevelData _levelData;
@@ -35,15 +35,12 @@ public class LevelBuilder : MonoBehaviour {
         IntVector3.Right,
     };
 
-    [SerializeField] private RoomBlueprint[] _roomBlueprints;
-    public RoomBlueprint[] RoomBlueprints {
-        get { return _roomBlueprints; }
-    }
+    [SerializeField] private List<RoomBlueprint> _roomBlueprints = new List<RoomBlueprint>();
 
     public const string RoomID = "ROOM_{0}";
+    private bool _processingCoroutine;
 
-    #region HACKED AF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    private bool processingCoroutine;
+    #region HACKED AF!(DEPRECATED)
 
     public int MinimumOffsetXLowerBound;
     public int MaximumOffsetXUpperBound;
@@ -79,6 +76,10 @@ public class LevelBuilder : MonoBehaviour {
 	}
 
     private List<IntVector3> InitializeGameMap() {
+        _mapX = _levelData.MapSizeX;
+        _mapY = _levelData.MapSizeY;
+        _mapZ = _levelData.MapSizeZ;
+
         List<IntVector3> availablePoints = new List<IntVector3>();
         _gameMap = new TileData[_mapX][][];
         for(int i = 0; i < _mapX; i++) {
@@ -101,11 +102,11 @@ public class LevelBuilder : MonoBehaviour {
         // IntVector3 offsetMax = new IntVector3(MaximumOffsetXUpperBound, MaximumOffsetYUpperBound, MaximumOffsetZUpperBound);
         // IntVector3 position = new IntVector3(levelStartX, levelStartY, levelStartZ);
 
-        while (processingCoroutine) {
+        while (_processingCoroutine) {
             yield return null;
         }
         StartCoroutine(BuildMap());
-        while (processingCoroutine) {
+        while (_processingCoroutine) {
             yield return null;
         }
         Debug.Log("Done!");
@@ -113,12 +114,13 @@ public class LevelBuilder : MonoBehaviour {
 
     private IEnumerator LayoutLevel() {
         Debug.Log("Laying out map...");
-        processingCoroutine = true;
+        _processingCoroutine = true;
         List<IntVector3> availablePoints = InitializeGameMap();
         Vector3 previousPoint = Vector3.one * 0.5f;
+        LoadRoomPool();
         yield return null;
-        for(int i = 0; i < _levelData.roomBlueprintIndices.Count; i++) {
-            RoomBlueprint blueprint = _roomBlueprints[_levelData.roomBlueprintIndices[i]];
+        for(int i = 0; i < _roomBlueprints.Count; i++) {
+            RoomBlueprint blueprint = _roomBlueprints[i];
             Vector3 vector3StartLocation = GetPseudoRandomPoint(previousPoint);
             previousPoint = vector3StartLocation;
             int roomX = Mathf.RoundToInt(_gameMap.Length * vector3StartLocation.x);
@@ -128,7 +130,22 @@ public class LevelBuilder : MonoBehaviour {
             TryGenerateRoom(roomX, roomY, roomZ, blueprint);
             yield return null;
         }
-        processingCoroutine = false;
+        _processingCoroutine = false;
+    }
+
+    private void LoadRoomPool() {
+        _roomBlueprints.Clear();
+        for(int i = 0; i < _levelData.RoomPool.Count; i++) {
+            RoomPoolObject roomPoolObject = _levelData.RoomPool[i];
+            int count = Random.Range(roomPoolObject.MinCount, roomPoolObject.MaxCount);
+            for(int j = 0; j < count; j++) {
+                _roomBlueprints.Add(roomPoolObject.RoomBlueprint);
+            }
+        }
+    }
+
+    private void PriorityShuffleRooms() {
+
     }
 
     private Vector3 GetPseudoRandomPoint(Vector3 previous) {
@@ -171,11 +188,13 @@ public class LevelBuilder : MonoBehaviour {
                     roomFits = false;
                     break;
                 }
+                Debug.Log("GameMap Length: " + _gameMap.Length);
+                Debug.Log("i: " + i);
                 for (int j = lowerBound.y; j <= upperBound.y; j++) {
                     if (!roomFits) {
                         break;
                     }
-                    if (y + j < 0 || y + j >= _gameMap[i].Length) {
+                    if (y + j < 0 || y + j >= _gameMap[x + i].Length) {
                         upperBound.y = j - 1;
                         roomFits = false;
                         break;
@@ -184,12 +203,12 @@ public class LevelBuilder : MonoBehaviour {
                         if (!roomFits) {
                             break;
                         }
-                        if (z + k < 0 || z + k >= _gameMap[i][j].Length) {
+                        if (z + k < 0 || z + k >= _gameMap[x + i][y + j].Length) {
                             upperBound.z = k - 1;
                             roomFits = false;
                             break;
                         }
-                        TileData tileData = _gameMap[i][j][k];
+                        TileData tileData = _gameMap[x + i][y + j][z + k];
                         if(tileData.TileType != TileData.MapPieceType.NONE) {
                             roomFits = false;
                             upperBound.x = i - 1;
@@ -206,13 +225,17 @@ public class LevelBuilder : MonoBehaviour {
         Debug.Log("Upper bound After: " + new Vector3(upperBound.x, upperBound.y, upperBound.z));
 
         // Validate that those offsets are possible dimensions for the room
-        if (lowerBound.x < upperBound.x && lowerBound.y < upperBound.y && lowerBound.z < upperBound.z) {
+        if (ValidateRoomDimensions(lowerBound, upperBound)) {
             LayoutRoom(lowerBound, upperBound, new IntVector3(x, y, z), blueprint);
             return true;
         }
 
         // Establish the room TileData
         return false;
+    }
+
+    private bool ValidateRoomDimensions(IntVector3 lowerBound, IntVector3 upperBound) {
+        return lowerBound.x < upperBound.x && lowerBound.y < upperBound.y && lowerBound.z < upperBound.z;
     }
 
     /// <summary>
@@ -223,7 +246,7 @@ public class LevelBuilder : MonoBehaviour {
     /// <param name="position"></param>
     private void LayoutRoom(IntVector3 offsetMin, IntVector3 offsetMax, IntVector3 position, RoomBlueprint roomBlueprint) {
         Debug.Log("Laying out room");
-        processingCoroutine = true;
+        _processingCoroutine = true;
         IntVector3 dimensionsMin = new IntVector3();
         IntVector3 dimensionsMax = new IntVector3();
         dimensionsMin.x = position.x + offsetMin.x;
@@ -259,12 +282,12 @@ public class LevelBuilder : MonoBehaviour {
                 }
             }
         }
-        processingCoroutine = false;
+        _processingCoroutine = false;
     }
 
     private IEnumerator BuildMap() {
         Debug.Log("Building map...");
-        processingCoroutine = true;
+        _processingCoroutine = true;
         for (int i = 0; i < _gameMap.Length; i++) {
             for (int j = 0; j < _gameMap[i].Length; j++) {
                 for (int k = 0; k < _gameMap[i][j].Length; k++) {
@@ -273,7 +296,7 @@ public class LevelBuilder : MonoBehaviour {
             }
             yield return null;
         }
-        processingCoroutine = false;
+        _processingCoroutine = false;
     }
 
     private void BuildMapPiece(int x, int y, int z) {
@@ -347,7 +370,6 @@ public class LevelBuilder : MonoBehaviour {
 
         }
 
-
         return dimensions;
     }
 
@@ -378,4 +400,64 @@ public class LevelBuilder : MonoBehaviour {
         public int Distance; // distance away from start of search
         public MapVertex Previous;
     }
+
+    /*
+    public static LevelBuilder Instance;
+    public const float TileScale = 5f; // this is for translating theoretical coordinates to world coordinates
+    public const float TileScaleOffset = .5f; // allows for some spacing between tile pieces(prevents ultra-thin walls)
+    public float ModifiedTileScale {
+        get {
+            return (TileScale / 2f) - TileScaleOffset;
+        }
+    }
+
+    public Tile _tilePrefab;
+    public GameObject floorPrefab;
+    public GameObject wallPrefab;
+    public GameObject doorPrefab;
+
+    // dimensions of the whole map
+    [SerializeField] private int _mapX;
+    [SerializeField] private int _mapY;
+    [SerializeField] private int _mapZ;
+
+    private TileData[][][] _gameMap;
+
+    private void InitializeGameMap() {
+        _gameMap = new TileData[_mapX][][];
+        for(int x = 0; x < _mapX; x++) {
+            _gameMap[x] = new TileData[_mapY][];
+            for(int y = 0; y < _mapY; y++) {
+                _gameMap[x][y] = new TileData[_mapZ];
+                for(int z = 0; z < _mapZ; z++) {
+                    _gameMap[x][y][z] = new TileData(x, y, z, TileData.MapPieceType.NONE, 0);
+                }
+            }
+        }
+    }
+
+    private IEnumerator BuildLevel() {
+        yield return null;
+    }
+
+    private void EstablishRoom(IntVector3 position, RoomBlueprint blueprint) {
+        int roomSizeX = 
+    }
+
+    public bool IsWithinMap(IntVector3 position) {
+        return position.x >= 0 && position.x < _mapX &&
+            position.y >= 0 && position.y < _mapY &&
+            position.z >= 0 && position.z < _mapZ;
+    }
+
+    public TileData GetTileData(int x, int y, int z) {
+        return new TileData(x, y, z, TileData.MapPieceType.FLOOR, 0);
+    }
+
+    [System.Serializable]
+    private class RoomData {
+        [SerializeField] public string _roomPrefabName;
+        [SerializeField] public List<RoomBlueprint> _possibleConnectingRooms;
+    }
+    */
 }

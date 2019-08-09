@@ -10,6 +10,7 @@ public class TutorialSet : ScriptableObject {
 
     [SerializeField] private string _tutorialId; // the tutorial id to reference and set flags for
     public string TutorialId => _tutorialId;
+    [SerializeField] private List<string> _triggerIds = new List<string>();
     [SerializeField] private bool _repeatable;
 
     [SerializeField] private List<TutorialCondition> _conditions = new List<TutorialCondition>();
@@ -18,8 +19,11 @@ public class TutorialSet : ScriptableObject {
     public delegate void TutorialEntryEvent();
     public event TutorialEntryEvent OnTutorialEntered;
 
-    public virtual bool ShouldTrigger() {
-        bool shouldTrigger = !IsTutorialTriggered();
+    public virtual bool ShouldTrigger(string triggerId) {
+        if (!_triggerIds.Contains(triggerId)) {
+            return false;
+        }
+        bool shouldTrigger = !IsTutorialCompleted();
         // check conditions here
         for(int i = 0; i < _conditions.Count; i++) {
             shouldTrigger &= _conditions[i].CanStartTutorial();
@@ -27,7 +31,7 @@ public class TutorialSet : ScriptableObject {
         return shouldTrigger;
     }
 
-    protected bool IsTutorialTriggered() {
+    protected bool IsTutorialCompleted() {
         return PlayerDataManager.Instance.GetFlag(_tutorialId);
     }
 

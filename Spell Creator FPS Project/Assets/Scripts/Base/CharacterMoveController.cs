@@ -47,28 +47,31 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
         return vector;
     }
 
-    public virtual void AddForce(Vector3 velocity) {
-        if(_externalForces != null) {
+    public virtual void AddForce(Vector3 velocity, float drag) {
+        float linearDrag = drag > 0f ? drag : _linearDrag;
+        if (_externalForces != null) {
             StopCoroutine(_externalForces);
         }
-        _externalForces = StartCoroutine(ExternalForceRoutine(velocity));
+        _externalForces = StartCoroutine(ExternalForceRoutine(velocity, linearDrag));
     }
 
-    protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce) {
+    protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
+        Debug.Log("External Force: " + externalForce);
+        float linearDrag = drag;
         _movementVelocity = externalForce / _mass;
         float magnitude = externalForce.magnitude;
         _characterController.Move(_movementVelocity * Time.deltaTime);
         yield return new WaitForFixedUpdate();
         Vector3 start = externalForce;
         while (!_characterController.isGrounded) {
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         float time = 0f;
         while (_movementVelocity.x != 0 && _movementVelocity.z != 0) {
-            time += Time.deltaTime * _linearDrag;
+            time += Time.deltaTime * linearDrag;
             _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
             _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         _externalForces = null;
     }

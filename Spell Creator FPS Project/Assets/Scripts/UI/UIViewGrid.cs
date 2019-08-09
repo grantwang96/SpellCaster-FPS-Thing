@@ -194,15 +194,13 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void OnViewCellHighlighted(IUIInteractable interactable) {
+        /*
         if (!Active) {
-            // Disallow if not active view grid
             return;
         }
-        UIViewCell viewCell = interactable as UIViewCell;
-        if(viewCell == null) {
-            return;
-        }
-        UpdateHighlightedViewCell(viewCell.XCoord, viewCell.YCoord);
+        */
+        Debug.Log("View Cell Highlighted: " + interactable.Id);
+        UpdateHighlightedViewCell(interactable.XCoord, interactable.YCoord);
     }
 
     public void UpdateHighlightedViewCell(int x, int y) {
@@ -253,9 +251,11 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void OnSelect(IUIInteractable interactable) {
+        Debug.Log("Clicked button");
         if (!Active) {
             return;
         }
+        Debug.Log("Button Success!");
         OnSelectPressed?.Invoke(interactable);
     }
 
@@ -325,6 +325,13 @@ public class UIViewGrid : MonoBehaviour {
     public void SetActive(bool active, bool hardLock = false) {
         Active = active;
         // set whether player can leave this view grid
+        _hardLocked = _hardLocked;
+
+        if (!Active) {
+            UnhighlightCell(CurrentItemX, CurrentItemY);
+        } else {
+            _interactableGrid[CurrentItemX][CurrentItemY].InteractableHighlight();
+        }
     }
 }
 

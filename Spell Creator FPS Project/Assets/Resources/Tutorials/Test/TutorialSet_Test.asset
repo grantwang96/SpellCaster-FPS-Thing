@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Name: TutorialSet_Test
   m_EditorClassIdentifier: 
   _tutorialId: Test_Tutorial
+  _triggerIds:
+  - TestBoxTrigger
   _repeatable: 0
   _conditions:
   - {fileID: 11400000, guid: 359c891cefadcbf4ba8731dc47e4ad1e, type: 2}

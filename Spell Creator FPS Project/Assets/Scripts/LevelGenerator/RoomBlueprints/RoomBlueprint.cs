@@ -8,9 +8,9 @@ using UnityEngine;
 /// </summary>
 public class RoomBlueprint : ScriptableObject {
 
-    [Range(1, 4)][SerializeField] protected int _entranceCount;
-    public int EntranceCount { get { return _entranceCount; } }
-    [SerializeField] protected int _pillarCount; // odd number will result in even spread with one pillar in center
+    [Range(1, 4)][SerializeField] protected int _preferredEntranceCount; // preferred number of entrances out of the room(excluding the initial way in)
+    public int EntranceCount { get { return _preferredEntranceCount; } }
+    [SerializeField] protected int _pillarCount; // odd number SHOULD result in even spread with one pillar in center
     public int PillarCount { get { return _pillarCount; } }
 
     [SerializeField] protected int _minimumWidth;

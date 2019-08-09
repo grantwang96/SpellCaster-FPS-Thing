@@ -7,6 +7,8 @@ public class Room : MonoBehaviour {
     [SerializeField] protected string _roomId;
     public string RoomId { get { return _roomId; } }
 
+    [SerializeField] protected List<EnemySpawn> _enemySpawn = new List<EnemySpawn>();
+
     [SerializeField] protected MeshFilter _meshFilter;
     [SerializeField] protected BoxCollider _boxCollider;
 
@@ -30,7 +32,23 @@ public class Room : MonoBehaviour {
         */
     }
 
-    void OnTriggerEnter(Collider other) {
-        Debug.Log(other.name + " has stepped into Room: " + _roomId);
+    private void OnTriggerEnter(Collider other) {
+        CharacterBehaviour character = other.GetComponent<CharacterBehaviour>();
+        if(character != null) {
+            if(character == GameplayController.Instance) {
+                OnPlayerEnter();
+            }
+        }
+    }
+
+    private void OnPlayerEnter() {
+        Debug.Log($"Player has entered room {_roomId}!");
+        
+    }
+
+    private void SpawnEnemies() {
+        for(int i = 0; i < _enemySpawn.Count; i++) {
+            _enemySpawn[i].SpawnPrefab();
+        }
     }
 }

@@ -13,11 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _itemType: 0
   _id: CAST_METHOD_SPREADSHOT_SEMIAUTO
-  _icon: {fileID: 0}
+  _smallIcon: {fileID: 0}
+  _largeIcon: {fileID: 0}
+  _name: 
+  _shortDescription: 
+  _longDescription: 
   manaCost: 1
   _intervalTime: 0
   spellTiming: 00000000
-  _magicProjectilePrefabId: prefab.MagicProjectile
+  _magicProjectilePrefabId: MagicProjectile
   _projectileSpeed: 40
   _lifeTime: 5
   _count: 8

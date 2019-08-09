@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118d3a64c4b89ed499c1db760d096f5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabId: 
+  _prefabId: RecoveryOrb
   _inUse: 0
   _meshRenderer: {fileID: 23324092778681492}
   _rigidbody: {fileID: 54344602387512090}

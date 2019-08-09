@@ -72,7 +72,6 @@ public class UICustomButton : Button, IUIInteractable {
     public override void OnPointerEnter(PointerEventData eventData) {
         Debug.Log($"Hovering over {this.name}");
         base.OnPointerEnter(eventData);
-        _rect.localScale = Vector3.one * 1.25f;
         OnMousePointerHighlight?.Invoke(this);
     }
 

@@ -5,8 +5,8 @@ using UnityEngine;
 /// Class that stores data about the player(like tutorials completed, favorite spell, etc.)
 /// </summary>
 
-public delegate void PlayerFlagsUpdatedEvent();
-public delegate void PlayerCountersUpdatedEvent();
+public delegate void PlayerFlagsUpdatedEvent(IReadOnlyDictionary<string, bool> updatedFlags);
+public delegate void PlayerCountersUpdatedEvent(IReadOnlyDictionary<string, int> updatedCounters);
 
 public interface IPlayerDataManager {
     void SetFlag(string key, bool value);
@@ -58,9 +58,11 @@ public class PlayerDataManager : MonoBehaviour, IPlayerDataManager {
 
     public void SetCounter(string key, int value) {
         _counters[key] = value;
+        OnPlayerCountersUpdated?.Invoke(_counters);
     }
 
     public void SetFlag(string key, bool value) {
         _flags[key] = value;
+        OnPlayerFlagsUpdated?.Invoke(_flags);
     }
 }

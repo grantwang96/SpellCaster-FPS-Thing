@@ -8,6 +8,10 @@ public interface ILevelManager {
     void RegisterInteractable(IInteractable interactable);
     void UnregisterInteractable(IInteractable interactable);
     IInteractable GetInteractable(string interactableId);
+
+    void RegisterRoom(Room room);
+
+    void RegisterEnemySpawn(EnemySpawn spawn);
 }
 
 /// <summary>
@@ -23,6 +27,7 @@ public class LevelManager : MonoBehaviour, ILevelManager {
     public List<ChestSpawn> ChestLocations => _chestLocations;
     // dictionary of doors and their respective keys
     // list of all enemy spawnpoints
+    [SerializeField] private List<EnemySpawn> _enemySpawnPoints = new List<EnemySpawn>();
 
     private void Awake() {
         Instance = this;
@@ -45,5 +50,15 @@ public class LevelManager : MonoBehaviour, ILevelManager {
             return null;
         }
         return _interactables[interactableId];
+    }
+
+    public void RegisterRoom(Room room) {
+
+    }
+
+    public void RegisterEnemySpawn(EnemySpawn spawn) {
+        if (!_enemySpawnPoints.Contains(spawn)) {
+            _enemySpawnPoints.Add(spawn);
+        }
     }
 }

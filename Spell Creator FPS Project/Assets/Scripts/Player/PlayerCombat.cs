@@ -30,6 +30,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     [SerializeField] private int _manaRechargeRate; // mana recovered per second
     public delegate void ManaChanged(int newMana);
     public event ManaChanged OnManaChanged;
+    public delegate void ActiveSpellDataUpdated();
+    public event ActiveSpellDataUpdated OnActiveSpellDataUpdated;
     private Coroutine _manaRegeneration;
 
     [SerializeField] private Transform _gunBarrel;
@@ -151,6 +153,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             FinishedCastSpell(ActiveSpell.totalManaCost);
         }
         ActiveSpell = null;
+        OnActiveSpellDataUpdated?.Invoke();
     }
 
     private bool CanFireSpell() {
@@ -164,10 +167,11 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             maxHoldTime = SelectedSpell.MaxChargeTime,
             baseManaCost = SelectedSpell.ManaCost
         };
+        OnActiveSpellDataUpdated?.Invoke();
     }
 
     private void OnSlotButtonPressed(int number) {
-        if(number < 0 || number >= _spellsList.Count) { return; }
+        if(number <= 0 || number > _spellsList.Count) { return; }
         _selectedSpellIndex = number - 1;
         Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
     }
@@ -183,8 +187,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if(ActiveSpell.holdIntervalTime > ActiveSpell.interval) {
             ActiveSpell.holdIntervalTime = 0f;
         }
-
         ActiveSpell.totalManaCost = CalculateTotalManaCost(ActiveSpell.baseManaCost, ActiveSpell.holdTime);
+        OnActiveSpellDataUpdated?.Invoke();
     }
 
     private int CalculateTotalManaCost(int baseManaCost, float holdTime) {
@@ -193,7 +197,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private void FinishedCastSpell(int lostMana) {
         Mana -= lostMana;
-        Debug.Log(ActiveSpell.interval);
+        ActiveSpell.holdIntervalTime = 0f;
+        ActiveSpell.holdTime = 0f;
         StartCoroutine(CoolDownSpell(ActiveSpell.interval));
         if(_manaRegeneration != null) { StopCoroutine(_manaRegeneration); }
         _manaRegeneration = StartCoroutine(RegenerateMana());

@@ -12,14 +12,18 @@ public class CastingMethod_SingleShot : CastingMethod_MagicProjectile {
         MagicProjectile magicProjectile = GetMagicProjectile();
         if (magicProjectile == null) { return; }
 
-        int power = 1;
-        if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
-            power += Mathf.FloorToInt(caster.ActiveSpell.holdTime);
-        }
-
+        int power = GetPower(spell.Power, caster.ActiveSpell);
         // initialize magic projectile
         magicProjectile.InitializeProjectile(power, _lifeTime, spell.Effects);
         InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
         magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
+    }
+
+    protected int GetPower(int basePower, ActiveSpell activeSpell) {
+        int power = basePower;
+        if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
+            power *= Mathf.FloorToInt(1 + (activeSpell.holdTime / activeSpell.holdIntervalTime));
+        }
+        return power;
     }
 }

@@ -19,8 +19,8 @@ MonoBehaviour:
   _shortDescription: 
   _longDescription: 
   manaCost: 1
-  _intervalTime: 0
+  _intervalTime: 0.2
   spellTiming: 0000000001000000
-  _magicProjectilePrefabId: prefab.MagicProjectile
+  _magicProjectilePrefabId: MagicProjectile
   _projectileSpeed: 40
   _lifeTime: 5

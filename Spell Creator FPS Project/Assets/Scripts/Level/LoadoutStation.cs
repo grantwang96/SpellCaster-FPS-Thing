@@ -12,8 +12,7 @@ public class LoadoutStation : InteractableStation {
             return transform.position + _collider.center;
         }
     }
-
-
+    
     protected override void OnPlayerInteract() {
         UIManager.Instance.OpenUIPanel(_loadOutPanelPrefabName);
     }

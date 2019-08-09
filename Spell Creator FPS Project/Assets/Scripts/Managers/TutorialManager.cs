@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour {
 
     [SerializeField] private string[] _tutorialFolderPaths;
 
-    private Dictionary<string, TutorialSet> _tutorialSets = new Dictionary<string, TutorialSet>();
+    private List<TutorialSet> _tutorialSets = new List<TutorialSet>();
     private Queue<TutorialSet> _tutorialQueue = new Queue<TutorialSet>();
     private TutorialSet _currentTutorial;
     [SerializeField] private int _tutorialActionIndex = 0;
@@ -37,23 +37,23 @@ public class TutorialManager : MonoBehaviour {
                 Debug.LogError($"[{nameof(TutorialManager)}] Object \"{_tutorialFolderPaths[i]}\" was not of type TutorialSet");
                 continue;
             }
-            _tutorialSets.Add(tutorialSet.TutorialId, tutorialSet);
+            _tutorialSets.Add(tutorialSet);
         }
     }
 
-    public void TriggerTutorial(TutorialSet tutorial) {
-        if (tutorial.ShouldTrigger()) {
-            _tutorialQueue.Enqueue(tutorial);
-            _currentTutorial = _tutorialQueue.Peek();
-            RunTutorial();
+    public void FireTutorialTrigger(string triggerId) {
+        _tutorialQueue.Clear();
+        _currentTutorial = null;
+        for(int i = 0; i < _tutorialSets.Count; i++) {
+            if (_tutorialSets[i].ShouldTrigger(triggerId)) {
+                _tutorialQueue.Enqueue(_tutorialSets[i]);
+            }
         }
-    }
-
-    public void TriggerTutorial(string tutorialId) {
-        if (!_tutorialSets.ContainsKey(tutorialId)) {
+        if(_tutorialQueue.Count == 0) {
             return;
         }
-        TriggerTutorial(_tutorialSets[tutorialId]);
+        _currentTutorial = _tutorialQueue.Peek();
+        RunTutorial();
     }
     
     // function that gets next tutorial action and runs it
@@ -62,7 +62,7 @@ public class TutorialManager : MonoBehaviour {
             return;
         }
         if(_currentTutorial == null) {
-            Debug.LogError($"[{nameof(TutorialManager)}] Tutorial Queue is empty!");
+            Debug.Log($"[{nameof(TutorialManager)}] Tutorial Queue was empty!");
             return;
         }
         RunNextTutorialAction();

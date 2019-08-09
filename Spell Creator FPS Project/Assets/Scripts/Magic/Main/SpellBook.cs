@@ -7,7 +7,14 @@ using UnityEngine;
 /// THIS CLASS HAS BEEN DEPRECATED. SPELLS CAN ONLY BE ACQUIRED THRU CRAFTING/LOADOUT SYSTEM
 /// FUTURE ITERATIONS MAY SEE SPELLBOOK RETURN IF MULTIPLAYER BECAME A THING
 /// </summary>
-public class SpellBook : PooledObject, IInteractable {
+/// 
+
+public class SpellBook : MonoBehaviour {
+
+}
+
+/*
+public class SpellBook : MonoBehaviour, PooledObject, IInteractable {
 
     [SerializeField] private Spell _heldSpell;
     public Spell HeldSpell {
@@ -67,3 +74,4 @@ public class SpellBook : PooledObject, IInteractable {
         
     }
 }
+*/

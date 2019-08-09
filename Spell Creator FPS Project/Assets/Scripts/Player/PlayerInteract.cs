@@ -47,13 +47,13 @@ public class PlayerInteract : MonoBehaviour {
 
     private void PressInteract() {
         if (currentInteractable != null) {
-            currentInteractable.Interact(GameplayController.Instance);
+            currentInteractable.InteractPress(GameplayController.Instance);
         }
     }
 
     private void HoldInteract() {
         if (currentInteractable != null) {
-            currentInteractable.Interact(GameplayController.Instance);
+            currentInteractable.InteractHold(GameplayController.Instance);
         }
     }
 

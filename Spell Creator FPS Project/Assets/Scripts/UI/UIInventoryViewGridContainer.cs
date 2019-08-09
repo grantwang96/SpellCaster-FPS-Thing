@@ -80,11 +80,10 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
     public override void SetActive(bool active, bool hardLocked, IntVector3 dir) {
         base.SetActive(active, hardLocked, dir);
         _mainInventoryGrid.SetActive(IsActive, hardLocked);
+        _mainInventoryGrid.UnhighlightCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
         if (IsActive) {
             _mainInventoryGrid.SetCurrentAtBound(dir);
             _mainInventoryGrid.UpdateHighlightedViewCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
-        } else {
-            _mainInventoryGrid.UnhighlightCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
         }
     }
 

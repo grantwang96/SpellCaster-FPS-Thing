@@ -11,10 +11,6 @@ public class MagicProjectile : Projectile {
     public Spell Spell { get; private set; }
     public ISpellCaster SpellCaster { get; private set; }
 
-    public override void ActivatePooledObject() {
-        gameObject.SetActive(true);
-    }
-
     public void InitializeMagic(ISpellCaster caster, Spell spell) {
         _owner = caster.Damageable;
         SpellCaster = caster;

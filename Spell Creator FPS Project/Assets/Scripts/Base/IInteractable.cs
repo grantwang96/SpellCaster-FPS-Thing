@@ -13,6 +13,7 @@ public interface IInteractable {
     event InteractEvent OnInteractAttempt; // called when an interaction is attempted (not necessarily successful)
     event InteractEvent OnInteractSuccess; // successful interaction
 
-    void Interact(CharacterBehaviour character);
+    void InteractPress(CharacterBehaviour character);
+    void InteractHold(CharacterBehaviour character);
     void Detect(); // should display message when looking at interactable object
 }

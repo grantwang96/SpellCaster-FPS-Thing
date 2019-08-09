@@ -12,9 +12,12 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     public float tiltLimit;
     [SerializeField] private bool tiltEnabled;
 
-    protected virtual void Start() {
+    protected virtual void Awake() {
         characterBehaviour = GetComponent<CharacterBehaviour>();
         characterBehaviour.ChangeAnimationState += OnStateChange;
+    }
+
+    protected virtual void Start() {
         bodyRoot = characterBehaviour.BodyTransform;
         anim = bodyRoot.GetComponent<Animator>();
     }
