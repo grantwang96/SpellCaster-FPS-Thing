@@ -1197,7 +1197,7 @@ MonoBehaviour:
   _baseSpeed: 7
   _maxSpeed: 0
   _mass: 1
-  _linearDrag: 0.5
+  _linearDrag: 1
   _headDistanceThreshold: 0.4
   _performingAction: 0
   _movementVelocity: {x: 0, y: 0, z: 0}

@@ -11,7 +11,7 @@ public class Effect_Heal : Effect {
         caster?.TakeDamage(-power);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         damageable.TakeDamage(-power);
     }
 

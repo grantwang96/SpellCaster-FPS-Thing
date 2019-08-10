@@ -11,7 +11,7 @@ public class CastingMethod_Self : Spell_CastingMethod {
             Damageable damageable = caster.Damageable;
             if (damageable != null) {
                 int power = GetPower(caster.ActiveSpell, spell.Effects[i].BasePower);
-                spell.Effects[i].TriggerEffect(caster.Damageable, power, damageable, effects);
+                spell.Effects[i].TriggerEffect(caster.Damageable, power, caster.Damageable.Body.position, damageable, effects);
             }
         }
     }

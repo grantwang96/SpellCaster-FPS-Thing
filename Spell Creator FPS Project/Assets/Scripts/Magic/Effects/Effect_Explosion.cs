@@ -18,7 +18,7 @@ public class Effect_Explosion : Effect {
         throw new System.NotImplementedException();
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         List<Effect> newEffects = additionalEffects == null ? new List<Effect>() : new List<Effect>(additionalEffects);
         newEffects.Remove(this);
         MagicExplosion explosion = Instantiate(magicExplosionPrefab, caster.Body.position, Quaternion.identity);

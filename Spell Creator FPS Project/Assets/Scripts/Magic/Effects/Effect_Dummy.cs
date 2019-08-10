@@ -11,7 +11,7 @@ public class Effect_Dummy : Effect {
         Debug.Log(caster + " performed spell!");
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if (caster == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
     }

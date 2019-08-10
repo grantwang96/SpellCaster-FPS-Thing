@@ -12,7 +12,7 @@ public class Effect_Bullrush : Effect {
         caster.AddForce(velocity, _overrideDrag);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         if(damageable == null) {
             return;
         }
@@ -22,6 +22,6 @@ public class Effect_Bullrush : Effect {
     }
 
     public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
-        TriggerEffect(caster, power, damageable, additionalEffects);
+        TriggerEffect(caster, power, position, damageable, additionalEffects);
     }
 }

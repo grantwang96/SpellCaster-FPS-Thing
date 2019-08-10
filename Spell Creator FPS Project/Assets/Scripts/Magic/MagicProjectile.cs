@@ -52,7 +52,7 @@ public class MagicProjectile : Projectile {
         _previousPosition = _rigidBody.position;
 	}
 
-    protected override void OnHitDamageable(Damageable damageable) {
+    protected override void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
         Vector3 dir = damageable.Body.position - _rigidBody.position;
         float force = _rigidBody.velocity.magnitude * _rigidBody.mass;
         foreach (Effect effect in Spell.Effects) {

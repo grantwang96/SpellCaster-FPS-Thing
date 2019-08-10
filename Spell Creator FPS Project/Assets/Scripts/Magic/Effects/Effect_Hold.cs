@@ -22,7 +22,7 @@ public class Effect_Hold : Effect {
         // Can't really hold yourself, can you? Can you?
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if(damageable == null) {
             return;
         }

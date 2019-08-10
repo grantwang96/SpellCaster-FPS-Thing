@@ -83,7 +83,7 @@ public class Projectile : MonoBehaviour, PooledObject {
             OnHitCollider(coll);
             return;
         }
-        OnHitDamageable(dam);
+        OnHitDamageable(transform.position, dam);
         // if it collides with a wall
     }
 
@@ -103,10 +103,10 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 
     // what happens when this collides with something?
-    protected virtual void OnHitDamageable(Damageable damageable) {
+    protected virtual void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
         // apply effects here
         for(int i = 0; i < _effects.Length; i++) {
-            _effects[i].TriggerEffect(_owner, _power, damageable);
+            _effects[i].TriggerEffect(_owner, _power, hitPoint, damageable);
         }
         Die();
     }

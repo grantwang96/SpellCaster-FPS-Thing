@@ -11,7 +11,7 @@ public class Effect_AddStatusEffect : Effect {
         caster.TakeDamage(power, _statusEffect);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Damageable damageable = null, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if (caster == null || damageable == null) { return; }
         damageable.TakeDamage(power, _statusEffect);
     }
