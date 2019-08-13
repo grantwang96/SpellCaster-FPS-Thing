@@ -10,7 +10,6 @@ public interface ILevelManager {
     IInteractable GetInteractable(string interactableId);
 
     void RegisterRoom(Room room);
-
     void RegisterEnemySpawn(EnemySpawn spawn);
 }
 

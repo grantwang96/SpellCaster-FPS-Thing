@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectPool : MonoBehaviour {
 
+    private const int HardPoolCap = 1000; // DO NOT ALLOW ANY POOL SIZE TO EXCEED THIS NUMBER
+
     public static ObjectPool Instance { get; private set; }
     [SerializeField] private ObjectPoolInitData[] _poolPrefabs;
 
@@ -35,12 +37,12 @@ public class ObjectPool : MonoBehaviour {
 
     private void InitializePooledObjects() {
         for (int i = 0; i < _poolPrefabs.Length; i++) {
-            RegisterObjectPool(_poolPrefabs[i]);
+            AddObjectToPool(_poolPrefabs[i]);
         }
     }
 
     // THIS FUNCTION MIGHT NEED TO BE HANDLED IN A LOADING COROUTINE TO REDUCE STUTTERS. GETCOMPONENT IS A THICC BOI
-    private void RegisterObjectPool(ObjectPoolInitData initData) {
+    private void AddObjectToPool(ObjectPoolInitData initData) {
         PooledObject prefab = initData.Prefab.GetComponent<PooledObject>();
         if(prefab == null) {
             Debug.LogError("WTF Bro?");
@@ -55,11 +57,34 @@ public class ObjectPool : MonoBehaviour {
             Debug.LogError($"Unable to retrieve object pool list for Prefab ID: {prefab.PrefabId}");
             return;
         }
-        for(int i = 0; i < initData.PoolSize; i++) {
-            GameObject clone = Instantiate(initData.Prefab, transform);
+        CloneToPool(prefab.PrefabId, initData.PoolSize, initData.Prefab);
+    }
+
+    public void RegisterObjectToPool(string resourcePath, string prefabName, int count) {
+        string path = $"{resourcePath}/{prefabName}";
+        GameObject resource = Resources.Load<GameObject>(path);
+        if(resource == null) {
+            Debug.LogError($"[{nameof(ObjectPool)}] Could not find resource object with name {prefabName}");
+            return;
+        }
+        if (_availablePooledObjects.ContainsKey(prefabName)) {
+            CloneToPool(prefabName, count, resource);
+            return;
+        }
+        _availablePooledObjects.Add(prefabName, new List<PooledObject>());
+        _inUsePooledObjects.Add(prefabName, new List<PooledObject>());
+        CloneToPool(prefabName, count, resource);
+    }
+
+    private void CloneToPool(string prefabName, int count, GameObject resource) {
+        for (int i = 0; i < count; i++) {
+            if(_availablePooledObjects[prefabName].Count >= HardPoolCap) {
+                break;
+            }
+            GameObject clone = Instantiate(resource, transform);
             PooledObject obj = clone.GetComponent<PooledObject>();
             clone.gameObject.SetActive(false);
-            objectPool.Add(obj);
+            _availablePooledObjects[prefabName].Add(obj);
         }
     }
 

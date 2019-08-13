@@ -56,7 +56,6 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
-        Debug.Log("External Force: " + externalForce);
         float linearDrag = drag;
         _movementVelocity = externalForce / _mass;
         float magnitude = externalForce.magnitude;

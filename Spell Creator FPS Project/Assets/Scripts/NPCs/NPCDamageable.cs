@@ -30,6 +30,7 @@ public class NPCDamageable : Damageable {
             parentDamageable.TakeDamage(damage);
             return;
         }
+        Debug.Log($"{this.name} took {damage} points of damage!");
         _health -= damage;
     }
 

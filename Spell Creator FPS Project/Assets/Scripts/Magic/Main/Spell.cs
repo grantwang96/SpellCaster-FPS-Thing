@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class Spell {
     public string Name { get; private set; }
     public string InstanceId { get; private set; }
@@ -40,9 +40,15 @@ public class Spell {
             Power += _effects[i]?.BasePower ?? 0;
         }
         if(spellModifiers != null) {
+            SpellStats stats = GetSpellStats();
             for (int i = 0; i < spellModifiers.Length; i++) {
-                _spellModifiers[i]?.SetupSpell(this);
+                if(spellModifiers[i] == null) {
+                    Debug.LogError($"[{nameof(Spell)}] Spell modifier was null!");
+                    continue;
+                }
+                stats = spellModifiers[i].SetupSpell(stats);
             }
+            OverrideStats(stats);
         }
         IntervalTime = Mathf.Clamp(IntervalTime, 0f, 100f);
         MaxChargeTime = 3f;
@@ -57,14 +63,35 @@ public class Spell {
             ManaCost += _effects[i]?.ManaCost ?? 0;
         }
         if(spellModifiers != null) {
+            SpellStats stats = GetSpellStats();
             for (int i = 0; i < spellModifiers.Length; i++) {
-                _spellModifiers[i]?.SetupSpell(this);
+                _spellModifiers[i]?.SetupSpell(stats);
             }
+            OverrideStats(stats);
         }
         MaxChargeTime = maxChargeTime;
         IntervalTime = intervalTime;
         Power = power;
         Name = name;
+    }
+
+    private SpellStats GetSpellStats() {
+        SpellStats stats = new SpellStats() {
+            Power = Power,
+            ManaCost = ManaCost,
+            MaxChargeTime = MaxChargeTime,
+            IntervalTime = IntervalTime,
+            HoldIntervalTime = HoldIntervalTime
+        };
+        return stats;
+    }
+
+    private void OverrideStats(SpellStats stats) {
+        Power = stats.Power;
+        ManaCost = stats.ManaCost;
+        MaxChargeTime = stats.MaxChargeTime;
+        IntervalTime = stats.IntervalTime;
+        HoldIntervalTime = stats.HoldIntervalTime;
     }
 
     public bool OnStartCastSpell(ISpellCaster caster) {
@@ -102,6 +129,14 @@ public class ActiveSpell {
         totalManaCost = 0;
         initialHitPoint = Vector3.zero;
     }
+}
+
+public struct SpellStats {
+    public int Power;
+    public int ManaCost;
+    public float MaxChargeTime;
+    public float IntervalTime;
+    public float HoldIntervalTime;
 }
 
 /// <summary>

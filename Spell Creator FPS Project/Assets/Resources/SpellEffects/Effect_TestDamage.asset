@@ -11,7 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59967616d373bd24e8a9d3ca08549904, type: 3}
   m_Name: Effect_TestDamage
   m_EditorClassIdentifier: 
+  _itemType: 0
   _id: SPELL_EFFECT_DAMAGE
+  _smallIcon: {fileID: 0}
+  _largeIcon: {fileID: 0}
+  _name: Damage
+  _shortDescription: Hurts things
+  _longDescription: Deals damage to target
   _manaCost: 2
   _chargeTime: 0
   _intervalTime: 0

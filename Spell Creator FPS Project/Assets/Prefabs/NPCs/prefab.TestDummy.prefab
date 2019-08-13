@@ -347,6 +347,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentDamageable: {fileID: 0}
   _health: 9999
+  _maxHealth: 0
+  _isDead: 0
+  _body: {fileID: 4454709202691722}
 --- !u!114 &114702878809848424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,10 +362,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseSpeed: 0
-  _mass: 2
-  _linearDrag: 3
+  _maxSpeed: 0
+  _mass: 5
+  _linearDrag: 5
+  _headDistanceThreshold: 0
   _performingAction: 0
-  movementVelocity: {x: 0, y: 0, z: 0}
+  _movementVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &143881912130502528
 CharacterController:
   m_ObjectHideFlags: 1

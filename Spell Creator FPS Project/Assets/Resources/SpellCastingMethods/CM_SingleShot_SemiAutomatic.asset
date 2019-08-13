@@ -15,9 +15,9 @@ MonoBehaviour:
   _id: CAST_METHOD_SINGLESHOT_SEMIAUTO
   _smallIcon: {fileID: 0}
   _largeIcon: {fileID: 0}
-  _name: 
-  _shortDescription: 
-  _longDescription: 
+  _name: Single Shot SemiAuto
+  _shortDescription: Fires bolt of magic
+  _longDescription: Semi automatic bolt of magic
   manaCost: 3
   _intervalTime: 0
   spellTiming: 00000000

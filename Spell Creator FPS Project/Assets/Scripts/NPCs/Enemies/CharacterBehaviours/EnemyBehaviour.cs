@@ -9,8 +9,12 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
+    public delegate void SpawnEvent(EnemyBehaviour behaviour);
+    public event SpawnEvent OnEnemySpawned;
+
     public void ActivatePooledObject() {
         gameObject.SetActive(true);
+        OnEnemySpawned?.Invoke(this);
     }
 
     public void DeactivatePooledObject() {

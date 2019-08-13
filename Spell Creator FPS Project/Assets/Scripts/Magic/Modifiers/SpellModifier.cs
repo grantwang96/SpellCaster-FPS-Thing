@@ -19,6 +19,6 @@ public abstract class SpellModifier : ScriptableObject, IInventoryStorable {
     [SerializeField] protected string _longDescription;
     public string LongDescription => _longDescription;
 
-    public abstract void SetupSpell(Spell spell);
+    public abstract SpellStats SetupSpell(SpellStats stats);
     public abstract void SetupProjectile(MagicProjectile projectile);
 }
