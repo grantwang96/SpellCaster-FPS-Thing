@@ -43,9 +43,10 @@ public class PlayerDamageable : Damageable {
         AddStatusEffect(statusEffect, damage);
     }
 
-    private void Die() {
+    protected override void Die() {
         _health = 0;
         _isDead = true;
+        base.Die();
     }
 
     public override void AddForce(Vector3 velocity, float drag = 0f) {

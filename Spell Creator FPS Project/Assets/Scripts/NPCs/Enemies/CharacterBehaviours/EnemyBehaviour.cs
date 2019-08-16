@@ -5,12 +5,16 @@ using UnityEngine;
 public class EnemyBehaviour : NPCBehaviour, PooledObject {
 
     [SerializeField] private string _prefabId;
-    public string PrefabId => _prefabId;
+    public string PrefabId => name;
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
     public delegate void SpawnEvent(EnemyBehaviour behaviour);
     public event SpawnEvent OnEnemySpawned;
+
+    protected override void Start() {
+        base.Start();
+    }
 
     public void ActivatePooledObject() {
         gameObject.SetActive(true);
@@ -21,8 +25,8 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
         gameObject.SetActive(false);
     }
 
-    protected override void OnDeath(bool isDead) {
-        base.OnDeath(isDead);
+    protected override void OnDeath(bool isDead, Damageable dam) {
+        base.OnDeath(isDead, dam);
         DeactivatePooledObject();
         ObjectPool.Instance?.ReturnUsedPooledObject(this);
     }

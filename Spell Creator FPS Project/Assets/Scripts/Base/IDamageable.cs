@@ -12,7 +12,7 @@ public abstract class Damageable : MonoBehaviour {
     public delegate void HealthChanged(int health);
     public event HealthChanged OnHealthChanged;
     public event HealthChanged OnMaxHealthChanged;
-    public delegate void DeathEvent(bool isDead);
+    public delegate void DeathEvent(bool isDead, Damageable damageable);
     public event DeathEvent OnDeath;
 
     public Damageable parentDamageable;
@@ -64,6 +64,9 @@ public abstract class Damageable : MonoBehaviour {
     }
 
     public abstract void AddForce(Vector3 velocity, float drag = 0f);
+    protected virtual void Die() {
+        OnDeath(true, this);
+    }
 }
 
 [System.Serializable]

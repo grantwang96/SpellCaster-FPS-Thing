@@ -48,6 +48,9 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     public virtual void AddForce(Vector3 velocity, float drag) {
+        if (!gameObject.activeInHierarchy) {
+            return;
+        }
         float linearDrag = drag > 0f ? drag : _linearDrag;
         if (_externalForces != null) {
             StopCoroutine(_externalForces);

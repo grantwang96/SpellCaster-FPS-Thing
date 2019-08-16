@@ -32,6 +32,9 @@ public class NPCDamageable : Damageable {
         }
         Debug.Log($"{this.name} took {damage} points of damage!");
         _health -= damage;
+        if(_health <= 0 && !_isDead) {
+            Die();
+        }
     }
 
     public override void TakeDamage(int damage, Vector3 velocity) {
@@ -69,8 +72,9 @@ public class NPCDamageable : Damageable {
         base.AddStatusEffect(statusEffect, damage);
     }
 
-    private void Die() {
-        gameObject.SetActive(false);
+    protected override void Die() {
+        _isDead = true;
+        base.Die();
     }
 
     public override void AddForce(Vector3 velocity, float drag = 0f) {

@@ -45,17 +45,13 @@ public class ObjectPool : MonoBehaviour {
     private void AddObjectToPool(ObjectPoolInitData initData) {
         PooledObject prefab = initData.Prefab.GetComponent<PooledObject>();
         if(prefab == null) {
-            Debug.LogError("WTF Bro?");
+            ErrorManager.LogError(nameof(ObjectPool), "Prefab to be added was null!");
             return;
         }
+        Debug.Log("Prefab Id: " + prefab.PrefabId);
         if (!_availablePooledObjects.ContainsKey(prefab.PrefabId)) {
             _availablePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
             _inUsePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
-        }
-        List<PooledObject> objectPool;
-        if(!_availablePooledObjects.TryGetValue(prefab.PrefabId, out objectPool)) {
-            Debug.LogError($"Unable to retrieve object pool list for Prefab ID: {prefab.PrefabId}");
-            return;
         }
         CloneToPool(prefab.PrefabId, initData.PoolSize, initData.Prefab);
     }
@@ -64,16 +60,19 @@ public class ObjectPool : MonoBehaviour {
         string path = $"{resourcePath}/{prefabName}";
         GameObject resource = Resources.Load<GameObject>(path);
         if(resource == null) {
-            Debug.LogError($"[{nameof(ObjectPool)}] Could not find resource object with name {prefabName}");
+            ErrorManager.LogError(nameof(ObjectPool), $"Could not find resource object with name {prefabName}");
             return;
         }
-        if (_availablePooledObjects.ContainsKey(prefabName)) {
-            CloneToPool(prefabName, count, resource);
+        PooledObject pooledObject = resource.GetComponent<PooledObject>();
+        if(pooledObject == null) {
+            ErrorManager.LogError(nameof(ObjectPool), $"Resource object was not of type {nameof(PooledObject)}");
             return;
         }
-        _availablePooledObjects.Add(prefabName, new List<PooledObject>());
-        _inUsePooledObjects.Add(prefabName, new List<PooledObject>());
-        CloneToPool(prefabName, count, resource);
+        if (!_availablePooledObjects.ContainsKey(pooledObject.PrefabId)) {
+            _availablePooledObjects.Add(prefabName, new List<PooledObject>());
+            _inUsePooledObjects.Add(prefabName, new List<PooledObject>());
+        }
+        CloneToPool(pooledObject.PrefabId, count, resource);
     }
 
     private void CloneToPool(string prefabName, int count, GameObject resource) {
@@ -84,6 +83,7 @@ public class ObjectPool : MonoBehaviour {
             GameObject clone = Instantiate(resource, transform);
             PooledObject obj = clone.GetComponent<PooledObject>();
             clone.gameObject.SetActive(false);
+            clone.name = prefabName;
             _availablePooledObjects[prefabName].Add(obj);
         }
     }

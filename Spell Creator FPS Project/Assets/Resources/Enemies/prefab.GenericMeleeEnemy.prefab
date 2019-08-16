@@ -1319,8 +1319,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentDamageable: {fileID: 0}
-  _health: 0
-  _maxHealth: 0
+  _health: 30
+  _maxHealth: 30
   _isDead: 0
   _body: {fileID: 4094145307567022}
 --- !u!114 &114193879206027700
@@ -1336,8 +1336,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseSpeed: 5
   _maxSpeed: 5
-  _mass: 1
-  _linearDrag: 1
+  _mass: 4
+  _linearDrag: 2
   _headDistanceThreshold: 0
   _performingAction: 0
   _movementVelocity: {x: 0, y: 0, z: 0}

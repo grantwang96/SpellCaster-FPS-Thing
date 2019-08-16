@@ -35,7 +35,13 @@ public class NPCBehaviour : CharacterBehaviour {
         }
         BaseSpeed = _blueprint.WalkSpeed;
         MaxSpeed = _blueprint.RunSpeed;
-        
+
+        if(_damageable == null) {
+            Debug.LogError($"[{nameof(NPCBehaviour)}] Does not contain damageable!");
+            OnDeath(true, null);
+            return;
+        }
+        _damageable.OnDeath += OnDeath;
         ChangeBrainState(_startingState);
     }
 
@@ -65,7 +71,7 @@ public class NPCBehaviour : CharacterBehaviour {
         InvokeChangeAnimationState(stateName);
     }
 
-    protected virtual void OnDeath(bool isDead) {
+    protected virtual void OnDeath(bool isDead, Damageable damageable) {
         ChangeBrainState(null);
     }
 }
