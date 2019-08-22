@@ -10,6 +10,7 @@ public class Effect_Damage : Effect {
     
     [SerializeField] private float _upwardForce;
     [SerializeField] private float _force;
+    [SerializeField] private float _powerScale;
 
     public override void TriggerEffect(Damageable caster, int power, List<Effect> effects = null) {
         
@@ -24,6 +25,6 @@ public class Effect_Damage : Effect {
     public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if (caster == damageable) { return; }
         velocity.y += _upwardForce;
-        damageable?.TakeDamage(power, velocity * power);
+        damageable?.TakeDamage(power, velocity * power * _powerScale);
     }
 }

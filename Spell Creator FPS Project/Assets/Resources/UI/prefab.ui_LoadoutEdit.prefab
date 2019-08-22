@@ -474,7 +474,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 0}
-  Active: 0
   _content: {fileID: 0}
   _rowPrefab: {fileID: 0}
   _cellPrefab: {fileID: 0}
@@ -615,7 +614,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 0}
-  Active: 0
   _content: {fileID: 0}
   _rowPrefab: {fileID: 0}
   _cellPrefab: {fileID: 0}
@@ -662,7 +660,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1443329736198576}
-  Active: 0
   _content: {fileID: 224680847791962032}
   _rowPrefab: {fileID: 224439062770544796}
   _cellPrefab: {fileID: 1629929435982714, guid: 70646145dc32cd5449c047ef7b4c1c6b,
@@ -748,7 +745,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1043688284153604}
-  Active: 0
   _content: {fileID: 224375821379920536}
   _rowPrefab: {fileID: 224439062770544796}
   _cellPrefab: {fileID: 1629929435982714, guid: 70646145dc32cd5449c047ef7b4c1c6b,

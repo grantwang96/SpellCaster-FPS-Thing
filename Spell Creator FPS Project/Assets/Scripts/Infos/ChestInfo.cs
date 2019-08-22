@@ -30,18 +30,18 @@ public class RewardsSet {
 [System.Serializable]
 public class ChestTypeData {
     [SerializeField] private ChestType _chestType;
-    [SerializeField] private MinMax _healthOrbReward;
-    [SerializeField] private MinMax _manaOrbReward;
-    [SerializeField] private MinMax _whiteTierRange;
-    [SerializeField] private MinMax _greenTierRange;
-    [SerializeField] private MinMax _purpleTierRange;
-    [SerializeField] private MinMax _goldTierRange;
+    [SerializeField] private MinMax_Int _healthOrbReward;
+    [SerializeField] private MinMax_Int _manaOrbReward;
+    [SerializeField] private MinMax_Int _whiteTierRange;
+    [SerializeField] private MinMax_Int _greenTierRange;
+    [SerializeField] private MinMax_Int _purpleTierRange;
+    [SerializeField] private MinMax_Int _goldTierRange;
 
     public ChestType ChestType => _chestType;
-    public MinMax HealthOrbs => _healthOrbReward;
-    public MinMax ManaOrbs => _manaOrbReward;
-    public MinMax WhiteTier => _whiteTierRange;
-    public MinMax GreenTier => _greenTierRange;
-    public MinMax PurpleTier => _purpleTierRange;
-    public MinMax GoldTier => _purpleTierRange;
+    public MinMax_Int HealthOrbs => _healthOrbReward;
+    public MinMax_Int ManaOrbs => _manaOrbReward;
+    public MinMax_Int WhiteTier => _whiteTierRange;
+    public MinMax_Int GreenTier => _greenTierRange;
+    public MinMax_Int PurpleTier => _purpleTierRange;
+    public MinMax_Int GoldTier => _purpleTierRange;
 }

@@ -48,7 +48,6 @@ public class ObjectPool : MonoBehaviour {
             ErrorManager.LogError(nameof(ObjectPool), "Prefab to be added was null!");
             return;
         }
-        Debug.Log("Prefab Id: " + prefab.PrefabId);
         if (!_availablePooledObjects.ContainsKey(prefab.PrefabId)) {
             _availablePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
             _inUsePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class MinMax {
+public class MinMax_Int {
     [SerializeField] private int _min;
     [SerializeField] private int _max;
     public int Min => _min;

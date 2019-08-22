@@ -17,8 +17,8 @@ public class PlayerHud : MonoBehaviour {
     [SerializeField] private PlayerDamageable _playerDamageable;
     [SerializeField] private PlayerCombat _playerCombat;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         _health = _playerDamageable.Health;
         _maxHealth = _playerDamageable.MaxHealth;
         _mana = _playerCombat.Mana;

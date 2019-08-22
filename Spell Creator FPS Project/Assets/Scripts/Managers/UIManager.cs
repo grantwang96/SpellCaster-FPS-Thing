@@ -5,6 +5,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour {
 
     public const string GenericMessageBoxPrefabId = "prefab.GenericMessageBox";
+    private const string UIPrefabsPath = "UI";
 
     public static UIManager Instance;
 
@@ -41,14 +42,27 @@ public class UIManager : MonoBehaviour {
     public void OpenUIPanel(string prefabName, UIPanelInitData initData = null) {
         // _currentScenePanel = Instantiate(uiPanelPrefab, transform);
         if(!_allUIPanels.TryGetValue(prefabName, out _currentScenePanel)) {
-            Debug.LogError($"[UIManager] Could not retrireve panel for name {prefabName}");
-            return;
+            if (!LoadUIPrefab(prefabName)) {
+                return;
+            }
+            _currentScenePanel = _allUIPanels[prefabName];
         }
         _currentScenePanel.Initialize(initData);
         _currentScenePanel.transform.SetAsLastSibling();
         _activeUIPanels.Push(_currentScenePanel);
         ActivateCurrentPanel();
         OnPanelsUpdated?.Invoke(_activeUIPanels.Count == 0);
+    }
+
+    private bool LoadUIPrefab(string prefabName) {
+        string path = $"{UIPrefabsPath}/{prefabName}";
+        UIPanel panel = Resources.Load<UIPanel>(path);
+        if(panel == null) {
+            Debug.LogError($"[{nameof(UIManager)}] Could not find panel in path {path}");
+            return false;
+        }
+        _allUIPanels.Add(prefabName, panel);
+        return true;
     }
 
     public void CloseUIPanel() {

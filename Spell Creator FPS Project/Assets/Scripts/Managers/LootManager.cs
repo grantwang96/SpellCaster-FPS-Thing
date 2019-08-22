@@ -18,7 +18,8 @@ public enum ChestType {
 
 public interface ILootManager {
     
-    RewardsSet OpenChest(string chestId);
+    RewardsSet GetRewards(string id);
+    void OnEnemySpawn(string enemyId, NPCBehaviour npc);
 }
 
 public class LootManager : MonoBehaviour, ILootManager {
@@ -34,6 +35,7 @@ public class LootManager : MonoBehaviour, ILootManager {
 
     // list of all chests that appear in the level
     private Dictionary<string, ChestInfo> _chests = new Dictionary<string, ChestInfo>();
+    private Dictionary<string, RewardsSet> _enemies = new Dictionary<string, RewardsSet>();
 
     [SerializeField] private List<string> _whiteTierLoot = new List<string>();
     [SerializeField] private List<string> _greenTierLoot = new List<string>();
@@ -73,15 +75,17 @@ public class LootManager : MonoBehaviour, ILootManager {
     }
 
     // called when player opens chest
-    public RewardsSet OpenChest(string chestId) {
-        if (!_chests.ContainsKey(chestId)) {
-            Debug.LogError($"Could not retrieve chest info with given id {chestId}!");
-            return RewardsSet.Default;
+    public RewardsSet GetRewards(string id) {
+        if (_chests.ContainsKey(id)) {
+            ChestInfo chestInfo = _chests[id];
+            _chests.Remove(id);
+            RewardsSet rewards = GenerateChestRewards(chestInfo.ChestType);
+            return rewards;
+        } else if (_enemies.ContainsKey(id)) {
+
         }
-        ChestInfo chestInfo = _chests[chestId];
-        _chests.Remove(chestId);
-        RewardsSet rewards = GenerateChestRewards(chestInfo.ChestType);
-        return rewards;
+        Debug.LogError($"Could not retrieve chest info with given id {id}!");
+        return RewardsSet.Default;
     }
 
     private RewardsSet GenerateChestRewards(ChestType chestType) {
@@ -132,5 +136,33 @@ public class LootManager : MonoBehaviour, ILootManager {
     private string GenerateChestId() {
         string chestId = $"{ChestIdPrefix}{StringGenerator.RandomString(ChestIdLength)}";
         return chestId;
+    }
+
+    public void OnEnemySpawn(string enemyId, NPCBehaviour npc) {
+        if (_enemies.ContainsKey(enemyId)) {
+            return;
+        }
+        int healthOrbCount = 0, manaOrbCount = 0;
+        IReadOnlyList<LootInfo> lootInfos = npc.Blueprint.LootInfos;
+        for(int i = 0; i < lootInfos.Count; i++) {
+            if (lootInfos[i].LootId.Equals(GameplayValues.Loot.HealthOrbId)) {
+                healthOrbCount = GenerateOrbCount(lootInfos[i].Chance, lootInfos[i].Range);
+                continue;
+            } else if (lootInfos[i].LootId.Equals(GameplayValues.Loot.ManaOrbId)) {
+                manaOrbCount = GenerateOrbCount(lootInfos[i].Chance, lootInfos[i].Range);
+                continue;
+            } else {
+                continue;
+            }
+        }
+    }
+
+    private int GenerateOrbCount(float chance, MinMax_Int Range) {
+        int count = 0;
+        float roll = Random.value * 100f;
+        if(roll <= chance) {
+            count = Random.Range(Range.Min, Range.Max + 1);
+        }
+        return count;
     }
 }

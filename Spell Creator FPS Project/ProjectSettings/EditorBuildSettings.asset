@@ -5,7 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Boot.unity
+    guid: 02c3a839123c19d40a2308021adbcd56
+  - enabled: 1
+    path: Assets/Scenes/LoadingScreen.unity
+    guid: a8b64b385e6c24e4ab8bdc8af229c757
+  - enabled: 1
+    path: Assets/Scenes/Arena01.unity
+    guid: a333f8365b071024881c222bd72be403
+  - enabled: 1
+    path: Assets/Scenes/Wizard_Tower.unity
+    guid: c3814010aa1f9a644904ad4568cd7292
+  - enabled: 1
+    path: Assets/Scenes/TestingGround.unity
+    guid: 58c903a64e3f4d245bed753922d912ae
   m_configObjects: {}

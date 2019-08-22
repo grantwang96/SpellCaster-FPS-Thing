@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void RoundStateUpdateDelegate(int round);
+public delegate void ArenaStatDelegate(int count);
+
 public interface IArenaManager {
     void StartRound();
+
+    event RoundStateUpdateDelegate OnRoundStarted;
+    event RoundStateUpdateDelegate OnRoundEnded;
+    
+    event ArenaStatDelegate OnEnemyCountUpdated;
+    event ArenaStatDelegate OnWaveCountUpdated;
 }
 
 public class ArenaManager : MonoBehaviour, IArenaManager {
@@ -17,11 +26,18 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     private bool _currentlyRunningRound;
     private int _enemyCount;
     private int _enemiesDefeated;
+    private int _currentWaveCount;
     private List<string> _nextRound = new List<string>();
     private List<string> _nextWave = new List<string>();
     private List<Damageable> _currentWave = new List<Damageable>();
 
     [SerializeField] private List<Transform> _spawnPoints;
+
+    public event RoundStateUpdateDelegate OnRoundStarted;
+    public event RoundStateUpdateDelegate OnRoundEnded;
+    
+    public event ArenaStatDelegate OnEnemyCountUpdated;
+    public event ArenaStatDelegate OnWaveCountUpdated;
     
     private void Awake() {
         Instance = this;
@@ -40,6 +56,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
 
     public void Initialize(ArenaLevelConfig config) {
         _config = config;
+        GameplayController.Instance.Damageable.OnDeath += LoseRound;
         RegisterEnemyPrefabs();
     }
 
@@ -53,9 +70,12 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     public void StartRound() {
         _enemiesDefeated = 0;
         _currentlyRunningRound = true;
+        _currentWaveCount = 0;
         CurrentLevel++;
+        Debug.Log($"Starting Round {CurrentLevel}");
         GenerateNextRound();
         GenerateNextWave();
+        OnRoundStarted?.Invoke(CurrentLevel);
     }
 
     // check if next wave needs to be spawned or if round is over here
@@ -64,7 +84,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         damageable.OnDeath -= OnEnemyDefeated;
         _currentWave.Remove(damageable);
         if(_enemiesDefeated == _enemyCount) {
-            EndRound();
+            WinRound();
             return;
         }
         if(_currentWave.Count == 0 && _nextWave.Count == 0) {
@@ -73,60 +93,60 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     }
 
     // actually ending the round here
-    private void EndRound() {
+    private void WinRound() {
+        if (!_currentlyRunningRound) {
+            return;
+        }
         _currentlyRunningRound = false;
         _nextRound.Clear();
+        OnRoundEnded?.Invoke(CurrentLevel);
+        Debug.Log($"Round {CurrentLevel} complete!");
+    }
+
+    private void LoseRound(bool isDead, Damageable damageable) {
+        _currentlyRunningRound = false;
+        // handle losing screen here
+        Debug.Log($"Round {CurrentLevel} lost!");
     }
 
     // initiates the next round
     private void GenerateNextRound() {
         // retrieve list of enemy configurations from config object
         _nextRound = _config.GetEnemyQueue(CurrentLevel);
+        OnEnemyCountUpdated?.Invoke(_nextRound.Count);
         _enemyCount = _nextRound.Count;
     }
 
     // initiates the next wave
     private void GenerateNextWave() {
+        _currentWaveCount++;
         int waveCount = GetWaveCount();
         if(waveCount > _nextRound.Count) {
             waveCount = _nextRound.Count;
         }
+        OnWaveCountUpdated?.Invoke(waveCount);
         _currentWave.Clear();
         _nextWave = _nextRound.GetRange(0, waveCount);
+        Debug.Log("Wave Size: " + _nextWave.Count);
         for(int i = 0; i < _nextWave.Count; i++) {
             _nextRound.Remove(_nextWave[i]);
         }
-        SpawnWaveInstant(_nextWave);
-        // StartCoroutine(SpawnWave(_nextWave));
+        StartCoroutine(SpawnWave(_nextWave));
     }
 
     private IEnumerator SpawnWave(List<string> enemyPrefabIds) {
-        Transform[] spawnpoints = new Transform[_spawnPoints.Count];
-        for(int i = 0; i < _spawnPoints.Count; i++) {
-            spawnpoints[i] = _spawnPoints[i];
-        }
         for (int i = 0; i < enemyPrefabIds.Count; i++) {
             yield return new WaitForSeconds(0.5f);
-            int rand = Random.Range(0, spawnpoints.Length);
-            Debug.Log("Array length: " + spawnpoints.Length);
-            Debug.Log("Index: " + rand);
-            Transform spawnPoint = spawnpoints[rand];
-            SpawnEnemyPrefab(enemyPrefabIds[i], spawnPoint.position);
-        }
-        _nextWave.Clear();
-    }
-
-    private void SpawnWaveInstant(List<string> enemyPrefabIds) {
-        for (int i = 0; i < enemyPrefabIds.Count; i++) {
             int rand = Random.Range(0, _spawnPoints.Count);
-            Debug.Log("Array length: " + _spawnPoints.Count);
-            Debug.Log("Index: " + rand);
             Transform spawnPoint = _spawnPoints[rand];
             SpawnEnemyPrefab(enemyPrefabIds[i], spawnPoint.position);
         }
+        _nextWave.Clear();
+        Debug.Log("Finished Spawning wave!");
     }
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
+        Debug.Log("Prefab Name: " + prefabName);
         PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(prefabName);
         EnemyBehaviour enemy = pooledObject as EnemyBehaviour;
         if(enemy == null) {
@@ -135,11 +155,20 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         }
         enemy.transform.position = position;
         enemy.Damageable.OnDeath += OnEnemyDefeated;
+        _currentWave.Add(enemy.Damageable);
         enemy.ActivatePooledObject();
+        Debug.Log("Spawned Enemy Prefab!");
     }
 
     private int GetWaveCount() {
-        int count = CurrentLevel + Random.Range(Mathf.CeilToInt(CurrentLevel / 2f), CurrentLevel);
-        return count;
+        return Random.Range(WaveCountMin(), WaveCountMax());
+    }
+
+    private int WaveCountMin() {
+        return CurrentLevel + CurrentLevel / 2;
+    }
+
+    private int WaveCountMax() {
+        return CurrentLevel + CurrentLevel * 2;
     }
 }

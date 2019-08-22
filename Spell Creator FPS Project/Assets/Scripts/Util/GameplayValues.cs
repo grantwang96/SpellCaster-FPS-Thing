@@ -28,6 +28,7 @@ public static partial class GameplayValues {
     }
 
     public static class Combat {
+        public const int NPCIdSize = 10;
         public const string NPCNormalAttackTriggerId = "Attack";
         public const string NPCAttackComboIndexId = "AttackComboIndex";
     }
@@ -36,6 +37,11 @@ public static partial class GameplayValues {
     public static class ObjectPooling {
         public const string RecoveryOrbPrefabId = "RecoveryOrb";
         public const string WorldRunePrefabId = "RecoveryRune";
+    }
+
+    public static class Loot {
+        public const string HealthOrbId = "HealthOrb";
+        public const string ManaOrbId = "ManaOrb";
     }
 
     public static class Level {

@@ -1274,7 +1274,7 @@ MonoBehaviour:
   _targetInRangeState: {fileID: 114843615361421774}
   _targetOutOfRangeState: {fileID: 114472222764003254}
   _targetMeleeRangeState: {fileID: 114472222764003254}
-  _projectilePrefabId: Projectile
+  _projectilePrefabId: prefab.Projectile
   _power: 5
   _useGravity: 0
   _effects:

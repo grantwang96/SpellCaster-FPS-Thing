@@ -11,7 +11,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f421ec8685589640ab67f8142fc8cd0, type: 3}
   m_Name: TestEnemy
   m_EditorClassIdentifier: 
-  _totalHealth: 10
+  _npcIdPrefix: 
+  _totalHealth: 1
+  _statResistances: []
+  _statWeaknesses: []
   _walkSpeed: 1.5
   _runSpeed: 3
   _idleTimeMinimum: 5
@@ -23,3 +26,6 @@ MonoBehaviour:
     m_Bits: 2561
   _attackRange: 2
   _attackComboMax: 2
+  _unitTags: []
+  _enemyTags: []
+  _lootInfo: []

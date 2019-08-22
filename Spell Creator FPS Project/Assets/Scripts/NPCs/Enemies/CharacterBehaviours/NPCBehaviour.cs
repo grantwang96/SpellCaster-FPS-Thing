@@ -22,10 +22,22 @@ public class NPCBehaviour : CharacterBehaviour {
     public delegate void BrainStateChangeDelegate(string newStateName);
     public event BrainStateChangeDelegate OnBrainStateChanged;
 
+    protected bool _prepped = false;
+
     protected override void Awake() {
         base.Awake();
         _charMove = GetComponent<NPCMoveController>();
         _damageable = GetComponent<Damageable>();
+        _prepped = true;
+    }
+
+    protected virtual void OnEnable() {
+        GenerateUniqueId();
+        LootManager.Instance.OnEnemySpawn(_id, this);
+    }
+
+    private void GenerateUniqueId() {
+        _id = $"{_blueprint.NpcIdPrefix}_{StringGenerator.RandomString(0)}";
     }
 
     protected virtual void Start() {

@@ -52,7 +52,7 @@ public class Chest : MonoBehaviour, IInteractable {
             return;
         }
         Interactable = false;
-        RewardsSet rewards = LootManager.Instance.OpenChest(_chestId);
+        RewardsSet rewards = LootManager.Instance.GetRewards(_chestId);
         // play chest open animation
         // at appropriate time, spawn reward objects
         _hinge.eulerAngles = new Vector3(_openAngle, 0f, 0f);

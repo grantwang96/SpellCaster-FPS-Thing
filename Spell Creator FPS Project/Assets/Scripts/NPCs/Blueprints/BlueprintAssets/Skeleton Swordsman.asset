@@ -11,7 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd3d87282f344cb4c945b45ef4a7ef43, type: 3}
   m_Name: Skeleton Swordsman
   m_EditorClassIdentifier: 
-  _totalHealth: 30
+  _npcIdPrefix: 
+  _totalHealth: 1
   _statResistances:
   - {fileID: 11400000, guid: 67daa09645c2ba94ca77f168c75c9d72, type: 2}
   _statWeaknesses: []
@@ -29,3 +30,4 @@ MonoBehaviour:
   _unitTags: []
   _enemyTags:
   - PLAYER_UNIT
+  _lootInfo: []
