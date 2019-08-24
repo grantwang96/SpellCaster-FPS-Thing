@@ -52,6 +52,9 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         if (Input.GetKeyDown(KeyCode.K) && !_currentlyRunningRound) {
             StartRound();
         }
+        if (Input.GetKeyDown(KeyCode.O)) {
+            GameStateManager.Instance.HandleTransition("enter_wizardtower");
+        }
     }
 
     public void Initialize(ArenaLevelConfig config) {

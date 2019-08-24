@@ -24,7 +24,11 @@ public class SceneController : MonoBehaviour {
     }
 
     public bool TransitionToScene(string sceneName) {
-        if (CurrentSceneName.Equals(sceneName) || isLoadingScene) {
+        if (CurrentSceneName.Equals(sceneName)) {
+            FinishLoadingScene();
+            return true;
+        }
+        if (isLoadingScene) {
             return false;
         }
         _nextSceneName = sceneName;

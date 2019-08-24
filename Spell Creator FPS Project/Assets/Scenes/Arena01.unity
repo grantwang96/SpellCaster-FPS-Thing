@@ -804,6 +804,52 @@ MonoBehaviour:
   _goldTierLoot: []
   _runePrefabId: prefab.Interactable_Rune
   _recoveryOrbPrefabId: prefab.RecoveryOrb
+--- !u!1 &370773521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 370773522}
+  - component: {fileID: 370773523}
+  m_Layer: 0
+  m_Name: ArenaManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &370773522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 370773521}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1788661511}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &370773523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 370773521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0a7458aef5f3ff4c8420d25bec06937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _config: {fileID: 11400000, guid: db87dbb0b4c5ee240893ccb7032ac0bf, type: 2}
+  _spawnPoints:
+  - {fileID: 1011245799}
+  - {fileID: 1800581285}
+  - {fileID: 959388370}
+  - {fileID: 1176781389}
 --- !u!1001 &504841627
 Prefab:
   m_ObjectHideFlags: 0
@@ -2914,6 +2960,7 @@ Transform:
   - {fileID: 1115801952}
   - {fileID: 1323944828}
   - {fileID: 165402498}
+  - {fileID: 370773522}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -5,13 +5,15 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour {
 
     public static GameStateManager Instance { get; private set; }
-    public GameState CurrentState { get; private set; }
+    public GameState CurrentState;
     public GameState PreviousState { get; private set; }
 
+    private bool _initialized = false;
+
     [SerializeField] private GameState _bootState; // where will the game start on load
-    [SerializeField] private GameState _startState; // where will that loading screen take us on app boot
 
     private void Awake() {
+        if (_initialized) { return; }
         if(Instance != null && Instance != this) {
             Debug.LogError($"[{nameof(GameStateManager)}] Game State Manager already exists!");
             return;
@@ -21,13 +23,15 @@ public class GameStateManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        if (_initialized) { return; }
         Debug.Log($"[{nameof(GameStateManager)}] is loaded!");
         OnAppStart();
 	}
 
     // this is when the game initially loads. Should be on loading screen here
     private void OnAppStart() {
-        ChangeState(_startState);
+        ChangeState(_bootState);
+        _initialized = true;
     }
 
     public void HandleTransition(string transitionName) {
@@ -35,21 +39,28 @@ public class GameStateManager : MonoBehaviour {
             Debug.LogError($"[{nameof(GameStateManager)}] Current State is null! Wait what?");
             return;
         }
-        for(int i = 0; i < CurrentState.Transitions.Length; i++) {
+        GameState nextState = CurrentState.GetGameStateByTransitionName(transitionName);
+        if(nextState == null) {
+            Debug.Log($"[{nameof(GameStateManager)}] Could not retrieve game state for transition name {transitionName}");
+            return;
+        }
+        ChangeState(nextState);
+        /*
+        for(int i = 0; i < CurrentState.Transitions.Count; i++) {
             if (CurrentState.Transitions[i].TransitionName.Equals(transitionName)) {
                 GameStateTransition transition = CurrentState.Transitions[i];
                 ChangeState(transition.GameState);
                 break;
             }
-        }
+        }*/
     }
 
-    private void ChangeState(GameState state) {
+    private void ChangeState(GameState newState) {
         if(CurrentState != null) {
             PreviousState = CurrentState;
-            CurrentState.Exit();
+            CurrentState.Exit(newState);
         }
-        CurrentState = state;
+        CurrentState = newState;
         CurrentState.Enter();
     }
 }

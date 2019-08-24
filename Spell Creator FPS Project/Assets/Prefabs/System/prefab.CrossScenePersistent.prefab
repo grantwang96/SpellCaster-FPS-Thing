@@ -75,6 +75,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1237906156502228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 224835363719177182}
+  - component: {fileID: 223490327663594118}
+  - component: {fileID: 114790232921252186}
+  - component: {fileID: 114794622911841398}
+  - component: {fileID: 114218880710977866}
+  m_Layer: 5
+  m_Name: prefab.UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1312338116238152
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +137,22 @@ GameObject:
   - component: {fileID: 114165993952794072}
   m_Layer: 0
   m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1600107144792198
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4487222799307292}
+  - component: {fileID: 114665676364238270}
+  m_Layer: 0
+  m_Name: WizardTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,12 +213,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1020532486019180}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4697429238373108}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4196067703027646
 Transform:
@@ -239,9 +274,23 @@ Transform:
   - {fileID: 4203248997685630}
   - {fileID: 4941419598696414}
   - {fileID: 4813181255536518}
+  - {fileID: 224835363719177182}
   - {fileID: 4697429238373108}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4487222799307292
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1600107144792198}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4697429238373108}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4697429238373108
 Transform:
@@ -255,9 +304,10 @@ Transform:
   m_Children:
   - {fileID: 4820630818807238}
   - {fileID: 4857758504832232}
+  - {fileID: 4487222799307292}
   - {fileID: 4001534338061864}
   m_Father: {fileID: 4482592674360416}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4813181255536518
 Transform:
@@ -325,7 +375,10 @@ MonoBehaviour:
   _transitions:
   - _transitionName: enter_loadscreen
     _gameState: {fileID: 114532308966428144}
+  - _transitionName: enter_wizardtower
+    _gameState: {fileID: 114665676364238270}
   _sceneName: Arena01
+  IsActive: 0
 --- !u!114 &114099621615724992
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -353,6 +406,23 @@ MonoBehaviour:
   _tutorialFolderPaths:
   - Test
   _tutorialActionIndex: 0
+--- !u!114 &114218880710977866
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237906156502228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be60e7184236b154ca32bbf2b8130660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiPanelPrefabs:
+  - {fileID: 114113446055635850, guid: a2bf09014fcf9444fa32cbdf98416c05, type: 2}
+  - {fileID: 114190655735548430, guid: b2947a255bb019b468f298a59f08e25b, type: 2}
+  - {fileID: 114203801472891472, guid: ee9c6b3c749cc9c4b8e8c40e0480ea2b, type: 2}
+  - {fileID: 114723597304336664, guid: fb7225deb6254db498647d06da96898e, type: 2}
+  _currentScenePanel: {fileID: 0}
 --- !u!114 &114335926267692570
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -368,6 +438,7 @@ MonoBehaviour:
   - _transitionName: enter_loadingscreen
     _gameState: {fileID: 114532308966428144}
   _sceneName: Boot
+  IsActive: 0
 --- !u!114 &114474577638933784
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -393,7 +464,26 @@ MonoBehaviour:
   _transitions:
   - _transitionName: enter_arena
     _gameState: {fileID: 114041504187102644}
-  _sceneName: LoadingScreen
+  _sceneName: 
+  IsActive: 0
+--- !u!114 &114665676364238270
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1600107144792198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25033089b4d2dab4984ef3aa243e620a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitions:
+  - _transitionName: enter_loadingscreen
+    _gameState: {fileID: 114532308966428144}
+  - _transitionName: enter_arena
+    _gameState: {fileID: 114041504187102644}
+  _sceneName: Wizard_Tower
+  IsActive: 0
 --- !u!114 &114682197470761088
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -427,6 +517,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48ec1721c0d86c0499bd034ab4ab810b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114790232921252186
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237906156502228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+--- !u!114 &114794622911841398
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237906156502228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!114 &114851250716205636
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -453,3 +580,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02314e77329049647b187da4f7268e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!223 &223490327663594118
+Canvas:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237906156502228}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 0
+  m_SortingOrder: 1
+  m_TargetDisplay: 0
+--- !u!224 &224835363719177182
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1237906156502228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4482592674360416}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
