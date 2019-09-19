@@ -22,6 +22,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     public static IArenaManager Instance;
 
     [SerializeField] private ArenaLevelConfig _config;
+
     public int CurrentLevel { get; private set; }
     private bool _currentlyRunningRound;
     private int _enemyCount;
@@ -49,11 +50,12 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.K) && !_currentlyRunningRound) {
-            StartRound();
-        }
+        // HackInputs();
+    }
+
+    private void HackInputs() {
         if (Input.GetKeyDown(KeyCode.O)) {
-            GameStateManager.Instance.HandleTransition("enter_wizardtower");
+            GameStateManager.Instance.HandleTransition(GameplayValues.Navigation.TutorialLevelTransitionId);
         }
     }
 

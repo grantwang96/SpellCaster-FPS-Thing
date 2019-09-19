@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-/*
- *
- * SHOULD REALLY CONSIDER BUILDING PARENT CLASS FOR INVENTORY VIEWS. 
- * 
- */
+
 public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
 
     [SerializeField] private RectTransform _content;
@@ -20,13 +16,8 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
 
     private ISpellInventory SpellsInventory;
     private List<StorableSpell> _storedSpells = new List<StorableSpell>();
-
-    public delegate void SpellSelectedDelegate();
-    public event SpellSelectedDelegate OnSpellSelected; // allows varying events to occur when selecting a spell(editing, selling, deleting, etc.)
-    public delegate void SpellHighlightedDelegate();
-    public event SpellHighlightedDelegate OnSpellHighlighted;
     
-    public string HighlightedSpellInstanceId { get; private set; }
+    public bool DisplayLoadoutSpells { get; private set; }
 
     protected override void Awake() {
         Initialize(PlayerInventory.SpellInventory);
@@ -38,7 +29,9 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
 
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
-
+        if(SpellsInventory == null) {
+            SpellsInventory = PlayerInventory.SpellInventory;
+        }
         SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
         OnInventoryUpdated(SpellsInventory.StoredSpells);
     }
@@ -47,7 +40,12 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
         if (SpellsInventory != null) {
             SpellsInventory.OnSpellInventoryDataUpdated -= OnInventoryUpdated;
         }
-        _mainInventoryGrid.OnSelectPressed -= OnSelectPressed;
+    }
+
+    private void OnEnable() {
+        if (SpellsInventory != null) {
+            SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
+        }
     }
 
     private void GenerateViewGrids() {

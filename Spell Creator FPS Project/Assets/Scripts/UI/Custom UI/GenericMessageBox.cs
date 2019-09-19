@@ -2,22 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GenericMessageBox : UIPanel {
 
-    private const string Horizontal = "Horizontal";
-    private const string Vertical = "Vertical";
-
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldThreshold;
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldFreq;
     [SerializeField] private bool _inverted;
     
     private float _horizontal;
-    private float _intervalHoldTime;
-    private float _holdTime;
-    private bool _directionButtonsPressed;
 
     [SerializeField] private Text _header;
     [SerializeField] private Text _message;
@@ -51,6 +42,7 @@ public class GenericMessageBox : UIPanel {
             CreateCustomButtons(messageBoxData.ButtonDatas);
         }
         _customButtons[_selectedIndex].InteractableHighlight();
+        SubscribeToController();
     }
 
     private void CreateGenericCloseButton() {
@@ -93,41 +85,8 @@ public class GenericMessageBox : UIPanel {
         }
     }
 
-    protected override void Update() {
-        base.Update();
-        ProcessInputs();
-    }
-
-    private void ProcessInputs() {
-        DirectionalInputs();
-        SelectButtonInput();
-    }
-
-    private void DirectionalInputs() {
-        float _horizontal = _inverted ? -Input.GetAxisRaw(Vertical) : Input.GetAxisRaw(Horizontal);
-
-        if(_horizontal == 0) {
-            _holdTime = 0f;
-            _intervalHoldTime = 0f;
-            _directionButtonsPressed = false;
-            return;
-        }
-
-        // if the button is being held
-        if (_directionButtonsPressed) {
-            if (_holdTime < _directionHoldThreshold) { // check if they're waiting to do continuous movement
-                _holdTime += Time.deltaTime;
-                return;
-            }
-            if (_intervalHoldTime < _directionHoldFreq) { // check if they're waiting on interval
-                _intervalHoldTime += Time.deltaTime;
-                return;
-            }
-        }
-        
-        // Process the actual movement;
-        _directionButtonsPressed = true;
-        _intervalHoldTime = 0f;
+    private void DirectionalInputs(Vector2 input) {
+        float _horizontal = _inverted ? -input.y : input.x;
 
         int selected = _selectedIndex + Mathf.RoundToInt(_horizontal);
         if(selected < 0) { selected = _buttonCount - 1; }
@@ -138,9 +97,7 @@ public class GenericMessageBox : UIPanel {
     }
 
     private void SelectButtonInput() {
-        if (Input.GetButtonDown("Submit")) {
-            _customButtons[_selectedIndex].InteractableSelect();
-        }
+        _customButtons[_selectedIndex].InteractableSelect();
     }
 
     private void OnButtonHighlighted(IUIInteractable interactable) {
@@ -168,6 +125,21 @@ public class GenericMessageBox : UIPanel {
             _customButtons[i].InteractableUnhighlight();
         }
     }
+
+    protected override void CloseUIPanel() {
+        base.CloseUIPanel();
+        UnsubscribeToController();
+    }
+
+    private void SubscribeToController() {
+        GameplayController.Instance.DirectionalInput += DirectionalInputs;
+        GameplayController.Instance.OnSubmitPressed += SelectButtonInput;
+    }
+
+    private void UnsubscribeToController() {
+        GameplayController.Instance.DirectionalInput -= DirectionalInputs;
+        GameplayController.Instance.OnSubmitPressed -= SelectButtonInput;
+    }
 }
 
 public class GenericMessageBoxInitData : UIPanelInitData {
@@ -184,10 +156,4 @@ public class GenericMessageBoxInitData : UIPanelInitData {
             _buttonDatas.AddRange(buttonActions);
         }
     }
-}
-
-public class ButtonActionData {
-    public string ButtonId;
-    public string ButtonText;
-    public UnityAction Action;
 }

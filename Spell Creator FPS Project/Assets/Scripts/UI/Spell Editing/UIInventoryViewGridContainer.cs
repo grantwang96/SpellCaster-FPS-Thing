@@ -30,10 +30,6 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         GenerateViewCells();
     }
 
-    private void OnDisable() {
-        _mainInventoryGrid.OnSelectPressed -= OnSelectPressed;
-    }
-
     protected void OnSelectPressed(IUIInteractable interactable) {
         HighlightedItemId = interactable.Id;
         OnGridItemSelected?.Invoke();
@@ -41,6 +37,9 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
 
     protected void OnItemHighlighted(IUIInteractable interactable) {
         HighlightedItemId = interactable.Id;
+
+        GameEventsManager.TestEventArgs.Broadcast(HighlightedItemId);
+
         OnGridItemHighlighted?.Invoke();
     }
 
@@ -77,18 +76,18 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
 
     }
 
-    public override void SetActive(bool active, bool hardLocked, IntVector3 dir) {
-        base.SetActive(active, hardLocked, dir);
-        _mainInventoryGrid.SetActive(IsActive, hardLocked);
+    public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
+        base.SetFocus(active, hardLocked, dir);
+        _mainInventoryGrid.SetActive(IsFocused, hardLocked);
         _mainInventoryGrid.UnhighlightCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
-        if (IsActive) {
+        if (IsFocused) {
             _mainInventoryGrid.SetCurrentAtBound(dir);
             _mainInventoryGrid.UpdateHighlightedViewCell(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
         }
     }
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
-        _mainInventoryGrid.SetActive(newGrid == _mainInventoryGrid) ;
+        _mainInventoryGrid.SetActive(newGrid == _mainInventoryGrid);
     }
 
     public void OutOfBounds(IntVector3 dir) {

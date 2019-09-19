@@ -5,12 +5,14 @@ using UnityEngine;
 public class GameStateManager : MonoBehaviour {
 
     public static GameStateManager Instance { get; private set; }
-    public GameState CurrentState;
+    public GameState CurrentState { get; private set; }
     public GameState PreviousState { get; private set; }
 
     private bool _initialized = false;
 
-    [SerializeField] private GameState _bootState; // where will the game start on load
+    [SerializeField] private GameState _hackStartState; // where will the game start on load
+    [SerializeField] private GameState _gameHubState; // where the game will normally boot to (if player has completed tutorial)
+    [SerializeField] private GameState _tutorialState; // where the game will boot for first time users
 
     private void Awake() {
         if (_initialized) { return; }
@@ -30,8 +32,21 @@ public class GameStateManager : MonoBehaviour {
 
     // this is when the game initially loads. Should be on loading screen here
     private void OnAppStart() {
-        ChangeState(_bootState);
+        ChangeState(_hackStartState);
+        // InitializeGameState();
         _initialized = true;
+    }
+
+    private void InitializeGameState() {
+        GameState startingState = GetStartingState();
+        ChangeState(startingState);
+    }
+
+    private GameState GetStartingState() {
+        if (!PlayerDataManager.Instance.GetFlag(GameplayValues.Tutorial.TutorialLevelCompletedId)) {
+            return _tutorialState;
+        }
+        return _gameHubState;
     }
 
     public void HandleTransition(string transitionName) {
@@ -45,14 +60,6 @@ public class GameStateManager : MonoBehaviour {
             return;
         }
         ChangeState(nextState);
-        /*
-        for(int i = 0; i < CurrentState.Transitions.Count; i++) {
-            if (CurrentState.Transitions[i].TransitionName.Equals(transitionName)) {
-                GameStateTransition transition = CurrentState.Transitions[i];
-                ChangeState(transition.GameState);
-                break;
-            }
-        }*/
     }
 
     private void ChangeState(GameState newState) {

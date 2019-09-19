@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TestingGround.unity
     guid: 58c903a64e3f4d245bed753922d912ae
+  - enabled: 1
+    path: Assets/Scenes/GameHub.unity
+    guid: 7a0560d3b1408564498c3cb34d290081
   m_configObjects: {}

@@ -63,4 +63,13 @@ public static partial class GameplayValues {
         public const int StorableSpellInstanceIdSize = 20;
         public const int PlayerLoadoutMaxSize = 3;
     }
+
+    public static class Navigation {
+        public const string TutorialLevelTransitionId = "enter_tutoriallevel";
+        public const string ArenaTransitionId = "enter_arena";
+    }
+
+    public static class Tutorial {
+        public const string TutorialLevelCompletedId = "TUTORIAL_LEVEL_COMPLETED";
+    }
 }

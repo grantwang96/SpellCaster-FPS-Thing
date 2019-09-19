@@ -32,7 +32,6 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
         if(Inventory != null) {
             Inventory.OnRunicInventoryDataUpdated -= OnItemsUpdated;
         }
-        _mainInventoryGrid.OnSelectPressed -= OnSelectPressed;
     }
 
     private void OnItemsUpdated(IReadOnlyDictionary<string, int> updatedInventory) {

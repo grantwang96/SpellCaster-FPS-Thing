@@ -53,6 +53,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         }
     }
 
+    private bool _active;
+
     public delegate void SelectedSpellUpdatedDelegate(int index);
     public delegate void SpellInventoryUpdatedDelegate(List<SpellSlotInfo> infos);
     public event SelectedSpellUpdatedDelegate OnSelectedSpellUpdated;
@@ -67,6 +69,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void Start() {
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += OnLoadoutUpdated;
         InitializeLoadout();
+        OnControllerStateUpdated();
     }
 
     private void InitializeLoadout() {
@@ -75,7 +78,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private void OnLoadoutUpdated(StorableSpell[] loadout) {
-        Debug.Log("Loadout updated!");
+        Debug.Log($"[{nameof(PlayerCombat)}]Loadout updated!");
         _spellsList.Clear();
         _spellSlotInfos.Clear();
         for(int i = 0; i < loadout.Length; i++) {
@@ -91,20 +94,27 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             // add to spell slot infos
             AddSpellSlotInfo(newSpell);
         }
+        OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
 
     void OnEnable() {
         GameplayController.Instance.OnFire1Pressed += OnFire1Pressed;
         GameplayController.Instance.OnFire1Held += OnFire1Held;
-        GameplayController.Instance.OnFire1End += OnFire1Released;
+        GameplayController.Instance.OnFire1Released += OnFire1Released;
         GameplayController.Instance.OnSlotBtnPressed += OnSlotButtonPressed;
+        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
     }
 
     void OnDisable() {
         GameplayController.Instance.OnFire1Pressed -= OnFire1Pressed;
         GameplayController.Instance.OnFire1Held -= OnFire1Held;
-        GameplayController.Instance.OnFire1End -= OnFire1Released;
+        GameplayController.Instance.OnFire1Released -= OnFire1Released;
         GameplayController.Instance.OnSlotBtnPressed -= OnSlotButtonPressed;
+        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+    }
+
+    private void OnControllerStateUpdated() {
+        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
     }
 
     private void OnFire1Pressed() {
@@ -157,7 +167,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private bool CanFireSpell() {
-        return GunBarrel != null && SelectedSpell != null && !_coolingDown;
+        return _active && GunBarrel != null && SelectedSpell != null && !_coolingDown;
     }
 
     private void InitializeActiveSpell() {
@@ -240,7 +250,6 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             modifierIcons[j] = newSpell.SpellModifiers[j].SmallIcon;
         }
         _spellSlotInfos.Add(new SpellSlotInfo(newSpell.Name, newSpell.CastingMethod.SmallIcon, effectIcons, modifierIcons));
-        OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
 
     /*

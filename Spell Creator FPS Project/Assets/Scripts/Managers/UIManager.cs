@@ -7,13 +7,15 @@ public class UIManager : MonoBehaviour {
     public const string GenericMessageBoxPrefabId = "prefab.GenericMessageBox";
     private const string UIPrefabsPath = "UI";
 
-    public static UIManager Instance;
+    public static UIManager Instance { get; private set; }
 
     [SerializeField] private List<UIPanel> _uiPanelPrefabs = new List<UIPanel>();
     private Dictionary<string, UIPanel> _allUIPanels = new Dictionary<string, UIPanel>();
     private Stack<UIPanel> _activeUIPanels = new Stack<UIPanel>();
     public UIPanel CurrentPanel => _activeUIPanels.Peek();
     [SerializeField] private UIPanel _currentScenePanel;
+
+    [SerializeField] private string mainMenuPrefabName;
 
     public delegate void PanelUpdateEvent(bool empty);
     public event PanelUpdateEvent OnPanelsUpdated;
@@ -97,5 +99,9 @@ public class UIManager : MonoBehaviour {
         if (_currentScenePanel != null) {
             _currentScenePanel.gameObject.SetActive(false);
         }
+    }
+
+    private void OnCancelPressed() {
+
     }
 }

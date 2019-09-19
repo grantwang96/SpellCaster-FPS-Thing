@@ -15,6 +15,7 @@ public interface IRunicInventory {
     bool RemoveItem(string id, int count);
     bool HasItem(string id);
     bool HasItemQuantity(string id, int count);
+    void SoftRefresh();
     IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems();
     IReadOnlyList<KeyValuePair<string, int>> RetrieveAllItems(InventoryItemType[] filter);
 
@@ -28,9 +29,11 @@ public interface ISpellInventory {
 
     void AddSpell(StorableSpell spell);
     void RemoveSpell(StorableSpell spell);
+    bool HasSpellByInstanceId(string instanceId);
     StorableSpell GetSpellByInstanceId(string instanceId);
     void SetSpellInLoadout(string spellInstanceId, int index);
     void RemoveSpellInLoadout(int index);
+    void SoftRefresh();
 
     event SpellInventoryDataUpdated OnSpellInventoryDataUpdated;
     event LoadoutDataUpdated OnLoadoutDataUpdated;
@@ -132,6 +135,12 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
     }
     #endregion
 
+    public void SoftRefresh() {
+        OnRunicInventoryDataUpdated?.Invoke(StoredRunes);
+        OnSpellInventoryDataUpdated?.Invoke(StoredSpells);
+        OnLoadoutDataUpdated?.Invoke(CurrentLoadout);
+    }
+
     #region Spells Inventory Methods
     public void AddSpell(StorableSpell spell) {
         _storableSpells.Add(spell);
@@ -141,6 +150,11 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
     public void RemoveSpell(StorableSpell spell) {
         _storableSpells.Remove(spell);
         OnSpellInventoryDataUpdated?.Invoke(StoredSpells);
+    }
+
+    public bool HasSpellByInstanceId(string spellInstanceId) {
+        int index = _storableSpells.FindIndex(x => x.InstanceId.Equals(spellInstanceId));
+        return index != -1;
     }
 
     public StorableSpell GetSpellByInstanceId(string instanceId) {
@@ -153,6 +167,11 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
     }
 
     public void SetSpellInLoadout(string spellInstanceId, int index) {
+        if (string.IsNullOrEmpty(spellInstanceId)) {
+            RemoveSpellFromLoadout(index);
+            OnLoadoutDataUpdated?.Invoke(CurrentLoadout);
+            return;
+        }
         StorableSpell spell = GetSpellByInstanceId(spellInstanceId);
         if(spell == null) {
             return;
@@ -163,6 +182,20 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
         }
         CurrentLoadout[index] = spell;
         OnLoadoutDataUpdated?.Invoke(CurrentLoadout);
+    }
+
+    private void RemoveSpellFromLoadout(int index) {
+        if (index > CurrentLoadout.Length || index < 0) {
+            Debug.LogError($"[{nameof(PlayerInventory)}] Index {index} out of bounds");
+            return;
+        }
+        for(int i = index; i < CurrentLoadout.Length; i++) {
+            if(i == CurrentLoadout.Length - 1) { // reached end of loadout
+                CurrentLoadout[i] = null;
+                break;
+            }
+            CurrentLoadout[i] = CurrentLoadout[i + 1];
+        }
     }
 
     public void RemoveSpellInLoadout(int index) {

@@ -1,13 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum ControllerState {
+    Gameplay, // normal gameplay state
+    UIMenu, // UI menu state
+}
 
 /// <summary>
 /// This is the in game controller that processes player's inputs and applies to other components
 /// </summary>
 public class GameplayController : CharacterBehaviour {
 
-    public static GameplayController Instance;
+    public static GameplayController Instance { get; private set; }
 
     public enum ControlScheme {
         MouseKeyboard, Controller
@@ -16,25 +22,46 @@ public class GameplayController : CharacterBehaviour {
     public ControlScheme controlScheme => _controlScheme;
     [SerializeField] private bool _uiPanelsEmpty;
 
+    public ControllerState ControllerState { get; private set; }
+    public event Action OnControllerStateUpdated;
+
+    private Vector2 _moveVectorRaw = new Vector2();
+    public event Action<Vector2> DirectionalInput;
+
+    private float _holdTime;
+    private float _intervalHoldTime;
+
+    [Range(0f, 1f)] [SerializeField] private float _directionalHoldThreshold; // how long before auto moving
+    [Range(0f, 1f)] [SerializeField] private float _directionalHoldFreq; // how quickly it should move
+    private bool _directionalButtonPressed;
+
     [SerializeField] protected Vector2 _lookVector; // Vector that saves camera controls input
     public Vector2 LookVector { get { return _lookVector; } }
     public override Vector3 GetBodyPosition() {
         return _bodyTransform.position + _playerMovement.CharacterController.center;
     }
 
-    public delegate void BasicBtnEvent(); // for button presses that don't need to pass information
-    public delegate void SlotBtnEvent(int number); // for numkey presses
-    public event BasicBtnEvent OnJumpPressed;
+    public event Action OnJumpPressed;
 
-    public event BasicBtnEvent OnInteractPressed;
-    public event BasicBtnEvent OnInteractHeld;
-    public event BasicBtnEvent OnInteractReleased;
+    public event Action OnInteractPressed;
+    public event Action OnInteractHeld;
+    public event Action OnInteractReleased;
 
-    public event BasicBtnEvent OnFire1Pressed;
-    public event BasicBtnEvent OnFire1Held;
-    public event BasicBtnEvent OnFire1End;
+    public event Action OnFire1Pressed;
+    public event Action OnFire1Held;
+    public event Action OnFire1Released;
 
-    public event SlotBtnEvent OnSlotBtnPressed;
+    public event Action OnFire2Pressed;
+    public event Action OnFire2Held;
+    public event Action OnFire2Released;
+
+    public event Action OnSubmitPressed;
+    public event Action OnSubmitHeld;
+    public event Action OnSubmitReleased;
+
+    public event Action OnCancelPressed;
+
+    public event Action<int> OnSlotBtnPressed;
 
     private PlayerMovement_FPS _playerMovement; // component that moves the player
     private PlayerCamera_FPS _playerCamera; // component that controls the camera
@@ -51,17 +78,18 @@ public class GameplayController : CharacterBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         SetMouseEnabled(false);
         UIManager.Instance.OnPanelsUpdated += OnUIPanelsUpdated;
         InitializeComponents();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (!_uiPanelsEmpty) { return; }
+    }
+
+    // Update is called once per frame
+    void Update() {
+        // do not run if UI is active
+        // if (!_uiPanelsEmpty) { return; }
         ProcessInputs();
-	}
+    }
 
     public override float GetMoveMagnitude() {
         Vector3 vel = _playerMovement.CharacterController.velocity;
@@ -111,6 +139,11 @@ public class GameplayController : CharacterBehaviour {
         _moveVector.x = Input.GetAxis("Horizontal");
         _moveVector.z = Input.GetAxis("Vertical");
 
+        _moveVectorRaw.x = Input.GetAxisRaw("Horizontal");
+        _moveVectorRaw.y = Input.GetAxisRaw("Vertical");
+
+        UpdateDirectionalInputData();
+
         _lookVector.x = Input.GetAxis("Mouse X");
         _lookVector.y = Input.GetAxis("Mouse Y");
 
@@ -129,6 +162,29 @@ public class GameplayController : CharacterBehaviour {
 
     }
 
+    private void UpdateDirectionalInputData() {
+        bool tempDirectionalButtonPressed = _moveVectorRaw.x != 0f || _moveVectorRaw.y != 0f;
+        if (tempDirectionalButtonPressed) {
+            // if initial press of button
+            if (!_directionalButtonPressed) {
+                _holdTime = 0f;
+                _intervalHoldTime = 0f;
+                _directionalButtonPressed = tempDirectionalButtonPressed;
+                DirectionalInput?.Invoke(_moveVectorRaw);
+                return;
+            }
+            if (_holdTime <= _directionalHoldThreshold) {
+                _holdTime += Time.deltaTime;
+            } else if (_intervalHoldTime >= _directionalHoldFreq) {
+                _intervalHoldTime = 0f;
+                DirectionalInput?.Invoke(_moveVectorRaw);
+                return;
+            }
+            _intervalHoldTime += Time.deltaTime;
+        }
+        _directionalButtonPressed = tempDirectionalButtonPressed;
+    }
+
     private void GetButtonInputs() {
         
         if (Input.GetButtonDown("Jump")) { Jump(); }
@@ -140,6 +196,8 @@ public class GameplayController : CharacterBehaviour {
         if (Input.GetButtonDown("Fire1")) { Shoot1Pressed(); }
         else if (Input.GetButton("Fire1")) { Shoot1Held(); }
         else if (Input.GetButtonUp("Fire1")) { Shoot1Released(); }
+
+        if (Input.GetButtonDown("Submit")) { SubmitPressed(); }
 
         if (Input.GetButtonDown("Cancel")) {
             MenuPressed();
@@ -171,21 +229,50 @@ public class GameplayController : CharacterBehaviour {
     }
 
     private void Shoot1Released() {
-        OnFire1End?.Invoke();
+        OnFire1Released?.Invoke();
+    }
+
+    private void Shoot2Pressed() {
+        OnFire2Pressed?.Invoke();
+    }
+
+    private void Shoot2Held() {
+        OnFire2Held?.Invoke();
+    }
+
+    private void Shoot2Released() {
+        OnFire2Released?.Invoke();
+    }
+
+    private void SubmitPressed() {
+        OnSubmitPressed?.Invoke();
+    }
+
+    private void SubmitHeld() {
+        OnSubmitHeld?.Invoke();
+    }
+
+    private void SubmitReleased() {
+        OnSubmitReleased.Invoke();
     }
 
     private void MenuPressed() {
-        UIManager.Instance.OpenUIPanel(_menuPrefabName);
+        OnCancelPressed?.Invoke();
+        if (_uiPanelsEmpty) {
+            UIManager.Instance.OpenUIPanel(_menuPrefabName);
+        }
     }
 
     // event that is called when UIManager updates its panels
     private void OnUIPanelsUpdated(bool panelsEmpty) {
         _uiPanelsEmpty = panelsEmpty;
-        Cursor.lockState = panelsEmpty ? CursorLockMode.Locked : CursorLockMode.None;
-        Cursor.visible = !panelsEmpty;
+        SetMouseEnabled(!panelsEmpty);
         _moveVector.x = panelsEmpty ? _moveVector.x : 0f;
         _moveVector.z = panelsEmpty ? _moveVector.z : 0f;
         _lookVector.x = panelsEmpty ? _lookVector.x : 0f;
         _lookVector.y = panelsEmpty ? _lookVector.y : 0f;
+
+        ControllerState = panelsEmpty ? ControllerState.Gameplay : ControllerState.UIMenu;
+        OnControllerStateUpdated?.Invoke();
     }
 }

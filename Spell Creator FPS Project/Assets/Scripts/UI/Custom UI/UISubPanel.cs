@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
 
     [SerializeField] protected UISubPanelParent _parentPanel;
-    public bool IsActive { get; protected set; }
+    public bool IsFocused { get; protected set; }
 
     public delegate void MouseHover();
     public event MouseHover OnMouseHover;
@@ -18,7 +18,7 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
     [SerializeField] protected UISubPanel _leftNeighbor;
 
     protected virtual void Update() {
-        if (!IsActive) {
+        if (!IsFocused) {
             return;
         }
         ProcessInputs();
@@ -32,8 +32,12 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
         
     }
 
-    public virtual void SetActive(bool active, bool hardLocked, IntVector3 dir) {
-        IsActive = active;
+    public virtual void SetFocus(bool isFocused, bool hardLocked, IntVector3 dir) {
+        IsFocused = isFocused;
+    }
+
+    public virtual void SetVisible(bool visible) {
+        gameObject.SetActive(visible);
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData) {

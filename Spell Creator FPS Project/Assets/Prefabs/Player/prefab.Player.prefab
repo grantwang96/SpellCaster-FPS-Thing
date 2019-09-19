@@ -1181,6 +1181,8 @@ MonoBehaviour:
   - PLAYER_UNIT
   _controlScheme: 0
   _uiPanelsEmpty: 1
+  _directionalHoldThreshold: 0.3
+  _directionalHoldFreq: 0.05
   _lookVector: {x: 0, y: 0}
   _menuPrefabName: prefab.ui_MainMenu
 --- !u!114 &114187418731465560

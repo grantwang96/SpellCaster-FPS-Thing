@@ -11,9 +11,6 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
 
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
-
-        // _rowSize = 1;
-        // _columnSize = GameplayValues.Magic.PlayerLoadoutMaxSize;
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
         GenerateViewCells();
         SpellInventory_OnLoadoutDataUpdated(PlayerInventory.SpellInventory.CurrentLoadout);

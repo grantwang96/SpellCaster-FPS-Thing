@@ -7,12 +7,21 @@ public class PlayerMovement_FPS : CharacterMoveController {
     [SerializeField] private float lookSpeed;
     [SerializeField] private float jumpForce;
 
+    private bool _active;
+
     private void OnEnable() {
         GameplayController.Instance.OnJumpPressed += OnJump;
+        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
     }
 
     private void OnDisable() {
         GameplayController.Instance.OnJumpPressed -= OnJump;
+        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+    }
+
+    protected override void Start() {
+        base.Start();
+        OnControllerStateUpdated();
     }
 
     // Update is called once per frame
@@ -28,6 +37,10 @@ public class PlayerMovement_FPS : CharacterMoveController {
     }
 
     private void ProcessWalkInput() {
+        if (!_active) {
+            _movementVelocity = Vector2.zero;
+            return;
+        }
         Vector3 inputVector = GameplayController.Instance.MoveVector;
         Vector3 newMoveVector = new Vector3();
         newMoveVector += transform.right * inputVector.x;
@@ -37,7 +50,7 @@ public class PlayerMovement_FPS : CharacterMoveController {
     }
 
     private void OnJump() {
-        if (_characterController.isGrounded) {
+        if (_characterController.isGrounded && _active) {
             _movementVelocity.y = jumpForce;
         }
     }
@@ -59,5 +72,9 @@ public class PlayerMovement_FPS : CharacterMoveController {
             yield return new WaitForFixedUpdate();
         }
         _externalForces = null;
+    }
+
+    private void OnControllerStateUpdated() {
+        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
     }
 }

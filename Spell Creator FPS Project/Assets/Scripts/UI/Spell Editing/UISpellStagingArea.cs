@@ -174,7 +174,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         OnCraftSpellPressed?.Invoke();
     }
 
-    public override void SetActive(bool active, bool hardLocked, IntVector3 dir) {
+    public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
         if (active) {
             _spellComponentsView.SetCurrentAtBound(dir);
         }

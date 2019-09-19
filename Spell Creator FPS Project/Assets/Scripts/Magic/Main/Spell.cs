@@ -153,13 +153,13 @@ public class StorableSpell {
     public string Name { get; private set; }
     public bool Favorite { get; private set; }
 
-    public StorableSpell(string castingMethodId, string[] spellEffectIds, string[] spellModifierIds, bool favorite = false) {
+    public StorableSpell(string castingMethodId, string[] spellEffectIds, string[] spellModifierIds, bool favorite = false, string name = "NoNameSadLife") {
         _castingMethodId = castingMethodId;
         _spellEffectIds = spellEffectIds;
         _spellModifierIds = spellModifierIds;
 
         InstanceId = GenerateInstanceId();
-        Name = ""; // TODO: GENERATE DEFAULT NAME FROM SPELL COMPONENTS
+        Name = name; // TODO: GENERATE DEFAULT NAME FROM SPELL COMPONENTS
         Favorite = favorite;
     }
 
@@ -202,7 +202,7 @@ public class StorableSpell {
             }
             modifiers[i] = modifier;
         }
-        Spell newSpell = new Spell(castingMethod, effects, modifiers);
+        Spell newSpell = new Spell(castingMethod, effects, modifiers, Name);
         return newSpell;
     }
 }

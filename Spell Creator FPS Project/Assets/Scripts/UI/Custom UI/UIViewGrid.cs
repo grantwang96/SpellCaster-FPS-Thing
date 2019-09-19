@@ -41,16 +41,11 @@ public class UIViewGrid : MonoBehaviour {
     [SerializeField] private UIViewGrid _down;
     [SerializeField] private UIViewGrid _left;
 
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldThreshold;
-    [Range(0f, 1f)] [SerializeField] private float _directionHoldFreq;
     [SerializeField] private bool _inverted;
 
     private bool _isBuilt = false;
     private float _horizontal;
     private float _vertical;
-    private float _intervalHoldTime;
-    private float _holdTime;
-    private bool _directionButtonsPressed;
 
     public delegate void GridItemEvent(IUIInteractable interactable);
     public event GridItemEvent OnHighlighted;
@@ -94,49 +89,10 @@ public class UIViewGrid : MonoBehaviour {
         return null;
     }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        ProcessInputs();
-	}
+    private void DirectionalInputs(Vector2 moveVector) {
 
-    private void ProcessInputs() {
-        if (!Active) { return; }
-        DirectionalInputs();
-        SelectButtonPressed();
-    }
-
-    private void DirectionalInputs() {
-        float _horizontal = _inverted ? -Input.GetAxisRaw(Vertical) : Input.GetAxisRaw(Horizontal);
-        float _vertical = _inverted ? -Input.GetAxisRaw(Horizontal) : Input.GetAxisRaw(Vertical);
-
-        // if no buttons are being pressed, reset values and carry on.
-        if (_horizontal == 0 && _vertical == 0) {
-            _holdTime = 0f;
-            _intervalHoldTime = 0f;
-            _directionButtonsPressed = false;
-            return;
-        }
-
-        // if the button is being held
-        if (_directionButtonsPressed) {
-            if (_holdTime < _directionHoldThreshold) { // check if they're waiting to do continuous movement
-                _holdTime += Time.deltaTime;
-                return;
-            }
-            if (_intervalHoldTime < _directionHoldFreq) { // check if they're waiting on interval
-                _intervalHoldTime += Time.deltaTime;
-                return;
-            }
-        }
-
-        // Process the actual movement;
-        _directionButtonsPressed = true;
-        _intervalHoldTime = 0f;
+        float _horizontal = _inverted ? -moveVector.y : moveVector.x;
+        float _vertical = _inverted ? -moveVector.x : moveVector.y;
 
         int x = CurrentItemX + Mathf.RoundToInt(_horizontal);
         int y = CurrentItemY - Mathf.RoundToInt(_vertical);
@@ -194,12 +150,6 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void OnViewCellHighlighted(IUIInteractable interactable) {
-        /*
-        if (!Active) {
-            return;
-        }
-        */
-        Debug.Log("View Cell Highlighted: " + interactable.Id);
         UpdateHighlightedViewCell(interactable.XCoord, interactable.YCoord);
     }
 
@@ -244,18 +194,16 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void SelectButtonPressed() {
-        if (Input.GetButtonDown("Submit")) {
-            IUIInteractable selected = _interactableGrid[CurrentItemX][CurrentItemY];
-            selected.InteractableSelect();
-        }
+        IUIInteractable selected = _interactableGrid[CurrentItemX][CurrentItemY];
+        Debug.Log("Select button pressed!");
+        selected.InteractableSelect();
     }
 
     private void OnSelect(IUIInteractable interactable) {
-        Debug.Log("Clicked button");
         if (!Active) {
             return;
         }
-        Debug.Log("Button Success!");
+        Debug.Log("Select interactable!");
         OnSelectPressed?.Invoke(interactable);
     }
 
@@ -325,13 +273,25 @@ public class UIViewGrid : MonoBehaviour {
     public void SetActive(bool active, bool hardLock = false) {
         Active = active;
         // set whether player can leave this view grid
-        _hardLocked = _hardLocked;
+        _hardLocked = hardLock;
 
+        UnsubscribeToController();
         if (!Active) {
             UnhighlightCell(CurrentItemX, CurrentItemY);
         } else {
             _interactableGrid[CurrentItemX][CurrentItemY].InteractableHighlight();
+            SubscribeToController();
         }
+    }
+
+    private void SubscribeToController() {
+        GameplayController.Instance.DirectionalInput += DirectionalInputs;
+        GameplayController.Instance.OnSubmitPressed += SelectButtonPressed;
+    }
+
+    private void UnsubscribeToController() {
+        GameplayController.Instance.DirectionalInput -= DirectionalInputs;
+        GameplayController.Instance.OnSubmitPressed -= SelectButtonPressed;
     }
 }
 

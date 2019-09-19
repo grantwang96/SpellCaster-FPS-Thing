@@ -88,7 +88,8 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   _id: 
-  _rect: {fileID: 0}
+  _rect: {fileID: 224518265155215348}
+  _customButtonText: {fileID: 114798249549377614}
 --- !u!114 &114360522894516558
 MonoBehaviour:
   m_ObjectHideFlags: 1

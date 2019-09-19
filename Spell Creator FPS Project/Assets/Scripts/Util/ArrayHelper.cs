@@ -6,7 +6,7 @@ public static class ArrayHelper {
     
     public static bool Contains<T>(T[] array, T item) {
         for(int i = 0; i < array.Length; i++) {
-            if(array[i].Equals(item)) {
+            if(array[i] != null && array[i].Equals(item)) {
                 return true;
             }
         }

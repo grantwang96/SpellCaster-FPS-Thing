@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ using UnityEngine.UI;
 public abstract class UIPanel : MonoBehaviour {
 
     [SerializeField] protected Button _closeButton;
+
+    public Vector2 _directionalInput { get; protected set; }
 
 	// Use this for initialization
 	protected virtual void Start () {
@@ -21,7 +24,7 @@ public abstract class UIPanel : MonoBehaviour {
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-        ProcessMenuButton();
+        ProcessInputs();
 	}
 
     protected virtual void OnUIManagerPanelsUpdated(bool panels) {
@@ -30,10 +33,15 @@ public abstract class UIPanel : MonoBehaviour {
         }
     }
 
-    private void ProcessMenuButton() {
-        if(UIManager.Instance.CurrentPanel != this) {
+    protected virtual void ProcessInputs() {
+        // do not run if this is not current panel
+        if (UIManager.Instance.CurrentPanel != this) {
             return;
         }
+        ProcessMenuButton();
+    }
+
+    private void ProcessMenuButton() {
         if (Input.GetButtonDown("Cancel")) {
             CloseUIPanel();
         }
@@ -45,9 +53,16 @@ public abstract class UIPanel : MonoBehaviour {
 }
 
 public abstract class UISubPanelParent : UIPanel {
-    
-    public virtual void ChangePanel(UISubPanel subPanel, IntVector3 dir) {
 
+    public event Action OnPanelClosed;
+    
+    public virtual void ChangePanel(UISubPanel subPanel, IntVector3 dir, bool hardLocked = false) {
+
+    }
+
+    protected override void CloseUIPanel() {
+        base.CloseUIPanel();
+        OnPanelClosed?.Invoke();
     }
 }
 

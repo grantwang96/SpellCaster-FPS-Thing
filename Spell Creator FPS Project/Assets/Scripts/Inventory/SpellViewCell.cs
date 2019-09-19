@@ -48,24 +48,26 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
     }
 
     public override void SetValue(IUIInteractableData data) {
-        xCoord = data.X;
-        yCoord = data.Y;
         if(data == null) {
             Debug.LogError($"[{nameof(SpellViewCell)}] Initialization data received was null!");
             return;
         }
+        xCoord = data.X;
+        yCoord = data.Y;
         SpellViewCellData initData = data as SpellViewCellData;
         if(initData == null) {
             Debug.LogError($"[{nameof(SpellViewCell)}] Initialization data received was not of type {nameof(SpellViewCellData)}!");
             return;
         }
         if(initData.StoredSpell == null) {
+            _id = string.Empty;
             _spellInstanceId = string.Empty;
             _spellName = "Empty Spell Slot";
             UpdateUIValues();
             return;
         }
         _spellInstanceId = initData.StoredSpell.InstanceId;
+        _id = _spellInstanceId;
         _spellName = initData.StoredSpell.Name;
         gameObject.SetActive(true);
         UpdateUIValues();

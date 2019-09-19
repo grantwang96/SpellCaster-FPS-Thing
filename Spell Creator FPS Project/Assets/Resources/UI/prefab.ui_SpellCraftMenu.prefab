@@ -518,7 +518,7 @@ MonoBehaviour:
   _up: {fileID: 114699235507296954}
   _right: {fileID: 0}
   _down: {fileID: 114514416492592954}
-  _left: {fileID: 114541312620179998}
+  _left: {fileID: 0}
   _directionHoldThreshold: 0.259
   _directionHoldFreq: 0.126
   _inverted: 0

@@ -13,10 +13,23 @@ public class PlayerCamera_FPS : MonoBehaviour {
     [SerializeField] private Transform _head;
     public Transform Head { get { return _head; } set { _head = value; } }
 
+    private bool _initialized;
+    private bool _active;
+
 	// Use this for initialization
 	void Start () {
-		
+        Initialize();
 	}
+
+    private void Initialize() {
+        if (_initialized) {
+            return;
+        }
+        // add some initialization shit here
+        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        OnControllerStateUpdated();
+        _initialized = true;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -24,6 +37,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
 	}
 
     private void ProcessLookInput() {
+        if (!_active) { return; }
         Vector3 lookInput = GameplayController.Instance.LookVector;
         lookRotation.x += lookInput.x * lookSpeed * Time.deltaTime;
         lookRotation.y -= lookInput.y * lookSpeed * Time.deltaTime;
@@ -34,5 +48,9 @@ public class PlayerCamera_FPS : MonoBehaviour {
 
         _head.localEulerAngles = newHeadRotation;
         _body.localEulerAngles = newBodyRotation;
+    }
+
+    private void OnControllerStateUpdated() {
+        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
     }
 }

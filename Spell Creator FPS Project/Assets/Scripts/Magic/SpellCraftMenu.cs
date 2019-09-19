@@ -21,11 +21,16 @@ public class SpellCraftMenu : UISubPanelParent {
     private SpellCraftManager _spellCraftManager;
 
     public override void Initialize(UIPanelInitData initData = null) {
+        GameEventsManager.TestEventArgs.Subscribe(TestEventListener);
+
         _spellCraftManager = new SpellCraftManager();
         _spellStagingArea.Initialize();
         _runicInventoryView.Initialize(null);
-        _runicInventoryView.SetActive(true, false, IntVector3.Zero);
-        _spellStagingArea.SetActive(false, false, IntVector3.Zero);
+        _runicInventoryView.SetFocus(true, false, IntVector3.Zero);
+        _runicInventoryView.SetVisible(true);
+        _spellStagingArea.SetFocus(false, false, IntVector3.Zero);
+        _spellStagingArea.SetVisible(true);
+
         _runicInventoryView.OnGridItemHighlighted += OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotHighlighted += OnStagingAreaItemHighlighted;
@@ -60,9 +65,13 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellStagingArea.OnCraftSpellPressed -= OnCraftSpellButtonPressed;
     }
 
-    public override void ChangePanel(UISubPanel neighbor, IntVector3 dir) {
-        _runicInventoryView.SetActive(_runicInventoryView == neighbor, false, dir);
-        _spellStagingArea.SetActive(_spellStagingArea == neighbor, false, dir);
+    private void TestEventListener(string gibbed) {
+        Debug.Log("Gibbed " + gibbed);
+    }
+
+    public override void ChangePanel(UISubPanel neighbor, IntVector3 dir, bool hardLocked = false) {
+        _runicInventoryView.SetFocus(_runicInventoryView == neighbor, hardLocked, dir);
+        _spellStagingArea.SetFocus(_spellStagingArea == neighbor, hardLocked, dir);
     }
 
     private void OnInventoryItemHighlighted() {
@@ -70,14 +79,14 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     private void OnInventoryUpdated() {
-        if (!_runicInventoryView.IsActive) {
+        if (!_runicInventoryView.IsFocused) {
             return;
         }
         _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
     }
 
     private void OnSpellSlotsUpdated(string itemId) {
-        if (!_spellStagingArea.IsActive) {
+        if (!_spellStagingArea.IsFocused) {
             return;
         }
         _spellComponentDescriptionView.UpdateDescription(itemId);

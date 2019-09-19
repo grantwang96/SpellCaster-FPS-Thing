@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4001534338061864}
   - component: {fileID: 114041504187102644}
+  - component: {fileID: 114031259466648726}
   m_Layer: 0
   m_Name: Arena
   m_TagString: Untagged
@@ -152,7 +153,23 @@ GameObject:
   - component: {fileID: 4487222799307292}
   - component: {fileID: 114665676364238270}
   m_Layer: 0
-  m_Name: WizardTower
+  m_Name: TutorialLevel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1617375590058106
+GameObject:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4711402893748090}
+  - component: {fileID: 114179900196295422}
+  m_Layer: 0
+  m_Name: GameHub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -306,8 +323,22 @@ Transform:
   - {fileID: 4857758504832232}
   - {fileID: 4487222799307292}
   - {fileID: 4001534338061864}
+  - {fileID: 4711402893748090}
   m_Father: {fileID: 4482592674360416}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4711402893748090
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1617375590058106}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4697429238373108}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4813181255536518
 Transform:
@@ -361,6 +392,19 @@ Transform:
   m_Father: {fileID: 4482592674360416}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114031259466648726
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1020532486019180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c52ee635103f449aa9031b277d794b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerId: ArenaEntry
+  _gameState: {fileID: 114041504187102644}
 --- !u!114 &114041504187102644
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -375,7 +419,7 @@ MonoBehaviour:
   _transitions:
   - _transitionName: enter_loadscreen
     _gameState: {fileID: 114532308966428144}
-  - _transitionName: enter_wizardtower
+  - _transitionName: enter_tutoriallevel
     _gameState: {fileID: 114665676364238270}
   _sceneName: Arena01
   IsActive: 0
@@ -390,8 +434,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad84c72f1c6a56246b6bf645553110da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bootState: {fileID: 114335926267692570}
-  _startState: {fileID: 114041504187102644}
+  _hackStartState: {fileID: 114041504187102644}
+  _gameHubState: {fileID: 0}
+  _tutorialState: {fileID: 0}
 --- !u!114 &114165993952794072
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -406,6 +451,22 @@ MonoBehaviour:
   _tutorialFolderPaths:
   - Test
   _tutorialActionIndex: 0
+--- !u!114 &114179900196295422
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1617375590058106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25033089b4d2dab4984ef3aa243e620a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transitions:
+  - _transitionName: enter_arena
+    _gameState: {fileID: 114041504187102644}
+  _sceneName: GameHub
+  IsActive: 0
 --- !u!114 &114218880710977866
 MonoBehaviour:
   m_ObjectHideFlags: 1

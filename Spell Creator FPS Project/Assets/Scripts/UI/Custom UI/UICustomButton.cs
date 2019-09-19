@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 /// <summary>
 /// Button that is designed to work with a view grid
@@ -16,6 +17,7 @@ public class UICustomButton : Button, IUIInteractable {
     public string Id => _id;
 
     [SerializeField] private RectTransform _rect;
+    [SerializeField] private Text _customButtonText;
 
     // events related to data represented by UIInteractable
     public event UIInteractableEvent OnMousePointerClick;
@@ -33,7 +35,14 @@ public class UICustomButton : Button, IUIInteractable {
     }
 
     public void SetValue(IUIInteractableData initData) {
-
+        UICustomButtonInitData customButtonData = initData as UICustomButtonInitData;
+        if(customButtonData == null) {
+            return;
+        }
+        XCoord = customButtonData.X;
+        YCoord = customButtonData.Y;
+        _id = customButtonData.Id;
+        _customButtonText.text = customButtonData.ButtonText;
     }
 
     // when dpad/arrow inputs are used
@@ -54,13 +63,13 @@ public class UICustomButton : Button, IUIInteractable {
         _rect.localScale = Vector3.one;
     }
 
+    // called via button input (not mouse)
     public void InteractableSelect() {
         onClick?.Invoke();
         OnButtonSelect();
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
-        Debug.Log($"Clicked on {this.name}");
         base.OnPointerClick(eventData);
         OnButtonSelect();
     }
@@ -70,7 +79,6 @@ public class UICustomButton : Button, IUIInteractable {
     }
 
     public override void OnPointerEnter(PointerEventData eventData) {
-        Debug.Log($"Hovering over {this.name}");
         base.OnPointerEnter(eventData);
         OnMousePointerHighlight?.Invoke(this);
     }
@@ -94,4 +102,10 @@ public class UICustomButtonInitData : IUIInteractableData {
     public int Y { get; set; }
     public string Id { get; set; }
     public string ButtonText { get; set; }
+}
+
+public class ButtonActionData {
+    public string ButtonId;
+    public string ButtonText;
+    public UnityAction Action;
 }
