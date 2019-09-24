@@ -95,7 +95,7 @@ public class LoadoutMenu : UISubPanelParent {
         _spellOptionsMenu.SetFocus(subPanel == _spellOptionsMenu, hardLocked, dir);
     }
 
-    protected override void CloseUIPanel() {
+    protected override void OnCloseUIPanel() {
 
         _loadoutView.OnGridItemHighlighted -= LoadoutView_OnLoadoutSpellHighlighted;
         _loadoutView.OnGridItemSelected -= LoadoutView_OnLoadoutSpellSelected;
@@ -103,7 +103,7 @@ public class LoadoutMenu : UISubPanelParent {
         _spellsInventoryView.OnGridItemHighlighted -= SpellsInventoryView_OnInventorySpellHighlighted;
         _spellsInventoryView.OnGridItemSelected -= SpellsInventoryView_OnInventorySpellSelected;
 
-        base.CloseUIPanel();
+        base.OnCloseUIPanel();
     }
 
     // Player is focused on loadout menu
@@ -119,9 +119,18 @@ public class LoadoutMenu : UISubPanelParent {
             bool hasSpell = PlayerInventory.SpellInventory.HasSpellByInstanceId(spellInstanceId);
             _loadoutMenu._spellOptionsMenu.SetVisible(true);
             _loadoutMenu._spellOptionsMenu.SetValue(new SpellOptionsInitData() {
+                Position = GetLoadoutSlotPosition(),
                 ButtonDatas = GenerateOptionMenuButtonActionDatas(hasSpell)
             });
             _loadoutMenu.ChangePanel(_loadoutMenu._spellOptionsMenu, IntVector3.Zero, true);
+        }
+
+        private Vector2 GetLoadoutSlotPosition() {
+            Vector2 position = new Vector2();
+            IUIInteractable highlightedLoadoutSlot = _loadoutMenu._loadoutView.GetCurrentInteractable();
+            position = highlightedLoadoutSlot.Position;
+            position += new Vector2(highlightedLoadoutSlot.RectTransform.sizeDelta.x / 2f, 0f);
+            return position;
         }
 
         private List<ButtonActionData> GenerateOptionMenuButtonActionDatas(bool hasSpell) {
@@ -169,6 +178,7 @@ public class LoadoutMenu : UISubPanelParent {
             _loadoutMenu.ChangePanel(_loadoutMenu._spellsInventoryView, IntVector3.Zero, true);
             _loadoutMenu._spellOptionsMenu.SetVisible(false);
             _loadoutMenu._spellsInventoryView.SetVisible(true);
+            _loadoutMenu._spellsInventoryView.ForceFocusItem(0, 0);
             _loadoutMenu._loadoutView.SetVisible(false);
             _loadoutMenu.ChangeState(new LoadoutMenu_OptionMenuState());
         }

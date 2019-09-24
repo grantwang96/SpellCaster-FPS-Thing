@@ -75,7 +75,6 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
     }
 
     public void OnPointerEnter(PointerEventData eventData) {
-        Debug.Log("HYAH!");
         PointerEnter();
     }
 }

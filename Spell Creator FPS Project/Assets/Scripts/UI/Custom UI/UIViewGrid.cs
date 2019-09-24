@@ -6,6 +6,7 @@ public delegate void UpdateActiveGrid();
 
 public interface IUIViewGridParent {
 
+    IUIInteractable GetCurrentInteractable();
     void UpdateActiveGrid(UIViewGrid newGrid);
     void OutOfBounds(IntVector3 dir);
 
@@ -195,7 +196,6 @@ public class UIViewGrid : MonoBehaviour {
 
     private void SelectButtonPressed() {
         IUIInteractable selected = _interactableGrid[CurrentItemX][CurrentItemY];
-        Debug.Log("Select button pressed!");
         selected.InteractableSelect();
     }
 
@@ -203,7 +203,6 @@ public class UIViewGrid : MonoBehaviour {
         if (!Active) {
             return;
         }
-        Debug.Log("Select interactable!");
         OnSelectPressed?.Invoke(interactable);
     }
 

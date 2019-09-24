@@ -7,7 +7,7 @@ public class PlayerMovement_FPS : CharacterMoveController {
     [SerializeField] private float lookSpeed;
     [SerializeField] private float jumpForce;
 
-    private bool _active;
+    [SerializeField] private bool _active;
 
     private void OnEnable() {
         GameplayController.Instance.OnJumpPressed += OnJump;

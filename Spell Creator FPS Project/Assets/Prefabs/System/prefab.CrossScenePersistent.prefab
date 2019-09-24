@@ -126,7 +126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1442169663399324
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,6 +484,8 @@ MonoBehaviour:
   - {fileID: 114203801472891472, guid: ee9c6b3c749cc9c4b8e8c40e0480ea2b, type: 2}
   - {fileID: 114723597304336664, guid: fb7225deb6254db498647d06da96898e, type: 2}
   _currentScenePanel: {fileID: 0}
+  mainMenuPrefabName: 
+  _mainCanvas: {fileID: 223490327663594118}
 --- !u!114 &114335926267692570
 MonoBehaviour:
   m_ObjectHideFlags: 1

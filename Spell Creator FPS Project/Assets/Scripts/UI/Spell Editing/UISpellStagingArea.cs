@@ -23,6 +23,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     [SerializeField] private UIViewGrid _spellComponentsView;
     [SerializeField] private UIViewGrid _craftButtonView;
 
+    private UIViewGrid _cachedUIViewGrid;
+    private IUIInteractable _currentInteractable;
+
     public delegate void SpellSlotsUpdatedEvent(string itemId);
     public event SpellSlotsUpdatedEvent OnSpellSlotsUpdated;
 
@@ -34,7 +37,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public event CraftSpellEvent OnCraftSpellPressed;
     public event UpdateActiveGrid OnUpdateActiveGrid;
 
-    public void Initialize() {
+    public override void Initialize(UIPanelInitData initData) {
+        base.Initialize(initData);
         UIViewGridInitData spellNameEditorInitData = new UIViewGridInitData();
         spellNameEditorInitData.RowLengths = _spellNameEditorViewRowLengths;
         _spellNameEditorView.Initialize(spellNameEditorInitData);
@@ -60,6 +64,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _spellComponentsView.SetActive(newGrid == _spellComponentsView);
         _spellNameEditorView.SetActive(newGrid == _spellNameEditorView);
         newGrid.UpdateHighlightedViewCell(newGrid.CurrentItemX, newGrid.CurrentItemY);
+        _currentInteractable = newGrid.GetInteractableAt(newGrid.CurrentItemX, newGrid.CurrentItemY);
+        _cachedUIViewGrid = newGrid;
     }
 
     public void OutOfBounds(IntVector3 dir) {
@@ -175,11 +181,31 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
+        base.SetFocus(active, hardLocked, dir);
         if (active) {
             _spellComponentsView.SetCurrentAtBound(dir);
         }
         _spellComponentsView.SetActive(active, hardLocked);
         _craftButtonView.SetActive(false, hardLocked);
         _spellNameEditorView.SetActive(false, hardLocked);
+    }
+
+    public IUIInteractable GetCurrentInteractable() {
+        return _currentInteractable;
+    }
+
+    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
+        base.OnActivePanelUpdated(isCurrentPanel);
+        if (isCurrentPanel) {
+            Debug.Log($"Cached UIViewGrid: {_cachedUIViewGrid?.name}");
+            Debug.Log($"Is Focused: {IsFocused}");
+            _spellNameEditorView.SetActive(_spellNameEditorView == _cachedUIViewGrid && IsFocused);
+            _spellComponentsView.SetActive(_spellComponentsView == _cachedUIViewGrid && IsFocused);
+            _craftButtonView.SetActive(_craftButtonView == _cachedUIViewGrid && IsFocused);
+        } else {
+            _spellNameEditorView.SetActive(false);
+            _spellComponentsView.SetActive(false);
+            _craftButtonView.SetActive(false);
+        }
     }
 }

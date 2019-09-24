@@ -7,6 +7,8 @@ public interface IUIInteractable {
     int XCoord { get; }
     int YCoord { get; }
     string Id { get; }
+    Vector2 Position { get; }
+    RectTransform RectTransform { get; }
     GameObject gameObject { get; }
 
     void Initialize(int x, int y);

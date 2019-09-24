@@ -70,8 +70,6 @@ public class GameplayController : CharacterBehaviour {
     private PlayerDamageable _playerDamageable;
     public override Damageable Damageable => _playerDamageable;
 
-    [SerializeField] private string _menuPrefabName;
-
     protected override void Awake() {
         Instance = this;
         base.Awake();
@@ -258,21 +256,18 @@ public class GameplayController : CharacterBehaviour {
 
     private void MenuPressed() {
         OnCancelPressed?.Invoke();
-        if (_uiPanelsEmpty) {
-            UIManager.Instance.OpenUIPanel(_menuPrefabName);
-        }
     }
 
     // event that is called when UIManager updates its panels
-    private void OnUIPanelsUpdated(bool panelsEmpty) {
-        _uiPanelsEmpty = panelsEmpty;
-        SetMouseEnabled(!panelsEmpty);
-        _moveVector.x = panelsEmpty ? _moveVector.x : 0f;
-        _moveVector.z = panelsEmpty ? _moveVector.z : 0f;
-        _lookVector.x = panelsEmpty ? _lookVector.x : 0f;
-        _lookVector.y = panelsEmpty ? _lookVector.y : 0f;
+    private void OnUIPanelsUpdated(bool panelsActive) {
+        _uiPanelsEmpty = !panelsActive;
+        SetMouseEnabled(!_uiPanelsEmpty);
+        _moveVector.x = _uiPanelsEmpty ? _moveVector.x : 0f;
+        _moveVector.z = _uiPanelsEmpty ? _moveVector.z : 0f;
+        _lookVector.x = _uiPanelsEmpty ? _lookVector.x : 0f;
+        _lookVector.y = _uiPanelsEmpty ? _lookVector.y : 0f;
 
-        ControllerState = panelsEmpty ? ControllerState.Gameplay : ControllerState.UIMenu;
+        ControllerState = _uiPanelsEmpty ? ControllerState.Gameplay : ControllerState.UIMenu;
         OnControllerStateUpdated?.Invoke();
     }
 }

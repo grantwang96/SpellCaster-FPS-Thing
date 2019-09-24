@@ -14,7 +14,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
     public Transform Head { get { return _head; } set { _head = value; } }
 
     private bool _initialized;
-    private bool _active;
+    [SerializeField] private bool _active;
 
 	// Use this for initialization
 	void Start () {
@@ -52,5 +52,6 @@ public class PlayerCamera_FPS : MonoBehaviour {
 
     private void OnControllerStateUpdated() {
         _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
+        Debug.Log("Controller state update");
     }
 }

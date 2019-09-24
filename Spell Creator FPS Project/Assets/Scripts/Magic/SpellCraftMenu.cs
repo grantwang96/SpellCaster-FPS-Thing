@@ -21,10 +21,9 @@ public class SpellCraftMenu : UISubPanelParent {
     private SpellCraftManager _spellCraftManager;
 
     public override void Initialize(UIPanelInitData initData = null) {
-        GameEventsManager.TestEventArgs.Subscribe(TestEventListener);
-
+        base.Initialize(initData);
         _spellCraftManager = new SpellCraftManager();
-        _spellStagingArea.Initialize();
+        _spellStagingArea.Initialize(null);
         _runicInventoryView.Initialize(null);
         _runicInventoryView.SetFocus(true, false, IntVector3.Zero);
         _runicInventoryView.SetVisible(true);
@@ -38,12 +37,11 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellStagingArea.OnCraftSpellPressed += OnCraftSpellButtonPressed;
         _runicInventoryView.OnInventoryUpdated += OnInventoryUpdated;
         _spellStagingArea.OnSpellSlotsUpdated += OnSpellSlotsUpdated;
-        Debug.Log("Finished initializing spell craft menu");
 
         // add on hover events here(maybe limit if we're on PC or not)
     }
 
-    protected override void CloseUIPanel() {
+    protected override void OnCloseUIPanel() {
         // return any staged runes to the player
         if(_spellCraftManager.LoadedCastingMethod != null) {
             _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
@@ -57,16 +55,12 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellStagingArea.ClearSpellComponentSlots();
 
         // close the panel
-        base.CloseUIPanel();
+        base.OnCloseUIPanel();
 
         // remove listeners
         _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
         _spellStagingArea.OnCraftSpellPressed -= OnCraftSpellButtonPressed;
-    }
-
-    private void TestEventListener(string gibbed) {
-        Debug.Log("Gibbed " + gibbed);
     }
 
     public override void ChangePanel(UISubPanel neighbor, IntVector3 dir, bool hardLocked = false) {

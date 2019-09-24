@@ -68,12 +68,20 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         HighlightedItemId = interactable.Id;
     }
 
+    public IUIInteractable GetCurrentInteractable() {
+        return _mainInventoryGrid.GetInteractableAt(_mainInventoryGrid.CurrentItemX, _mainInventoryGrid.CurrentItemY);
+    }
+
     protected virtual int GetTotalPages(int itemsPerPage) {
         return 1;
     }
 
     protected virtual void SetGridInteractableItem(int x, int y) {
 
+    }
+
+    public virtual void ForceFocusItem(int x, int y) {
+        _mainInventoryGrid.UpdateHighlightedViewCell(x, y);
     }
 
     public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
@@ -88,6 +96,10 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
         _mainInventoryGrid.SetActive(newGrid == _mainInventoryGrid);
+    }
+
+    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
+        _mainInventoryGrid.SetActive(isCurrentPanel && IsFocused);
     }
 
     public void OutOfBounds(IntVector3 dir) {

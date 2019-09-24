@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 114419468601579986}
   - component: {fileID: 114820299144877070}
   - component: {fileID: 114216178686495076}
+  - component: {fileID: 114290673117529676}
   m_Layer: 9
   m_Name: prefab.Player
   m_TagString: Untagged
@@ -1184,7 +1185,6 @@ MonoBehaviour:
   _directionalHoldThreshold: 0.3
   _directionalHoldFreq: 0.05
   _lookVector: {x: 0, y: 0}
-  _menuPrefabName: prefab.ui_MainMenu
 --- !u!114 &114187418731465560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1275,6 +1275,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerCombat: {fileID: 114242404479300404}
   _playerSpellSlotPrefab: {fileID: 114924329038407324}
+--- !u!114 &114290673117529676
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1125936217374846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c276db7e2b54948a333483b847fd92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _menuPrefabId: prefab.ui_MainMenu
 --- !u!114 &114402609693236468
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -58,6 +58,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
+  _rect: {fileID: 224941072768808468}
+  xCoord: 0
+  yCoord: 0
+  _spellInstanceId: 
+  _spellName: 
   _content: {fileID: 224980082756122574}
   _spellNameText: {fileID: 114425939740459078}
 --- !u!114 &114425939740459078

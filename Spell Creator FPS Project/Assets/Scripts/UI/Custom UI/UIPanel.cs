@@ -11,57 +11,79 @@ public abstract class UIPanel : MonoBehaviour {
 
     [SerializeField] protected Button _closeButton;
 
-    public Vector2 _directionalInput { get; protected set; }
+    private bool _active;
 
 	// Use this for initialization
 	protected virtual void Start () {
-        _closeButton?.onClick.AddListener(CloseUIPanel);
+        _closeButton?.onClick.AddListener(ClosePanel);
     }
 
     public virtual void Initialize(UIPanelInitData initData) {
-
+        UIManager.Instance.OnPanelsUpdated += OnUIManagerPanelsUpdated;
+        SubscribeToGameplayController();
+        OnControllerStateUpdated();
     }
-	
-	// Update is called once per frame
-	protected virtual void Update () {
-        ProcessInputs();
-	}
+
+    protected virtual void SubscribeToGameplayController() {
+        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        GameplayController.Instance.OnCancelPressed += OnMenuBtnPressed;
+    }
+
+    protected virtual void UnsubscribeToGameplayController() {
+        GameplayController.Instance.OnCancelPressed -= OnMenuBtnPressed;
+        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+    }
 
     protected virtual void OnUIManagerPanelsUpdated(bool panels) {
-        if(panels && UIManager.Instance.CurrentPanel == this) {
-            Debug.Log($"Panel {this.name} is current active panel.");
+        UnsubscribeToGameplayController();
+        if (panels && UIManager.Instance.CurrentPanel == this) {
+            SubscribeToGameplayController();
         }
     }
 
-    protected virtual void ProcessInputs() {
-        // do not run if this is not current panel
-        if (UIManager.Instance.CurrentPanel != this) {
-            return;
-        }
-        ProcessMenuButton();
-    }
-
-    private void ProcessMenuButton() {
-        if (Input.GetButtonDown("Cancel")) {
-            CloseUIPanel();
-        }
-    }
-
-    protected virtual void CloseUIPanel() {
+    public virtual void ClosePanel() {
         UIManager.Instance.CloseUIPanel();
+    }
+
+    protected virtual void OnCloseUIPanel() {
+        UIManager.Instance.OnPanelsUpdated -= OnUIManagerPanelsUpdated;
+        UnsubscribeToGameplayController();
+    }
+
+    protected virtual void MenuBtnAction() {
+        ClosePanel();
+    }
+
+    protected virtual void OnMenuBtnPressed() {
+        if (!_active) { return; }
+        MenuBtnAction();
+    }
+
+    protected virtual void OnControllerStateUpdated() {
+        _active = GameplayController.Instance.ControllerState == ControllerState.UIMenu;
     }
 }
 
 public abstract class UISubPanelParent : UIPanel {
 
     public event Action OnPanelClosed;
+    public event Action<bool> OnCurrentPanelUpdated;
     
     public virtual void ChangePanel(UISubPanel subPanel, IntVector3 dir, bool hardLocked = false) {
 
     }
 
-    protected override void CloseUIPanel() {
-        base.CloseUIPanel();
+    protected override void OnUIManagerPanelsUpdated(bool panels) {
+        base.OnUIManagerPanelsUpdated(panels);
+        bool isCurrentPanel = UIManager.Instance.CurrentPanel == this;
+        OnCurrentPanelUpdated?.Invoke(isCurrentPanel);
+        if (isCurrentPanel) {
+            // do active panel things
+        }
+    }
+
+    protected override void OnCloseUIPanel() {
+        base.OnCloseUIPanel();
         OnPanelClosed?.Invoke();
     }
 }

@@ -28,6 +28,7 @@ public class GenericMessageBox : UIPanel {
     }
 
     public override void Initialize(UIPanelInitData initData) {
+        base.Initialize(initData);
         _selectedIndex = 0;
         GenericMessageBoxInitData messageBoxData = initData as GenericMessageBoxInitData;
         if(messageBoxData == null) {
@@ -42,7 +43,6 @@ public class GenericMessageBox : UIPanel {
             CreateCustomButtons(messageBoxData.ButtonDatas);
         }
         _customButtons[_selectedIndex].InteractableHighlight();
-        SubscribeToController();
     }
 
     private void CreateGenericCloseButton() {
@@ -62,7 +62,7 @@ public class GenericMessageBox : UIPanel {
 
     private void OnGenericClosedButtonSelected(IUIInteractable interactable) {
         _customButtons[0].OnMousePointerClick -= OnGenericClosedButtonSelected;
-        CloseUIPanel();
+        ClosePanel();
     }
 
     private void ClearButtons() {
@@ -78,6 +78,12 @@ public class GenericMessageBox : UIPanel {
                 Debug.LogError($"[{nameof(GenericMessageBox)}] Exceeded button limit in generic message box!");
                 break;
             }
+            _customButtons[i].SetValue(new UICustomButtonInitData() {
+                X = i,
+                Y = 0,
+                ButtonText = actions[i].ButtonText,
+                Id = actions[i].ButtonId
+            });
             _customButtons[i].onClick.RemoveAllListeners();
             _customButtons[i].gameObject.SetActive(true);
             _customButtons[i].onClick.AddListener(actions[i].Action);
@@ -126,17 +132,14 @@ public class GenericMessageBox : UIPanel {
         }
     }
 
-    protected override void CloseUIPanel() {
-        base.CloseUIPanel();
-        UnsubscribeToController();
-    }
-
-    private void SubscribeToController() {
+    protected override void SubscribeToGameplayController() {
+        base.SubscribeToGameplayController();
         GameplayController.Instance.DirectionalInput += DirectionalInputs;
         GameplayController.Instance.OnSubmitPressed += SelectButtonInput;
     }
 
-    private void UnsubscribeToController() {
+    protected override void UnsubscribeToGameplayController() {
+        base.UnsubscribeToGameplayController();
         GameplayController.Instance.DirectionalInput -= DirectionalInputs;
         GameplayController.Instance.OnSubmitPressed -= SelectButtonInput;
     }

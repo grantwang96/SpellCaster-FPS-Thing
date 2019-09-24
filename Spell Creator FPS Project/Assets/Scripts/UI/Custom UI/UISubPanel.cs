@@ -16,20 +16,11 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
     [SerializeField] protected UISubPanel _rightNeighbor;
     [SerializeField] protected UISubPanel _downNeighbor;
     [SerializeField] protected UISubPanel _leftNeighbor;
-
-    protected virtual void Update() {
-        if (!IsFocused) {
-            return;
-        }
-        ProcessInputs();
-    }
-
-    protected virtual void ProcessInputs() {
-        
-    }
-
+    
     public virtual void Initialize(UIPanelInitData initData) {
-        
+        if(_parentPanel != null) {
+            _parentPanel.OnCurrentPanelUpdated += OnActivePanelUpdated;
+        }
     }
 
     public virtual void SetFocus(bool isFocused, bool hardLocked, IntVector3 dir) {
@@ -42,6 +33,10 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
 
     public virtual void OnPointerEnter(PointerEventData eventData) {
         
+    }
+
+    protected virtual void OnActivePanelUpdated(bool isCurrentPanel) {
+
     }
 }
 

@@ -11,20 +11,24 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
 
     [SerializeField] private string _id; // the idea of an item here. This field will likely not matter much
     public string Id => _id;
+    [SerializeField] private RectTransform _rect;
+    public RectTransform RectTransform => _rect;
+    public Vector2 Position => UIManager.Instance.GetCanvasPosition(_rect.position);
 
     public event UIInteractableEvent OnMousePointerClick;
     public event UIInteractableEvent OnMousePointerHighlight;
 
     public IUIInteractableData ExtractData() {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     public void InteractableHighlight() {
-
+        EventSystem.current.SetSelectedGameObject(gameObject, null);
     }
 
     public void Initialize(int x, int y) {
-
+        XCoord = x;
+        YCoord = y;
     }
 
     public void SetValue(IUIInteractableData data) {
@@ -32,11 +36,13 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
     }
 
     public void InteractableUnhighlight() {
-
+        if(EventSystem.current.currentSelectedGameObject == gameObject) {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void InteractableSelect() {
-
+        EventSystem.current.SetSelectedGameObject(gameObject);
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
@@ -50,4 +56,11 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
         base.OnPointerEnter(eventData);
         OnMousePointerHighlight?.Invoke(this);
     }
+}
+
+public class UICustomInputFieldData : IUIInteractableData {
+    public int X { get; set; }
+    public int Y { get; set; }
+    public string Id { get; set; }
+    public string InputFieldText { get; set; }
 }

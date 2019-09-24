@@ -18,10 +18,6 @@ public class UITabbedPanel : UIPanel {
         base.Start();
     }
 
-    protected override void Update() {
-        base.Update();
-    }
-
     private void SideInputs() {
         // Controller only?
     }
