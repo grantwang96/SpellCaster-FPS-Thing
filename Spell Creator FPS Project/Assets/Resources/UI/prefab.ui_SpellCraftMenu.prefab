@@ -363,9 +363,8 @@ GameObject:
   - component: {fileID: 224075077809978916}
   - component: {fileID: 222908470875824712}
   - component: {fileID: 114415088906717648}
-  - component: {fileID: 114236800591579864}
   m_Layer: 5
-  m_Name: prefab.ui_SpellNameEditor
+  m_Name: SpellNameView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -482,7 +481,7 @@ MonoBehaviour:
     type: 2}
   _currentItemX: 0
   _currentItemY: 0
-  _up: {fileID: 0}
+  _up: {fileID: 114622223635849956}
   _right: {fileID: 0}
   _down: {fileID: 114514416492592954}
   _left: {fileID: 0}
@@ -538,6 +537,7 @@ MonoBehaviour:
   _spellNameEditorView: {fileID: 114622223635849956}
   _spellComponentsView: {fileID: 114075673215975766}
   _craftButtonView: {fileID: 114514416492592954}
+  _renameSpellPanelId: prefab.ui_SpellNameEditor
 --- !u!114 &114131689889825690
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -692,25 +692,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114236800591579864
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1844873374125224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 445565bf959f16644894d2152da076a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _parentPanel: {fileID: 0}
-  _upNeighbor: {fileID: 0}
-  _rightNeighbor: {fileID: 0}
-  _downNeighbor: {fileID: 0}
-  _leftNeighbor: {fileID: 0}
-  _inputFieldGrid: {fileID: 0}
-  _buttonsView: {fileID: 0}
-  _buttonPrefab: {fileID: 0}
 --- !u!114 &114248819037469020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -997,9 +978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentPanelGameObject: {fileID: 1795502510432786}
-  _content: {fileID: 0}
+  _content: {fileID: 224684946332798444}
   _rowPrefab: {fileID: 224986717452082902}
-  _cellPrefab: {fileID: 1582652422769354, guid: 5ecf829df59e0f24982b55c246f0242c,
+  _cellPrefab: {fileID: 1076789855440372, guid: efa941d2a884b2b439496bf3634957ff,
     type: 2}
   _currentItemX: 0
   _currentItemY: 0

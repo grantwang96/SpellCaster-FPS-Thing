@@ -43,9 +43,6 @@ public abstract class UIPanel : MonoBehaviour {
 
     public virtual void ClosePanel() {
         UIManager.Instance.CloseUIPanel();
-    }
-
-    protected virtual void OnCloseUIPanel() {
         UIManager.Instance.OnPanelsUpdated -= OnUIManagerPanelsUpdated;
         UnsubscribeToGameplayController();
     }
@@ -82,8 +79,8 @@ public abstract class UISubPanelParent : UIPanel {
         }
     }
 
-    protected override void OnCloseUIPanel() {
-        base.OnCloseUIPanel();
+    public override void ClosePanel() {
+        base.ClosePanel();
         OnPanelClosed?.Invoke();
     }
 }

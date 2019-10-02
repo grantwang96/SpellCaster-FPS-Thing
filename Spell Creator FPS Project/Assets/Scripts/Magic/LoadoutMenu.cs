@@ -15,7 +15,7 @@ public class LoadoutMenu : UISubPanelParent {
     [SerializeField] private UISpellDescriptionView _loadoutSpellDescriptionView;
     [SerializeField] private UISpellDescriptionView _inventorySpellDescriptionView;
 
-    // public Action<string> SpellSelectedAction;
+    [SerializeField] private string _spellNameEditPrefabId;
 
     private LoadoutMenuState CurrentState;
 
@@ -25,7 +25,6 @@ public class LoadoutMenu : UISubPanelParent {
         InitializeViewGridContainers();
         InitializeSpellOptionsMenu();
         InitializeSpellDescriptionViews();
-        // SpellSelectedAction = OpenSpellOptionsMenu;
 
         base.Initialize(initData);
     }
@@ -95,7 +94,10 @@ public class LoadoutMenu : UISubPanelParent {
         _spellOptionsMenu.SetFocus(subPanel == _spellOptionsMenu, hardLocked, dir);
     }
 
-    protected override void OnCloseUIPanel() {
+    public override void ClosePanel() {
+
+        ChangePanel(_loadoutView, IntVector3.Zero, false);
+        _spellsInventoryView.SetVisible(false);
 
         _loadoutView.OnGridItemHighlighted -= LoadoutView_OnLoadoutSpellHighlighted;
         _loadoutView.OnGridItemSelected -= LoadoutView_OnLoadoutSpellSelected;
@@ -103,7 +105,7 @@ public class LoadoutMenu : UISubPanelParent {
         _spellsInventoryView.OnGridItemHighlighted -= SpellsInventoryView_OnInventorySpellHighlighted;
         _spellsInventoryView.OnGridItemSelected -= SpellsInventoryView_OnInventorySpellSelected;
 
-        base.OnCloseUIPanel();
+        base.ClosePanel();
     }
 
     // Player is focused on loadout menu
@@ -111,12 +113,15 @@ public class LoadoutMenu : UISubPanelParent {
 
         protected LoadoutMenu _loadoutMenu;
 
+        private StorableSpell _currentSpell;
+        private string _spellName;
+
         public virtual void Enter(LoadoutMenu loadoutMenu) {
             _loadoutMenu = loadoutMenu;
         }
 
         public virtual void OnLoadoutItemSelected(string spellInstanceId) {
-            bool hasSpell = PlayerInventory.SpellInventory.HasSpellByInstanceId(spellInstanceId);
+            bool hasSpell = _currentSpell != null;
             _loadoutMenu._spellOptionsMenu.SetVisible(true);
             _loadoutMenu._spellOptionsMenu.SetValue(new SpellOptionsInitData() {
                 Position = GetLoadoutSlotPosition(),
@@ -161,7 +166,8 @@ public class LoadoutMenu : UISubPanelParent {
         }
 
         public virtual void OnLoadoutItemHighlighted(string spellInstanceId) {
-
+            _currentSpell = PlayerInventory.SpellInventory.GetSpellByInstanceId(spellInstanceId);
+            _spellName = _currentSpell?.Name;
         }
 
         public virtual void OnSpellInventoryItemSelected(string spellInstanceId) {
@@ -175,22 +181,45 @@ public class LoadoutMenu : UISubPanelParent {
         #region SPELL OPTIONS MENU LISTENERS
 
         private void OnChangeSpellSelected() {
+            Debug.Log("Change spell selected");
             _loadoutMenu.ChangePanel(_loadoutMenu._spellsInventoryView, IntVector3.Zero, true);
             _loadoutMenu._spellOptionsMenu.SetVisible(false);
             _loadoutMenu._spellsInventoryView.SetVisible(true);
             _loadoutMenu._spellsInventoryView.ForceFocusItem(0, 0);
             _loadoutMenu._loadoutView.SetVisible(false);
-            _loadoutMenu.ChangeState(new LoadoutMenu_OptionMenuState());
+            CoroutineGod.Instance.ExecuteAfterOneFrame(ChangetoSpellSwapState);
+        }
+
+        private void ChangetoSpellSwapState() {
+            _loadoutMenu.ChangeState(new LoadoutMenu_SpellSwapState());
         }
 
         private void OnRenameSpellSelected() {
-            // TODO
+            ReturnToLoadoutView();
+            UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+            SpellNameEditorInitData initData = new SpellNameEditorInitData() {
+                InitialName = _spellName
+            };
+            UIManager.Instance.OpenUIPanel(_loadoutMenu._spellNameEditPrefabId, initData);
+            UIManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
+        }
+
+        private void OnSpellNameUpdated(string newSpellName) {
+            UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+            _spellName = string.IsNullOrEmpty(newSpellName) ? _spellName : newSpellName;
+            _currentSpell.SetName(_spellName);
+            PlayerInventory.SpellInventory.SoftRefresh();
+            _loadoutMenu.LoadoutView_OnLoadoutSpellHighlighted();
         }
 
         private void OnCancelSelected() {
-            _loadoutMenu.ChangePanel(_loadoutMenu._loadoutView, IntVector3.Zero, false);
+            CoroutineGod.Instance.ExecuteAfterOneFrame(ReturnToLoadoutView);
+        }
+
+        private void ReturnToLoadoutView() {
             _loadoutMenu._spellsInventoryView.SetVisible(false);
             _loadoutMenu._spellOptionsMenu.SetVisible(false);
+            _loadoutMenu.ChangePanel(_loadoutMenu._loadoutView, IntVector3.Zero, false);
         }
 
         #endregion
@@ -198,7 +227,7 @@ public class LoadoutMenu : UISubPanelParent {
     }
 
     // player is focused on option menu OR spell inventory menu
-    private class LoadoutMenu_OptionMenuState : LoadoutMenuState {
+    private class LoadoutMenu_SpellSwapState : LoadoutMenuState {
 
         private StorableSpell _selectedSpell;
 
@@ -209,6 +238,7 @@ public class LoadoutMenu : UISubPanelParent {
 
         // performs the swap action
         public override void OnSpellInventoryItemSelected(string spellInstanceId) {
+            Debug.Log("Do the thing! But better!");
             bool hasSpell = PlayerInventory.SpellInventory.HasSpellByInstanceId(spellInstanceId);
             string instanceId = hasSpell ? spellInstanceId : string.Empty;
             StorableSpell[] loadout = PlayerInventory.SpellInventory.CurrentLoadout;
@@ -225,6 +255,7 @@ public class LoadoutMenu : UISubPanelParent {
             }
             PlayerInventory.SpellInventory.SoftRefresh();
             _loadoutMenu.ChangeState(new LoadoutMenuState());
+            _loadoutMenu.LoadoutView_OnLoadoutSpellHighlighted();
         }
 
         private void SetLoadoutSpell(string spellInstanceId, int index) {

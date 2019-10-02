@@ -34,4 +34,9 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
         initData.SetValue(currentSpell);
         _mainInventoryGrid.SetInteractableItem(x, y, initData);
     }
+
+    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
+        base.OnActivePanelUpdated(isCurrentPanel);
+        Debug.Log("Loadout menu is active: " + isCurrentPanel);
+    }
 }

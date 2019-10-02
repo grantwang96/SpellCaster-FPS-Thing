@@ -48,6 +48,7 @@ public class UISpellComponentSlot : UIViewCell, IPointerClickHandler, IPointerEn
     }
 
     public override void InteractableSelect() {
+        EventSystem.current.SetSelectedGameObject(null);
         OnSelect();
     }
 

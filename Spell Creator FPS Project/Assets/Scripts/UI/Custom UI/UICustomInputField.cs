@@ -9,6 +9,8 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
     public int XCoord { get; private set; }
     public int YCoord { get; private set; }
 
+    public bool StartActive;
+
     [SerializeField] private string _id; // the idea of an item here. This field will likely not matter much
     public string Id => _id;
     [SerializeField] private RectTransform _rect;
@@ -17,6 +19,13 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
 
     public event UIInteractableEvent OnMousePointerClick;
     public event UIInteractableEvent OnMousePointerHighlight;
+
+    protected override void OnEnable() {
+        base.OnEnable();
+        if (StartActive) {
+            InteractableSelect();
+        }
+    }
 
     public IUIInteractableData ExtractData() {
         return null;
@@ -36,13 +45,13 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
     }
 
     public void InteractableUnhighlight() {
-        if(EventSystem.current.currentSelectedGameObject == gameObject) {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
+        DeactivateInputField();
+        OnDeselect(null);
     }
 
     public void InteractableSelect() {
-        EventSystem.current.SetSelectedGameObject(gameObject);
+        ActivateInputField();
+        OnMousePointerClick?.Invoke(this);
     }
 
     public override void OnPointerClick(PointerEventData eventData) {

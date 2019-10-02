@@ -1383,6 +1383,7 @@ MonoBehaviour:
   _spellOptionsMenu: {fileID: 114551357537560604}
   _loadoutSpellDescriptionView: {fileID: 114057720545568586}
   _inventorySpellDescriptionView: {fileID: 114291060396139102}
+  _spellNameEditPrefabId: prefab.ui_SpellNameEditor
 --- !u!114 &114206186434372184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1978,7 +1979,7 @@ MonoBehaviour:
   _menuListContainer: {fileID: 224633351883295496}
   _menuListContent: {fileID: 224586245915707730}
   _options: []
-  _initialButtonCount: 3
+  _buttonCount: 0
   _previousSubPanel: {fileID: 0}
   _inverted: 1
 --- !u!114 &114551735833030268

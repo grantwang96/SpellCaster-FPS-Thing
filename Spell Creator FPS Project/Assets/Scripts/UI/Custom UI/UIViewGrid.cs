@@ -19,9 +19,6 @@ public interface IUIViewGridParent {
 /// </summary>
 public class UIViewGrid : MonoBehaviour {
 
-    private const string Horizontal = "Horizontal";
-    private const string Vertical = "Vertical";
-
     [SerializeField] private GameObject _parentPanelGameObject;
     private IUIViewGridParent _parentPanel;
     public bool Active { get; private set; } // is this grid currently receiving inputs?

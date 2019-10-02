@@ -30,6 +30,13 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellStagingArea.SetFocus(false, false, IntVector3.Zero);
         _spellStagingArea.SetVisible(true);
 
+
+        // add on hover events here(maybe limit if we're on PC or not)
+        SubscribeToSubPanels();
+    }
+
+    private void SubscribeToSubPanels() {
+        Debug.Log("sub to subpanels");
         _runicInventoryView.OnGridItemHighlighted += OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotHighlighted += OnStagingAreaItemHighlighted;
@@ -37,30 +44,37 @@ public class SpellCraftMenu : UISubPanelParent {
         _spellStagingArea.OnCraftSpellPressed += OnCraftSpellButtonPressed;
         _runicInventoryView.OnInventoryUpdated += OnInventoryUpdated;
         _spellStagingArea.OnSpellSlotsUpdated += OnSpellSlotsUpdated;
-
-        // add on hover events here(maybe limit if we're on PC or not)
     }
 
-    protected override void OnCloseUIPanel() {
+    private void UnsubscribeToSubPanels() {
+        Debug.Log("unsub from subpanels");
+        _runicInventoryView.OnGridItemHighlighted -= OnInventoryItemHighlighted;
+        _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
+        _spellStagingArea.OnSpellSlotHighlighted -= OnStagingAreaItemHighlighted;
+        _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
+        _spellStagingArea.OnCraftSpellPressed -= OnCraftSpellButtonPressed;
+        _runicInventoryView.OnInventoryUpdated -= OnInventoryUpdated;
+        _spellStagingArea.OnSpellSlotsUpdated -= OnSpellSlotsUpdated;
+    }
+
+    public override void ClosePanel() {
         // return any staged runes to the player
-        if(_spellCraftManager.LoadedCastingMethod != null) {
+        if (_spellCraftManager.LoadedCastingMethod != null) {
             _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
         }
-        foreach(Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
+        foreach (Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
             _runicInventoryView.AddItem(spellEffect.Id, 1);
         }
-        foreach(SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
+        foreach (SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
             _runicInventoryView.AddItem(spellModifier.Id, 1);
         }
         _spellStagingArea.ClearSpellComponentSlots();
 
         // close the panel
-        base.OnCloseUIPanel();
+        base.ClosePanel();
 
         // remove listeners
-        _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
-        _spellStagingArea.OnSpellSlotSelected -= OnStagingAreaItemSelected;
-        _spellStagingArea.OnCraftSpellPressed -= OnCraftSpellButtonPressed;
+        UnsubscribeToSubPanels();
     }
 
     public override void ChangePanel(UISubPanel neighbor, IntVector3 dir, bool hardLocked = false) {
@@ -147,6 +161,7 @@ public class SpellCraftMenu : UISubPanelParent {
             return;
         }
         StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
+        storableSpell.SetName(_spellStagingArea.SpellName);
         PlayerInventory.SpellInventory.AddSpell(storableSpell);
         _spellCraftManager.ClearSpellComponents();
         _spellStagingArea.ClearSpellComponentSlots();
@@ -182,7 +197,11 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     private void OpenLoadoutEditor() {
-        UIManager.Instance.CloseUIPanel();
+        CloseUseSpellNowDialog();
+        CoroutineGod.Instance.ExecuteAfterOneFrame(OpenLoadoutPrefab);
+    }
+
+    private void OpenLoadoutPrefab() {
         UIManager.Instance.OpenUIPanel(_loadoutPrefabId);
     }
 

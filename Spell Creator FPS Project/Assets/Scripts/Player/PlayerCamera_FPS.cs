@@ -52,6 +52,5 @@ public class PlayerCamera_FPS : MonoBehaviour {
 
     private void OnControllerStateUpdated() {
         _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
-        Debug.Log("Controller state update");
     }
 }

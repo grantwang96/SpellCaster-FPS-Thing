@@ -102,6 +102,12 @@ public abstract class UIInventoryViewGridContainer : UISubPanel, IUIViewGridPare
         _mainInventoryGrid.SetActive(isCurrentPanel && IsFocused);
     }
 
+    protected override void OnParentPanelClosed() {
+        base.OnParentPanelClosed();
+        _mainInventoryGrid.OnHighlighted -= OnItemHighlighted;
+        _mainInventoryGrid.OnSelectPressed -= OnSelectPressed;
+    }
+
     public void OutOfBounds(IntVector3 dir) {
         UISubPanel neighbor;
         if (dir == IntVector3.Up) {

@@ -187,9 +187,9 @@ public class GameplayController : CharacterBehaviour {
         
         if (Input.GetButtonDown("Jump")) { Jump(); }
 
-        if (Input.GetButtonDown("Interact")) { InteractPressed(); }
-        else if (Input.GetButton("Interact")) { InteractHeld(); }
-        else if (Input.GetButtonUp("Interact")) { InteractReleased(); }
+        if (Input.GetButtonDown("Gameplay_Interact")) { InteractPressed(); }
+        else if (Input.GetButton("Gameplay_Interact")) { InteractHeld(); }
+        else if (Input.GetButtonUp("Gameplay_Interact")) { InteractReleased(); }
 
         if (Input.GetButtonDown("Fire1")) { Shoot1Pressed(); }
         else if (Input.GetButton("Fire1")) { Shoot1Held(); }

@@ -56,6 +56,7 @@ public class UICustomButton : Button, IUIInteractable {
     // the actual highlight action. Do not call event here.
     private void Highlight() {
         _rect.localScale = Vector3.one * 1.25f;
+        EventSystem.current.SetSelectedGameObject(gameObject);
     }
 
     public void InteractableUnhighlight() {
@@ -68,13 +69,14 @@ public class UICustomButton : Button, IUIInteractable {
 
     // called via button input (not mouse)
     public void InteractableSelect() {
-        onClick?.Invoke();
+        // onClick?.Invoke();
         OnButtonSelect();
     }
 
     public override void OnPointerClick(PointerEventData eventData) {
         base.OnPointerClick(eventData);
         OnButtonSelect();
+        eventData.Use();
     }
 
     private void OnButtonSelect() {

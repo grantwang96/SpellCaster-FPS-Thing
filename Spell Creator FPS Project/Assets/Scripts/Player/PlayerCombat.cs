@@ -78,7 +78,6 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private void OnLoadoutUpdated(StorableSpell[] loadout) {
-        Debug.Log($"[{nameof(PlayerCombat)}]Loadout updated!");
         _spellsList.Clear();
         _spellSlotInfos.Clear();
         for(int i = 0; i < loadout.Length; i++) {

@@ -206,6 +206,7 @@ public static class IntVector3Builder {
     }
 }
 
+[System.Serializable]
 public struct IntVector3 {
 
     public IntVector3(int newX, int newY, int newZ) {

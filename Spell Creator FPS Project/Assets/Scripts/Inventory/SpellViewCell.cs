@@ -22,6 +22,7 @@ public class SpellViewCell : UIViewCell, IPointerClickHandler, IPointerEnterHand
     }
 
     public override void InteractableSelect() {
+        EventSystem.current.SetSelectedGameObject(null);
         OnSelect();
     }
 

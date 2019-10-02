@@ -22,7 +22,7 @@ public class ObjectPool : MonoBehaviour {
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.U)) {
-            CheatSpawnPooledObject();
+            // CheatSpawnPooledObject();
         }
     }
 

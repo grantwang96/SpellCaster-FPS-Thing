@@ -59,6 +59,7 @@ public class InventoryViewCell : UIViewCell, IPointerClickHandler, IPointerEnter
     }
 
     public override void InteractableSelect() {
+        EventSystem.current.SetSelectedGameObject(null);
         OnSelect();
     }
 

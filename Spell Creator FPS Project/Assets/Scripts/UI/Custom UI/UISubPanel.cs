@@ -20,6 +20,7 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
     public virtual void Initialize(UIPanelInitData initData) {
         if(_parentPanel != null) {
             _parentPanel.OnCurrentPanelUpdated += OnActivePanelUpdated;
+            _parentPanel.OnPanelClosed += OnParentPanelClosed;
         }
     }
 
@@ -37,6 +38,13 @@ public class UISubPanel : MonoBehaviour, IPointerEnterHandler {
 
     protected virtual void OnActivePanelUpdated(bool isCurrentPanel) {
 
+    }
+
+    protected virtual void OnParentPanelClosed() {
+        if(_parentPanel != null) {
+            _parentPanel.OnCurrentPanelUpdated -= OnActivePanelUpdated;
+            _parentPanel.OnPanelClosed -= OnParentPanelClosed;
+        }
     }
 }
 

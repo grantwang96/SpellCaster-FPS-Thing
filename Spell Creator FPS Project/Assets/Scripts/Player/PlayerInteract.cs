@@ -11,6 +11,8 @@ public class PlayerInteract : MonoBehaviour {
 
     private IInteractable currentInteractable;
 
+    private bool _active;
+
     private void OnEnable() {
         GameplayController.Instance.OnInteractPressed += PressInteract;
         GameplayController.Instance.OnInteractHeld += HoldInteract;
@@ -24,6 +26,8 @@ public class PlayerInteract : MonoBehaviour {
     // Use this for initialization
     void Start () {
         head = GameplayController.Instance.Head;
+        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdate;
+        OnControllerStateUpdate();
 	}
 	
 	// Update is called once per frame
@@ -46,18 +50,25 @@ public class PlayerInteract : MonoBehaviour {
     }
 
     private void PressInteract() {
+        if (!_active) { return; }
         if (currentInteractable != null) {
             currentInteractable.InteractPress(GameplayController.Instance);
         }
     }
 
     private void HoldInteract() {
+        if (!_active) { return; }
         if (currentInteractable != null) {
             currentInteractable.InteractHold(GameplayController.Instance);
         }
     }
 
     private void ReleaseInteract() {
+        if (!_active) { return; }
 
+    }
+
+    private void OnControllerStateUpdate() {
+        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
     }
 }

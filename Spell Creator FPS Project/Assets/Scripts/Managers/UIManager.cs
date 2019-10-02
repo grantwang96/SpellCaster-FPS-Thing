@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour {
@@ -23,6 +24,9 @@ public class UIManager : MonoBehaviour {
 
     public delegate void PanelUpdateEvent(bool empty);
     public event PanelUpdateEvent OnPanelsUpdated;
+
+    // events for passing data between UIPanels
+    public event Action<string> OnStringDataPassed;
 
     private void Awake() {
         if(Instance != null) {
@@ -57,7 +61,6 @@ public class UIManager : MonoBehaviour {
         _currentScenePanel.transform.SetAsLastSibling();
         _activeUIPanels.Push(_currentScenePanel);
         ActivateCurrentPanel();
-        Debug.Log(_activeUIPanels.Count);
         OnPanelsUpdated?.Invoke(_activeUIPanels.Count != 0);
     }
 
@@ -92,6 +95,10 @@ public class UIManager : MonoBehaviour {
             return;
         }
         panel.ClosePanel();
+    }
+
+    public void PassStringData(string newString) {
+        OnStringDataPassed?.Invoke(newString);
     }
 
     private void ActivateCurrentPanel() {

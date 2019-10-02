@@ -71,8 +71,8 @@ public class UISpellOptionsMenu : UISubPanel {
         UnsubscribeToController();
         if (isFocused) {
             SubscribeToController();
-        _selectedIndex = 0;
-        UpdateHighlightedButton();
+            _selectedIndex = 0;
+            UpdateHighlightedButton();
         }
         SetVisible(isFocused);
     }
@@ -116,6 +116,14 @@ public class UISpellOptionsMenu : UISubPanel {
     private void UnsubscribeToController() {
         GameplayController.Instance.DirectionalInput -= DirectionalInputs;
         GameplayController.Instance.OnSubmitPressed -= SelectButtonInput;
+    }
+
+    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
+        base.OnActivePanelUpdated(isCurrentPanel);
+        UnsubscribeToController();
+        if (isCurrentPanel && IsFocused) {
+            SubscribeToController();
+        }
     }
 }
 

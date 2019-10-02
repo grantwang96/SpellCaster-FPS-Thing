@@ -23,6 +23,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     [SerializeField] private UIViewGrid _spellComponentsView;
     [SerializeField] private UIViewGrid _craftButtonView;
 
+    [SerializeField] private string _renameSpellPanelId;
+
     private UIViewGrid _cachedUIViewGrid;
     private IUIInteractable _currentInteractable;
 
@@ -42,21 +44,43 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         UIViewGridInitData spellNameEditorInitData = new UIViewGridInitData();
         spellNameEditorInitData.RowLengths = _spellNameEditorViewRowLengths;
         _spellNameEditorView.Initialize(spellNameEditorInitData);
-        _spellNameEditorView.OnSelectPressed += OnSpellNameEditorSelected;
-        _spellNameEditorView.OnHighlighted += OnSpellNameEditorHighlighted;
+        _spellNameEditorView.SetInteractableItem(0, 0, new UICustomButtonInitData() {
+            ButtonText = "Insert Spell Name Here..."
+        });
 
         UIViewGridInitData spellComponentsInit = new UIViewGridInitData();
         spellComponentsInit.RowLengths = _spellComponentsViewRowLengths;
         _spellComponentsView.Initialize(spellComponentsInit);
         _spellComponentsView.SetCurrentAtBound(IntVector3.Right);
-        _spellComponentsView.OnSelectPressed += OnSpellComponentSelected;
-        _spellComponentsView.OnHighlighted += OnSpellComponentHighlighted;
 
         UIViewGridInitData craftButtonInit = new UIViewGridInitData();
         craftButtonInit.RowLengths = _craftButtonViewRowLengths;
         _craftButtonView.Initialize(craftButtonInit);
+
+        SubscribeToViewGrids();
+    }
+
+    private void SubscribeToViewGrids() {
+        _spellNameEditorView.OnSelectPressed += OnSpellNameEditorSelected;
+        _spellNameEditorView.OnHighlighted += OnSpellNameEditorHighlighted;
+        _spellComponentsView.OnSelectPressed += OnSpellComponentSelected;
+        _spellComponentsView.OnHighlighted += OnSpellComponentHighlighted;
         _craftButtonView.OnSelectPressed += OnCraftSpellButtonSelected;
         _craftButtonView.OnHighlighted += OnCraftSpellButtonHighlighted;
+    }
+
+    private void UnsubscribeToViewGrids() {
+        _spellNameEditorView.OnSelectPressed -= OnSpellNameEditorSelected;
+        _spellNameEditorView.OnHighlighted -= OnSpellNameEditorHighlighted;
+        _spellComponentsView.OnSelectPressed -= OnSpellComponentSelected;
+        _spellComponentsView.OnHighlighted -= OnSpellComponentHighlighted;
+        _craftButtonView.OnSelectPressed -= OnCraftSpellButtonSelected;
+        _craftButtonView.OnHighlighted -= OnCraftSpellButtonHighlighted;
+    }
+
+    protected override void OnParentPanelClosed() {
+        base.OnParentPanelClosed();
+        UnsubscribeToViewGrids();
     }
 
     public void UpdateActiveGrid(UIViewGrid newGrid) {
@@ -148,7 +172,22 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnSpellNameEditorSelected(IUIInteractable interactable) {
+        UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+        SpellNameEditorInitData initData = new SpellNameEditorInitData() {
+            InitialName = _cachedSpellName
+        };
+        // open rename spell dialog
+        UIManager.Instance.OpenUIPanel(_renameSpellPanelId, initData);
+        // listen to rename spell dialog
+        UIManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
+    }
 
+    private void OnSpellNameUpdated(string spellName) {
+        _cachedSpellName = spellName;
+        _spellNameEditorView.SetInteractableItem(0, 0, new UICustomButtonInitData() {
+            ButtonText = string.IsNullOrEmpty(_cachedSpellName) ? "Insert spell name here..." : _cachedSpellName
+        });
+        UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
     }
 
     private void OnSpellComponentHighlighted(IUIInteractable interactable) {
@@ -198,7 +237,6 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         base.OnActivePanelUpdated(isCurrentPanel);
         if (isCurrentPanel) {
             Debug.Log($"Cached UIViewGrid: {_cachedUIViewGrid?.name}");
-            Debug.Log($"Is Focused: {IsFocused}");
             _spellNameEditorView.SetActive(_spellNameEditorView == _cachedUIViewGrid && IsFocused);
             _spellComponentsView.SetActive(_spellComponentsView == _cachedUIViewGrid && IsFocused);
             _craftButtonView.SetActive(_craftButtonView == _cachedUIViewGrid && IsFocused);
