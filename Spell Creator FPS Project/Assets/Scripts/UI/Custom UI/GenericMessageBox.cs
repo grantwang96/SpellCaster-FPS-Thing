@@ -134,14 +134,14 @@ public class GenericMessageBox : UIPanel {
 
     protected override void SubscribeToGameplayController() {
         base.SubscribeToGameplayController();
-        GameplayController.Instance.DirectionalInput += DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed += SelectButtonInput;
+        PlayerController.Instance.DirectionalInput += DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed += SelectButtonInput;
     }
 
     protected override void UnsubscribeToGameplayController() {
         base.UnsubscribeToGameplayController();
-        GameplayController.Instance.DirectionalInput -= DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed -= SelectButtonInput;
+        PlayerController.Instance.DirectionalInput -= DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed -= SelectButtonInput;
     }
 }
 

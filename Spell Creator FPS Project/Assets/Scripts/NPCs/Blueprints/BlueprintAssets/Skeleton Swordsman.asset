@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Skeleton Swordsman
   m_EditorClassIdentifier: 
   _npcIdPrefix: 
+  _scoreValue: 10
   _totalHealth: 1
   _statResistances:
   - {fileID: 11400000, guid: 67daa09645c2ba94ca77f168c75c9d72, type: 2}

@@ -109,13 +109,13 @@ public class UISpellOptionsMenu : UISubPanel {
     }
 
     private void SubscribeToController() {
-        GameplayController.Instance.DirectionalInput += DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed += SelectButtonInput;
+        PlayerController.Instance.DirectionalInput += DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed += SelectButtonInput;
     }
 
     private void UnsubscribeToController() {
-        GameplayController.Instance.DirectionalInput -= DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed -= SelectButtonInput;
+        PlayerController.Instance.DirectionalInput -= DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed -= SelectButtonInput;
     }
 
     protected override void OnActivePanelUpdated(bool isCurrentPanel) {

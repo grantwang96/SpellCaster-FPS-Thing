@@ -69,6 +69,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void Start() {
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += OnLoadoutUpdated;
         InitializeLoadout();
+        SubscribeToController();
         OnControllerStateUpdated();
     }
 
@@ -96,24 +97,34 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         OnSpellsInventoryUpdated?.Invoke(_spellSlotInfos);
     }
 
-    void OnEnable() {
-        GameplayController.Instance.OnFire1Pressed += OnFire1Pressed;
-        GameplayController.Instance.OnFire1Held += OnFire1Held;
-        GameplayController.Instance.OnFire1Released += OnFire1Released;
-        GameplayController.Instance.OnSlotBtnPressed += OnSlotButtonPressed;
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+    private void SubscribeToController() {
+        PlayerController.Instance.OnFire1Pressed += OnFire1Pressed;
+        PlayerController.Instance.OnFire1Held += OnFire1Held;
+        PlayerController.Instance.OnFire1Released += OnFire1Released;
+        PlayerController.Instance.OnSlotBtnPressed += OnSlotButtonPressed;
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        PlayerController.Instance.Damageable.OnDeath += OnPlayerDeath;
+    }
+
+    private void UnsubscribeToController() {
+        PlayerController.Instance.OnFire1Pressed -= OnFire1Pressed;
+        PlayerController.Instance.OnFire1Held -= OnFire1Held;
+        PlayerController.Instance.OnFire1Released -= OnFire1Released;
+        PlayerController.Instance.OnSlotBtnPressed -= OnSlotButtonPressed;
+        PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+        PlayerController.Instance.Damageable.OnDeath -= OnPlayerDeath;
     }
 
     void OnDisable() {
-        GameplayController.Instance.OnFire1Pressed -= OnFire1Pressed;
-        GameplayController.Instance.OnFire1Held -= OnFire1Held;
-        GameplayController.Instance.OnFire1Released -= OnFire1Released;
-        GameplayController.Instance.OnSlotBtnPressed -= OnSlotButtonPressed;
-        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+        PlayerInventory.SpellInventory.OnLoadoutDataUpdated -= OnLoadoutUpdated;
     }
 
     private void OnControllerStateUpdated() {
-        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
+        _active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
+    }
+
+    private void OnPlayerDeath(bool isDead, Damageable damageable) {
+        UnsubscribeToController();
     }
 
     private void OnFire1Pressed() {

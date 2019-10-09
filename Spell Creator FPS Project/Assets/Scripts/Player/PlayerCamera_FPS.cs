@@ -21,14 +21,28 @@ public class PlayerCamera_FPS : MonoBehaviour {
         Initialize();
 	}
 
+    private void OnDisable() {
+        UnsubscribeToController();
+    }
+
+    private void SubscribeToController() {
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        PlayerController.Instance.Damageable.OnDeath += OnPlayerDeath;
+    }
+
     private void Initialize() {
         if (_initialized) {
             return;
         }
         // add some initialization shit here
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        SubscribeToController();
         OnControllerStateUpdated();
         _initialized = true;
+    }
+
+    private void UnsubscribeToController() {
+        PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+        PlayerController.Instance.Damageable.OnDeath -= OnPlayerDeath;
     }
 	
 	// Update is called once per frame
@@ -38,7 +52,7 @@ public class PlayerCamera_FPS : MonoBehaviour {
 
     private void ProcessLookInput() {
         if (!_active) { return; }
-        Vector3 lookInput = GameplayController.Instance.LookVector;
+        Vector3 lookInput = PlayerController.Instance.LookVector;
         lookRotation.x += lookInput.x * lookSpeed * Time.deltaTime;
         lookRotation.y -= lookInput.y * lookSpeed * Time.deltaTime;
         lookRotation.y = Mathf.Clamp(lookRotation.y, -maxVerticalLookRotation, maxVerticalLookRotation);
@@ -51,6 +65,11 @@ public class PlayerCamera_FPS : MonoBehaviour {
     }
 
     private void OnControllerStateUpdated() {
-        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
+        _active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
+    }
+
+    private void OnPlayerDeath(bool isDead, Damageable damageable) {
+        UnsubscribeToController();
+        _active = false;
     }
 }

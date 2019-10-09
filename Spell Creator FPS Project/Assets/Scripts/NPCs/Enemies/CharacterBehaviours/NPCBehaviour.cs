@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -21,6 +22,8 @@ public class NPCBehaviour : CharacterBehaviour {
     [SerializeField] protected BrainState _startingState; // how the NPC should behave at start (usually idle)
     public delegate void BrainStateChangeDelegate(string newStateName);
     public event BrainStateChangeDelegate OnBrainStateChanged;
+
+    public event Action OnCharacterSpawned;
 
     protected bool _prepped = false;
 
@@ -59,6 +62,10 @@ public class NPCBehaviour : CharacterBehaviour {
 
     protected virtual void Update() {
         if(_currentBrainState != null) { _currentBrainState.Execute(); }
+    }
+
+    protected virtual void FireCharacterSpawnedEvent() {
+        OnCharacterSpawned?.Invoke();
     }
 
     public override float GetMoveMagnitude() {

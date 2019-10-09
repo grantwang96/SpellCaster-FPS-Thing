@@ -61,12 +61,12 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
         if (!_interactable) { return; }
         if (_type == RecoveryOrbType.Health) {
             Damageable dam = other.GetComponent<Damageable>();
-            if (dam == GameplayController.Instance.Damageable) {
+            if (dam == PlayerController.Instance.Damageable) {
                 TryHeal(dam);
             }
         } else {
             ISpellCaster caster = other.GetComponent<ISpellCaster>();
-            if (caster == GameplayController.Instance.PlayerCombat) {
+            if (caster == PlayerController.Instance.PlayerCombat) {
                 TryRestoreMana(caster);
             }
         }

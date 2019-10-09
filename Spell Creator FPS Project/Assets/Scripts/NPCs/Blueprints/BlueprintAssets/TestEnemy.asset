@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: TestEnemy
   m_EditorClassIdentifier: 
   _npcIdPrefix: 
+  _scoreValue: 10
   _totalHealth: 1
   _statResistances: []
   _statWeaknesses: []

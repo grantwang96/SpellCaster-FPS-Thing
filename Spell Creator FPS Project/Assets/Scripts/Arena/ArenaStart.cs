@@ -26,24 +26,12 @@ public class ArenaStart : MonoBehaviour, IInteractable {
     }
 
     public void InteractPress(CharacterBehaviour character) {
-        if(character == GameplayController.Instance && Interactable) {
-            _interactable = false;
+        if(character == PlayerController.Instance && Interactable) {
             ArenaManager.Instance.StartRound();
         }
-    }
-
-    private void OnRoundStart(int round) {
-        _parentObject.SetActive(false);
-    }
-
-    private void OnRoundEnd(int round) {
-        _interactable = true;
-        _parentObject.SetActive(true);
     }
     
     private void Start() {
         _parentObject = transform.parent.gameObject;
-        ArenaManager.Instance.OnRoundStarted += OnRoundStart;
-        ArenaManager.Instance.OnRoundEnded += OnRoundEnd;
     }
 }

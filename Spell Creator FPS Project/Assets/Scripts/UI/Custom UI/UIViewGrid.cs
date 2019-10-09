@@ -281,13 +281,13 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     private void SubscribeToController() {
-        GameplayController.Instance.DirectionalInput += DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed += SelectButtonPressed;
+        PlayerController.Instance.DirectionalInput += DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed += SelectButtonPressed;
     }
 
     private void UnsubscribeToController() {
-        GameplayController.Instance.DirectionalInput -= DirectionalInputs;
-        GameplayController.Instance.OnSubmitPressed -= SelectButtonPressed;
+        PlayerController.Instance.DirectionalInput -= DirectionalInputs;
+        PlayerController.Instance.OnSubmitPressed -= SelectButtonPressed;
     }
 }
 

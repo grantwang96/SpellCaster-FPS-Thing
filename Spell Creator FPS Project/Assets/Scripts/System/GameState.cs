@@ -59,10 +59,6 @@ public class GameState : MonoBehaviour {
     }
 
     public virtual void Enter() {
-        // no need to re-enter if we're already active
-        if (IsActive) {
-            return;
-        }
         IsLoading = true;
         if (ParentState != null) {
             ParentState.Enter();

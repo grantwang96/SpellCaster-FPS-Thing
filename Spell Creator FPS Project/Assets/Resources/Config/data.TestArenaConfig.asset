@@ -13,15 +13,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyConfigs:
   - _enemyPrefabId: prefab.GenericMeleeEnemy
-    _lowCount: 1
+    _lowCount: 3
     _highCount: 20
     _thresholdLevel: 1
     _priority: 0
   - _enemyPrefabId: prefab.GenericRangedEnemy
-    _lowCount: 1
+    _lowCount: 3
     _highCount: 20
     _thresholdLevel: 3
     _priority: 0
-  _base: 3
+  _base: 8
   _multiplier: 2
-  _constant: 2
+  _constant: 5

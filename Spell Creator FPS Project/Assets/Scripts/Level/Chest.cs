@@ -37,7 +37,7 @@ public class Chest : MonoBehaviour, IInteractable {
     }
 
     public void InteractPress(CharacterBehaviour character) {
-        if(character == GameplayController.Instance) {
+        if(character == PlayerController.Instance) {
             Open();
         }
     }

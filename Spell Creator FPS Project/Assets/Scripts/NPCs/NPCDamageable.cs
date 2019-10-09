@@ -16,13 +16,19 @@ public class NPCDamageable : Damageable {
     private NPCMoveController _moveController;
     private NPCBehaviour _npcBehaviour;
 
-    // Use this for initialization
-    void Start () {
+    protected virtual void Awake() {
         _moveController = GetComponent<NPCMoveController>();
         _npcBehaviour = GetComponent<NPCBehaviour>();
 
         _health = _npcBehaviour.Blueprint.TotalHealth;
         _maxHealth = _npcBehaviour.Blueprint.TotalHealth;
+
+        _npcBehaviour.OnCharacterSpawned += OnCharacterSpawned;
+    }
+
+    protected void OnCharacterSpawned() {
+        _health = _maxHealth;
+        _isDead = false;
     }
 	
     public override void TakeDamage(int damage) {
@@ -30,7 +36,6 @@ public class NPCDamageable : Damageable {
             parentDamageable.TakeDamage(damage);
             return;
         }
-        // Debug.Log($"{this.name} took {damage} points of damage!");
         _health -= damage;
         if(_health <= 0 && !_isDead) {
             Die();

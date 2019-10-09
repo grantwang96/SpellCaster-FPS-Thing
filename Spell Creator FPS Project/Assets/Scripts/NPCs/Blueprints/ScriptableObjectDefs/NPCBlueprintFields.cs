@@ -7,6 +7,9 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     [SerializeField] protected string _npcIdPrefix;
     public string NpcIdPrefix => _npcIdPrefix;
 
+    [SerializeField] private int _scoreValue;
+    public int ScoreValue => _scoreValue;
+
     [SerializeField] protected int _totalHealth;
     public int TotalHealth { get { return _totalHealth; } }
     [SerializeField] protected StatusEffect[] _statResistances;

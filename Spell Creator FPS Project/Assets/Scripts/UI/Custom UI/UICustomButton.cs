@@ -35,6 +35,7 @@ public class UICustomButton : Button, IUIInteractable {
         XCoord = x;
         YCoord = y;
         _rect = GetComponent<RectTransform>();
+        _id = GameplayValues.UI.EmptyInventoryItemId;
     }
 
     public void SetValue(IUIInteractableData initData) {

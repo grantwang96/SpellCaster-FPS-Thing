@@ -9,11 +9,11 @@ public enum ControllerState {
 }
 
 /// <summary>
-/// This is the in game controller that processes player's inputs and applies to other components
+/// This is the game controller that processes player's inputs and applies to other components
 /// </summary>
-public class GameplayController : CharacterBehaviour {
+public class PlayerController : CharacterBehaviour {
 
-    public static GameplayController Instance { get; private set; }
+    public static PlayerController Instance { get; private set; }
 
     public enum ControlScheme {
         MouseKeyboard, Controller

@@ -13,20 +13,28 @@ public class PlayerInteract : MonoBehaviour {
 
     private bool _active;
 
-    private void OnEnable() {
-        GameplayController.Instance.OnInteractPressed += PressInteract;
-        GameplayController.Instance.OnInteractHeld += HoldInteract;
+    private void OnDisable() {
+        UnsubscribeToController();
     }
 
-    private void OnDisable() {
-        GameplayController.Instance.OnInteractPressed += PressInteract;
-        GameplayController.Instance.OnInteractHeld += HoldInteract;
+    private void SubscribeToController() {
+        PlayerController.Instance.OnInteractPressed += PressInteract;
+        PlayerController.Instance.OnInteractHeld += HoldInteract;
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdate;
+        PlayerController.Instance.Damageable.OnDeath += OnPlayerDeath;
+    }
+
+    private void UnsubscribeToController() {
+        PlayerController.Instance.OnInteractPressed -= PressInteract;
+        PlayerController.Instance.OnInteractHeld -= HoldInteract;
+        PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdate;
+        PlayerController.Instance.Damageable.OnDeath -= OnPlayerDeath;
     }
 
     // Use this for initialization
     void Start () {
-        head = GameplayController.Instance.Head;
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdate;
+        head = PlayerController.Instance.Head;
+        SubscribeToController();
         OnControllerStateUpdate();
 	}
 	
@@ -52,14 +60,14 @@ public class PlayerInteract : MonoBehaviour {
     private void PressInteract() {
         if (!_active) { return; }
         if (currentInteractable != null) {
-            currentInteractable.InteractPress(GameplayController.Instance);
+            currentInteractable.InteractPress(PlayerController.Instance);
         }
     }
 
     private void HoldInteract() {
         if (!_active) { return; }
         if (currentInteractable != null) {
-            currentInteractable.InteractHold(GameplayController.Instance);
+            currentInteractable.InteractHold(PlayerController.Instance);
         }
     }
 
@@ -69,6 +77,10 @@ public class PlayerInteract : MonoBehaviour {
     }
 
     private void OnControllerStateUpdate() {
-        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
+        _active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
+    }
+
+    private void OnPlayerDeath(bool isDead, Damageable damageable) {
+        UnsubscribeToController();
     }
 }

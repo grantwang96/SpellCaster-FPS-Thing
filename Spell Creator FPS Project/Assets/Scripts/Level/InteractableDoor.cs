@@ -15,7 +15,7 @@ public class InteractableDoor : MonoBehaviour, IInteractable {
     public event InteractEvent OnInteractSuccess;
     
     public void InteractPress(CharacterBehaviour character) {
-        if (character == GameplayController.Instance) {
+        if (character == PlayerController.Instance) {
             _parentDoor.PlayerInteracted();
         }
     }

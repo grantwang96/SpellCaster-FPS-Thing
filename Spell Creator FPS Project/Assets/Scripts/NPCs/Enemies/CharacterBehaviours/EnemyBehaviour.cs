@@ -10,15 +10,11 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
     public bool InUse => _inUse;
 
     public delegate void SpawnEvent(EnemyBehaviour behaviour);
-    public event SpawnEvent OnEnemySpawned;
-
-    protected override void Start() {
-        base.Start();
-    }
-
+    
     public void ActivatePooledObject() {
         gameObject.SetActive(true);
-        OnEnemySpawned?.Invoke(this);
+        ChangeBrainState(_startingState);
+        FireCharacterSpawnedEvent();
     }
 
     public void DeactivatePooledObject() {

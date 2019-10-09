@@ -50,7 +50,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     public void InteractPress(CharacterBehaviour character) {
         OnInteractAttempt?.Invoke();
         if (!Interactable) { return; }
-        if(character == GameplayController.Instance) {
+        if(character == PlayerController.Instance) {
             _interactable = false;
             PlayerInventory.RunicInventory.AddItem(_itemId, 1);
             OnInteractSuccess?.Invoke();

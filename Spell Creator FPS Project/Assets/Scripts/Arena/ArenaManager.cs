@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public delegate void RoundStateUpdateDelegate(int round);
 public delegate void ArenaStatDelegate(int count);
@@ -13,15 +14,21 @@ public interface IArenaManager {
     
     event ArenaStatDelegate OnEnemyCountUpdated;
     event ArenaStatDelegate OnWaveCountUpdated;
+
+    event Action<int> OnEnemyDefeated;
 }
 
 public class ArenaManager : MonoBehaviour, IArenaManager {
 
     private const string EnemiesResourcePath = "Enemies";
 
-    public static IArenaManager Instance;
+    public static IArenaManager Instance { get; private set; }
 
     [SerializeField] private ArenaLevelConfig _config;
+    [SerializeField] private string _winScreenPrefabId;
+    [SerializeField] private string _loseScreenPrefabId;
+
+    private ArenaStats ArenaStats;
 
     public int CurrentLevel { get; private set; }
     private bool _currentlyRunningRound;
@@ -30,7 +37,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     private int _currentWaveCount;
     private List<string> _nextRound = new List<string>();
     private List<string> _nextWave = new List<string>();
-    private List<Damageable> _currentWave = new List<Damageable>();
+    private Dictionary<Damageable, EnemyBehaviour> _currentWave = new Dictionary<Damageable, EnemyBehaviour>();
 
     [SerializeField] private List<Transform> _spawnPoints;
 
@@ -39,6 +46,8 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     
     public event ArenaStatDelegate OnEnemyCountUpdated;
     public event ArenaStatDelegate OnWaveCountUpdated;
+
+    public event Action<int> OnEnemyDefeated;
     
     private void Awake() {
         Instance = this;
@@ -55,14 +64,24 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
 
     private void HackInputs() {
         if (Input.GetKeyDown(KeyCode.O)) {
-            GameStateManager.Instance.HandleTransition(GameplayValues.Navigation.TutorialLevelTransitionId);
+            GameStateManager.Instance.HandleTransition(GameplayValues.Navigation.EnterTutorialLevelTransitionId);
         }
     }
 
     public void Initialize(ArenaLevelConfig config) {
         _config = config;
-        GameplayController.Instance.Damageable.OnDeath += LoseRound;
+        InitializeArenaStats();
         RegisterEnemyPrefabs();
+        UIManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
+        PlayerController.Instance.Damageable.OnDeath += LoseRound;
+    }
+
+    private void InitializeArenaStats() {
+        ArenaStats = new ArenaStats();
+    }
+
+    private void OnDestroy() {
+        UIManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
     }
 
     private void RegisterEnemyPrefabs() {
@@ -84,17 +103,33 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     }
 
     // check if next wave needs to be spawned or if round is over here
-    private void OnEnemyDefeated(bool isDead, Damageable damageable) {
+    private void OnEnemyDefeatedListener(bool isDead, Damageable damageable) {
         _enemiesDefeated++;
-        damageable.OnDeath -= OnEnemyDefeated;
+        damageable.OnDeath -= OnEnemyDefeatedListener;
+        EnemyBehaviour enemy;
+        if(!_currentWave.TryGetValue(damageable, out enemy)) {
+            Debug.LogError($"[{nameof(ArenaManager)}] Received unregistered damageable! HOW?");
+            return;
+        }
+        SendEnemyDefeatedMessage(enemy);
         _currentWave.Remove(damageable);
-        if(_enemiesDefeated == _enemyCount) {
+
+        OnEnemyCountUpdated?.Invoke(_enemyCount - _enemiesDefeated);
+        OnWaveCountUpdated?.Invoke(_currentWave.Count);
+
+        if (_enemiesDefeated == _enemyCount) {
             WinRound();
+            OnWaveCountUpdated?.Invoke(_currentWave.Count);
             return;
         }
         if(_currentWave.Count == 0 && _nextWave.Count == 0) {
             GenerateNextWave();
         }
+    }
+
+    private void SendEnemyDefeatedMessage(EnemyBehaviour enemy) {
+        int scoreValue = enemy.Blueprint.ScoreValue;
+        OnEnemyDefeated?.Invoke(scoreValue);
     }
 
     // actually ending the round here
@@ -111,6 +146,10 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     private void LoseRound(bool isDead, Damageable damageable) {
         _currentlyRunningRound = false;
         // handle losing screen here
+        UIManager.Instance.OpenUIPanel(_loseScreenPrefabId,
+            new ArenaLoseScreenInitData() {
+                ArenaStats = ArenaStats
+        });
         Debug.Log($"Round {CurrentLevel} lost!");
     }
 
@@ -129,11 +168,10 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         if(waveCount > _nextRound.Count) {
             waveCount = _nextRound.Count;
         }
-        OnWaveCountUpdated?.Invoke(waveCount);
         _currentWave.Clear();
         _nextWave = _nextRound.GetRange(0, waveCount);
         Debug.Log("Wave Size: " + _nextWave.Count);
-        for(int i = 0; i < _nextWave.Count; i++) {
+        for (int i = 0; i < _nextWave.Count; i++) {
             _nextRound.Remove(_nextWave[i]);
         }
         StartCoroutine(SpawnWave(_nextWave));
@@ -141,8 +179,8 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
 
     private IEnumerator SpawnWave(List<string> enemyPrefabIds) {
         for (int i = 0; i < enemyPrefabIds.Count; i++) {
-            yield return new WaitForSeconds(0.5f);
-            int rand = Random.Range(0, _spawnPoints.Count);
+            yield return new WaitForSeconds(1f);
+            int rand = UnityEngine.Random.Range(0, _spawnPoints.Count);
             Transform spawnPoint = _spawnPoints[rand];
             SpawnEnemyPrefab(enemyPrefabIds[i], spawnPoint.position);
         }
@@ -159,14 +197,15 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
             return;
         }
         enemy.transform.position = position;
-        enemy.Damageable.OnDeath += OnEnemyDefeated;
-        _currentWave.Add(enemy.Damageable);
+        enemy.Damageable.OnDeath += OnEnemyDefeatedListener;
+        _currentWave.Add(enemy.Damageable, enemy);
+        OnWaveCountUpdated?.Invoke(_currentWave.Count);
         enemy.ActivatePooledObject();
         Debug.Log("Spawned Enemy Prefab!");
     }
 
     private int GetWaveCount() {
-        return Random.Range(WaveCountMin(), WaveCountMax());
+        return UnityEngine.Random.Range(WaveCountMin(), WaveCountMax());
     }
 
     private int WaveCountMin() {

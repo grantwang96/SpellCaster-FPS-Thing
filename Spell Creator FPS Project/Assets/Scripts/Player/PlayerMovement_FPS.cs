@@ -8,19 +8,28 @@ public class PlayerMovement_FPS : CharacterMoveController {
     [SerializeField] private float jumpForce;
 
     [SerializeField] private bool _active;
-
-    private void OnEnable() {
-        GameplayController.Instance.OnJumpPressed += OnJump;
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+    
+    private void OnDisable() {
+        UnsubscribeToController();
     }
 
-    private void OnDisable() {
-        GameplayController.Instance.OnJumpPressed -= OnJump;
-        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+    private void SubscribeToController() {
+        PlayerController.Instance.OnJumpPressed += OnJump;
+        PlayerController.Instance.Damageable.OnDeath += OnPlayerDeath;
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+
+    }
+
+    private void UnsubscribeToController() {
+        PlayerController.Instance.OnJumpPressed -= OnJump;
+        PlayerController.Instance.Damageable.OnDeath -= OnPlayerDeath;
+        PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+
     }
 
     protected override void Start() {
         base.Start();
+        SubscribeToController();
         OnControllerStateUpdated();
     }
 
@@ -41,7 +50,7 @@ public class PlayerMovement_FPS : CharacterMoveController {
             _movementVelocity = Vector2.zero;
             return;
         }
-        Vector3 inputVector = GameplayController.Instance.MoveVector;
+        Vector3 inputVector = PlayerController.Instance.MoveVector;
         Vector3 newMoveVector = new Vector3();
         newMoveVector += transform.right * inputVector.x;
         newMoveVector += transform.forward * inputVector.z;
@@ -75,6 +84,11 @@ public class PlayerMovement_FPS : CharacterMoveController {
     }
 
     private void OnControllerStateUpdated() {
-        _active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
+        _active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
+    }
+
+    private void OnPlayerDeath(bool isDead, Damageable damageable) {
+        _active = false;
+        UnsubscribeToController();
     }
 }

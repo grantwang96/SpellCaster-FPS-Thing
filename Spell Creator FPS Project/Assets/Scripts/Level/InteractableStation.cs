@@ -34,7 +34,7 @@ public abstract class InteractableStation : MonoBehaviour, IInteractable {
 
     public virtual void InteractPress(CharacterBehaviour character) {
         OnInteractAttempt?.Invoke();
-        if (character != GameplayController.Instance) {
+        if (character != PlayerController.Instance) {
             return;
         }
         OnPlayerInteract();

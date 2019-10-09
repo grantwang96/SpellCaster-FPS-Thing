@@ -65,8 +65,9 @@ public static partial class GameplayValues {
     }
 
     public static class Navigation {
-        public const string TutorialLevelTransitionId = "enter_tutoriallevel";
-        public const string ArenaTransitionId = "enter_arena";
+        public const string EnterTutorialLevelTransitionId = "enter_tutoriallevel";
+        public const string EnterArenaTransitionId = "enter_arena";
+        public const string ReenterArenaTransitionId = "reenter_arena";
     }
 
     public static class Tutorial {

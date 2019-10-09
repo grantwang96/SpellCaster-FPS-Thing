@@ -7,15 +7,15 @@ public class MenuOpenListener : MonoBehaviour {
     [SerializeField] private string _menuPrefabId;
 
     private void Start() {
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
         OnControllerStateUpdated();
     }
 
     private void OnControllerStateUpdated() {
-        bool active = GameplayController.Instance.ControllerState == ControllerState.Gameplay;
-        GameplayController.Instance.OnCancelPressed -= OnCancelPressed;
+        bool active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
+        PlayerController.Instance.OnCancelPressed -= OnCancelPressed;
         if (active) {
-            GameplayController.Instance.OnCancelPressed += OnCancelPressed;
+            PlayerController.Instance.OnCancelPressed += OnCancelPressed;
         }
     }
 

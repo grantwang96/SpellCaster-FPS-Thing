@@ -25,13 +25,13 @@ public abstract class UIPanel : MonoBehaviour {
     }
 
     protected virtual void SubscribeToGameplayController() {
-        GameplayController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
-        GameplayController.Instance.OnCancelPressed += OnMenuBtnPressed;
+        PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
+        PlayerController.Instance.OnCancelPressed += OnMenuBtnPressed;
     }
 
     protected virtual void UnsubscribeToGameplayController() {
-        GameplayController.Instance.OnCancelPressed -= OnMenuBtnPressed;
-        GameplayController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
+        PlayerController.Instance.OnCancelPressed -= OnMenuBtnPressed;
+        PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
     }
 
     protected virtual void OnUIManagerPanelsUpdated(bool panels) {
@@ -57,7 +57,7 @@ public abstract class UIPanel : MonoBehaviour {
     }
 
     protected virtual void OnControllerStateUpdated() {
-        _active = GameplayController.Instance.ControllerState == ControllerState.UIMenu;
+        _active = PlayerController.Instance.ControllerState == ControllerState.UIMenu;
     }
 }
 

@@ -94,6 +94,10 @@ public class LoadoutMenu : UISubPanelParent {
         _spellOptionsMenu.SetFocus(subPanel == _spellOptionsMenu, hardLocked, dir);
     }
 
+    protected override void MenuBtnAction() {
+        CurrentState.OnMenuBtnPressed();
+    }
+
     public override void ClosePanel() {
 
         ChangePanel(_loadoutView, IntVector3.Zero, false);
@@ -178,6 +182,10 @@ public class LoadoutMenu : UISubPanelParent {
 
         }
 
+        public virtual void OnMenuBtnPressed() {
+            _loadoutMenu.ClosePanel();
+        }
+
         #region SPELL OPTIONS MENU LISTENERS
 
         private void OnChangeSpellSelected() {
@@ -238,7 +246,6 @@ public class LoadoutMenu : UISubPanelParent {
 
         // performs the swap action
         public override void OnSpellInventoryItemSelected(string spellInstanceId) {
-            Debug.Log("Do the thing! But better!");
             bool hasSpell = PlayerInventory.SpellInventory.HasSpellByInstanceId(spellInstanceId);
             string instanceId = hasSpell ? spellInstanceId : string.Empty;
             StorableSpell[] loadout = PlayerInventory.SpellInventory.CurrentLoadout;
@@ -254,15 +261,23 @@ public class LoadoutMenu : UISubPanelParent {
                 }
             }
             PlayerInventory.SpellInventory.SoftRefresh();
+            ReturnToLoadoutMenu();
+        }
+
+        public override void OnMenuBtnPressed() {
+            ReturnToLoadoutMenu();
+        }
+
+        private void ReturnToLoadoutMenu() {
+            _loadoutMenu.ChangePanel(_loadoutMenu._loadoutView, IntVector3.Zero, false);
+            _loadoutMenu._loadoutView.SetVisible(true);
+            _loadoutMenu._spellsInventoryView.SetVisible(false);
             _loadoutMenu.ChangeState(new LoadoutMenuState());
             _loadoutMenu.LoadoutView_OnLoadoutSpellHighlighted();
         }
 
         private void SetLoadoutSpell(string spellInstanceId, int index) {
             PlayerInventory.SpellInventory.SetSpellInLoadout(spellInstanceId, index);
-            _loadoutMenu.ChangePanel(_loadoutMenu._loadoutView, IntVector3.Zero, false);
-            _loadoutMenu._loadoutView.SetVisible(true);
-            _loadoutMenu._spellsInventoryView.SetVisible(false);
         }
     }
 }

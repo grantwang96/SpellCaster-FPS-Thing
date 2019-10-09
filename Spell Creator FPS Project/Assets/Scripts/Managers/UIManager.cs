@@ -12,10 +12,10 @@ public class UIManager : MonoBehaviour {
 
     [SerializeField] private List<UIPanel> _uiPanelPrefabs = new List<UIPanel>();
     private Dictionary<string, UIPanel> _allUIPanels = new Dictionary<string, UIPanel>();
-    private Stack<UIPanel> _activeUIPanels = new Stack<UIPanel>();
+    private List<UIPanel> _activeUIPanels = new List<UIPanel>();
     public UIPanel CurrentPanel {
         get {
-            return _activeUIPanels.Count > 0 ? _activeUIPanels.Peek() : null;
+            return _activeUIPanels.Count > 0 ? _activeUIPanels[_activeUIPanels.Count - 1] : null;
         }
     }
     [SerializeField] private UIPanel _currentScenePanel;
@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour {
         Debug.Log($"[{nameof(UIManager)}] Opening ui panel {_currentScenePanel}");
         _currentScenePanel.Initialize(initData);
         _currentScenePanel.transform.SetAsLastSibling();
-        _activeUIPanels.Push(_currentScenePanel);
+        _activeUIPanels.Add(_currentScenePanel);
         ActivateCurrentPanel();
         OnPanelsUpdated?.Invoke(_activeUIPanels.Count != 0);
     }
@@ -71,18 +71,38 @@ public class UIManager : MonoBehaviour {
             Debug.LogError($"[{nameof(UIManager)}] Could not find panel in path {path}");
             return false;
         }
-        _allUIPanels.Add(prefabName, panel);
+        UIPanel clone = Instantiate(panel, transform);
+        clone.gameObject.SetActive(false);
+        _allUIPanels.Add(prefabName, clone);
         return true;
+    }
+
+    public void RegisterUIPanel(string prefabName) {
+        if (_allUIPanels.ContainsKey(prefabName)) {
+            return;
+        }
+        LoadUIPrefab(prefabName);
+    }
+
+    // good for panels that are only used in one particular scene
+    public void DeregisterUIPanel(string prefabName) {
+        UIPanel panel;
+        if(_allUIPanels.TryGetValue(prefabName, out panel)) {
+            CloseUIPanel(prefabName);
+
+        }
     }
 
     public void CloseUIPanel() {
         Debug.Log($"Closing UIPanel...");
-        if(_activeUIPanels.Count != 0) {
-            UIPanel closingPanel = _activeUIPanels.Pop();
+        if (_activeUIPanels.Count != 0) {
+            int indexLast = _activeUIPanels.Count - 1;
+            UIPanel closingPanel = _activeUIPanels[indexLast];
+            _activeUIPanels.RemoveAt(indexLast);
             DeactivateCurrentPanel();   
         }
         if(_activeUIPanels.Count != 0) {
-            _currentScenePanel = _activeUIPanels.Peek();
+            _currentScenePanel = _activeUIPanels[_activeUIPanels.Count - 1];
             ActivateCurrentPanel();
         }
         OnPanelsUpdated?.Invoke(_activeUIPanels.Count != 0);
@@ -94,7 +114,19 @@ public class UIManager : MonoBehaviour {
             Debug.LogError($"[{nameof(UIManager)}] Received invalid prefab id {prefabId}");
             return;
         }
+        if (_activeUIPanels.Contains(panel)) {
+            _activeUIPanels.Remove(panel);
+        }
         panel.ClosePanel();
+    }
+
+    public void CloseAllUIPanels() {
+        while(_activeUIPanels.Count != 0) {
+            UIPanel panel = _activeUIPanels[_activeUIPanels.Count - 1];
+            _activeUIPanels.RemoveAt(_activeUIPanels.Count - 1);
+            panel.ClosePanel();
+        }
+        OnPanelsUpdated?.Invoke(_activeUIPanels.Count != 0);
     }
 
     public void PassStringData(string newString) {

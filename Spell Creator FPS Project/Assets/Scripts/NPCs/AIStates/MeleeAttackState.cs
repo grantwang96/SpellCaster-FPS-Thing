@@ -62,7 +62,7 @@ public class MeleeAttackState : AttackState {
     }
 
     public override void Exit() {
-        Debug.Log("Exiting Melee Attack State");
+        // Debug.Log("Exiting Melee Attack State");
         _animController.ResetTrigger("Attack");
         HitBoxesActive = false;
     }

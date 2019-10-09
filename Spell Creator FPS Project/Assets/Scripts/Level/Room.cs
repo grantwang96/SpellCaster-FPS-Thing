@@ -35,7 +35,7 @@ public class Room : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         CharacterBehaviour character = other.GetComponent<CharacterBehaviour>();
         if(character != null) {
-            if(character == GameplayController.Instance) {
+            if(character == PlayerController.Instance) {
                 OnPlayerEnter();
             }
         }

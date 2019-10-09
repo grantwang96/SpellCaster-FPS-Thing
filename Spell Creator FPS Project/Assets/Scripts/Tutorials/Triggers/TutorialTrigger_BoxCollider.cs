@@ -20,7 +20,7 @@ public class TutorialTrigger_BoxCollider : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         // check if player walked thru here
         CharacterBehaviour character = other.GetComponent<CharacterBehaviour>();
-        if(character == null || character != GameplayController.Instance) {
+        if(character == null || character != PlayerController.Instance) {
             return;
         }
         // fire tutorial trigger
