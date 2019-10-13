@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public interface ILevelManager {
+
     List<ChestSpawn> ChestLocations { get; }
 
     void RegisterInteractable(IInteractable interactable);
     void UnregisterInteractable(IInteractable interactable);
     IInteractable GetInteractable(string interactableId);
+}
 
+public interface ICampaignLevelManager : ILevelManager {
     void RegisterRoom(Room room);
     void RegisterEnemySpawn(EnemySpawn spawn);
 }
@@ -16,9 +19,10 @@ public interface ILevelManager {
 /// <summary>
 /// Included in scene. Manages all location data of level.
 /// </summary>
-public class LevelManager : MonoBehaviour, ILevelManager {
+public class LevelManager : MonoBehaviour, ICampaignLevelManager {
 
-    public static ILevelManager Instance { get; private set; }
+    public static ILevelManager LevelManagerInstance { get; private set; }
+    public static ICampaignLevelManager CampaignLevelManagerInstance { get; private set; }
     // list of all interactable objects
     private Dictionary<string, IInteractable> _interactables = new Dictionary<string, IInteractable>();
     // list of all treasure chest locations
@@ -28,8 +32,9 @@ public class LevelManager : MonoBehaviour, ILevelManager {
     // list of all enemy spawnpoints
     [SerializeField] private List<EnemySpawn> _enemySpawnPoints = new List<EnemySpawn>();
 
-    private void Awake() {
-        Instance = this;
+    protected virtual void Awake() {
+        LevelManagerInstance = this;
+        CampaignLevelManagerInstance = this;
     }
 
     public void RegisterInteractable(IInteractable interactable) {

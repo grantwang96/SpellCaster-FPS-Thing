@@ -18,11 +18,19 @@ public class EnemyLootData {
 
 [System.Serializable]
 public class LootInfo {
-    [SerializeField] private string _lootId;
-    [SerializeField] private float _chance;
-    [SerializeField] private MinMax_Int _range;
+    [SerializeField] private MinMax_Int _healthOrbRange;
+    [SerializeField] private MinMax_Int _manaOrbRange;
+    [SerializeField] private MinMax_Int _tieredLootRange;
+    [SerializeField] private MinMax_Int _whiteTierLootRange;
+    [SerializeField] private MinMax_Int _greenTierLootRange;
+    [SerializeField] private MinMax_Int _purpleTierLootRange;
+    [SerializeField] private MinMax_Int _goldTierLootRange;
 
-    public string LootId => _lootId;
-    public float Chance => _chance;
-    public MinMax_Int Range => _range;
+    public MinMax_Int HealthOrbRange => _healthOrbRange;
+    public MinMax_Int ManaOrbRange => _manaOrbRange;
+    public MinMax_Int TieredLootRange => _tieredLootRange;
+    public MinMax_Int WhiteTierLootRange => _whiteTierLootRange;
+    public MinMax_Int GreenTierLootRange => _greenTierLootRange;
+    public MinMax_Int PurpleTierLootRange => _purpleTierLootRange;
+    public MinMax_Int GoldTierLootRange => _goldTierLootRange;
 }

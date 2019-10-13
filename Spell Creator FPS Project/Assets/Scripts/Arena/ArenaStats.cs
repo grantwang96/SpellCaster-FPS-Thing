@@ -6,13 +6,13 @@ public class ArenaStats {
     public int RoundsCompleted { get; private set; }
 
     public ArenaStats() {
-        ArenaManager.Instance.OnEnemyDefeated += OnEnemyDefeated;
-        ArenaManager.Instance.OnRoundEnded += OnRoundWon;
+        ArenaManager.ArenaManagerInstance.OnEnemyDefeated += OnEnemyDefeated;
+        ArenaManager.ArenaManagerInstance.OnRoundEnded += OnRoundWon;
     }
 
     public void DeregisterListeners() {
-        ArenaManager.Instance.OnEnemyDefeated -= OnEnemyDefeated;
-        ArenaManager.Instance.OnRoundEnded -= OnRoundWon;
+        ArenaManager.ArenaManagerInstance.OnEnemyDefeated -= OnEnemyDefeated;
+        ArenaManager.ArenaManagerInstance.OnRoundEnded -= OnRoundWon;
     }
 
     private void OnEnemyDefeated(int scoreValue) {

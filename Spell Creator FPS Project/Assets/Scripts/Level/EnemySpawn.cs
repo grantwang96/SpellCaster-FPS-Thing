@@ -14,28 +14,15 @@ public class EnemySpawn : MonoBehaviour {
         _room = room;
     }
 
-    public virtual EnemyBehaviour SpawnPrefab() {
+    public virtual void SpawnPrefab() {
         if (_finishedSpawning) {
-            return null;
+            return;
         }
-        EnemyBehaviour enemy = SpawnEnemy();
+        SpawnEnemy();
         _finishedSpawning = true;
-        return enemy;
     }
 
-    protected virtual EnemyBehaviour SpawnEnemy() {
-        PooledObject pooledObject = ObjectPool.Instance?.UsePooledObject(_enemyPrefabId);
-        if (pooledObject == null) {
-            Debug.LogError($"[{nameof(EnemySpawn)}] \"{name}\" was not able to retrieve prefab with ID {_enemyPrefabId}!");
-            return null;
-        }
-        EnemyBehaviour enemy = pooledObject as EnemyBehaviour;
-        if (enemy == null) {
-            Debug.LogError($"[{nameof(EnemySpawn)}] Object received was not of type {nameof(EnemyBehaviour)}");
-            return null;
-        }
-        enemy.transform.position = transform.position;
-        enemy.ActivatePooledObject();
-        return enemy;
+    protected virtual void SpawnEnemy() {
+        NPCManager.Instance.SpawnPooledNPC(_enemyPrefabId, transform.position);
     }
 }

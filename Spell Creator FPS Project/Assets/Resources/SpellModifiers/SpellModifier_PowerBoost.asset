@@ -18,5 +18,6 @@ MonoBehaviour:
   _name: Power Boost
   _shortDescription: Increases power of spell
   _longDescription: Adds some oomph to that spell
+  _lootTier: 1
   _multiplier: 2
   _constant: 5

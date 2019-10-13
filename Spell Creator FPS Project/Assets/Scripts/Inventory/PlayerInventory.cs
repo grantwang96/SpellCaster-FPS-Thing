@@ -64,15 +64,15 @@ public class PlayerInventory : MonoBehaviour, IRunicInventory, ISpellInventory{
 
     private void InitializeRuneInventory() {
         _storedRunes.Clear();
-        List<StorableInventoryRune> runeInventory = GameManager.Instance.GetSavedRuneInventory();
+        List<StorableInventoryRune> runeInventory = SaveManager.Instance.GetSavedRuneInventory();
         for(int i = 0; i < runeInventory.Count; i++) {
             _storedRunes.Add(runeInventory[i].Id, runeInventory[i].Count);
         }
     }
 
     private void InitializeSpellInventory() {
-        _storableSpells = GameManager.Instance.GetSavedSpellsInventory();
-        CurrentLoadout = GameManager.Instance.GetSavedLoadout();
+        _storableSpells = SaveManager.Instance.GetSavedSpellsInventory();
+        CurrentLoadout = SaveManager.Instance.GetSavedLoadout();
     }
 
     #region Runes Inventory Methods

@@ -18,6 +18,7 @@ MonoBehaviour:
   _name: Heal
   _shortDescription: Recovers some HP
   _longDescription: Recovers some HP or whatever
+  _lootTier: 1
   _manaCost: 10
   _chargeTime: 2
   _intervalTime: 0.3

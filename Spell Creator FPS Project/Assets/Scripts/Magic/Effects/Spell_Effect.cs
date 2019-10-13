@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Applies an effect(could be spell, weapon, or projectile)
 /// </summary>
-public abstract class Effect : ScriptableObject, IInventoryStorable {
+public abstract class Effect : ScriptableObject, IInventoryStorable, ILootableItem {
 
     [SerializeField] protected InventoryItemType _itemType;
     public InventoryItemType ItemType => _itemType;
@@ -21,6 +21,9 @@ public abstract class Effect : ScriptableObject, IInventoryStorable {
     public string ShortDescription => _shortDescription;
     [SerializeField] protected string _longDescription;
     public string LongDescription => _longDescription;
+
+    [SerializeField] private LootTier _lootTier;
+    public LootTier LootTier => _lootTier;
 
     [SerializeField] private int _manaCost; // how much will this effect cost
     public int ManaCost {

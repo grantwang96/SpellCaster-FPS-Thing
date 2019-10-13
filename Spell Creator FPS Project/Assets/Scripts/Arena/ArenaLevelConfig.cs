@@ -14,6 +14,9 @@ public class ArenaLevelConfig : ScriptableObject {
     [Range(1f, 20f)][SerializeField] private float _multiplier;
     [Range(1, 100)] [SerializeField] private int _constant;
 
+    [SerializeField] private List<string> _possibleLootIds = new List<string>();
+    public IReadOnlyList<string> PossibleLootIds => _possibleLootIds;
+
     public List<ArenaEnemyCount> GetEnemyCountsForLevel(int level) {
         List<ArenaEnemyCount> enemyCounts = new List<ArenaEnemyCount>();
         // figure out enemy scaling

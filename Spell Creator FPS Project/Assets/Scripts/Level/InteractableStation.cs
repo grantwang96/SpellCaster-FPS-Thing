@@ -29,7 +29,7 @@ public abstract class InteractableStation : MonoBehaviour, IInteractable {
             InteractableId =
                 $"{GameplayValues.Level.LoadoutStationInstanceIdPrefix}{StringGenerator.RandomString(GameplayValues.Level.LoadoutStationInstanceIdSize)}";
         }
-        LevelManager.Instance.RegisterInteractable(this);
+        LevelManager.LevelManagerInstance.RegisterInteractable(this);
     }
 
     public virtual void InteractPress(CharacterBehaviour character) {

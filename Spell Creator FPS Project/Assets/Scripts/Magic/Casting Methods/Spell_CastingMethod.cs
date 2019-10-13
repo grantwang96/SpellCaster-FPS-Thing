@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// This is the base class for how spells are cast
 /// </summary>
-public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable {
+public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable, ILootableItem {
 
     [SerializeField] protected InventoryItemType _itemType;
     public InventoryItemType ItemType => _itemType;
@@ -21,6 +21,9 @@ public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable
     public string ShortDescription => _shortDescription;
     [SerializeField] protected string _longDescription;
     public string LongDescription => _longDescription;
+
+    [SerializeField] private LootTier _lootTier;
+    public LootTier LootTier => _lootTier;
 
     [SerializeField] protected int manaCost;
     public virtual int ManaCost { get { return manaCost; } }

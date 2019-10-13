@@ -5,13 +5,21 @@ using UnityEngine;
 /// <summary>
 /// Included in scene. Handles gameplay events that affect inventory and on screen enemies
 /// </summary>
-public class GameManager_Gameplay : GameManager {
+public class SaveManager : MonoBehaviour {
 
-    protected override void Initialize() {
+    public static SaveManager Instance;
+    protected static GameSave _currentGame;
+
+    protected virtual void Awake() {
+        Instance = this;
+        _currentGame = SaveLoad.ReadFromDisk();
+    }
+
+    protected void Initialize() {
         SubscribeToInventoryEvents();
     }
 
-    protected override void SubscribeToInventoryEvents() {
+    protected void SubscribeToInventoryEvents() {
         PlayerInventory.RunicInventory.OnRunicInventoryDataUpdated += RunicInventory_OnRunicInventoryDataUpdated;
         PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated += SpellInventory_OnSpellInventoryDataUpdated;
         PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
@@ -63,4 +71,24 @@ public class GameManager_Gameplay : GameManager {
     private void Start () {
         Initialize();
 	}
+
+    public static void SaveGame() {
+        SaveLoad.Save(_currentGame);
+    }
+
+
+    public virtual List<StorableInventoryRune> GetSavedRuneInventory() {
+        return new List<StorableInventoryRune>(_currentGame.PlayerRunesInventory);
+    }
+
+    public virtual List<StorableSpell> GetSavedSpellsInventory() {
+        return new List<StorableSpell>(_currentGame.PlayerSpellsInventory);
+    }
+
+    public virtual StorableSpell[] GetSavedLoadout() {
+        if (_currentGame.PlayerCurrentLoadout == null) {
+            return new StorableSpell[GameplayValues.Magic.PlayerLoadoutMaxSize];
+        }
+        return (StorableSpell[])_currentGame.PlayerCurrentLoadout.Clone();
+    }
 }

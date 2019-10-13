@@ -7,14 +7,14 @@ public class ArenaListener_BetweenRounds : MonoBehaviour {
     [SerializeField] private List<GameObject> _activeGameObjectsBetween = new List<GameObject>();
 
     private void Start() {
-        ArenaManager.Instance.OnRoundStarted += OnRoundStart;
-        ArenaManager.Instance.OnRoundEnded += OnRoundEnd;
+        ArenaManager.ArenaManagerInstance.OnRoundStarted += OnRoundStart;
+        ArenaManager.ArenaManagerInstance.OnRoundEnded += OnRoundEnd;
         OnRoundEnd(0);
     }
 
     private void OnDestroy() {
-        ArenaManager.Instance.OnRoundStarted -= OnRoundStart;
-        ArenaManager.Instance.OnRoundEnded -= OnRoundEnd;
+        ArenaManager.ArenaManagerInstance.OnRoundStarted -= OnRoundStart;
+        ArenaManager.ArenaManagerInstance.OnRoundEnded -= OnRoundEnd;
     }
 
     private void OnRoundStart(int round) {

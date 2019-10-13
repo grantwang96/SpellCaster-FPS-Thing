@@ -14,10 +14,10 @@ public class ArenaHud : MonoBehaviour {
         OnRoundStarted(0);
         OnEnemyCountUpdated(0);
         OnWaveCountUpdated(0);
-		if(ArenaManager.Instance != null) {
-            ArenaManager.Instance.OnRoundStarted += OnRoundStarted;
-            ArenaManager.Instance.OnEnemyCountUpdated += OnEnemyCountUpdated;
-            ArenaManager.Instance.OnWaveCountUpdated += OnWaveCountUpdated;
+		if(ArenaManager.ArenaManagerInstance != null) {
+            ArenaManager.ArenaManagerInstance.OnRoundStarted += OnRoundStarted;
+            ArenaManager.ArenaManagerInstance.OnEnemyCountUpdated += OnEnemyCountUpdated;
+            ArenaManager.ArenaManagerInstance.OnWaveCountUpdated += OnWaveCountUpdated;
         }
 	}
 	

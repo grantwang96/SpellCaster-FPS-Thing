@@ -11,7 +11,7 @@ public class TutorialActionPointInteractableTarget : TutorialAction {
     [SerializeField] private InteractableMarker _interactableMarkerPrefab;
 
     public override TutorialActionStatus Execute() {
-        IInteractable interactable = LevelManager.Instance.GetInteractable(_targetId);
+        IInteractable interactable = LevelManager.LevelManagerInstance.GetInteractable(_targetId);
         if(interactable == null) {
             Debug.LogError($"[{nameof(TutorialActionPointInteractableTarget)}] Could not find interactable for ID {_targetId}");
             return TutorialActionStatus.Abort;

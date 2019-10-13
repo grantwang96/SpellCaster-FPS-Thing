@@ -33,7 +33,7 @@ public class Chest : MonoBehaviour, IInteractable {
         }
         // TODO: edit chest visuals when initialized
         Interactable = true;
-        LevelManager.Instance.RegisterInteractable(this);
+        LevelManager.LevelManagerInstance.RegisterInteractable(this);
     }
 
     public void InteractPress(CharacterBehaviour character) {

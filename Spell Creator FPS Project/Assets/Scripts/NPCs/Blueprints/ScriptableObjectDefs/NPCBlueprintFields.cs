@@ -44,6 +44,6 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     [SerializeField] private string[] _enemyTags;
     public string[] EnemyTags => _enemyTags;
 
-    [SerializeField] private List<LootInfo> _lootInfo;
-    public IReadOnlyList<LootInfo> LootInfos => _lootInfo;
+    [SerializeField] private LootInfo _lootInfo;
+    public LootInfo LootInfo => _lootInfo;
 }

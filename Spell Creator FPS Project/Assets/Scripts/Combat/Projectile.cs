@@ -8,7 +8,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour, PooledObject {
 
     [SerializeField] private string _prefabId;
-    public string PrefabId => name;
+    public string PrefabId => _prefabId;
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 

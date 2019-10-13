@@ -18,9 +18,10 @@ MonoBehaviour:
   _name: Single Shot SemiAuto
   _shortDescription: Fires bolt of magic
   _longDescription: Semi automatic bolt of magic
+  _lootTier: 0
   manaCost: 3
   _intervalTime: 0
   spellTiming: 00000000
-  _magicProjectilePrefabId: prefab.MagicProjectile
+  _magicProjectilePrefabId: MagicProjectile
   _projectileSpeed: 40
   _lifeTime: 5

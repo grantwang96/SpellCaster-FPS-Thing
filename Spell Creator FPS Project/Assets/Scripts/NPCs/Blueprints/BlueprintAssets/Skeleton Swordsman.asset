@@ -31,4 +31,25 @@ MonoBehaviour:
   _unitTags: []
   _enemyTags:
   - PLAYER_UNIT
-  _lootInfo: []
+  _lootInfo:
+    _healthOrbRange:
+      _min: 0
+      _max: 5
+    _manaOrbRange:
+      _min: 0
+      _max: 5
+    _tieredLootRange:
+      _min: 2
+      _max: 5
+    _whiteTierLootRange:
+      _min: 1
+      _max: 4
+    _greenTierLootRange:
+      _min: 0
+      _max: 2
+    _purpleTierLootRange:
+      _min: 0
+      _max: 0
+    _goldTierLootRange:
+      _min: 0
+      _max: 0

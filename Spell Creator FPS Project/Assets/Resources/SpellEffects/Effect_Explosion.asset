@@ -18,6 +18,7 @@ MonoBehaviour:
   _name: Explosion
   _shortDescription: Creates an explosion
   _longDescription: Creates an explosion that triggers other spell effects
+  _lootTier: 1
   _manaCost: 5
   _chargeTime: 2
   _intervalTime: 0.5

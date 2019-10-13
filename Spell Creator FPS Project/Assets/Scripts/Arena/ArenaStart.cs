@@ -27,7 +27,7 @@ public class ArenaStart : MonoBehaviour, IInteractable {
 
     public void InteractPress(CharacterBehaviour character) {
         if(character == PlayerController.Instance && Interactable) {
-            ArenaManager.Instance.StartRound();
+            ArenaManager.ArenaManagerInstance.StartRound();
         }
     }
     

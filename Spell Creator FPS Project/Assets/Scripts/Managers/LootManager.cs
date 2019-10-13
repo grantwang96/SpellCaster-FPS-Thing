@@ -6,7 +6,8 @@ public enum LootTier {
     White = 0,
     Green = 1,
     Purple = 2,
-    Gold = 3
+    Gold = 3,
+    Recovery = 99,
 }
 
 public enum ChestType {
@@ -19,7 +20,6 @@ public enum ChestType {
 public interface ILootManager {
     
     RewardsSet GetRewards(string id);
-    void OnEnemySpawn(string enemyId, NPCBehaviour npc);
 }
 
 public class LootManager : MonoBehaviour, ILootManager {
@@ -37,10 +37,8 @@ public class LootManager : MonoBehaviour, ILootManager {
     private Dictionary<string, ChestInfo> _chests = new Dictionary<string, ChestInfo>();
     private Dictionary<string, RewardsSet> _enemies = new Dictionary<string, RewardsSet>();
 
-    [SerializeField] private List<string> _whiteTierLoot = new List<string>();
-    [SerializeField] private List<string> _greenTierLoot = new List<string>();
-    [SerializeField] private List<string> _purpleTierLoot = new List<string>();
-    [SerializeField] private List<string> _goldTierLoot = new List<string>();
+    private Dictionary<LootTier, List<string>> _lootTable = new Dictionary<LootTier, List<string>>();
+    [SerializeField] private List<string> _allLoot = new List<string>(); // temp
 
     [SerializeField] private string _runePrefabId;
     [SerializeField] private string _recoveryOrbPrefabId;
@@ -52,7 +50,29 @@ public class LootManager : MonoBehaviour, ILootManager {
 	}
 
     private void Start() {
+        BuildLootTable();
         PopulateLevel();
+        SubscribeToEvents();
+    }
+
+    private void OnDestroy() {
+        UnsubscribeToEvents();
+    }
+
+    private void BuildLootTable() {
+        _lootTable.Add(LootTier.White, new List<string>());
+        _lootTable.Add(LootTier.Green, new List<string>());
+        _lootTable.Add(LootTier.Purple, new List<string>());
+        _lootTable.Add(LootTier.Gold, new List<string>());
+        for (int i = 0; i < _allLoot.Count; i++) {
+            IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_allLoot[i]);
+            ILootableItem lootable = storable as ILootableItem;
+            if(lootable == null) {
+                Debug.LogError($"[{nameof(LootManager)}] ID {_allLoot[i]} was not a {nameof(ILootableItem)} object");
+                continue;
+            }
+            _lootTable[lootable.LootTier].Add(_allLoot[i]);
+        }
     }
 
     private void LoadConfig() {
@@ -67,22 +87,32 @@ public class LootManager : MonoBehaviour, ILootManager {
     // called at start. Populates the level with chests based on location type and rarity
     private void PopulateLevel() {
         // for each possible location in the level
-        for(int i = 0; i < LevelManager.Instance.ChestLocations.Count; i++) {
-            ChestSpawn chestSpawn = LevelManager.Instance.ChestLocations[i];
+        for(int i = 0; i < LevelManager.LevelManagerInstance.ChestLocations.Count; i++) {
+            ChestSpawn chestSpawn = LevelManager.LevelManagerInstance.ChestLocations[i];
             string id = RegisterChest(chestSpawn.ChestType, chestSpawn.OverrideId);
             chestSpawn.SpawnPrefab(id);
         }
     }
+    
+    private void SubscribeToEvents() {
+        NPCManager.Instance.OnNPCSpawned += OnNPCSpawned;
+    }
+
+    private void UnsubscribeToEvents() {
+        NPCManager.Instance.OnNPCSpawned -= OnNPCSpawned;
+    }
 
     // called when player opens chest
     public RewardsSet GetRewards(string id) {
+        RewardsSet rewards;
         if (_chests.ContainsKey(id)) {
             ChestInfo chestInfo = _chests[id];
             _chests.Remove(id);
-            RewardsSet rewards = GenerateChestRewards(chestInfo.ChestType);
+            rewards = GenerateChestRewards(chestInfo.ChestType);
             return rewards;
         } else if (_enemies.ContainsKey(id)) {
-
+            rewards = _enemies[id];
+            return rewards;
         }
         Debug.LogError($"Could not retrieve chest info with given id {id}!");
         return RewardsSet.Default;
@@ -106,19 +136,19 @@ public class LootManager : MonoBehaviour, ILootManager {
         // fill list with inventory storable ids
         int tierRewardsCount = Random.Range(data.WhiteTier.Min, data.WhiteTier.Max);
         for(int i = 0; i < tierRewardsCount; i++) {
-            inventoryRewards.Add(_whiteTierLoot[Random.Range(0, _whiteTierLoot.Count)]);
+            inventoryRewards.Add(_lootTable[LootTier.White][Random.Range(0, _lootTable[LootTier.White].Count)]);
         }
         tierRewardsCount = Random.Range(data.GreenTier.Min, data.GreenTier.Max);
         for (int i = 0; i < tierRewardsCount; i++) {
-            inventoryRewards.Add(_greenTierLoot[Random.Range(0, _greenTierLoot.Count)]);
+            inventoryRewards.Add(_lootTable[LootTier.Green][Random.Range(0, _lootTable[LootTier.Green].Count)]);
         }
         tierRewardsCount = Random.Range(data.PurpleTier.Min, data.PurpleTier.Max);
         for (int i = 0; i < tierRewardsCount; i++) {
-            inventoryRewards.Add(_purpleTierLoot[Random.Range(0, _purpleTierLoot.Count)]);
+            inventoryRewards.Add(_lootTable[LootTier.Purple][Random.Range(0, _lootTable[LootTier.Purple].Count)]);
         }
         tierRewardsCount = Random.Range(data.GoldTier.Min, data.GoldTier.Max);
         for (int i = 0; i < tierRewardsCount; i++) {
-            inventoryRewards.Add(_goldTierLoot[Random.Range(0, _goldTierLoot.Count)]);
+            inventoryRewards.Add(_lootTable[LootTier.Gold][Random.Range(0, _lootTable[LootTier.Gold].Count)]);
         }
         int healthOrbs = Random.Range(data.HealthOrbs.Min, data.HealthOrbs.Max);
         int manaOrbs = Random.Range(data.ManaOrbs.Min, data.ManaOrbs.Max);
@@ -138,31 +168,65 @@ public class LootManager : MonoBehaviour, ILootManager {
         return chestId;
     }
 
-    public void OnEnemySpawn(string enemyId, NPCBehaviour npc) {
+    private void OnNPCSpawned(string enemyId, NPCBehaviour npc) {
         if (_enemies.ContainsKey(enemyId)) {
             return;
         }
-        int healthOrbCount = 0, manaOrbCount = 0;
-        IReadOnlyList<LootInfo> lootInfos = npc.Blueprint.LootInfos;
-        for(int i = 0; i < lootInfos.Count; i++) {
-            if (lootInfos[i].LootId.Equals(GameplayValues.Loot.HealthOrbId)) {
-                healthOrbCount = GenerateOrbCount(lootInfos[i].Chance, lootInfos[i].Range);
-                continue;
-            } else if (lootInfos[i].LootId.Equals(GameplayValues.Loot.ManaOrbId)) {
-                manaOrbCount = GenerateOrbCount(lootInfos[i].Chance, lootInfos[i].Range);
-                continue;
-            } else {
-                continue;
-            }
+        LootInfo lootInfo = npc.Blueprint.LootInfo;
+        if(lootInfo == null) {
+            return;
         }
+        int healthOrbCount = Random.Range(lootInfo.HealthOrbRange.Min, lootInfo.HealthOrbRange.Max);
+        int manaOrbCount = Random.Range(lootInfo.ManaOrbRange.Min, lootInfo.ManaOrbRange.Max);
+
+        List<string> inventoryItems = new List<string>();
+        int totalTieredLootCount = MinMax_Int.GetCountFromMinMax(lootInfo.TieredLootRange);
+        int currentTieredLootCount = 0;
+        currentTieredLootCount =
+            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.WhiteTierLootRange, _lootTable[LootTier.White]);
+        currentTieredLootCount =
+            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.GreenTierLootRange, _lootTable[LootTier.Green]);
+        currentTieredLootCount =
+            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.PurpleTierLootRange, _lootTable[LootTier.Purple]);
+        currentTieredLootCount =
+            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.GoldTierLootRange, _lootTable[LootTier.Gold]);
+
+        // SUPER HACKY FIX FOR EDGE CASE
+        while (currentTieredLootCount < totalTieredLootCount) {
+            currentTieredLootCount++;
+            inventoryItems.Add(GetRandomLootFromList(_lootTable[LootTier.White]));
+        }
+
+        RewardsSet rewards = new RewardsSet(healthOrbCount, manaOrbCount, inventoryItems);
+        _enemies.Add(enemyId, rewards);
     }
 
-    private int GenerateOrbCount(float chance, MinMax_Int Range) {
-        int count = 0;
-        float roll = Random.value * 100f;
-        if(roll <= chance) {
-            count = Random.Range(Range.Min, Range.Max + 1);
+    private int GenerateLootForTier(int currentCount, int maxCount, List<string> inventoryItems, MinMax_Int lootTierRange, List<string> lootTier) {
+        int tieredLootCount = MinMax_Int.GetCountFromMinMax(lootTierRange);
+        if (MaxLootCountReached(currentCount, tieredLootCount, maxCount)) {
+            tieredLootCount = CapLootCount(maxCount, currentCount);
         }
-        return count;
+        currentCount += tieredLootCount;
+        AddToLootList(inventoryItems, lootTier, tieredLootCount);
+        return currentCount;
+    }
+
+    private bool MaxLootCountReached(int currentCount, int nextAmount, int maxCount) {
+        return currentCount + nextAmount > maxCount;
+    }
+
+    private int CapLootCount(int totalLootCount, int currentLootCount) {
+        return Mathf.Max(totalLootCount - currentLootCount, 0);
+    }
+
+    private string GetRandomLootFromList(List<string> lootList) {
+        int rand = Random.Range(0, lootList.Count);
+        return lootList[rand];
+    }
+
+    private void AddToLootList(List<string> inventoryItems, List<string> lootTier, int count) {
+        for(int i = 0; i < count; i++) {
+            inventoryItems.Add(GetRandomLootFromList(lootTier));
+        }
     }
 }

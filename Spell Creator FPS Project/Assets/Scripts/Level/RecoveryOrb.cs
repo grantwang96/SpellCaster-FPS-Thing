@@ -17,10 +17,12 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Collider _colliderInner;
     [SerializeField] private Collider _colliderOuter;
-    [SerializeField] private SeparateColliderBroadcaster _triggerArea;
     [SerializeField] private float _flySpeed;
     [SerializeField] private float _spawnSpread;
     [SerializeField] private float _spawnForce;
+
+    [SerializeField] private Material _healthOrbMaterial;
+    [SerializeField] private Material _manaOrbMaterial;
 
     private RecoveryOrbType _type;
     private bool _interactable = true;
@@ -33,6 +35,15 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
         _colliderInner.enabled = true;
         _colliderOuter.enabled = true;
 
+        switch (_type) {
+            case RecoveryOrbType.Health:
+                _meshRenderer.material = _healthOrbMaterial;
+                break;
+            case RecoveryOrbType.Mana:
+                _meshRenderer.material = _manaOrbMaterial;
+                break;
+        }
+
         Spawn();
     }
 
@@ -42,22 +53,8 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
         Vector3 dir = Vector3.up + offset;
         _rigidbody.AddForce(dir.normalized * _spawnForce, ForceMode.Impulse);
     }
-
-	// Use this for initialization
-	void Start () {
-        _triggerArea.TriggerEnter += OnRecoveryOrbAreaEntered;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    private void OnDestroy() {
-        _triggerArea.TriggerEnter -= OnRecoveryOrbAreaEntered;
-    }
-
-    private void OnRecoveryOrbAreaEntered(Collider other) {
+    
+    public void TryPickUp(GameObject other) {
         if (!_interactable) { return; }
         if (_type == RecoveryOrbType.Health) {
             Damageable dam = other.GetComponent<Damageable>();

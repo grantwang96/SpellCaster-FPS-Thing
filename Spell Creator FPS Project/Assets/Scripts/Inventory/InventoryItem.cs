@@ -30,7 +30,7 @@ public interface IInventoryStorable {
 }
 
 public interface ILootableItem {
-
+    LootTier LootTier { get; }
 }
 
 public abstract class SpellComponent : ScriptableObject, IInventoryStorable {

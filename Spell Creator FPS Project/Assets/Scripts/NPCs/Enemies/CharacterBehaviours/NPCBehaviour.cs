@@ -36,7 +36,6 @@ public class NPCBehaviour : CharacterBehaviour {
 
     protected virtual void OnEnable() {
         GenerateUniqueId();
-        LootManager.Instance.OnEnemySpawn(_id, this);
     }
 
     private void GenerateUniqueId() {
@@ -92,6 +91,40 @@ public class NPCBehaviour : CharacterBehaviour {
 
     protected virtual void OnDeath(bool isDead, Damageable damageable) {
         ChangeBrainState(null);
+        DropLoot();
+    }
+
+    protected virtual void DropLoot() {
+        RewardsSet rewards = LootManager.Instance.GetRewards(Id);
+        for(int i = 0; i < rewards.HealthOrbs; i++) {
+            SpawnRecoveryOrb(RecoveryOrbType.Health);
+        }
+        for(int i = 0; i < rewards.ManaOrbs; i++) {
+            SpawnRecoveryOrb(RecoveryOrbType.Mana);
+        }
+        for(int i = 0; i < rewards.InventoryItems.Count; i++) {
+            SpawnInventoryItem(rewards.InventoryItems[i]);
+        }
+    }
+
+    protected virtual void SpawnRecoveryOrb(RecoveryOrbType recoveryOrbType) {
+        PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId);
+        RecoveryOrb recoveryOrb = obj as RecoveryOrb;
+        Debug.Log("Spawning recovery orb");
+        if (recoveryOrb != null) {
+            recoveryOrb.ActivatePooledObject();
+            recoveryOrb.Initialize(recoveryOrbType);
+            recoveryOrb.transform.position = GetBodyPosition();
+        }
+    }
+
+    protected virtual void SpawnInventoryItem(string itemId) {
+        PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.WorldRunePrefabId);
+        Rune rune = obj as Rune;
+        if(rune != null) {
+            rune.transform.position = GetBodyPosition();
+            rune.Initialize(itemId);
+        }
     }
 }
 

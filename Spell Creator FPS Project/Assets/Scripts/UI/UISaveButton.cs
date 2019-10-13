@@ -18,6 +18,6 @@ public class UISaveButton : MonoBehaviour {
     }
 
     private void SaveGame() {
-        GameManager.SaveGame();
+        SaveManager.SaveGame();
     }
 }

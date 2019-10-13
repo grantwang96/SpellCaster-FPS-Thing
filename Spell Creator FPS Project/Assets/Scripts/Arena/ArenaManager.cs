@@ -22,7 +22,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
 
     private const string EnemiesResourcePath = "Enemies";
 
-    public static IArenaManager Instance { get; private set; }
+    public static IArenaManager ArenaManagerInstance { get; private set; }
 
     [SerializeField] private ArenaLevelConfig _config;
     [SerializeField] private string _winScreenPrefabId;
@@ -37,7 +37,9 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     private int _currentWaveCount;
     private List<string> _nextRound = new List<string>();
     private List<string> _nextWave = new List<string>();
-    private Dictionary<Damageable, EnemyBehaviour> _currentWave = new Dictionary<Damageable, EnemyBehaviour>();
+
+    private Dictionary<string, IInteractable> _interactables = new Dictionary<string, IInteractable>();
+    private Dictionary<Damageable, NPCBehaviour> _currentWave = new Dictionary<Damageable, NPCBehaviour>();
 
     [SerializeField] private List<Transform> _spawnPoints;
 
@@ -50,7 +52,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     public event Action<int> OnEnemyDefeated;
     
     private void Awake() {
-        Instance = this;
+        ArenaManagerInstance = this;
     }
 
     private void Start() {
@@ -73,15 +75,17 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         InitializeArenaStats();
         RegisterEnemyPrefabs();
         UIManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
+        NPCManager.Instance.OnNPCSpawned += OnEnemySpawned;
         PlayerController.Instance.Damageable.OnDeath += LoseRound;
     }
-
     private void InitializeArenaStats() {
         ArenaStats = new ArenaStats();
     }
 
     private void OnDestroy() {
         UIManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
+        PlayerController.Instance.Damageable.OnDeath -= LoseRound;
+        NPCManager.Instance.OnNPCSpawned -= OnEnemySpawned;
     }
 
     private void RegisterEnemyPrefabs() {
@@ -106,7 +110,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     private void OnEnemyDefeatedListener(bool isDead, Damageable damageable) {
         _enemiesDefeated++;
         damageable.OnDeath -= OnEnemyDefeatedListener;
-        EnemyBehaviour enemy;
+        NPCBehaviour enemy;
         if(!_currentWave.TryGetValue(damageable, out enemy)) {
             Debug.LogError($"[{nameof(ArenaManager)}] Received unregistered damageable! HOW?");
             return;
@@ -127,7 +131,7 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         }
     }
 
-    private void SendEnemyDefeatedMessage(EnemyBehaviour enemy) {
+    private void SendEnemyDefeatedMessage(NPCBehaviour enemy) {
         int scoreValue = enemy.Blueprint.ScoreValue;
         OnEnemyDefeated?.Invoke(scoreValue);
     }
@@ -189,18 +193,13 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
     }
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
-        Debug.Log("Prefab Name: " + prefabName);
-        PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(prefabName);
-        EnemyBehaviour enemy = pooledObject as EnemyBehaviour;
-        if(enemy == null) {
-            ErrorManager.LogError(nameof(ArenaManager), $"Pooled object {pooledObject} was not of type {nameof(EnemyBehaviour)}");
-            return;
-        }
-        enemy.transform.position = position;
-        enemy.Damageable.OnDeath += OnEnemyDefeatedListener;
-        _currentWave.Add(enemy.Damageable, enemy);
+        NPCManager.Instance.SpawnPooledNPC(prefabName, position);
+    }
+
+    private void OnEnemySpawned(string id, NPCBehaviour npc) {
+        npc.Damageable.OnDeath += OnEnemyDefeatedListener;
+        _currentWave.Add(npc.Damageable, npc);
         OnWaveCountUpdated?.Invoke(_currentWave.Count);
-        enemy.ActivatePooledObject();
         Debug.Log("Spawned Enemy Prefab!");
     }
 
