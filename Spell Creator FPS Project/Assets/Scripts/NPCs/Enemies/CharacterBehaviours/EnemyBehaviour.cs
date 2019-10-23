@@ -13,6 +13,7 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
     
     public void ActivatePooledObject() {
         gameObject.SetActive(true);
+        GenerateUniqueId();
         ChangeBrainState(_startingState);
         FireCharacterSpawnedEvent();
     }

@@ -42,7 +42,7 @@ public abstract class Effect : ScriptableObject, IInventoryStorable, ILootableIt
         }
     }
 
-    [SerializeField] private int _basePower;
+    [SerializeField] protected int _basePower;
     public int BasePower { get { return _basePower; } }
 
     public abstract void TriggerEffect(Damageable caster, int power, List<Effect> additionalEffects = null);

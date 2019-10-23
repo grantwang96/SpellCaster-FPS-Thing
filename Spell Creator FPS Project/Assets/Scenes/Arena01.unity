@@ -228,7 +228,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1788661511}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &92783242
 MonoBehaviour:
@@ -270,7 +270,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1788661511}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &165402499
 MonoBehaviour:
@@ -849,15 +849,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _allLoot:
-  - CASTING_METHOD_RAYCAST_INSTANT
-  - CAST_METHOD_SELF_SEMIAUTO
-  - CAST_METHOD_SINGLESHOT_CHARGE
-  - SPELL_EFFECT_TRANSMUTE
-  - SPELL_EFFECT_DAMAGE
-  - SPELL_EFFECT_HEAL
-  - SPELL_MOD_MESHTOHUMAN
-  - SPELL_MOD_POWERBOOST
-  - CAST_METHOD_SPREADSHOT_SEMIAUTO
+  - CM_SingleShot_Instant_1
+  - CM_SingleShot_Held_1
+  - CM_Self_Instant_2
+  - Effect_Damage_1
+  - Effect_Damage_2
+  - SpellMod_HumanShapedSpells
   _runePrefabId: prefab.Interactable_Rune
   _recoveryOrbPrefabId: prefab.RecoveryOrb
 --- !u!1 &370773521
@@ -887,7 +884,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1788661511}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &370773523
 MonoBehaviour:
@@ -1552,59 +1549,6 @@ Transform:
   m_Father: {fileID: 1919275460}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1115801951
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 1667911058033454, guid: e15cf3614554bb745a1b9e42185e2bbe,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1115801952}
-  - component: {fileID: 1115801953}
-  m_Layer: 0
-  m_Name: prefab.ObjectPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1115801952
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 4881173967832756, guid: e15cf3614554bb745a1b9e42185e2bbe,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1115801951}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1788661511}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1115801953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 114441433774706938, guid: e15cf3614554bb745a1b9e42185e2bbe,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1115801951}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dc4e26b228aee049ab188a4bd24c71f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _poolPrefabs:
-  - Prefab: {fileID: 1808567154107826, guid: 2b21930a973bd2848894605410560b6c, type: 2}
-    PoolSize: 200
-  - Prefab: {fileID: 1234227501664626, guid: 45b004c497e010e409d52cada67e96d0, type: 2}
-    PoolSize: 200
-  - Prefab: {fileID: 1847680807995996, guid: c283574ca77c92b4c8e815e54b5312af, type: 2}
-    PoolSize: 200
-  - Prefab: {fileID: 1167175321328372, guid: 57cd213c353e74c4988cb1f23da16a0b, type: 2}
-    PoolSize: 5
-  CheatPrefabId: prefab.RecoveryOrb
 --- !u!1 &1115812676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2481,7 +2425,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1788661511}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1323944829
 MonoBehaviour:
@@ -2496,9 +2440,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _castingMethods:
-  - {fileID: 11400000, guid: 77ffb843e11aba24a9e28899cc49dcca, type: 2}
+  - {fileID: 0}
   _spellEffects:
-  - {fileID: 11400000, guid: 746f8bb69f6c4a948ba3dbcf42fe3b51, type: 2}
+  - {fileID: 0}
   _spellModifiers: []
   spellBookPrefab: {fileID: 114120116622674726, guid: 6b3be3ddbf8d99d439eaee54bafac4dd,
     type: 2}
@@ -3357,7 +3301,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 352366523}
-  - {fileID: 1115801952}
   - {fileID: 1323944828}
   - {fileID: 165402498}
   - {fileID: 370773522}

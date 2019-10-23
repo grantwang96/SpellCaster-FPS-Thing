@@ -67,7 +67,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private void Start() {
-        PlayerInventory.SpellInventory.OnLoadoutDataUpdated += OnLoadoutUpdated;
+        GameManager.GameManagerInstance.CurrentSpellInventory.OnLoadoutDataUpdated += OnLoadoutUpdated;
         InitializeLoadout();
         SubscribeToController();
         OnControllerStateUpdated();
@@ -75,7 +75,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private void InitializeLoadout() {
         _spellsList = new List<Spell>();
-        OnLoadoutUpdated(PlayerInventory.SpellInventory.CurrentLoadout);
+        OnLoadoutUpdated(GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout);
     }
 
     private void OnLoadoutUpdated(StorableSpell[] loadout) {
@@ -98,6 +98,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private void SubscribeToController() {
+        PlayerController.Instance.MouseScrollEvent += OnMouseScrollEvent;
         PlayerController.Instance.OnFire1Pressed += OnFire1Pressed;
         PlayerController.Instance.OnFire1Held += OnFire1Held;
         PlayerController.Instance.OnFire1Released += OnFire1Released;
@@ -107,6 +108,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private void UnsubscribeToController() {
+        PlayerController.Instance.MouseScrollEvent -= OnMouseScrollEvent;
         PlayerController.Instance.OnFire1Pressed -= OnFire1Pressed;
         PlayerController.Instance.OnFire1Held -= OnFire1Held;
         PlayerController.Instance.OnFire1Released -= OnFire1Released;
@@ -116,7 +118,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     void OnDisable() {
-        PlayerInventory.SpellInventory.OnLoadoutDataUpdated -= OnLoadoutUpdated;
+        GameManager.GameManagerInstance.CurrentSpellInventory.OnLoadoutDataUpdated -= OnLoadoutUpdated;
     }
 
     private void OnControllerStateUpdated() {
@@ -125,6 +127,16 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private void OnPlayerDeath(bool isDead, Damageable damageable) {
         UnsubscribeToController();
+    }
+
+    private void OnMouseScrollEvent(float mouseDelta) {
+        int nextSlot = _selectedSpellIndex - Mathf.RoundToInt(mouseDelta);
+        if(nextSlot < 0) {
+            nextSlot = _spellsList.Count - 1;
+        } else if(nextSlot >= _spellsList.Count) {
+            nextSlot = 0;
+        }
+        OnSlotButtonPressed(nextSlot + 1);
     }
 
     private void OnFire1Pressed() {
@@ -194,6 +206,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if(number <= 0 || number > _spellsList.Count) { return; }
         _selectedSpellIndex = number - 1;
         Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
+        OnSelectedSpellUpdated?.Invoke(_selectedSpellIndex);
     }
 
     private void UpdateActiveSpell() {

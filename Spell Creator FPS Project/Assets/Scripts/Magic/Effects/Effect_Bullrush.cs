@@ -16,8 +16,8 @@ public class Effect_Bullrush : Effect {
         if(damageable == null) {
             return;
         }
-        Vector3 velocity = damageable.Body.forward * power;
-        Debug.Log("Power: " + power);
+        Vector3 velocity = damageable.Body.forward * _basePower;
+        Debug.Log("Power: " + _basePower);
         damageable.AddForce(velocity, _overrideDrag);
     }
 

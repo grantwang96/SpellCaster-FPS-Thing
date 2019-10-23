@@ -7,7 +7,7 @@ public class MinMax_Int {
     public int Min => _min;
     public int Max => _max;
     
-    public static int GetCountFromMinMax(MinMax_Int minMax) {
+    public static int GetRandomFromMinMax(MinMax_Int minMax) {
         return Random.Range(minMax.Min, minMax.Max);
     }
 }

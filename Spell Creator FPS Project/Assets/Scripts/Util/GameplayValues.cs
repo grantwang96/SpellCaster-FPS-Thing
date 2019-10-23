@@ -46,7 +46,7 @@ public static partial class GameplayValues {
 
     public static class Level {
         public const int HealthOrbValue = 3;
-        public const int ManaOrbValue = 100;
+        public const int ManaOrbValue = 25;
 
         public const string RuneInstanceIdPrefix = "SpellComponentRune_";
         public const int RuneInstanceIdSize = 20;

@@ -7,7 +7,7 @@ public class BlastZone : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         Damageable damageable = other.GetComponent<Damageable>();
         if(damageable != null) {
-            damageable.TakeDamage(9999999);
+            damageable.TakeDamage(9999999, Element.Bullshit);
         }
     }
 }

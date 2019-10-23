@@ -70,7 +70,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
     }
 
     private void TryHeal(Damageable dam) {
-        dam.TakeDamage(-GameplayValues.Level.HealthOrbValue);
+        dam.TakeDamage(-GameplayValues.Level.HealthOrbValue, Element.Healing);
         StartCoroutine(FlyToTarget(dam.Body));
     }
 
@@ -92,6 +92,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
             yield return new WaitForSeconds(Time.deltaTime);
         }
         DeactivatePooledObject();
+        ObjectPool.Instance.ReturnUsedPooledObject(this);
     }
 
     public void ActivatePooledObject() {
@@ -101,7 +102,6 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
     public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
-        ObjectPool.Instance.ReturnUsedPooledObject(this);
         _interactable = false;
     }
 }

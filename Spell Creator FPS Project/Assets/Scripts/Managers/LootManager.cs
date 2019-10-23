@@ -112,6 +112,7 @@ public class LootManager : MonoBehaviour, ILootManager {
             return rewards;
         } else if (_enemies.ContainsKey(id)) {
             rewards = _enemies[id];
+            _enemies.Remove(id);
             return rewards;
         }
         Debug.LogError($"Could not retrieve chest info with given id {id}!");
@@ -172,61 +173,41 @@ public class LootManager : MonoBehaviour, ILootManager {
         if (_enemies.ContainsKey(enemyId)) {
             return;
         }
-        LootInfo lootInfo = npc.Blueprint.LootInfo;
-        if(lootInfo == null) {
+        NPCBlueprint blueprint = npc.Blueprint;
+        if(blueprint == null) {
             return;
         }
-        int healthOrbCount = Random.Range(lootInfo.HealthOrbRange.Min, lootInfo.HealthOrbRange.Max);
-        int manaOrbCount = Random.Range(lootInfo.ManaOrbRange.Min, lootInfo.ManaOrbRange.Max);
+        GenerateEnemyRewardsSet(enemyId, blueprint);
+    }
 
-        List<string> inventoryItems = new List<string>();
-        int totalTieredLootCount = MinMax_Int.GetCountFromMinMax(lootInfo.TieredLootRange);
-        int currentTieredLootCount = 0;
-        currentTieredLootCount =
-            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.WhiteTierLootRange, _lootTable[LootTier.White]);
-        currentTieredLootCount =
-            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.GreenTierLootRange, _lootTable[LootTier.Green]);
-        currentTieredLootCount =
-            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.PurpleTierLootRange, _lootTable[LootTier.Purple]);
-        currentTieredLootCount =
-            GenerateLootForTier(currentTieredLootCount, totalTieredLootCount, inventoryItems, lootInfo.GoldTierLootRange, _lootTable[LootTier.Gold]);
+    private void GenerateEnemyRewardsSet(string enemyId, NPCBlueprint blueprint) {
+        int healthOrbCount = Random.Range(blueprint.HealthOrbRewards.Min, blueprint.HealthOrbRewards.Max);
+        int manaOrbCount = Random.Range(blueprint.ManaOrbRewards.Min, blueprint.ManaOrbRewards.Max);
 
-        // SUPER HACKY FIX FOR EDGE CASE
-        while (currentTieredLootCount < totalTieredLootCount) {
-            currentTieredLootCount++;
-            inventoryItems.Add(GetRandomLootFromList(_lootTable[LootTier.White]));
-        }
+        int totalTieredLootCount = MinMax_Int.GetRandomFromMinMax(blueprint.RewardDropRange);
+        List<string> inventoryItems = GenerateLootForEnemy(totalTieredLootCount, blueprint.LootTable);
 
         RewardsSet rewards = new RewardsSet(healthOrbCount, manaOrbCount, inventoryItems);
         _enemies.Add(enemyId, rewards);
     }
 
-    private int GenerateLootForTier(int currentCount, int maxCount, List<string> inventoryItems, MinMax_Int lootTierRange, List<string> lootTier) {
-        int tieredLootCount = MinMax_Int.GetCountFromMinMax(lootTierRange);
-        if (MaxLootCountReached(currentCount, tieredLootCount, maxCount)) {
-            tieredLootCount = CapLootCount(maxCount, currentCount);
+    private List<string> GenerateLootForEnemy(int totalLootCount, IReadOnlyList<LootInfo> lootTable) {
+        List<LootInfo> tempLootInfos = new List<LootInfo>();
+        List<string> inventoryItems = new List<string>();
+        int weightSum = 0;
+        for(int i = 0; i < lootTable.Count; i++) {
+            weightSum += lootTable[i].DropWeight;
+            tempLootInfos.Add(new LootInfo(lootTable[i].LootId, weightSum));
         }
-        currentCount += tieredLootCount;
-        AddToLootList(inventoryItems, lootTier, tieredLootCount);
-        return currentCount;
-    }
-
-    private bool MaxLootCountReached(int currentCount, int nextAmount, int maxCount) {
-        return currentCount + nextAmount > maxCount;
-    }
-
-    private int CapLootCount(int totalLootCount, int currentLootCount) {
-        return Mathf.Max(totalLootCount - currentLootCount, 0);
-    }
-
-    private string GetRandomLootFromList(List<string> lootList) {
-        int rand = Random.Range(0, lootList.Count);
-        return lootList[rand];
-    }
-
-    private void AddToLootList(List<string> inventoryItems, List<string> lootTier, int count) {
-        for(int i = 0; i < count; i++) {
-            inventoryItems.Add(GetRandomLootFromList(lootTier));
+        for (int i = 0; i < totalLootCount; i++) {
+            int roll = Random.Range(0, weightSum + 1);
+            for(int j = 0; j < tempLootInfos.Count; j++) {
+                if(roll <= tempLootInfos[j].DropWeight) {
+                    inventoryItems.Add(tempLootInfos[j].LootId);
+                    break;
+                }
+            }
         }
+        return inventoryItems;
     }
 }

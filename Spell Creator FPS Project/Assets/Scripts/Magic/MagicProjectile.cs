@@ -54,9 +54,8 @@ public class MagicProjectile : Projectile {
 
     protected override void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
         Vector3 dir = damageable.Body.position - _rigidBody.position;
-        float force = _rigidBody.velocity.magnitude * _rigidBody.mass;
         foreach (Effect effect in Spell.Effects) {
-            effect?.TriggerEffect(SpellCaster.Damageable, dir.normalized * force, _power, transform.position, damageable);
+            effect?.TriggerEffect(SpellCaster.Damageable, dir.normalized * _power * _rigidBody.mass, _power, transform.position, damageable);
         }
         Die();
     }

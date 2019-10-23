@@ -234,11 +234,18 @@ public class UIViewGrid : MonoBehaviour {
     }
 
     public void AddInteractableToGrid(IUIInteractableData data) {
-
+        for(int i = 0; i < _interactableGrid.Length; i++) {
+            for(int j = 0; j < _interactableGrid[i].Length; j++) {
+                if(_interactableGrid[i][j] == null || _interactableGrid[i][j].Id == GameplayValues.UI.EmptyInventoryItemId) {
+                    _interactableGrid[i][j].SetValue(data);
+                }
+            }
+        }
     }
 
-    public void AddInteractableAt(int x, int y, IUIInteractable data) {
+    public void AddInteractableAt(int x, int y, IUIInteractableData data) {
         IUIInteractable slot = _interactableGrid[x][y];
+        slot.SetValue(data);
     }
 
     public void ClearInteractableItem(int x, int y) {

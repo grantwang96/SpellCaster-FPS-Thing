@@ -94,7 +94,6 @@ public class UIManager : MonoBehaviour {
     }
 
     public void CloseUIPanel() {
-        Debug.Log($"Closing UIPanel...");
         if (_activeUIPanels.Count != 0) {
             int indexLast = _activeUIPanels.Count - 1;
             UIPanel closingPanel = _activeUIPanels[indexLast];

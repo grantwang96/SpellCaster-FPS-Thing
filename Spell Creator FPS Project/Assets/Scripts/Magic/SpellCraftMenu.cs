@@ -36,7 +36,6 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     private void SubscribeToSubPanels() {
-        Debug.Log("sub to subpanels");
         _runicInventoryView.OnGridItemHighlighted += OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected += OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotHighlighted += OnStagingAreaItemHighlighted;
@@ -47,7 +46,6 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     private void UnsubscribeToSubPanels() {
-        Debug.Log("unsub from subpanels");
         _runicInventoryView.OnGridItemHighlighted -= OnInventoryItemHighlighted;
         _runicInventoryView.OnGridItemSelected -= OnInventoryItemSelected;
         _spellStagingArea.OnSpellSlotHighlighted -= OnStagingAreaItemHighlighted;
@@ -162,14 +160,14 @@ public class SpellCraftMenu : UISubPanelParent {
         }
         StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
         storableSpell.SetName(_spellStagingArea.SpellName);
-        PlayerInventory.SpellInventory.AddSpell(storableSpell);
+        GameManager.GameManagerInstance.CurrentSpellInventory.AddSpell(storableSpell);
         _spellCraftManager.ClearSpellComponents();
         _spellStagingArea.ClearSpellComponentSlots();
         
         // add this to loadout if loadout is not full
         for(int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
-            if(PlayerInventory.SpellInventory.CurrentLoadout[i] == null) {
-                PlayerInventory.SpellInventory.SetSpellInLoadout(storableSpell.InstanceId, i);
+            if(GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout[i] == null) {
+                GameManager.GameManagerInstance.CurrentSpellInventory.SetSpellInLoadout(storableSpell.InstanceId, i);
                 return;
             }
         }

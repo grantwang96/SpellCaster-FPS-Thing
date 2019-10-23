@@ -134,7 +134,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         SpellComponentData componentData = new SpellComponentData(1, 0);
         componentData.Id = spell_Effect.Id;
         componentData.Name = spell_Effect.Name;
-        componentData.Text = spell_Effect.ShortDescription;
+        componentData.Text = spell_Effect.Name;
 
         _spellComponentsView.AddInteractableItemToRow(1, componentData);
     }
@@ -143,7 +143,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         SpellComponentData componentData = new SpellComponentData(2, 0);
         componentData.Id = spellModifier.Id;
         componentData.Name = spellModifier.Name;
-        componentData.Text = spellModifier.ShortDescription;
+        componentData.Text = spellModifier.Name;
 
         _spellComponentsView.AddInteractableItemToRow(2, componentData);
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
@@ -159,7 +159,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public void ClearSpellComponentSlots() {
         for (int i = 0; i < _spellComponentsViewRowLengths.Length; i++) {
             for(int j = 0; j < _spellComponentsViewRowLengths[i]; j++) {
-                _spellComponentsView.RemoveInteractableFromRow(i, j);
+                _spellComponentsView.RemoveInteractableFromRow(i, 0);
             }
         }
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
@@ -236,7 +236,6 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     protected override void OnActivePanelUpdated(bool isCurrentPanel) {
         base.OnActivePanelUpdated(isCurrentPanel);
         if (isCurrentPanel) {
-            Debug.Log($"Cached UIViewGrid: {_cachedUIViewGrid?.name}");
             _spellNameEditorView.SetActive(_spellNameEditorView == _cachedUIViewGrid && IsFocused);
             _spellComponentsView.SetActive(_spellComponentsView == _cachedUIViewGrid && IsFocused);
             _craftButtonView.SetActive(_craftButtonView == _cachedUIViewGrid && IsFocused);

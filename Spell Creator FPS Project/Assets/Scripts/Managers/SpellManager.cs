@@ -35,14 +35,4 @@ public class SpellManager : MonoBehaviour {
         Spell newSpell = new Spell(castingMethod, effects, spellModifiers);
         return newSpell;
     }
-
-    public void GenerateSpellBook(Spell spell, Vector3 location, Quaternion rotation) {
-        // create a spellbook with this spell inside
-        SpellBook newSpellBook = Instantiate(spellBookPrefab, location, rotation);
-    }
-
-    // TODO: when chests are implemented, use this to build a spell based on ID
-    public Spell GenerateSpellFromChestId(string id) {
-        return GenerateRandomSpell();
-    }
 }

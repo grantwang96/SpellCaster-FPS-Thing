@@ -57,7 +57,8 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         if (!Interactable) { return; }
         if(character == PlayerController.Instance) {
             _interactable = false;
-            PlayerInventory.RunicInventory.AddItem(_itemId, 1);
+            GameManager.GameManagerInstance.CurrentRunicInventory.AddItem(_itemId, 1);
+            // PersistedInventory.RunicInventory.AddItem(_itemId, 1);
             OnInteractSuccess?.Invoke();
             DeactivatePooledObject();
         }

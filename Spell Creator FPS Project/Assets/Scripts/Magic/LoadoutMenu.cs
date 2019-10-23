@@ -30,7 +30,7 @@ public class LoadoutMenu : UISubPanelParent {
     }
 
     private void InitializeSpellDescriptionViews() {
-        StorableSpell firstLoadoutSpell = PlayerInventory.SpellInventory.CurrentLoadout[0];
+        StorableSpell firstLoadoutSpell = GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout[0];
         string id = firstLoadoutSpell == null ? string.Empty : firstLoadoutSpell.InstanceId;
         SpellDescriptionViewInitData loadoutSpellInitData = new SpellDescriptionViewInitData(id);
         _loadoutSpellDescriptionView.SetVisible(true);
@@ -170,7 +170,7 @@ public class LoadoutMenu : UISubPanelParent {
         }
 
         public virtual void OnLoadoutItemHighlighted(string spellInstanceId) {
-            _currentSpell = PlayerInventory.SpellInventory.GetSpellByInstanceId(spellInstanceId);
+            _currentSpell = GameManager.GameManagerInstance.CurrentSpellInventory.GetSpellByInstanceId(spellInstanceId);
             _spellName = _currentSpell?.Name;
         }
 
@@ -189,7 +189,6 @@ public class LoadoutMenu : UISubPanelParent {
         #region SPELL OPTIONS MENU LISTENERS
 
         private void OnChangeSpellSelected() {
-            Debug.Log("Change spell selected");
             _loadoutMenu.ChangePanel(_loadoutMenu._spellsInventoryView, IntVector3.Zero, true);
             _loadoutMenu._spellOptionsMenu.SetVisible(false);
             _loadoutMenu._spellsInventoryView.SetVisible(true);
@@ -216,7 +215,7 @@ public class LoadoutMenu : UISubPanelParent {
             UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
             _spellName = string.IsNullOrEmpty(newSpellName) ? _spellName : newSpellName;
             _currentSpell.SetName(_spellName);
-            PlayerInventory.SpellInventory.SoftRefresh();
+            GameManager.GameManagerInstance.CurrentSpellInventory.SoftRefresh();
             _loadoutMenu.LoadoutView_OnLoadoutSpellHighlighted();
         }
 
@@ -241,17 +240,18 @@ public class LoadoutMenu : UISubPanelParent {
 
         public override void Enter(LoadoutMenu loadoutMenu) {
             base.Enter(loadoutMenu);
-            _selectedSpell = PlayerInventory.SpellInventory.GetSpellByInstanceId(loadoutMenu._loadoutView.HighlightedItemId);
+            _selectedSpell =
+                GameManager.GameManagerInstance.CurrentSpellInventory.GetSpellByInstanceId(loadoutMenu._loadoutView.HighlightedItemId);
         }
 
         // performs the swap action
         public override void OnSpellInventoryItemSelected(string spellInstanceId) {
-            bool hasSpell = PlayerInventory.SpellInventory.HasSpellByInstanceId(spellInstanceId);
+            bool hasSpell = GameManager.GameManagerInstance.CurrentSpellInventory.HasSpellByInstanceId(spellInstanceId);
             string instanceId = hasSpell ? spellInstanceId : string.Empty;
-            StorableSpell[] loadout = PlayerInventory.SpellInventory.CurrentLoadout;
+            StorableSpell[] loadout = GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout;
             for (int i = 0; i < loadout.Length; i++) {
                 if (loadout[i] == _selectedSpell) {
-                    StorableSpell spell = PlayerInventory.SpellInventory.GetSpellByInstanceId(spellInstanceId);
+                    StorableSpell spell = GameManager.GameManagerInstance.CurrentSpellInventory.GetSpellByInstanceId(spellInstanceId);
                     if(ArrayHelper.Contains(loadout, spell)) {
                         // do not let the player set the another slot with the same spell
                         return;
@@ -260,7 +260,7 @@ public class LoadoutMenu : UISubPanelParent {
                     break;
                 }
             }
-            PlayerInventory.SpellInventory.SoftRefresh();
+            GameManager.GameManagerInstance.CurrentSpellInventory.SoftRefresh();
             ReturnToLoadoutMenu();
         }
 
@@ -277,7 +277,7 @@ public class LoadoutMenu : UISubPanelParent {
         }
 
         private void SetLoadoutSpell(string spellInstanceId, int index) {
-            PlayerInventory.SpellInventory.SetSpellInLoadout(spellInstanceId, index);
+            GameManager.GameManagerInstance.CurrentSpellInventory.SetSpellInLoadout(spellInstanceId, index);
         }
     }
 }

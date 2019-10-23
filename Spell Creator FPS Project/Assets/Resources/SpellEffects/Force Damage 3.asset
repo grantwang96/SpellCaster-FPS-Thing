@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59967616d373bd24e8a9d3ca08549904, type: 3}
+  m_Name: Force Damage 3
+  m_EditorClassIdentifier: 
+  _itemType: 0
+  _id: Effect_Damage_3
+  _smallIcon: {fileID: 0}
+  _largeIcon: {fileID: 0}
+  _name: Force Damage III
+  _shortDescription: Deals normal damage
+  _longDescription: 
+  _lootTier: 2
+  _manaCost: 14
+  _chargeTime: 0
+  _intervalTime: 0
+  _basePower: 19
+  _upwardForce: 10
+  _force: 45
+  _powerScale: 1
+  _element: 0

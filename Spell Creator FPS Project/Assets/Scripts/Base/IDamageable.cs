@@ -22,10 +22,10 @@ public abstract class Damageable : MonoBehaviour {
         ProcessActiveStatusEffects();
     }
 
-    public abstract void TakeDamage(int power);
-    public abstract void TakeDamage(int power, Vector3 velocity);
-    public abstract void TakeDamage(int power, StatusEffect statusEffect);
-    public abstract void TakeDamage(int power, Vector3 velocity, StatusEffect statusEffect);
+    public abstract void TakeDamage(int power, Element element);
+    public abstract void TakeDamage(int power, Element element, Vector3 velocity);
+    public abstract void TakeDamage(int power, Element element, StatusEffect statusEffect);
+    public abstract void TakeDamage(int power, Element element, Vector3 velocity, StatusEffect statusEffect);
 
     protected void FireHealthUpdateEvent() {
         OnHealthChanged?.Invoke(Health);

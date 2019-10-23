@@ -38,12 +38,25 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     [SerializeField] protected int _attackComboMax;
     public int AttackComboMax { get { return _attackComboMax; } }
 
+    // what type of enemy this is
     [SerializeField] private string[] _unitTags;
     public string[] UnitTags => _unitTags;
 
+    // what type of enemies to be aggressive against
     [SerializeField] private string[] _enemyTags;
     public string[] EnemyTags => _enemyTags;
 
-    [SerializeField] private LootInfo _lootInfo;
-    public LootInfo LootInfo => _lootInfo;
+    // loot drop data
+    [SerializeField] private MinMax_Int _healthOrbRewards;
+    public MinMax_Int HealthOrbRewards => _healthOrbRewards;
+    [SerializeField] private MinMax_Int _manaOrbRewards;
+    public MinMax_Int ManaOrbRewards => _manaOrbRewards;
+
+    // range of the total of how many reward items can drop
+    [SerializeField] private MinMax_Int _rewardDropRange;
+    public MinMax_Int RewardDropRange => _rewardDropRange;
+
+    // loot information for each tier
+    [SerializeField] private List<LootInfo> _lootTable;
+    public IReadOnlyList<LootInfo> LootTable => _lootTable;
 }

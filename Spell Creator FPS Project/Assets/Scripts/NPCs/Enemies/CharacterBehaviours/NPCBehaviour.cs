@@ -34,24 +34,20 @@ public class NPCBehaviour : CharacterBehaviour {
         _prepped = true;
     }
 
-    protected virtual void OnEnable() {
-        GenerateUniqueId();
-    }
-
-    private void GenerateUniqueId() {
-        _id = $"{_blueprint.NpcIdPrefix}_{StringGenerator.RandomString(0)}";
+    protected void GenerateUniqueId() {
+        _id = $"{_blueprint.NpcIdPrefix}_{StringGenerator.RandomString(GameplayValues.Combat.NPCIdSize)}";
     }
 
     protected virtual void Start() {
         if(_blueprint == null) {
-            Debug.LogError(name + " doesn't have a blueprint!");
+            Debug.LogError($"[{nameof(NPCBehaviour)}] NPC {name} doesn't have a blueprint!");
             return;
         }
         BaseSpeed = _blueprint.WalkSpeed;
         MaxSpeed = _blueprint.RunSpeed;
 
         if(_damageable == null) {
-            Debug.LogError($"[{nameof(NPCBehaviour)}] Does not contain damageable!");
+            Debug.LogError($"[{nameof(NPCBehaviour)}] NPC {name} does not contain damageable!");
             OnDeath(true, null);
             return;
         }
@@ -110,7 +106,6 @@ public class NPCBehaviour : CharacterBehaviour {
     protected virtual void SpawnRecoveryOrb(RecoveryOrbType recoveryOrbType) {
         PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId);
         RecoveryOrb recoveryOrb = obj as RecoveryOrb;
-        Debug.Log("Spawning recovery orb");
         if (recoveryOrb != null) {
             recoveryOrb.ActivatePooledObject();
             recoveryOrb.Initialize(recoveryOrbType);

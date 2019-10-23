@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour {
@@ -14,6 +15,9 @@ public class GameStateManager : MonoBehaviour {
     [SerializeField] private GameState _gameHubState; // where the game will normally boot to (if player has completed tutorial)
     [SerializeField] private GameState _tutorialState; // where the game will boot for first time users
 
+    public event Action OnStateEntered;
+    public event Action OnStateExited;
+
     private void Awake() {
         if (_initialized) { return; }
         if(Instance != null && Instance != this) {
@@ -26,7 +30,7 @@ public class GameStateManager : MonoBehaviour {
     // Use this for initialization
     void Start () {
         if (_initialized) { return; }
-        Debug.Log($"[{nameof(GameStateManager)}] is loaded!");
+        Debug.Log($"[{nameof(GameStateManager)}] {name} is loaded!");
         OnAppStart();
 	}
 
@@ -66,8 +70,10 @@ public class GameStateManager : MonoBehaviour {
         if(CurrentState != null) {
             PreviousState = CurrentState;
             CurrentState.Exit(newState);
+            OnStateExited?.Invoke();
         }
         CurrentState = newState;
         CurrentState.Enter();
+        OnStateEntered?.Invoke();
     }
 }

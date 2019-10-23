@@ -11,9 +11,9 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
 
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
-        PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
+        GameManager.GameManagerInstance.CurrentSpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
         GenerateViewCells();
-        SpellInventory_OnLoadoutDataUpdated(PlayerInventory.SpellInventory.CurrentLoadout);
+        SpellInventory_OnLoadoutDataUpdated(GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout);
     }
 
     private void SpellInventory_OnLoadoutDataUpdated(StorableSpell[] Loadout) {
@@ -33,10 +33,5 @@ public class UILoadoutViewGridContainer : UIInventoryViewGridContainer {
         initData.Id = currentSpell.InstanceId;
         initData.SetValue(currentSpell);
         _mainInventoryGrid.SetInteractableItem(x, y, initData);
-    }
-
-    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
-        base.OnActivePanelUpdated(isCurrentPanel);
-        Debug.Log("Loadout menu is active: " + isCurrentPanel);
     }
 }

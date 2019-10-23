@@ -31,9 +31,9 @@ public class NPCDamageable : Damageable {
         _isDead = false;
     }
 	
-    public override void TakeDamage(int damage) {
+    public override void TakeDamage(int damage, Element element) {
         if (parentDamageable != null) {
-            parentDamageable.TakeDamage(damage);
+            parentDamageable.TakeDamage(damage, element);
             return;
         }
         _health -= damage;
@@ -42,29 +42,29 @@ public class NPCDamageable : Damageable {
         }
     }
 
-    public override void TakeDamage(int damage, Vector3 velocity) {
+    public override void TakeDamage(int damage, Element element, Vector3 velocity) {
         if (parentDamageable != null) {
-            parentDamageable.TakeDamage(damage, velocity);
+            parentDamageable.TakeDamage(damage, element, velocity);
             return;
         }
-        TakeDamage(damage);
+        TakeDamage(damage, element);
         AddForce(velocity);
     }
 
-    public override void TakeDamage(int power, StatusEffect statusEffect) {
+    public override void TakeDamage(int power, Element element, StatusEffect statusEffect) {
         if (parentDamageable != null) {
-            parentDamageable.TakeDamage(power, statusEffect);
+            parentDamageable.TakeDamage(power, element, statusEffect);
             return;
         }
         AddStatusEffect(statusEffect, power);
     }
 
-    public override void TakeDamage(int damage, Vector3 velocity, StatusEffect statusEffect) {
+    public override void TakeDamage(int damage, Element element, Vector3 velocity, StatusEffect statusEffect) {
         if (parentDamageable != null) {
-            parentDamageable.TakeDamage(damage, velocity, statusEffect);
+            parentDamageable.TakeDamage(damage, element, velocity, statusEffect);
             return;
         }
-        TakeDamage(damage, velocity);
+        TakeDamage(damage, element, velocity);
         AddStatusEffect(statusEffect, damage);
     }
 

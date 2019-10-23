@@ -1371,6 +1371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _owner: {fileID: 114120558083659074}
   _power: 60
+  _element: 0
 --- !u!114 &114287093471164494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1396,6 +1397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _owner: {fileID: 114120558083659074}
   _power: 60
+  _element: 0
 --- !u!114 &114565834472377426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1489,6 +1491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _owner: {fileID: 114120558083659074}
   _power: 60
+  _element: 0
 --- !u!114 &114862455297173096
 MonoBehaviour:
   m_ObjectHideFlags: 1

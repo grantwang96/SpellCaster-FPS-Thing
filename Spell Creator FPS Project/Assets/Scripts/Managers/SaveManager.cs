@@ -20,9 +20,9 @@ public class SaveManager : MonoBehaviour {
     }
 
     protected void SubscribeToInventoryEvents() {
-        PlayerInventory.RunicInventory.OnRunicInventoryDataUpdated += RunicInventory_OnRunicInventoryDataUpdated;
-        PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated += SpellInventory_OnSpellInventoryDataUpdated;
-        PlayerInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
+        PersistedInventory.RunicInventory.OnRunicInventoryDataUpdated += RunicInventory_OnRunicInventoryDataUpdated;
+        PersistedInventory.SpellInventory.OnSpellInventoryDataUpdated += SpellInventory_OnSpellInventoryDataUpdated;
+        PersistedInventory.SpellInventory.OnLoadoutDataUpdated += SpellInventory_OnLoadoutDataUpdated;
     }
 
     protected void SubscribeToPlayerDataEvents() {
@@ -62,9 +62,9 @@ public class SaveManager : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        PlayerInventory.RunicInventory.OnRunicInventoryDataUpdated -= RunicInventory_OnRunicInventoryDataUpdated;
-        PlayerInventory.SpellInventory.OnSpellInventoryDataUpdated -= SpellInventory_OnSpellInventoryDataUpdated;
-        PlayerInventory.SpellInventory.OnLoadoutDataUpdated -= SpellInventory_OnLoadoutDataUpdated;
+        PersistedInventory.RunicInventory.OnRunicInventoryDataUpdated -= RunicInventory_OnRunicInventoryDataUpdated;
+        PersistedInventory.SpellInventory.OnSpellInventoryDataUpdated -= SpellInventory_OnSpellInventoryDataUpdated;
+        PersistedInventory.SpellInventory.OnLoadoutDataUpdated -= SpellInventory_OnLoadoutDataUpdated;
     }
 
     // Use this for initialization

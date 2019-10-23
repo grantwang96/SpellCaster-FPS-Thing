@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f37206ecdd3c8fb4e8902bb860b9307f, type: 3}
+  m_Name: Single Shot Held 3
+  m_EditorClassIdentifier: 
+  _itemType: 0
+  _id: CM_SingleShot_Held_3
+  _smallIcon: {fileID: 0}
+  _largeIcon: {fileID: 0}
+  _name: Rapid Missile 3
+  _shortDescription: 
+  _longDescription: 
+  _lootTier: 2
+  manaCost: 15
+  _intervalTime: 0.1
+  _powerModifier: 0.4
+  spellTiming: 0000000001000000
+  _magicProjectilePrefabId: MagicProjectile
+  _projectileSpeed: 100
+  _lifeTime: 5

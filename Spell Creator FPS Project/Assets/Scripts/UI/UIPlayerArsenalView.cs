@@ -19,11 +19,6 @@ public class UIPlayerArsenalView : MonoBehaviour {
             _spellSlots.Add(spellSlot);
         }
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     private void OnDestroy() {
         _playerCombat.OnSpellsInventoryUpdated -= OnHeldSpellsUpdated;

@@ -20,6 +20,11 @@ public class ObjectPool : MonoBehaviour {
         InitializePooledObjects();
     }
 
+    private void Start() {
+        GameStateManager.Instance.OnStateEntered += OnGameStateManagerNewStateEntered;
+        OnGameStateManagerNewStateEntered();
+    }
+
     private void Update() {
         if (Input.GetKeyDown(KeyCode.U)) {
             // CheatSpawnPooledObject();
@@ -41,6 +46,16 @@ public class ObjectPool : MonoBehaviour {
         }
     }
 
+    private void OnGameStateManagerNewStateEntered() {
+        GameStateManager.Instance.CurrentState.OnGameStateExit += OnGameStateExit;
+    }
+
+    // when the game is transitioning states
+    private void OnGameStateExit() {
+        ResetAllInUseObjects();
+        GameStateManager.Instance.CurrentState.OnGameStateExit -= OnGameStateExit;
+    }
+
     // THIS FUNCTION MIGHT NEED TO BE HANDLED IN A LOADING COROUTINE TO REDUCE STUTTERS. GETCOMPONENT IS A THICC BOI
     private void AddObjectToPool(ObjectPoolInitData initData) {
         PooledObject prefab = initData.Prefab.GetComponent<PooledObject>();
@@ -48,7 +63,6 @@ public class ObjectPool : MonoBehaviour {
             ErrorManager.LogError(nameof(ObjectPool), "Prefab to be added was null!");
             return;
         }
-        Debug.Log(prefab.PrefabId);
         if (!_availablePooledObjects.ContainsKey(prefab.PrefabId)) {
             _availablePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
             _inUsePooledObjects.Add(prefab.PrefabId, new List<PooledObject>());
@@ -88,6 +102,24 @@ public class ObjectPool : MonoBehaviour {
         }
     }
 
+    private void ResetAllInUseObjects() {
+        int failNumber = 0;
+        foreach (KeyValuePair<string, List<PooledObject>> inUseList in _inUsePooledObjects) {
+            failNumber = _inUsePooledObjects[inUseList.Key].Count;
+            int tries = 0;
+            while (_inUsePooledObjects[inUseList.Key].Count != 0) {
+                PooledObject obj = _inUsePooledObjects[inUseList.Key][0];
+                obj.DeactivatePooledObject();
+                ReturnUsedPooledObject(obj);
+                tries++;
+                if(tries > failNumber) {
+                    Debug.LogError($"[{nameof(ObjectPool)}] Took too many tries to clear in use object list {inUseList.Key}!");
+                    break;
+                }
+            }
+        }
+    }
+
     public PooledObject UsePooledObject(string id) {
         // make sure requested object exists within pool
         if (!_availablePooledObjects.ContainsKey(id)) {
@@ -117,7 +149,6 @@ public class ObjectPool : MonoBehaviour {
             Debug.LogError($"Object {obj.PrefabId} not found in In-Use list of ID: {obj.PrefabId}!");
             return;
         }
-        _inUsePooledObjects[obj.PrefabId].Remove(obj);
         if (!_availablePooledObjects.ContainsKey(obj.PrefabId)) {
             Debug.LogError($"Unable to find pooled object list with ID: {obj.PrefabId}");
             return;

@@ -20,7 +20,7 @@ public class PlayerDamageable : Damageable {
         _moveController = GetComponent<CharacterMoveController>();
     }
 
-    public override void TakeDamage(int damage) {
+    public override void TakeDamage(int damage, Element element) {
         if (_isDead) { return; }
         _health -= damage;
         if(_health > MaxHealth) { _health = MaxHealth; }
@@ -28,18 +28,18 @@ public class PlayerDamageable : Damageable {
         FireHealthUpdateEvent();
     }
 
-    public override void TakeDamage(int damage, Vector3 velocity) {
-        TakeDamage(damage);
+    public override void TakeDamage(int damage, Element element, Vector3 velocity) {
+        TakeDamage(damage, element);
         AddForce(velocity);
     }
 
-    public override void TakeDamage(int damage, StatusEffect statusEffect) {
-        TakeDamage(damage);
+    public override void TakeDamage(int damage, Element element, StatusEffect statusEffect) {
+        TakeDamage(damage, element);
         AddStatusEffect(statusEffect, damage);
     }
 
-    public override void TakeDamage(int damage, Vector3 velocity, StatusEffect statusEffect) {
-        TakeDamage(damage, velocity);
+    public override void TakeDamage(int damage, Element element, Vector3 velocity, StatusEffect statusEffect) {
+        TakeDamage(damage, element, velocity);
         AddStatusEffect(statusEffect, damage);
     }
 

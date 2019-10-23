@@ -18,7 +18,7 @@ public interface IArenaManager {
     event Action<int> OnEnemyDefeated;
 }
 
-public class ArenaManager : MonoBehaviour, IArenaManager {
+public class ArenaManager : GameManager, IArenaManager {
 
     private const string EnemiesResourcePath = "Enemies";
 
@@ -51,8 +51,15 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
 
     public event Action<int> OnEnemyDefeated;
     
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         ArenaManagerInstance = this;
+    }
+
+    protected override void SetInventories() {
+        TempInventory tempInventory = new TempInventory(true, PersistedInventory.RunicInventory, PersistedInventory.SpellInventory);
+        CurrentRunicInventory = tempInventory;
+        CurrentSpellInventory = tempInventory;
     }
 
     private void Start() {
@@ -174,7 +181,6 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         }
         _currentWave.Clear();
         _nextWave = _nextRound.GetRange(0, waveCount);
-        Debug.Log("Wave Size: " + _nextWave.Count);
         for (int i = 0; i < _nextWave.Count; i++) {
             _nextRound.Remove(_nextWave[i]);
         }
@@ -189,7 +195,6 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
             SpawnEnemyPrefab(enemyPrefabIds[i], spawnPoint.position);
         }
         _nextWave.Clear();
-        Debug.Log("Finished Spawning wave!");
     }
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
@@ -200,7 +205,6 @@ public class ArenaManager : MonoBehaviour, IArenaManager {
         npc.Damageable.OnDeath += OnEnemyDefeatedListener;
         _currentWave.Add(npc.Damageable, npc);
         OnWaveCountUpdated?.Invoke(_currentWave.Count);
-        Debug.Log("Spawned Enemy Prefab!");
     }
 
     private int GetWaveCount() {

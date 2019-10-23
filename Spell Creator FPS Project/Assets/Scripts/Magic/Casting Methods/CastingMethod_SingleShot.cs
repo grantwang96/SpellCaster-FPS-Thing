@@ -18,12 +18,4 @@ public class CastingMethod_SingleShot : CastingMethod_MagicProjectile {
         InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
         magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
     }
-
-    protected int GetPower(int basePower, ActiveSpell activeSpell) {
-        int power = basePower;
-        if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
-            power *= Mathf.FloorToInt(1 + (activeSpell.holdTime / activeSpell.holdIntervalTime));
-        }
-        return power;
-    }
 }

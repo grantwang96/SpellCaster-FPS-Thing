@@ -33,7 +33,7 @@ public class UISpellDescriptionView : UISubPanel {
 
     public void UpdateContainedSpell(string spellInstanceId) {
         ContainedSpellId = spellInstanceId;
-        StorableSpell storableSpell = PlayerInventory.SpellInventory.GetSpellByInstanceId(spellInstanceId);
+        StorableSpell storableSpell = GameManager.GameManagerInstance.CurrentSpellInventory.GetSpellByInstanceId(spellInstanceId);
         if(storableSpell == null) {
             // turn this off
             ShowContents(false);

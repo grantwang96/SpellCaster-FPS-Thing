@@ -1299,10 +1299,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71dd165649df6e7408c0cdb33c1dd27a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mana: 10000
-  _maxMana: 10000
+  _mana: 1000
+  _maxMana: 1000
   _manaRechargeDelay: 1
-  _manaRechargeRate: 30
+  _manaRechargeRate: 20
   _gunBarrel: {fileID: 4325496623865586}
   _spellsList: []
   _selectedSpellIndex: 0

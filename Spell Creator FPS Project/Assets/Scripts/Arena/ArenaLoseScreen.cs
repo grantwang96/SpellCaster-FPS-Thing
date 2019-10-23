@@ -32,6 +32,8 @@ public class ArenaLoseScreen : LoseScreen {
         // close panels
         UIManager.Instance.CloseUIPanel();
         // reload state
+        GameManager.GameManagerInstance.CurrentSpellInventory?.ClearAll();
+        GameManager.GameManagerInstance.CurrentRunicInventory?.ClearAll();
         GameStateManager.Instance.HandleTransition(GameplayValues.Navigation.ReenterArenaTransitionId);
     }
 

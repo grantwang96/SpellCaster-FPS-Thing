@@ -6,6 +6,7 @@ using UnityEngine;
 public class DamageOverTime : StatusEffect {
 
     [SerializeField] private int _baseDamage = 1;
+    [SerializeField] private Element _element;
 
     public override void OnAddEffect(Damageable damageable, int power) {
         ApplyEffect(damageable, power);
@@ -13,6 +14,6 @@ public class DamageOverTime : StatusEffect {
 
     public override void ApplyEffect(Damageable damageable, int power) {
         int totalPower = _baseDamage * power;
-        damageable.TakeDamage(totalPower);
+        damageable.TakeDamage(totalPower, _element);
     }
 }

@@ -17,13 +17,12 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     public event InventoryUpdatedEvent OnInventoryUpdated;
 
     protected override void Awake() {
-        Inventory = PlayerInventory.RunicInventory;
+        Inventory = GameManager.GameManagerInstance?.CurrentRunicInventory;
     }
 
     public override void Initialize(UIPanelInitData initData) {
-        Debug.Log("Initializing Runic Inventory...");
         base.Initialize(initData);
-        if(Inventory == null) { Inventory = PlayerInventory.RunicInventory; }
+        if(Inventory == null) { Inventory = GameManager.GameManagerInstance?.CurrentRunicInventory; }
         Inventory.OnRunicInventoryDataUpdated += OnItemsUpdated;
         OnItemsUpdated(Inventory.StoredRunes);
     }
@@ -35,10 +34,8 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     }
 
     private void OnItemsUpdated(IReadOnlyDictionary<string, int> updatedInventory) {
-        Debug.Log("Updating inventory view items...");
         _items.Clear();
         foreach(KeyValuePair<string, int> pair in updatedInventory) {
-            Debug.Log($"{pair.Key}, {pair.Value}");
             _items.Add(pair);
         }
         UpdateViewCells();

@@ -59,7 +59,7 @@ public class NPCMoveController : CharacterMoveController {
         if (_traveling) {
             Move();
             CheckArrivedDestination();
-        } else {
+        } else if (_externalForces == null) {
             SlowDown();
         }
     }
@@ -117,13 +117,19 @@ public class NPCMoveController : CharacterMoveController {
         }
         // trigger event if you've arrived at destination
         if (!NextPathCorner()) {
-            _traveling = false;
-            _movementVelocity = Vector3.zero;
-            _path = null;
-            OnArrivedDestination?.Invoke();
+            ArrivedDestination();
             return;
         }
         _currentPathCorner = Path[_pathIndex];
+    }
+
+    private void ArrivedDestination() {
+        _traveling = false;
+        float verticalVel = _movementVelocity.y;
+        _movementVelocity = Vector3.zero;
+        _movementVelocity.y = verticalVel;
+        _path = null;
+        OnArrivedDestination?.Invoke();
     }
 
     public virtual bool IsPathObstructedToTarget(Vector3 target) {
@@ -156,7 +162,8 @@ public class NPCMoveController : CharacterMoveController {
             _movementVelocity = Vector3.down * gravity;
             return;
         }
-        _movementVelocity = Vector3.Lerp(_movementVelocity, Vector3.down * gravity, 0.5f);
+        _movementVelocity = Vector3.Lerp(_movementVelocity, Vector3.zero, 0.5f);
+        _movementVelocity.y = gravity;
     }
 
     // sets the rotation of the character

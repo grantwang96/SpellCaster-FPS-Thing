@@ -41,6 +41,8 @@ public class PlayerController : CharacterBehaviour {
         return _bodyTransform.position + _playerMovement.CharacterController.center;
     }
 
+    public event Action<float> MouseScrollEvent;
+
     public event Action OnJumpPressed;
 
     public event Action OnInteractPressed;
@@ -144,6 +146,11 @@ public class PlayerController : CharacterBehaviour {
 
         _lookVector.x = Input.GetAxis("Mouse X");
         _lookVector.y = Input.GetAxis("Mouse Y");
+
+        float mouseWheelInput = Input.GetAxisRaw("Mouse ScrollWheel");
+        if(!Mathf.Approximately(mouseWheelInput, 0f)) {
+            MouseScrollEvent?.Invoke(mouseWheelInput > 0f ? 1f : -1f);
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             OnSlotBtnPressed?.Invoke(1);

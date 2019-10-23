@@ -42,14 +42,14 @@ public class InventoryRegistry : MonoBehaviour, IInventoryRegistry {
         for(int i = 0; i < objs.Length; i++) {
             IInventoryStorable inventoryStorable = objs[i] as IInventoryStorable;
             if (inventoryStorable == null) {
-                Debug.Log($"Object is not IInventoryStorable! Skipping...");
+                Debug.LogWarning($"Object is not IInventoryStorable! Skipping...");
                 continue;
             }
             if (_inventoryRegistry.ContainsKey(inventoryStorable.Id)) {
-                Debug.Log($"Inventory Registry already contains key {inventoryStorable.Id}!");
+                Debug.LogWarning($"Inventory Registry already contains key {inventoryStorable.Id}!");
                 continue;
             }
-            Debug.Log($"Registering inventory storable ({inventoryStorable.ToString()}) with ID {inventoryStorable.Id}");
+            // Debug.Log($"Registering inventory storable ({inventoryStorable.ToString()}) with ID {inventoryStorable.Id}");
             _inventoryRegistry.Add(inventoryStorable.Id, inventoryStorable);
         }
     }

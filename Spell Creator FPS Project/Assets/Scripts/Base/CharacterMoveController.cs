@@ -60,15 +60,15 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
         float linearDrag = drag;
-        _movementVelocity = externalForce / _mass;
-        float magnitude = externalForce.magnitude;
+        _movementVelocity += externalForce / _mass;
+        _movementVelocity.y = externalForce.y;
         _characterController.Move(_movementVelocity * Time.deltaTime);
         yield return new WaitForFixedUpdate();
-        Vector3 start = externalForce;
         while (!_characterController.isGrounded) {
             yield return new WaitForFixedUpdate();
         }
         float time = 0f;
+        Vector3 start = _movementVelocity;
         while (_movementVelocity.x != 0 && _movementVelocity.z != 0) {
             time += Time.deltaTime * linearDrag;
             _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);

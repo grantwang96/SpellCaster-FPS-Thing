@@ -94,6 +94,6 @@ public class SpellViewCellData : ViewCellData{
 
     public void SetValue(string instanceId) {
         Id = instanceId;
-        StoredSpell = PlayerInventory.SpellInventory.GetSpellByInstanceId(instanceId);
+        StoredSpell = GameManager.GameManagerInstance.CurrentSpellInventory.GetSpellByInstanceId(instanceId);
     }
 }

@@ -18,19 +18,15 @@ public class EnemyLootData {
 
 [System.Serializable]
 public class LootInfo {
-    [SerializeField] private MinMax_Int _healthOrbRange;
-    [SerializeField] private MinMax_Int _manaOrbRange;
-    [SerializeField] private MinMax_Int _tieredLootRange;
-    [SerializeField] private MinMax_Int _whiteTierLootRange;
-    [SerializeField] private MinMax_Int _greenTierLootRange;
-    [SerializeField] private MinMax_Int _purpleTierLootRange;
-    [SerializeField] private MinMax_Int _goldTierLootRange;
+    [SerializeField] private string _lootId;
+    [SerializeField] [Range(1, 1000)] private int _dropWeight;
 
-    public MinMax_Int HealthOrbRange => _healthOrbRange;
-    public MinMax_Int ManaOrbRange => _manaOrbRange;
-    public MinMax_Int TieredLootRange => _tieredLootRange;
-    public MinMax_Int WhiteTierLootRange => _whiteTierLootRange;
-    public MinMax_Int GreenTierLootRange => _greenTierLootRange;
-    public MinMax_Int PurpleTierLootRange => _purpleTierLootRange;
-    public MinMax_Int GoldTierLootRange => _goldTierLootRange;
-}
+    public string LootId => _lootId;
+    public int DropWeight => _dropWeight;
+
+    // when code wants to use this
+    public LootInfo(string lootId, int dropWeight) {
+        _lootId = lootId;
+        _dropWeight = dropWeight;
+    }
+} 

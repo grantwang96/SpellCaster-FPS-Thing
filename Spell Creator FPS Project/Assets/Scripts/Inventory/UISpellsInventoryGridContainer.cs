@@ -20,7 +20,7 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
     public bool DisplayLoadoutSpells { get; private set; }
 
     protected override void Awake() {
-        Initialize(PlayerInventory.SpellInventory);
+        Initialize(GameManager.GameManagerInstance?.CurrentSpellInventory);
     }
 
     private void Initialize(ISpellInventory inventory) {
@@ -30,7 +30,7 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
         if(SpellsInventory == null) {
-            SpellsInventory = PlayerInventory.SpellInventory;
+            SpellsInventory = GameManager.GameManagerInstance?.CurrentSpellInventory;
         }
         SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
         OnInventoryUpdated(SpellsInventory.StoredSpells);
