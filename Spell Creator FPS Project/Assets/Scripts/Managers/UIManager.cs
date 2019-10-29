@@ -23,6 +23,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private Canvas _mainCanvas;
 
     public delegate void PanelUpdateEvent(bool empty);
+    public event Action<string> OnPanelDeactivated;
+    public event Action<string> OnPanelActivated;
     public event PanelUpdateEvent OnPanelsUpdated;
 
     // events for passing data between UIPanels
@@ -73,6 +75,7 @@ public class UIManager : MonoBehaviour {
         }
         UIPanel clone = Instantiate(panel, transform);
         clone.gameObject.SetActive(false);
+        clone.name = prefabName;
         _allUIPanels.Add(prefabName, clone);
         return true;
     }
@@ -100,6 +103,7 @@ public class UIManager : MonoBehaviour {
             _activeUIPanels.RemoveAt(indexLast);
             DeactivateCurrentPanel();   
         }
+        _currentScenePanel = null;
         if(_activeUIPanels.Count != 0) {
             _currentScenePanel = _activeUIPanels[_activeUIPanels.Count - 1];
             ActivateCurrentPanel();
@@ -134,14 +138,15 @@ public class UIManager : MonoBehaviour {
 
     private void ActivateCurrentPanel() {
         if (_currentScenePanel != null) {
-            _currentScenePanel.gameObject.SetActive(true);
+            _currentScenePanel.SetPanelVisible(true);
         }
         // call some initialization function here
     }
 
     private void DeactivateCurrentPanel() {
         if (_currentScenePanel != null) {
-            _currentScenePanel.gameObject.SetActive(false);
+            _currentScenePanel.SetPanelVisible(false);
+            OnPanelDeactivated?.Invoke(_currentScenePanel.name);
         }
     }
 

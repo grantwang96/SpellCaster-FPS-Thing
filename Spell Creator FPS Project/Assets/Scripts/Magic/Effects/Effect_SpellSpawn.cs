@@ -12,19 +12,19 @@ public class Effect_SpellSpawn : Effect {
     [SerializeField] private bool _useGravity;
     [SerializeField] private float _force;
 
-    public override void TriggerEffect(Damageable caster, int power, List<Effect> additionalEffects = null) {
-        SpawnMagicProjectiles(power, caster.Body.position, additionalEffects);
+    public override void TriggerEffect(Damageable caster, float powerScale, List<Effect> additionalEffects = null) {
+        SpawnMagicProjectiles(powerScale, caster.Body.position, additionalEffects);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         if(damageable == null) {
             return;
         }
-        SpawnMagicProjectiles(power, damageable.Body.position, additionalEffects);
+        SpawnMagicProjectiles(powerScale, damageable.Body.position, additionalEffects);
     }
 
-    public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
-        TriggerEffect(caster, power, position, damageable, additionalEffects);
+    public override void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
+        TriggerEffect(caster, powerScale, position, damageable, additionalEffects);
     }
 
     private bool IsEffectListEmpty(List<Effect> additionalEffects = null) {
@@ -35,7 +35,7 @@ public class Effect_SpellSpawn : Effect {
         return false;
     }
 
-    private void SpawnMagicProjectiles(int power, Vector3 position, List<Effect> additionalEffects) {
+    private void SpawnMagicProjectiles(float powerScale, Vector3 position, List<Effect> additionalEffects) {
         if (IsEffectListEmpty()) {
             return;
         }
@@ -46,7 +46,7 @@ public class Effect_SpellSpawn : Effect {
             Vector3 velocity = Random.insideUnitSphere.normalized * _force;
 
             MagicProjectile magicProjectile = GetMagicProjectile();
-            magicProjectile.InitializeProjectile(power, _projectileLifeTime, effects.ToArray());
+            magicProjectile.InitializeProjectile(powerScale, _projectileLifeTime, effects.ToArray());
             magicProjectile.InitializePosition(position, velocity);
 
             magicProjectile.ActivatePooledObject();

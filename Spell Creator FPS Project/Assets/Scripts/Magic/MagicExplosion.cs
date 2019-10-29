@@ -9,7 +9,7 @@ public class MagicExplosion : MonoBehaviour {
     private float _force;
     private float _totalTime;
     private float _time;
-    private int _power;
+    private float _powerScale;
     private Damageable _owner;
 
     [SerializeField] private SphereCollider _collider;
@@ -17,12 +17,12 @@ public class MagicExplosion : MonoBehaviour {
 
     private List<Collider> _ignoredColliders = new List<Collider>();
 
-    public void Initialize(List<Effect> effects, float radius, float force, float time, int power, Damageable owner, Damageable damageable = null) {
+    public void Initialize(List<Effect> effects, float radius, float force, float time, float powerScale, Damageable owner, Damageable damageable = null) {
         _effects = effects;
         _radius = radius;
         _totalTime = time;
         _time = 0f;
-        _power = power;
+        _powerScale = powerScale;
         _owner = owner;
 
         transform.localScale = Vector3.zero;
@@ -52,7 +52,7 @@ public class MagicExplosion : MonoBehaviour {
     private void ApplyEffects(Damageable damageable) {
         Vector3 dir = (damageable.transform.position - transform.position).normalized;
         foreach (Effect effect in _effects) {
-            effect?.TriggerEffect(_owner, dir * _force, _power, transform.position, damageable, _effects);
+            effect?.TriggerEffect(_owner, dir * _force, _powerScale, transform.position, damageable, _effects);
         }
     }
 }

@@ -14,28 +14,28 @@ public class Effect_Explosion : Effect {
 
     [SerializeField] private MagicExplosion magicExplosionPrefab;
 
-    public override void TriggerEffect(Damageable caster, int power, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, List<Effect> effects = null) {
         throw new System.NotImplementedException();
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         List<Effect> newEffects = additionalEffects == null ? new List<Effect>() : new List<Effect>(additionalEffects);
         newEffects.Remove(this);
         MagicExplosion explosion = Instantiate(magicExplosionPrefab, caster.Body.position, Quaternion.identity);
-        explosion.Initialize(newEffects, _radius, _force, _time, power, caster);
+        explosion.Initialize(newEffects, _radius, _force, _time, powerScale, caster);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {
         List<Effect> newEffects = additionalEffects == null ? new List<Effect>() : new List<Effect>(additionalEffects);
         newEffects.Remove(this);
         MagicExplosion explosion = Instantiate(magicExplosionPrefab, position, Quaternion.identity);
-        explosion.Initialize(newEffects, _radius, _force, _time, power, caster);
+        explosion.Initialize(newEffects, _radius, _force, _time, powerScale, caster);
     }
 
-    public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         List<Effect> newEffects = effects == null ? new List<Effect>() : new List<Effect>(effects);
         newEffects.Remove(this);
         MagicExplosion explosion = Instantiate(magicExplosionPrefab, position, Quaternion.identity);
-        explosion.Initialize(newEffects, _radius, _force, _time, power, caster, damageable);
+        explosion.Initialize(newEffects, _radius, _force, _time, powerScale, caster, damageable);
     }
 }

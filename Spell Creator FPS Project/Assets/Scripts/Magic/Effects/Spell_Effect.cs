@@ -45,15 +45,19 @@ public abstract class Effect : ScriptableObject, IInventoryStorable, ILootableIt
     [SerializeField] protected int _basePower;
     public int BasePower { get { return _basePower; } }
 
-    public abstract void TriggerEffect(Damageable caster, int power, List<Effect> additionalEffects = null);
+    public abstract void TriggerEffect(Damageable caster, float powerScale, List<Effect> additionalEffects = null);
     /// <summary>
     /// Applies effect to given damageable
     /// </summary>
     /// <param name="damageable"></param>
-    public abstract void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null);
-    public abstract void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null);
+    public abstract void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null);
+    public abstract void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null);
 
-    public virtual void TriggerEffect(Damageable caster, int power, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {
+    public virtual void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {
 
+    }
+
+    protected virtual int GetTotalPower(float powerScale) {
+        return Mathf.RoundToInt(_basePower * powerScale);
     }
 }

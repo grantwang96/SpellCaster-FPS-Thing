@@ -17,9 +17,9 @@ public class PlayerRadiusInteract : MonoBehaviour {
 	}
 
     private void TriggerAreaEnter(Collider other) {
-        RecoveryOrb recoveryOrb = other.GetComponent<RecoveryOrb>();
-        if(recoveryOrb != null) {
-            recoveryOrb.TryPickUp(this.gameObject);
+        IInteractable interactable = other.GetComponent<IInteractable>();
+        if(interactable != null) {
+            interactable.InteractPress(PlayerController.Instance);
         }
     }
 }

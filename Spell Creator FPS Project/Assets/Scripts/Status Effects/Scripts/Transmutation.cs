@@ -35,7 +35,7 @@ public class Transmutation : StatusEffect {
             }
         }
         Damageable replacementObject = Instantiate(replacementObjectPrefab, damageable.transform.position, damageable.transform.rotation);
-        replacementObject.parentDamageable = damageable;
+        replacementObject._parentDamageable = damageable;
         replacementObject.gameObject.name = ReplacementObjectName;
         replacementObject.transform.parent = damageable.transform;
     }

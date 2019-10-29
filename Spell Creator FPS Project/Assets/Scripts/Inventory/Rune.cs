@@ -18,8 +18,10 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
 
     [SerializeField] private float _spawnSpread;
     [SerializeField] private float _spawnForce;
+    [SerializeField] private float _flySpeed;
 
     [SerializeField] private Rigidbody _rigidbody;
+    [SerializeField] private Collider _collider;
 
     [SerializeField] private MeshFilter _outerMeshFilter;
     [SerializeField] private MeshRenderer _outerMeshRenderer;
@@ -60,7 +62,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
             GameManager.GameManagerInstance.CurrentRunicInventory.AddItem(_itemId, 1);
             // PersistedInventory.RunicInventory.AddItem(_itemId, 1);
             OnInteractSuccess?.Invoke();
-            DeactivatePooledObject();
+            StartCoroutine(FlyToTarget(character.BodyTransform));
         }
     }
 
@@ -82,11 +84,29 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         Vector3 offset = Random.insideUnitCircle * _spawnSpread;
         offset = new Vector3(offset.x, 0f, offset.y);
         Vector3 dir = Vector3.up + offset;
+        _collider.enabled = true;
+        _rigidbody.isKinematic = false;
+        _rigidbody.useGravity = true;
         _rigidbody.AddForce(dir.normalized * _spawnForce, ForceMode.Impulse);
     }
 
     public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         LevelManager.LevelManagerInstance.UnregisterInteractable(this);
+    }
+
+    private IEnumerator FlyToTarget(Transform target) {
+        _rigidbody.isKinematic = true;
+        _rigidbody.useGravity = false;
+        _collider.enabled = false;
+        _interactable = false;
+        float time = 0f;
+        while (time < 1f) {
+            time += Time.deltaTime * _flySpeed;
+            transform.position = Vector3.Lerp(transform.position, target.position, time);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        DeactivatePooledObject();
+        ObjectPool.Instance.ReturnUsedPooledObject(this);
     }
 }

@@ -22,7 +22,7 @@ TagManager:
   - Weapon
   - Pickupable
   - CollisionInteractable
-  - PlayerInteract
+  - NPCInteract
   - 
   - 
   - 

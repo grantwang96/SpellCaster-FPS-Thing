@@ -47,6 +47,10 @@ public abstract class UIPanel : MonoBehaviour {
         UnsubscribeToGameplayController();
     }
 
+    public virtual void SetPanelVisible(bool visible) {
+        gameObject.SetActive(visible);
+    }
+
     protected virtual void MenuBtnAction() {
         ClosePanel();
     }

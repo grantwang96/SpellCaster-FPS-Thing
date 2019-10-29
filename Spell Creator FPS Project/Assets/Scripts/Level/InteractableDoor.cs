@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InteractableDoor : MonoBehaviour, IInteractable {
 
-    public bool Interactable { get; private set; }
+    public bool Interactable { get; private set; } = true;
     public Vector3 InteractableCenter => transform.position;
 
     [SerializeField] private string _interactableId;
@@ -15,6 +15,9 @@ public class InteractableDoor : MonoBehaviour, IInteractable {
     public event InteractEvent OnInteractSuccess;
     
     public void InteractPress(CharacterBehaviour character) {
+        if (!Interactable) {
+            return;
+        }
         if (character == PlayerController.Instance) {
             _parentDoor.PlayerInteracted();
         }

@@ -27,11 +27,8 @@ public class CastingMethod_SpreadShot : CastingMethod_MagicProjectile {
                 Debug.LogError($"Object \"{pooledObject}\" retrieved with ID \"{_magicProjectilePrefabId}\" was not of type MagicProjectile.");
                 return;
             }
-            int power = 1;
-            if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
-                power += Mathf.FloorToInt(caster.ActiveSpell.holdTime);
-            }
-            magicProjectile.InitializeProjectile(power, _lifeTime, spell.Effects);
+            float powerScale = GetTotalPowerScale(caster.ActiveSpell, spell);
+            magicProjectile.InitializeProjectile(powerScale, _lifeTime, spell.Effects);
             InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
             magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
         }

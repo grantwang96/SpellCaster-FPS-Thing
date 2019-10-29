@@ -163,12 +163,12 @@ PrefabInstance:
         type: 3}
       propertyPath: _hackStartState
       value: 
-      objectReference: {fileID: 946074933}
+      objectReference: {fileID: 926496286}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd73f7c74818b8c4fa64c3bd90ac6b38, type: 3}
---- !u!114 &946074933 stripped
+--- !u!114 &926496286 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114041504187102644, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+  m_CorrespondingSourceObject: {fileID: 114665676364238270, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
     type: 3}
   m_PrefabInstance: {fileID: 926496285}
   m_PrefabAsset: {fileID: 0}

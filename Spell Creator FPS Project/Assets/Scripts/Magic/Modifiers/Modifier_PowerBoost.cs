@@ -6,15 +6,15 @@ using UnityEngine;
 public class Modifier_PowerBoost : SpellModifier {
 
     [Range(1f, 10f)][SerializeField] private float _multiplier;
-    [SerializeField] private int _constant;
+    [Range(0f, 1f)][SerializeField] private float _constant;
 
     public override void SetupProjectile(MagicProjectile projectile) {
         // visual effects?
     }
 
     public override SpellStats SetupSpell(SpellStats stats) {
-        stats.Power = (int)(stats.Power * _multiplier);
-        stats.Power += _constant;
+        stats.PowerScale = (int)(stats.PowerScale * _multiplier);
+        stats.PowerScale += _constant;
         return stats;
     }
 }

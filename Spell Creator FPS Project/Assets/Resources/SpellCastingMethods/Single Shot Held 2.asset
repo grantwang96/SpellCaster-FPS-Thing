@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -21,7 +22,7 @@ MonoBehaviour:
   _lootTier: 1
   manaCost: 10
   _intervalTime: 0.2
-  _powerModifier: 0.3
+  _powerScale: 0.33
   spellTiming: 0000000001000000
   _magicProjectilePrefabId: MagicProjectile
   _projectileSpeed: 100

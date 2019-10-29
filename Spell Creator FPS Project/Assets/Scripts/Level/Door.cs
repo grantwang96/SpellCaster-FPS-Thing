@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour{
+public class Door : MonoBehaviour {
 
+    [SerializeField] private Key _key;
     [SerializeField] private bool _canOpen;
     public bool CanOpen => _canOpen;
     private bool _isOpen;
@@ -18,6 +19,9 @@ public class Door : MonoBehaviour{
 
     private void Start() {
         Close();
+        if (!_canOpen) {
+            Lock();
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -54,7 +58,7 @@ public class Door : MonoBehaviour{
     private void Open() {
         // temp code
         _isOpen = true;
-        _doorCollider.isTrigger = true;
+        _doorCollider.enabled = false;
         _meshRenderer.material.color = OpenColor;
     }
 
@@ -67,8 +71,20 @@ public class Door : MonoBehaviour{
 
     private void Close() {
         _isOpen = false;
-        _doorCollider.isTrigger = false;
+        _doorCollider.enabled = true;
         _meshRenderer.material.color = ClosedColor;
+    }
+
+    public void Lock() {
+        if(_key == null) {
+            return;
+        }
+        _key.OnInteractSuccess += Unlock;
+    }
+
+    private void Unlock() {
+        _canOpen = true;
+        _key.OnInteractSuccess -= Unlock;
     }
 
     public void PlayerInteracted() {

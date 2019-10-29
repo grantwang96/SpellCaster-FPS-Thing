@@ -29,7 +29,7 @@ public class Projectile : MonoBehaviour, PooledObject {
     protected float _lifeTime;
     protected float _startTime;
     protected float _speed;
-    protected int _power;
+    protected float _powerScale;
 
     [SerializeField] protected bool _isLive; // can things collider with this projectile still?
     public bool IsLive => _isLive;
@@ -43,8 +43,8 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 
     // initialize projectile's stats like power, gravity, and velocity
-    public void InitializeProjectile(int power, float lifeTime, Effect[] effects) {
-        _power = power;
+    public void InitializeProjectile(float powerScale, float lifeTime, Effect[] effects) {
+        _powerScale= powerScale;
         _lifeTime = lifeTime;
         _effects = effects;
     }
@@ -97,7 +97,7 @@ public class Projectile : MonoBehaviour, PooledObject {
         }
 
         for (int i = 0; i < _effects.Length; i++) {
-            _effects[i].TriggerEffect(_owner, _power, transform.position, coll);
+            _effects[i].TriggerEffect(_owner, _powerScale, transform.position, coll);
         }
         Die();
     }
@@ -106,7 +106,7 @@ public class Projectile : MonoBehaviour, PooledObject {
     protected virtual void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
         // apply effects here
         for(int i = 0; i < _effects.Length; i++) {
-            _effects[i].TriggerEffect(_owner, _power, hitPoint, damageable);
+            _effects[i].TriggerEffect(_owner, _powerScale, hitPoint, damageable);
         }
         Die();
     }

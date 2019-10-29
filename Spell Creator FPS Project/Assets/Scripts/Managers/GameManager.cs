@@ -15,6 +15,28 @@ public abstract class GameManager : MonoBehaviour {
         SetInventories();
     }
 
+    protected virtual void Start() {
+        SubscribeToEvents();
+    }
+
+    protected virtual void SubscribeToEvents() {
+        PlayerController.Instance.Damageable.OnDeath += OnPlayerDefeated;
+        GameStateManager.Instance.OnStateExited += OnCurrentGameStateExited;
+    }
+
+    protected virtual void UnsubscribeToEvents() {
+        PlayerController.Instance.Damageable.OnDeath -= OnPlayerDefeated;
+        GameStateManager.Instance.OnStateExited -= OnCurrentGameStateExited;
+    }
+
+    protected virtual void OnPlayerDefeated(bool isDead, Damageable damageable) {
+
+    }
+
+    protected virtual void OnCurrentGameStateExited() {
+        UnsubscribeToEvents();
+    }
+
     protected virtual void SetInventories() {
         TempInventory tempInventory = new TempInventory(true);
         CurrentRunicInventory = tempInventory;

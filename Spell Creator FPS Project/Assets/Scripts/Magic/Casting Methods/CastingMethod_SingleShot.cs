@@ -12,9 +12,9 @@ public class CastingMethod_SingleShot : CastingMethod_MagicProjectile {
         MagicProjectile magicProjectile = GetMagicProjectile();
         if (magicProjectile == null) { return; }
 
-        int power = GetPower(spell.Power, caster.ActiveSpell);
+        float powerScale = GetTotalPowerScale(caster.ActiveSpell, spell);
         // initialize magic projectile
-        magicProjectile.InitializeProjectile(power, _lifeTime, spell.Effects);
+        magicProjectile.InitializeProjectile(powerScale, _lifeTime, spell.Effects);
         InitializeMagicProjectile(magicProjectile, startPosition, direction, caster, spell);
         magicProjectile.FireProjectile(false, direction.normalized * _projectileSpeed);
     }

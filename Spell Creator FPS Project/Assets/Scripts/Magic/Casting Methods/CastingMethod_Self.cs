@@ -10,8 +10,8 @@ public class CastingMethod_Self : Spell_CastingMethod {
         for (int i = 0; i < spell.Effects.Length; i++) {
             Damageable damageable = caster.Damageable;
             if (damageable != null) {
-                int power = GetPower(spell.Power, caster.ActiveSpell);
-                spell.Effects[i].TriggerEffect(caster.Damageable, power, caster.Damageable.Body.position, damageable, effects);
+                float powerScale = GetTotalPowerScale(caster.ActiveSpell, spell);
+                spell.Effects[i].TriggerEffect(caster.Damageable, powerScale, caster.Damageable.Body.position, damageable, effects);
             }
         }
     }

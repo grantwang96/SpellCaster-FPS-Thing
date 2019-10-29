@@ -19,11 +19,11 @@ public class CastingMethod_Raycast : Spell_CastingMethod {
             Damageable damageable = hit.transform.GetComponent<Damageable>();
             if (damageable != null) {
                 for (int i = 0; i < spell.Effects.Length; i++) {
-                    spell.Effects[i].TriggerEffect(caster.Damageable, spell.Power, hit.point, damageable, effects);
+                    spell.Effects[i].TriggerEffect(caster.Damageable, _powerScale, hit.point, damageable, effects);
                 }
             } else {
                 for (int i = 0; i < spell.Effects.Length; i++) {
-                    spell.Effects[i].TriggerEffect(caster.Damageable, spell.Power, hit.point, hit.collider, effects);
+                    spell.Effects[i].TriggerEffect(caster.Damageable, _powerScale, hit.point, hit.collider, effects);
                 }
             }
         }

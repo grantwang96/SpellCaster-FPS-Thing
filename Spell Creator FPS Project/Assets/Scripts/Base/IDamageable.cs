@@ -15,7 +15,7 @@ public abstract class Damageable : MonoBehaviour {
     public delegate void DeathEvent(bool isDead, Damageable damageable);
     public event DeathEvent OnDeath;
 
-    public Damageable parentDamageable;
+    public Damageable _parentDamageable;
     protected List<ActiveStatusEffect> _activeStatusEffects = new List<ActiveStatusEffect>();
 
     protected virtual void Update() {

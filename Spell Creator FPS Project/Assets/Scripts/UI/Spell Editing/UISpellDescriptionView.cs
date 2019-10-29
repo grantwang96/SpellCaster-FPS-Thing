@@ -16,8 +16,7 @@ public class UISpellDescriptionView : UISubPanel {
     [SerializeField] private Text _castingMethodText;
     [SerializeField] private List<Text> _spellEffectList = new List<Text>();
     [SerializeField] private List<Text> _spellModifierList = new List<Text>();
-
-    [SerializeField] private Text _powerDisplay;
+    
     [SerializeField] private Text _manaCost;
 
     public override void Initialize(UIPanelInitData initData) {
@@ -65,7 +64,6 @@ public class UISpellDescriptionView : UISubPanel {
             _spellModifierList[i].text = _containedSpell.SpellModifiers[i].Name;
         }
         _spellName.text = $"{_containedSpell.Name}";
-        _powerDisplay.text = $"Power: {_containedSpell.Power}";
         _manaCost.text = $"Mana Cost: {_containedSpell.ManaCost}";
     }
 

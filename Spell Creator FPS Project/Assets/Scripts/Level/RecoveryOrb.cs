@@ -6,12 +6,18 @@ public enum RecoveryOrbType {
     Health, Mana
 }
 
-public class RecoveryOrb : MonoBehaviour, PooledObject {
+public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
 
     [SerializeField] private string _prefabId;
     public string PrefabId => _prefabId;
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
+
+    public string InteractableId { get; private set; }
+
+    public bool Interactable { get; private set; } = true;
+
+    public Vector3 InteractableCenter => transform.position;
 
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField] private Rigidbody _rigidbody;
@@ -25,11 +31,13 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
     [SerializeField] private Material _manaOrbMaterial;
 
     private RecoveryOrbType _type;
-    private bool _interactable = true;
+
+    public event InteractEvent OnInteractAttempt;
+    public event InteractEvent OnInteractSuccess;
 
     public void Initialize(RecoveryOrbType type) {
         _type = type;
-        _interactable = true;
+        Interactable = true;
         _rigidbody.isKinematic = false;
         _rigidbody.useGravity = true;
         _colliderInner.enabled = true;
@@ -53,28 +61,19 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
         Vector3 dir = Vector3.up + offset;
         _rigidbody.AddForce(dir.normalized * _spawnForce, ForceMode.Impulse);
     }
-    
-    public void TryPickUp(GameObject other) {
-        if (!_interactable) { return; }
-        if (_type == RecoveryOrbType.Health) {
-            Damageable dam = other.GetComponent<Damageable>();
-            if (dam == PlayerController.Instance.Damageable) {
-                TryHeal(dam);
-            }
-        } else {
-            ISpellCaster caster = other.GetComponent<ISpellCaster>();
-            if (caster == PlayerController.Instance.PlayerCombat) {
-                TryRestoreMana(caster);
-            }
-        }
-    }
 
     private void TryHeal(Damageable dam) {
+        if(dam == null) {
+            return;
+        }
         dam.TakeDamage(-GameplayValues.Level.HealthOrbValue, Element.Healing);
         StartCoroutine(FlyToTarget(dam.Body));
     }
 
     private void TryRestoreMana(ISpellCaster caster) {
+        if(caster == null) {
+            return;
+        }
         caster.RecoverMana(GameplayValues.Level.ManaOrbValue);
         StartCoroutine(FlyToTarget(caster.Damageable.Body));
     }
@@ -84,7 +83,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
         _rigidbody.useGravity = false;
         _colliderInner.enabled = false;
         _colliderOuter.enabled = false;
-        _interactable = false;
+        Interactable = false;
         float time = 0f;
         while(time < 1f) {
             time += Time.deltaTime * _flySpeed;
@@ -102,6 +101,26 @@ public class RecoveryOrb : MonoBehaviour, PooledObject {
     public void DeactivatePooledObject() {
         gameObject.SetActive(false);
         transform.SetParent(ObjectPool.Instance?.transform);
-        _interactable = false;
+        Interactable = false;
+    }
+
+    public void InteractPress(CharacterBehaviour character) {
+        if(character != PlayerController.Instance) {
+            return;
+        }
+        if(_type == RecoveryOrbType.Health) {
+            TryHeal(character.Damageable);
+        } else {
+            ISpellCaster caster = character.GetComponent<ISpellCaster>();
+            TryRestoreMana(caster);
+        }
+    }
+
+    public void InteractHold(CharacterBehaviour character) {
+        
+    }
+
+    public void Detect() {
+        
     }
 }

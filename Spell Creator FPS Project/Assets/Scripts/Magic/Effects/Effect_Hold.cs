@@ -18,15 +18,14 @@ public class Effect_Hold : Effect {
     [SerializeField] private float _risingDuration;
     [SerializeField] private float _baseDuration;
 
-    public override void TriggerEffect(Damageable caster, int power, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, List<Effect> effects = null) {
         // Can't really hold yourself, can you? Can you?
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if(damageable == null) {
             return;
         }
-        Debug.Log($"Holding {damageable.name}...");
         // calculate distance at which the object is being held
         float distance = Vector3.Distance(caster.transform.position, damageable.Body.position);
         // get position according to where caster is looking
@@ -36,7 +35,7 @@ public class Effect_Hold : Effect {
         damageable.AddForce(directionToTargetPosition * _holdPowerModifier);
     }
 
-    public override void TriggerEffect(Damageable caster, int power, Vector3 position, Collider collider, List<Effect> effects = null) {
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Collider collider, List<Effect> effects = null) {
         // calculate distance at which the object is being held
         float distance = Vector3.Distance(caster.transform.position, collider.transform.position);
         // get position according to where caster is looking
@@ -46,8 +45,8 @@ public class Effect_Hold : Effect {
         collider.attachedRigidbody?.AddForce(directionToTargetPosition, ForceMode.VelocityChange);
     }
 
-    public override void TriggerEffect(Damageable caster, Vector3 velocity, int power, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
-        damageable?.StartCoroutine(RisingHold(power, damageable));
+    public override void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
+        damageable?.StartCoroutine(RisingHold(GetTotalPower(powerScale), damageable));
     }
 
     private IEnumerator RisingHold(float duration, Damageable damageable) {

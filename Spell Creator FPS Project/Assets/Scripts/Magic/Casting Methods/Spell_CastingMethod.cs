@@ -29,7 +29,8 @@ public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable
     public virtual int ManaCost { get { return manaCost; } }
     [SerializeField] protected float _intervalTime;
     public float IntervalTime { get { return _intervalTime; } }
-    [SerializeField] protected float _powerModifier;
+    [SerializeField] protected float _powerScale;
+    public float PowerScale => _powerScale;
 
     public enum SpellTiming {
         Instant, Continuous, Charge
@@ -76,11 +77,11 @@ public abstract class Spell_CastingMethod : ScriptableObject, IInventoryStorable
 
     protected abstract void CastSpell(ISpellCaster caster, Spell spell);
 
-    protected virtual int GetPower(int basePower, ActiveSpell activeSpell) {
-        int power = Mathf.CeilToInt(basePower * _powerModifier);
+    protected virtual float GetTotalPowerScale(ActiveSpell activeSpell, Spell spell) {
+        float powerScale = spell.PowerScale;
         if (ArrayHelper.Contains(spellTiming, SpellTiming.Charge)) {
-            power *= Mathf.FloorToInt(1 + (activeSpell.holdTime / activeSpell.holdIntervalTime));
+            powerScale += activeSpell.holdTime / activeSpell.holdIntervalTime;
         }
-        return power;
+        return powerScale;
     }
 }

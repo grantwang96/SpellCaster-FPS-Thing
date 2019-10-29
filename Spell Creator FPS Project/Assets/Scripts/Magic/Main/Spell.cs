@@ -21,7 +21,7 @@ public class Spell {
     public float IntervalTime { get; private set; }
     public float HoldIntervalTime { get; private set; }
 
-    public int Power { get; private set; }
+    public float PowerScale { get; private set; }
 
     public Spell(Spell_CastingMethod castingMethod, Effect[] effects, SpellModifier[] spellModifiers = null, string name = "NoNameSadLife") {
         
@@ -30,6 +30,7 @@ public class Spell {
         Name = name;
 
         _castingMethod = castingMethod;
+        PowerScale = castingMethod.PowerScale;
         _effects = effects;
         _spellModifiers = spellModifiers;
         ManaCost = _castingMethod.ManaCost;
@@ -37,7 +38,6 @@ public class Spell {
         for(int i = 0; i < _effects.Length; i++) {
             IntervalTime += _effects[i]?.IntervalTime ?? 0;
             ManaCost += _effects[i]?.ManaCost ?? 0;
-            Power += _effects[i]?.BasePower ?? 0;
         }
         if(spellModifiers != null) {
             SpellStats stats = GetSpellStats();
@@ -54,7 +54,7 @@ public class Spell {
         MaxChargeTime = 3f;
     }
 
-    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, float maxChargeTime, float intervalTime, int power, string name, SpellModifier[] spellModifiers = null) {
+    public Spell(Spell_CastingMethod castingMethod, Effect[] effects, float maxChargeTime, float intervalTime, float powerScale, string name, SpellModifier[] spellModifiers = null) {
         _castingMethod = castingMethod;
         _effects = effects;
         _spellModifiers = spellModifiers;
@@ -71,13 +71,13 @@ public class Spell {
         }
         MaxChargeTime = maxChargeTime;
         IntervalTime = intervalTime;
-        Power = power;
+        PowerScale = powerScale;
         Name = name;
     }
 
     private SpellStats GetSpellStats() {
         SpellStats stats = new SpellStats() {
-            Power = Power,
+            PowerScale = PowerScale,
             ManaCost = ManaCost,
             MaxChargeTime = MaxChargeTime,
             IntervalTime = IntervalTime,
@@ -87,7 +87,7 @@ public class Spell {
     }
 
     private void OverrideStats(SpellStats stats) {
-        Power = stats.Power;
+        PowerScale = stats.PowerScale;
         ManaCost = stats.ManaCost;
         MaxChargeTime = stats.MaxChargeTime;
         IntervalTime = stats.IntervalTime;
@@ -132,7 +132,7 @@ public class ActiveSpell {
 }
 
 public struct SpellStats {
-    public int Power;
+    public float PowerScale;
     public int ManaCost;
     public float MaxChargeTime;
     public float IntervalTime;
