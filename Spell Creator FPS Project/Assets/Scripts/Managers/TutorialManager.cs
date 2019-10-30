@@ -70,6 +70,10 @@ public class TutorialManager : MonoBehaviour {
 
     private void RunNextTutorialAction() {
         _currentAction = _currentTutorial?.GetTutorialAction(_tutorialActionIndex);
+        if(_currentAction == null) {
+            TutorialCompleted();
+            return;
+        }
         TutorialActionStatus result = _currentAction.Execute();
         switch (result) {
             case TutorialActionStatus.Abort:
@@ -81,6 +85,7 @@ public class TutorialManager : MonoBehaviour {
                 break;
             case TutorialActionStatus.Complete:
                 // immediately go to the next tutorial action
+                _tutorialActionIndex++;
                 RunNextTutorialAction();
                 break;
             default:

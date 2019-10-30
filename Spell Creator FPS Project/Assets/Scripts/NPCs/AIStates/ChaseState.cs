@@ -17,11 +17,10 @@ public class ChaseState : MoveState {
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
-    public override void Enter(BrainState overrideBrainState = null) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         targetLastKnownPosition = _vision.CurrentTarget.transform.position;
-        base.Enter(overrideBrainState);
+        base.Enter(overrideBrainState, duration);
         if (_vision.CurrentTarget == null) {
-            Debug.Log("Target was null!");
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }

@@ -20,6 +20,10 @@ public class NPCBehaviour : CharacterBehaviour {
 
     [SerializeField] protected BrainState _currentBrainState; // current state of AI State Machine
     [SerializeField] protected BrainState _startingState; // how the NPC should behave at start (usually idle)
+
+    [SerializeField] private List<BrainStateTransition> _allBrainStateTransitions = new List<BrainStateTransition>();
+    private Dictionary<BrainStateTransitionId, BrainState> _brainStateTransitions = new Dictionary<BrainStateTransitionId, BrainState>();
+
     public delegate void BrainStateChangeDelegate(string newStateName);
     public event BrainStateChangeDelegate OnBrainStateChanged;
 
@@ -29,12 +33,23 @@ public class NPCBehaviour : CharacterBehaviour {
 
     protected override void Awake() {
         base.Awake();
+        InitializeBrainStateTransitions();
         _charMove = GetComponent<NPCMoveController>();
         _damageable = GetComponent<Damageable>();
         _prepped = true;
     }
 
-    protected void GenerateUniqueId() {
+    protected virtual void InitializeBrainStateTransitions() {
+        for(int i = 0; i < _allBrainStateTransitions.Count; i++) {
+            _brainStateTransitions.Add(_allBrainStateTransitions[i].TransitionId, _allBrainStateTransitions[i].BrainState);
+        }
+    }
+
+    protected void GenerateUniqueId(string overrideUniqueId) {
+        if (!string.IsNullOrEmpty(overrideUniqueId)) {
+            _id = overrideUniqueId;
+            return;
+        }
         _id = $"{_blueprint.NpcIdPrefix}_{StringGenerator.RandomString(GameplayValues.Combat.NPCIdSize)}";
     }
 
@@ -52,7 +67,9 @@ public class NPCBehaviour : CharacterBehaviour {
             return;
         }
         _damageable.OnDeath += OnDeath;
-        ChangeBrainState(_startingState);
+        if(_currentBrainState == null) {
+            ChangeBrainState(_startingState);
+        }
     }
 
     protected virtual void Update() {
@@ -73,20 +90,28 @@ public class NPCBehaviour : CharacterBehaviour {
     /// Changes the current state in the AI State Machine
     /// </summary>
     /// <param name="brainState"></param>
-    public virtual void ChangeBrainState(BrainState brainState, BrainState overrideBrainState = null) {
+    public virtual void ChangeBrainState(BrainState brainState, BrainState overrideBrainState = null, float duration = 0f) {
         // perform any exit operations from the previous state
         _currentBrainState?.Exit();
 
         // save the new brain state and enter
         _currentBrainState = brainState;
-        _currentBrainState?.Enter(overrideBrainState);
+        _currentBrainState?.Enter(overrideBrainState, duration);
 
         string stateName = _currentBrainState?.TriggerName ?? string.Empty;
         InvokeChangeAnimationState(stateName);
     }
 
+    public virtual bool ChangeBrainState(BrainStateTransitionId transitionId, float duration = 0f) {
+        if (!_brainStateTransitions.ContainsKey(transitionId)) {
+            return false;
+        }
+        ChangeBrainState(_brainStateTransitions[transitionId], null, duration);
+        return true;
+    }
+
     protected virtual void OnDeath(bool isDead, Damageable damageable) {
-        ChangeBrainState(null);
+        ChangeBrainState(null, null);
         DropLoot();
     }
 

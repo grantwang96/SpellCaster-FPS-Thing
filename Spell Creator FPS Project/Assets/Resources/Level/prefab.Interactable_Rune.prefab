@@ -209,7 +209,9 @@ MonoBehaviour:
   _itemId: CAST_METHOD_SELF_CHARGE
   _spawnSpread: 0.5
   _spawnForce: 10
+  _flySpeed: 10
   _rigidbody: {fileID: 54827362068496640}
+  _collider: {fileID: 65891493218109108}
   _outerMeshFilter: {fileID: 33458600932174172}
   _outerMeshRenderer: {fileID: 23982932670061442}
   _innerSymbolMeshFilter: {fileID: 33213272981173404}

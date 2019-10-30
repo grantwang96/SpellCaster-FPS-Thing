@@ -27,8 +27,8 @@ public class MeleeAttackState : AttackState {
         }
     }
 
-    public override void Enter(BrainState overrideBrainState = null) {
-        base.Enter(overrideBrainState);
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+        base.Enter(overrideBrainState, duration);
         if (_attackComboIndex > -1) {
             _animController.SetIntParameter(GameplayValues.Combat.NPCAttackComboIndexId, _attackComboIndex);
             _animController.SetTrigger(GameplayValues.Combat.NPCNormalAttackTriggerId);

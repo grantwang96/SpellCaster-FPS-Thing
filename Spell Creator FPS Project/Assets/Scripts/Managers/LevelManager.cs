@@ -14,13 +14,16 @@ public interface ILevelManager {
 
 public interface ICampaignLevelManager : ILevelManager {
     void RegisterRoom(Room room);
-    void RegisterEnemySpawn(EnemySpawn spawn);
+    void RegisterEnemySpawn(string id, EnemySpawn spawn);
+    EnemySpawn GetEnemySpawnById(string id);
 }
 
 /// <summary>
 /// Included in scene. Manages all location data of level.
 /// </summary>
 public class LevelManager : MonoBehaviour, ICampaignLevelManager {
+
+    private const string EnemiesResourcePath = "Enemies";
 
     public static ILevelManager LevelManagerInstance { get; private set; }
     public static ICampaignLevelManager CampaignLevelManagerInstance { get; private set; }
@@ -29,13 +32,21 @@ public class LevelManager : MonoBehaviour, ICampaignLevelManager {
     // list of all treasure chest locations
     [SerializeField] private List<ChestSpawn> _chestLocations = new List<ChestSpawn>();
     public List<ChestSpawn> ChestLocations => _chestLocations;
+    [SerializeField] private List<EnemyPrefabEntry> _enemyPrefabIds = new List<EnemyPrefabEntry>();
     // dictionary of doors and their respective keys
     // list of all enemy spawnpoints
-    [SerializeField] private List<EnemySpawn> _enemySpawnPoints = new List<EnemySpawn>();
+    private Dictionary<string, EnemySpawn> _enemySpawnPoints = new Dictionary<string, EnemySpawn>();
 
     protected virtual void Awake() {
         LevelManagerInstance = this;
         CampaignLevelManagerInstance = this;
+        RegisterEnemyPrefabs();
+    }
+
+    private void RegisterEnemyPrefabs() {
+        for (int i = 0; i < _enemyPrefabIds.Count; i++) {
+            ObjectPool.Instance.RegisterObjectToPool(EnemiesResourcePath, _enemyPrefabIds[i].Id, _enemyPrefabIds[i].Count);
+        }
     }
 
     public void RegisterInteractable(IInteractable interactable) {
@@ -61,9 +72,24 @@ public class LevelManager : MonoBehaviour, ICampaignLevelManager {
 
     }
 
-    public void RegisterEnemySpawn(EnemySpawn spawn) {
-        if (!_enemySpawnPoints.Contains(spawn)) {
-            _enemySpawnPoints.Add(spawn);
+    public void RegisterEnemySpawn(string id, EnemySpawn spawn) {
+        if (!_enemySpawnPoints.ContainsKey(id)) {
+            _enemySpawnPoints.Add(id, spawn);
         }
     }
+
+    public EnemySpawn GetEnemySpawnById(string id) {
+        if (_enemySpawnPoints.ContainsKey(id)) {
+            return _enemySpawnPoints[id];
+        }
+        return null;
+    }
+}
+
+[System.Serializable]
+public class EnemyPrefabEntry {
+    [SerializeField] private string _id;
+    public string Id => _id;
+    [SerializeField] private int _count;
+    public int Count => _count;
 }

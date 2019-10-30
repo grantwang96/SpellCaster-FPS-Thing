@@ -45,7 +45,6 @@ public class TutorialSet : ScriptableObject {
 
     public virtual TutorialAction GetTutorialAction(int index) {
         if(index < 0 || index >= _actions.Count) {
-            Debug.LogError($"[{name}] Tutorial Action index {index} out of range!");
             return null;
         }
         return _actions[index];

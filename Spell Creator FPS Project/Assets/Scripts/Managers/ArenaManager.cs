@@ -82,7 +82,7 @@ public class ArenaManager : GameManager, IArenaManager {
         InitializeArenaStats();
         RegisterEnemyPrefabs();
         UIManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
-        NPCManager.Instance.OnNPCSpawned += OnEnemySpawned;
+        NPCManager.Instance.OnEnemySpawned += OnEnemySpawned;
         PlayerController.Instance.Damageable.OnDeath += LoseRound;
     }
     private void InitializeArenaStats() {
@@ -92,7 +92,7 @@ public class ArenaManager : GameManager, IArenaManager {
     private void OnDestroy() {
         UIManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
         PlayerController.Instance.Damageable.OnDeath -= LoseRound;
-        NPCManager.Instance.OnNPCSpawned -= OnEnemySpawned;
+        NPCManager.Instance.OnEnemySpawned -= OnEnemySpawned;
     }
 
     private void RegisterEnemyPrefabs() {
@@ -198,7 +198,7 @@ public class ArenaManager : GameManager, IArenaManager {
     }
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
-        NPCManager.Instance.SpawnPooledNPC(prefabName, position);
+        NPCManager.Instance.SpawnPooledNPC(prefabName, position, string.Empty);
     }
 
     private void OnEnemySpawned(string id, NPCBehaviour npc) {

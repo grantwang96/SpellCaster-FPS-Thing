@@ -10,6 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d1b97aa5cbdab045af970ef28896963, type: 3}
-  m_Name: InitialCinematic
+  m_Name: 03_InitialCinematic
   m_EditorClassIdentifier: 
-  _cameraId: 
+  _cinematicsId: IntroCombat_01
+  _interruptable: 1
+  _interruptTime: 4

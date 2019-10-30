@@ -26,8 +26,8 @@ public class RangedAttackState : AttackState {
     private bool _projectileSpawned;
     private Projectile _currentProjectile;
 
-    public override void Enter(BrainState overrideBrainState = null) {
-        base.Enter(overrideBrainState);
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+        base.Enter(overrideBrainState, duration);
         _animController.PlayAnimation(_attackName);
         _moveController.SetRotation(_npcVision.CurrentTarget.transform.position, .9f);
     }

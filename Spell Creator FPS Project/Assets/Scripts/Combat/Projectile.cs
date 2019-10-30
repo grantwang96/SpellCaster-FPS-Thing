@@ -12,6 +12,8 @@ public class Projectile : MonoBehaviour, PooledObject {
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
+    public string UniqueId { get; private set; }
+
     [SerializeField] protected Damageable _owner;
     [SerializeField] protected GameObject _onHitVFX;
     [SerializeField] protected Rigidbody _rigidBody;
@@ -139,8 +141,9 @@ public class Projectile : MonoBehaviour, PooledObject {
         DeactivatePooledObject();
     }
 
-    public virtual void ActivatePooledObject() {
+    public virtual void ActivatePooledObject(string uniqueId = "") {
         gameObject.SetActive(true);
+        UniqueId = uniqueId;
     }
 
     public void DeactivatePooledObject() {

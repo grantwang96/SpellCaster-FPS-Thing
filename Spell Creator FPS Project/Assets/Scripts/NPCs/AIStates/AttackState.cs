@@ -8,7 +8,6 @@ using UnityEngine;
 /// </summary>
 public abstract class AttackState : BrainState {
     
-    [SerializeField] protected float _duration;
     [SerializeField] protected NPCVision _npcVision;
     [SerializeField] protected string _attackName; // this should reflect the name of the actual animation state
 

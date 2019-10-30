@@ -4,8 +4,9 @@
 public interface PooledObject {
     
     string PrefabId { get; }
+    string UniqueId { get; }
     bool InUse { get; }
 
     void DeactivatePooledObject();
-    void ActivatePooledObject();
+    void ActivatePooledObject(string uniqueId = "");
 }

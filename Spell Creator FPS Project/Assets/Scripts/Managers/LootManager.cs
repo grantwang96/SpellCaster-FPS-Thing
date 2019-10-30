@@ -95,11 +95,11 @@ public class LootManager : MonoBehaviour, ILootManager {
     }
     
     private void SubscribeToEvents() {
-        NPCManager.Instance.OnNPCSpawned += OnNPCSpawned;
+        NPCManager.Instance.OnEnemySpawned += OnNPCSpawned;
     }
 
     private void UnsubscribeToEvents() {
-        NPCManager.Instance.OnNPCSpawned -= OnNPCSpawned;
+        NPCManager.Instance.OnEnemySpawned -= OnNPCSpawned;
     }
 
     // called when player opens chest

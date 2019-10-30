@@ -13,8 +13,9 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
-    public string InteractableId { get; private set; }
-
+    private string _id;
+    public string UniqueId => _id;
+    public string InteractableId => _id;
     public bool Interactable { get; private set; } = true;
 
     public Vector3 InteractableCenter => transform.position;
@@ -94,7 +95,8 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
         ObjectPool.Instance.ReturnUsedPooledObject(this);
     }
 
-    public void ActivatePooledObject() {
+    public void ActivatePooledObject(string uniqueId = "") {
+        _id = uniqueId;
         gameObject.SetActive(true);
     }
 

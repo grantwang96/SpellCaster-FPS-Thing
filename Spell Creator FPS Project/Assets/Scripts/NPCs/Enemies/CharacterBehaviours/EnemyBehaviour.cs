@@ -9,12 +9,13 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
+    public string UniqueId => _id;
+
     public delegate void SpawnEvent(EnemyBehaviour behaviour);
     
-    public void ActivatePooledObject() {
+    public void ActivatePooledObject(string uniqueId = "") {
         gameObject.SetActive(true);
-        GenerateUniqueId();
-        ChangeBrainState(_startingState);
+        GenerateUniqueId(uniqueId);
         FireCharacterSpawnedEvent();
     }
 

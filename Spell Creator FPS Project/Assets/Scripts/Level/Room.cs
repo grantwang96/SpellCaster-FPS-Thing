@@ -48,7 +48,7 @@ public class Room : MonoBehaviour {
 
     private void SpawnEnemies() {
         for(int i = 0; i < _enemySpawn.Count; i++) {
-            _enemySpawn[i].SpawnPrefab();
+            _enemySpawn[i].SpawnNPC();
         }
     }
 }

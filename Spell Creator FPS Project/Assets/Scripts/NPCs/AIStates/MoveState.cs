@@ -14,8 +14,8 @@ public class MoveState : BrainState {
     private bool _pathCalculated;
     private bool _facingTarget;
 
-    public override void Enter(BrainState overrideBrainState = null) {
-        base.Enter(overrideBrainState);
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+        base.Enter(overrideBrainState, duration);
         Vector3 targetDestination = GetDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
         _pathCalculated = false;

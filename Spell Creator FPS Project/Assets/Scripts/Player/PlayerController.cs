@@ -98,7 +98,7 @@ public class PlayerController : CharacterBehaviour {
     }
 
     // hides the mouse
-    private void SetMouseEnabled(bool enabled) {
+    public void SetMouseEnabled(bool enabled) {
         if (enabled) {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -209,6 +209,8 @@ public class PlayerController : CharacterBehaviour {
         }
     }
 
+    #region ACTION INPUTS
+
     private void Jump() {
         OnJumpPressed?.Invoke();
     }
@@ -265,6 +267,8 @@ public class PlayerController : CharacterBehaviour {
         OnCancelPressed?.Invoke();
     }
 
+    #endregion
+
     // event that is called when UIManager updates its panels
     private void OnUIPanelsUpdated(bool panelsActive) {
         _uiPanelsEmpty = !panelsActive;
@@ -276,5 +280,13 @@ public class PlayerController : CharacterBehaviour {
 
         ControllerState = _uiPanelsEmpty ? ControllerState.Gameplay : ControllerState.UIMenu;
         OnControllerStateUpdated?.Invoke();
+    }
+
+    public void SetPlayerControllerEnabled(bool active) {
+        enabled = active;
+        _moveVector.x = enabled ? _moveVector.x : 0f;
+        _moveVector.z = enabled ? _moveVector.z : 0f;
+        _lookVector.x = enabled ? _lookVector.x : 0f;
+        _lookVector.y = enabled ? _lookVector.y : 0f;
     }
 }

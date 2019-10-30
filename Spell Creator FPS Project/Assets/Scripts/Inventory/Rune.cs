@@ -12,7 +12,8 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     public bool Interactable { get { return _interactable; } }
     [SerializeField] private string _itemId; // item id contained in rune
     public string Id => _itemId;
-    
+    public string UniqueId { get; private set; }
+
     public string InteractableId { get; private set; }
     public Vector3 InteractableCenter => transform.position;
 
@@ -78,8 +79,9 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         
     }
 
-    public void ActivatePooledObject() {
+    public void ActivatePooledObject(string uniqueId = "") {
         gameObject.SetActive(true);
+        UniqueId = uniqueId;
         LevelManager.LevelManagerInstance.RegisterInteractable(this);
         Vector3 offset = Random.insideUnitCircle * _spawnSpread;
         offset = new Vector3(offset.x, 0f, offset.y);

@@ -164,6 +164,16 @@ PrefabInstance:
       propertyPath: _hackStartState
       value: 
       objectReference: {fileID: 926496286}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialFolderPaths.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialFolderPaths.Array.data[1]
+      value: IntroCombat_01
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd73f7c74818b8c4fa64c3bd90ac6b38, type: 3}
 --- !u!114 &926496286 stripped

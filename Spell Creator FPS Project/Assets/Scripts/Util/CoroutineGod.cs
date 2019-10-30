@@ -11,6 +11,10 @@ public class CoroutineGod : MonoBehaviour {
         Instance = this;
     }
 
+    public void ClearAllCoroutines() {
+        StopAllCoroutines();
+    }
+
     public void ExecuteAfterOneFrame(Action action) {
         StartCoroutine(WaitOneFrameThenExecute(action));
     }
