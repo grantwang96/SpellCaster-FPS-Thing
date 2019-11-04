@@ -198,7 +198,8 @@ public class ArenaManager : GameManager, IArenaManager {
     }
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
-        NPCManager.Instance.SpawnPooledNPC(prefabName, position, string.Empty);
+        Quaternion forward = Quaternion.LookRotation(-position);
+        NPCManager.Instance.SpawnPooledNPC(prefabName, position, forward.eulerAngles, string.Empty);
     }
 
     private void OnEnemySpawned(string id, NPCBehaviour npc) {

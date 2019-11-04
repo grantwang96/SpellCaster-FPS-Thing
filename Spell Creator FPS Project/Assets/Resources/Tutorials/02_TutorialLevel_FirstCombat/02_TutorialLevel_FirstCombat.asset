@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdef5b3a8b359fd4e9ee18fe3762a9eb, type: 3}
-  m_Name: TutorialSet_IntroCombat_01
+  m_Name: 02_TutorialLevel_FirstCombat
   m_EditorClassIdentifier: 
-  _tutorialId: Tutorial_IntroCombat_01
+  _tutorialId: Tutorial02_TutorialLevel_FirstCombat
   _triggerIds:
   - EnteredDiningHall
   _repeatable: 0
@@ -23,5 +23,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3654ea9cdd8b2824d93819a1dbca2d48, type: 2}
   - {fileID: 11400000, guid: 62afdfc29806fd34687612eef485e307, type: 2}
   - {fileID: 11400000, guid: a807488116ef91c4fa63c2426ea369f3, type: 2}
-  - {fileID: 11400000, guid: 12f2d28ac11e89e4f84d762d0d70c467, type: 2}
   - {fileID: 11400000, guid: 39f9a883c87062d479544a76c9588cf7, type: 2}
+  - {fileID: 11400000, guid: b64aa8f439b174a4c9b2a1b52c86924a, type: 2}
+  - {fileID: 11400000, guid: 12f2d28ac11e89e4f84d762d0d70c467, type: 2}
+  - {fileID: 11400000, guid: a66d6dce6102f8249a91a873c6abc49a, type: 2}
+  - {fileID: 11400000, guid: a012021b3d3907d4f8109e6d4f22fbc1, type: 2}
+  - {fileID: 11400000, guid: 490d24dd6ed0a2445aea5dc3bc85abc2, type: 2}
+  - {fileID: 11400000, guid: f60c5ce47d691434e882c2443bf75712, type: 2}

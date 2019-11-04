@@ -17,6 +17,8 @@ public class TempInventory : IRunicInventory, ISpellInventory
 
     public TempInventory(bool usePersistedLoadout, IRunicInventory baseRunicInventory = null, ISpellInventory baseSpellInventory = null) {
         // start the inventory fresh
+        _storableSpells = new List<StorableSpell>();
+        _storedRunes = new Dictionary<string, int>();
         if (usePersistedLoadout) {
             // copy base inventory items (if any)
             if(baseRunicInventory != null) {
@@ -33,6 +35,9 @@ public class TempInventory : IRunicInventory, ISpellInventory
             }
             CurrentLoadout = SaveManager.Instance.GetSavedLoadout();
             for (int i = 0; i < CurrentLoadout.Length; i++) {
+                if(CurrentLoadout[i] == null) {
+                    continue;
+                }
                 AddSpell(CurrentLoadout[i]);
             }
         }
@@ -134,7 +139,13 @@ public class TempInventory : IRunicInventory, ISpellInventory
     }
 
     public StorableSpell GetSpellByInstanceId(string instanceId) {
-        int index = _storableSpells.FindIndex(x => x.InstanceId.Equals(instanceId));
+        int index = -1;
+        for(int i = 0; i < _storableSpells.Count; i++) {
+            if (_storableSpells[i].InstanceId == instanceId) {
+                index = i;
+                break;
+            }
+        }
         if (index == -1) {
             Debug.LogWarning($"[{nameof(PersistedInventory)}] Spell with instance id {instanceId} not found!");
             return null;

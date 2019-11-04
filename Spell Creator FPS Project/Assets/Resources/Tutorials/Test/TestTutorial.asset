@@ -4,14 +4,15 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdef5b3a8b359fd4e9ee18fe3762a9eb, type: 3}
-  m_Name: TutorialSet_Test
+  m_Name: TestTutorial
   m_EditorClassIdentifier: 
-  _tutorialId: Test_Tutorial
+  _tutorialId: TutorialTest
   _triggerIds:
   - TestBoxTrigger
   _repeatable: 0

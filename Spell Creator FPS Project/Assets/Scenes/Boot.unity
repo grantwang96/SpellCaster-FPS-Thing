@@ -120,6 +120,26 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &769794205 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1600107144792198, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+    type: 3}
+  m_PrefabInstance: {fileID: 926496285}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &769794206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769794205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55c52ee635103f449aa9031b277d794b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerId: TutorialLevelEntry
+  _gameState: {fileID: 926496286}
 --- !u!1001 &926496285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -167,12 +187,62 @@ PrefabInstance:
     - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
         type: 3}
       propertyPath: _tutorialFolderPaths.Array.size
-      value: 2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialSets.Array.size
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
         type: 3}
       propertyPath: _tutorialFolderPaths.Array.data[1]
-      value: IntroCombat_01
+      value: LevelStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialFolderPaths.Array.data[2]
+      value: FirstCombat
+      objectReference: {fileID: 0}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialSets.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 945f30c7e8b896645881a814d4b935a8,
+        type: 2}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialSets.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 528b648507f8af940a67a47a8fdd14cf,
+        type: 2}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialSets.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: fd6eb7b0558c1524984a7941d674d8c8,
+        type: 2}
+    - target: {fileID: 114165993952794072, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _tutorialSets.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: ee456170f299abb4d838ab67baedc910,
+        type: 2}
+    - target: {fileID: 114218880710977866, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _uiPanelPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 114218880710977866, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _uiPanelPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 262453990737075663, guid: c701f73fb346e7f45823d761edb01c23,
+        type: 3}
+    - target: {fileID: 114218880710977866, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _currentScenePanel
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd73f7c74818b8c4fa64c3bd90ac6b38, type: 3}
@@ -182,7 +252,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 926496285}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 769794205}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25033089b4d2dab4984ef3aa243e620a, type: 3}

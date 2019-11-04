@@ -8,9 +8,9 @@ public class TutorialManager : MonoBehaviour {
     private const string TutorialSetBaseName = "TutorialSet_";
     public static TutorialManager Instance { get; private set; }
 
-    [SerializeField] private string[] _tutorialFolderPaths;
+    // [SerializeField] private string[] _tutorialFolderPaths;
 
-    private List<TutorialSet> _tutorialSets = new List<TutorialSet>();
+    [SerializeField] private List<TutorialSet> _tutorialSets = new List<TutorialSet>();
     private Queue<TutorialSet> _tutorialQueue = new Queue<TutorialSet>();
     private TutorialSet _currentTutorial;
     [SerializeField] private int _tutorialActionIndex = 0;
@@ -21,9 +21,10 @@ public class TutorialManager : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-        LoadAllTutorials();
+        // LoadAllTutorials();
     }
 
+    /*
     private void LoadAllTutorials() {
         for(int i = 0; i < _tutorialFolderPaths.Length; i++) {
             string tutorialPath = $"{TutorialFolderBasePath}/{_tutorialFolderPaths[i]}/{TutorialSetBaseName}{_tutorialFolderPaths[i]}";
@@ -40,10 +41,10 @@ public class TutorialManager : MonoBehaviour {
             _tutorialSets.Add(tutorialSet);
         }
     }
-
+    */
+    
     public void FireTutorialTrigger(string triggerId) {
         _tutorialQueue.Clear();
-        _currentTutorial = null;
         for(int i = 0; i < _tutorialSets.Count; i++) {
             if (_tutorialSets[i].ShouldTrigger(triggerId)) {
                 _tutorialQueue.Enqueue(_tutorialSets[i]);
@@ -52,7 +53,7 @@ public class TutorialManager : MonoBehaviour {
         if(_tutorialQueue.Count == 0) {
             return;
         }
-        _currentTutorial = _tutorialQueue.Peek();
+        _currentTutorial = _tutorialQueue.Dequeue();
         RunTutorial();
     }
     
@@ -115,7 +116,6 @@ public class TutorialManager : MonoBehaviour {
 
     private void TutorialCompleted() {
         _currentTutorial.ExitTutorial();
-        _tutorialQueue.Dequeue();
         _tutorialActionIndex = 0;
         _currentTutorial = null;
     }

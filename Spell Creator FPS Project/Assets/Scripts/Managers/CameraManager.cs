@@ -40,9 +40,9 @@ public class CameraManager : MonoBehaviour, ICameraManager
             return;
         }
         if(ActiveCamera != null) {
-            ActiveCamera.enabled = false;
+            ActiveCamera.gameObject.SetActive(false);
         }
-        camera.enabled = true;
+        camera.gameObject.SetActive(true);
         ActiveCamera = camera;
     }
 

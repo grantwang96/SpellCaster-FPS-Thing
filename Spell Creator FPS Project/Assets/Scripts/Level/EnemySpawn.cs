@@ -6,7 +6,9 @@ public class EnemySpawn : MonoBehaviour {
 
     [SerializeField] private string _id;
     [SerializeField] private string _enemyPrefabId;
+    [SerializeField] private int _enemySpawnLimit;
     public string EnemyPrefabId => _enemyPrefabId;
+    private int _spawnedEnemies = 0;
     private bool _finishedSpawning = false;
 
     private Room _room;
@@ -25,10 +27,13 @@ public class EnemySpawn : MonoBehaviour {
         }
         EnemyBehaviour enemy = SpawnEnemyObject(overrideUniqueId);
         enemy.ChangeBrainState(transitionId, time);
-        _finishedSpawning = true;
+        _spawnedEnemies++;
+        if(_enemySpawnLimit > 0 && _spawnedEnemies == _enemySpawnLimit) {
+            _finishedSpawning = true;
+        }
     }
 
     protected virtual EnemyBehaviour SpawnEnemyObject(string overrideUniqueId) {
-        return NPCManager.Instance.SpawnPooledNPC(_enemyPrefabId, transform.position, overrideUniqueId);
+        return NPCManager.Instance.SpawnPooledNPC(_enemyPrefabId, transform.position, transform.eulerAngles, overrideUniqueId);
     }
 }

@@ -57,8 +57,8 @@ public class SceneController : MonoBehaviour {
     }
 
     private void FinishLoadingScene() {
-        OnSceneLoaded?.Invoke(_nextSceneName);
         isLoadingScene = false;
+        OnSceneLoaded?.Invoke(_nextSceneName);
     }
 
     public bool LoadSceneInstant(string sceneName) {

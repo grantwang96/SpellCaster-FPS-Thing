@@ -5,18 +5,32 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Tutorials/Actions/SpawnEnemy")]
 public class TutorialActionSpawnEnemy : TutorialAction
 {
-    [SerializeField] private string _enemySpawnId;
-    [SerializeField] private string _overrideEnemyUniqueId;
-    [SerializeField] private BrainStateTransitionId _initialBrainStateId;
-    [SerializeField] private float _initialBrainStateDuration;
+    [SerializeField] private List<EnemySpawnData> _enemySpawnData = new List<EnemySpawnData>();
 
     public override TutorialActionStatus Execute() {
-        EnemySpawn spawnPoint = LevelManager.CampaignLevelManagerInstance.GetEnemySpawnById(_enemySpawnId);
-        if(spawnPoint == null) {
-            ErrorManager.LogError(nameof(TutorialActionSpawnEnemy), $"Could not retrieve enemy spawnpoint with id: {_enemySpawnId}");
-            return TutorialActionStatus.Abort;
+        for(int i = 0; i < _enemySpawnData.Count; i++) {
+            EnemySpawn spawnPoint = LevelManager.CampaignLevelManagerInstance.GetEnemySpawnById(_enemySpawnData[i].EnemySpawnId);
+            if (spawnPoint == null) {
+                ErrorManager.LogError(nameof(TutorialActionSpawnEnemy), $"Could not retrieve enemy spawnpoint with id: {_enemySpawnData[i].EnemySpawnId}");
+                return TutorialActionStatus.Abort;
+            }
+            EnemySpawnData enemySpawnData = _enemySpawnData[i];
+            spawnPoint.SpawnNPC(enemySpawnData.InitialBrainStateId, enemySpawnData.InitialBrainStateDuration, enemySpawnData.OverrideEnemyUniqueId);
         }
-        spawnPoint.SpawnNPC(_initialBrainStateId, _initialBrainStateDuration, _overrideEnemyUniqueId);
+
         return base.Execute();
+    }
+
+    [System.Serializable]
+    private class EnemySpawnData {
+        [SerializeField] private string _enemySpawnId;
+        [SerializeField] private string _overrideEnemyUniqueId;
+        [SerializeField] private BrainStateTransitionId _initialBrainStateId;
+        [SerializeField] private float _initialBrainStateDuration;
+
+        public string EnemySpawnId => _enemySpawnId;
+        public string OverrideEnemyUniqueId => _overrideEnemyUniqueId;
+        public BrainStateTransitionId InitialBrainStateId => _initialBrainStateId;
+        public float InitialBrainStateDuration => _initialBrainStateDuration;
     }
 }

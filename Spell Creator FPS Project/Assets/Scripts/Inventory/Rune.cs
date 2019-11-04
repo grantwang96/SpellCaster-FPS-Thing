@@ -34,7 +34,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
 
-    private void Awake() {
+    private void GenerateUniqueId() {
         InteractableId = $"{GameplayValues.Level.RuneInstanceIdPrefix}{StringGenerator.RandomString(GameplayValues.Level.RuneInstanceIdSize)}";
     }
 
@@ -47,6 +47,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
             DeactivatePooledObject();
             return;
         }
+        GenerateUniqueId();
         ActivatePooledObject();
         // initialize visuals based on item id
     }
@@ -76,20 +77,26 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     }
 
     public void ReleaseFromChest(Vector3 force) {
-        
+        _collider.enabled = true;
+        _rigidbody.isKinematic = false;
+        _rigidbody.useGravity = true;
+        _rigidbody.AddForce(force, ForceMode.Impulse);
     }
 
     public void ActivatePooledObject(string uniqueId = "") {
         gameObject.SetActive(true);
-        UniqueId = uniqueId;
+        if (!string.IsNullOrEmpty(uniqueId)) {
+            InteractableId = uniqueId;
+        }
         LevelManager.LevelManagerInstance.RegisterInteractable(this);
+        ReleaseFromChest(GetForceDirection() * _spawnForce);
+    }
+
+    private Vector3 GetForceDirection() {
         Vector3 offset = Random.insideUnitCircle * _spawnSpread;
         offset = new Vector3(offset.x, 0f, offset.y);
         Vector3 dir = Vector3.up + offset;
-        _collider.enabled = true;
-        _rigidbody.isKinematic = false;
-        _rigidbody.useGravity = true;
-        _rigidbody.AddForce(dir.normalized * _spawnForce, ForceMode.Impulse);
+        return dir;
     }
 
     public void DeactivatePooledObject() {

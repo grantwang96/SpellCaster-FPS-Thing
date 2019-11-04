@@ -17,26 +17,49 @@ public class PlayerHud : MonoBehaviour {
     [SerializeField] private PlayerDamageable _playerDamageable;
     [SerializeField] private PlayerCombat _playerCombat;
 
+    public static PlayerHud Instance { get; private set; }
+    public bool Enabled { get; private set; }
+
+    private void Awake() {
+        Instance = this;
+    }
+
+    public void SetEnabled(bool enabled) {
+        Enabled = enabled;
+        gameObject.SetActive(enabled);
+        UnsubscribeToEvents();
+        if (Enabled) {
+            SubscribeToEvents();
+        }
+    }
+
     // Use this for initialization
     void Start () {
         _health = _playerDamageable.Health;
         _maxHealth = _playerDamageable.MaxHealth;
         _mana = _playerCombat.Mana;
         _maxMana = _playerCombat.MaxMana;
-        _playerDamageable.OnHealthChanged += PlayerHealthChanged;
-        _playerDamageable.OnMaxHealthChanged += PlayerMaxHealthChanged;
-        _playerCombat.OnManaChanged += PlayerManaChanged;
-        _playerCombat.OnActiveSpellDataUpdated += OnActiveSpellDataUpdated;
-
+        SubscribeToEvents();
         UpdateHealthDisplay(_health, _maxHealth);
         UpdateManaDisplay(_mana, _maxMana);
 	}
 
-    private void OnDestroy() {
+    private void SubscribeToEvents() {
+        _playerDamageable.OnHealthChanged += PlayerHealthChanged;
+        _playerDamageable.OnMaxHealthChanged += PlayerMaxHealthChanged;
+        _playerCombat.OnManaChanged += PlayerManaChanged;
+        _playerCombat.OnActiveSpellDataUpdated += OnActiveSpellDataUpdated;
+    }
+
+    private void UnsubscribeToEvents() {
         _playerDamageable.OnHealthChanged -= PlayerHealthChanged;
         _playerDamageable.OnMaxHealthChanged -= PlayerMaxHealthChanged;
         _playerCombat.OnManaChanged -= PlayerManaChanged;
         _playerCombat.OnActiveSpellDataUpdated -= OnActiveSpellDataUpdated;
+    }
+
+    private void OnDestroy() {
+        UnsubscribeToEvents();
     }
 
     private void PlayerHealthChanged(int newHealth) {

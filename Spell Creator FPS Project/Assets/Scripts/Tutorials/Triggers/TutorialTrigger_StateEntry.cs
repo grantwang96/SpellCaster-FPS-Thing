@@ -11,12 +11,8 @@ public class TutorialTrigger_StateEntry : MonoBehaviour {
         if (_gameState == null) {
             _gameState = GetComponent<GameState>();
         }
-    }
-
-    // Use this for initialization
-    void Start () {
         _gameState.OnGameStateEnter += OnGameStateEnter;
-	}
+    }
 
     private void OnGameStateEnter() {
         TutorialManager.Instance.FireTutorialTrigger(_triggerId);

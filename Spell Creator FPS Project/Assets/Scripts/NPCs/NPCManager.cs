@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface INPCManager {
 
-    EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, string uniqueId);
+    EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId);
     EnemyBehaviour GetActiveNPC(string npcId);
 
     event Action<string, EnemyBehaviour> OnEnemySpawned;
@@ -25,7 +25,7 @@ public class NPCManager : MonoBehaviour, INPCManager {
         Instance = this;
     }
 
-    public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, string uniqueId) {
+    public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId) {
         PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(npcPrefabId);
         EnemyBehaviour enemy = pooledObject as EnemyBehaviour;
         if (enemy == null) {
@@ -33,6 +33,7 @@ public class NPCManager : MonoBehaviour, INPCManager {
             return null;
         }
         enemy.transform.position = position;
+        enemy.transform.eulerAngles = rotation;
         enemy.ActivatePooledObject(uniqueId);
         _activeNPCs.Add(enemy.UniqueId, enemy);
         enemy.Damageable.OnDeath += OnEnemyDeath;
