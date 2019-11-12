@@ -14,10 +14,9 @@ public abstract class CharacterBehaviour : MonoBehaviour {
     /// The "intended" vector that the character wants to move
     /// </summary>
     [SerializeField] protected Vector3 _moveVector;
-    public Vector3 MoveVector { get { return _moveVector; } }
-    [SerializeField] public float BaseSpeed { get; protected set; }
-    [SerializeField] public float MaxSpeed { get; protected set; }
-    public abstract float GetMoveMagnitude();
+    public Vector3 MoveVector => _moveVector;
+    public float BaseSpeed { get; protected set; }
+    public float MaxSpeed { get; protected set; }
 
     [SerializeField] protected Transform _bodyTransform;
     public Transform BodyTransform { get { return _bodyTransform; } }
@@ -31,22 +30,11 @@ public abstract class CharacterBehaviour : MonoBehaviour {
 
     public abstract Damageable Damageable { get; }
     [SerializeField] protected CharacterAnimationHandler _animHandler;
-    public CharacterAnimationHandler CharacterAnimationHandler {
-        get {
-            return _animHandler;
-        }
-    }
-    public delegate void ChangeAnimationStateCallback(string stateName, params int[] args);
-    public event ChangeAnimationStateCallback ChangeAnimationState;
 
     [SerializeField] protected List<string> _unitTags = new List<string>(); // can dynamically change what type of tags exist on this character
     public List<string> UnitTags => _unitTags;
     
     protected virtual void Awake() {
         _animHandler = GetComponent<CharacterAnimationHandler>();
-    }
-
-    protected void InvokeChangeAnimationState(string stateName) {
-        ChangeAnimationState?.Invoke(stateName);
     }
 }

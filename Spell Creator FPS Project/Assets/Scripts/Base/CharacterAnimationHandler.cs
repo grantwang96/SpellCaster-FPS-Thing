@@ -4,81 +4,74 @@ using UnityEngine;
 
 public class CharacterAnimationHandler : MonoBehaviour { // base class that handles animations
 
-    public Animator anim;
-    public Transform bodyRoot;
-    protected CharacterBehaviour characterBehaviour;
+    [SerializeField] protected Animator _anim;
+    [SerializeField] protected Transform _bodyRoot;
+    [SerializeField] protected CharacterBehaviour _characterBehaviour;
+    [SerializeField] protected CharacterMoveController _moveController;
+    [SerializeField] protected Damageable _damageable;
 
-    public AnimationCurve accelerationTiltCurve;
-    public float tiltLimit;
-    [SerializeField] private bool tiltEnabled;
-
-    protected virtual void Awake() {
-        characterBehaviour = GetComponent<CharacterBehaviour>();
-        characterBehaviour.ChangeAnimationState += OnStateChange;
-    }
-
+    [SerializeField] protected AnimationCurve _accelerationTiltCurve;
+    [SerializeField] protected float _tiltLimit;
+    [SerializeField] private bool _tiltEnabled;
+    
     protected virtual void Start() {
-        bodyRoot = characterBehaviour.BodyTransform;
-        anim = bodyRoot.GetComponent<Animator>();
+        _damageable.OnHealthChanged += OnHealthChanged;
+        _damageable.OnDeath += OnDeath;
     }
-
-    protected virtual void OnDestroy() {
-        characterBehaviour.ChangeAnimationState -= OnStateChange;
-    }
-
+    
     public virtual void TiltCharacter(float x) {
-        if (!tiltEnabled) { return; }
+        if (!_tiltEnabled) { return; }
         float val = Mathf.Clamp(x, -1, 1);
         // int mod = x > 0 ? 1 : -1;
         // float val = Mathf.Abs(accelerationTiltCurve.Evaluate(x));
-        bodyRoot.localEulerAngles = new Vector3(
-            bodyRoot.localEulerAngles.x, bodyRoot.localEulerAngles.y, -val * tiltLimit);
+        _bodyRoot.localEulerAngles = new Vector3(
+            _bodyRoot.localEulerAngles.x, _bodyRoot.localEulerAngles.y, -val * _tiltLimit);
     }
 
     public virtual bool IsStateByName(string name) {
-        return anim.GetCurrentAnimatorStateInfo(0).IsName(name);
+        return _anim.GetCurrentAnimatorStateInfo(0).IsName(name);
     }
 
     public virtual bool IsStateByTag(string tag) {
-        return anim.GetCurrentAnimatorStateInfo(0).IsTag(tag);
+        return _anim.GetCurrentAnimatorStateInfo(0).IsTag(tag);
     }
 
     public virtual float GetCurrentAnimationTime() {
-        return anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
+        return _anim.GetCurrentAnimatorStateInfo(0).normalizedTime;
     }
 
     public virtual float GetCurrentAnimationDuration() {
-        return anim.GetCurrentAnimatorStateInfo(0).length;
+        return _anim.GetCurrentAnimatorStateInfo(0).length;
     }
 
     public virtual void SetIntParameter(string parameter, int num) {
-        if (anim.GetInteger(parameter) != -1) {
-            anim.SetInteger(parameter, num);
+        if (_anim.GetInteger(parameter) != -1) {
+            _anim.SetInteger(parameter, num);
         }
     }
 
     public virtual void SetTrigger(string triggerName) {
-        anim.SetTrigger(triggerName);
+        _anim.SetTrigger(triggerName);
     }
 
     public virtual void ResetTrigger(string triggerName) {
-        anim.ResetTrigger(triggerName);
+        _anim.ResetTrigger(triggerName);
     }
 
     public virtual void PlayAnimation(string animationName) {
-        anim.Play(animationName);
+        _anim.Play(animationName);
     }
 
     public virtual void StopAnimation() {
-        anim.StopPlayback();
+        _anim.StopPlayback();
     }
 
-    protected virtual void OnStateChange(string stateName, params int[] args) {
-        /*
-        if(stateName == string.Empty) {
-            return;
-        }
-        anim.SetTrigger(stateName);
-        */
+    protected virtual void OnHealthChanged(int health) {
+        // determine if damage was taken
+        // immediately enter damaged animation state
+    }
+
+    protected virtual void OnDeath(bool isDead, Damageable damageable) {
+        // immediately enter death state
     }
 }

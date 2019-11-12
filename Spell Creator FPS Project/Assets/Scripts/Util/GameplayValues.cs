@@ -21,6 +21,18 @@ public static partial class GameplayValues {
         public const string GenericButtonIdNo = "GENERIC_BUTTON_NO";
     }
 
+    public static class BrainStates {
+        public const string IdleStateId = "IdleBrainState";
+        public const string WalkStateId = "WalkBrainState";
+        public const string ChaseStateId = "ChaseBrainState";
+        public const string ScanStateId = "ScanBrainState";
+        public const string RunStateId = "RunBrainState";
+        public const string TakeCoverStateId = "TakeCoverBrainState";
+        public const string AlertStateId = "AlertBrainStateId";
+        public const string MeleeAttackStateId = "MeleeAttackBrainState";
+        public const string RangeAttackStateId = "RangeAttackBrainState";
+    }
+
     public static class UnitTags {
         public const string PlayerUnitTag = "PLAYER_UNIT";
         public const string PlayerFriendlyUnitTag = "PLAYER_FRIENDLY_UNIT";

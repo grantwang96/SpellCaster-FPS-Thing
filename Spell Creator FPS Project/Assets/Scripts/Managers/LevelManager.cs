@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour, ICampaignLevelManager {
     // list of all treasure chest locations
     [SerializeField] private List<ChestSpawn> _chestLocations = new List<ChestSpawn>();
     public List<ChestSpawn> ChestLocations => _chestLocations;
-    [SerializeField] private List<EnemyPrefabEntry> _enemyPrefabIds = new List<EnemyPrefabEntry>();
+    [SerializeField] private List<PooledObjectEntry> _enemyPrefabIds = new List<PooledObjectEntry>();
     // dictionary of doors and their respective keys
     // list of all enemy spawnpoints
     private Dictionary<string, EnemySpawn> _enemySpawnPoints = new Dictionary<string, EnemySpawn>();
@@ -84,12 +84,4 @@ public class LevelManager : MonoBehaviour, ICampaignLevelManager {
         }
         return null;
     }
-}
-
-[System.Serializable]
-public class EnemyPrefabEntry {
-    [SerializeField] private string _id;
-    public string Id => _id;
-    [SerializeField] private int _count;
-    public int Count => _count;
 }

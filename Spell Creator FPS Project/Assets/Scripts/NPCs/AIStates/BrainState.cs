@@ -22,6 +22,14 @@ public abstract class BrainState : MonoBehaviour{
     protected float _startTime;
     protected float _duration;
 
+    protected virtual void Awake() {
+        SetTriggerName();
+    }
+
+    protected virtual void SetTriggerName() {
+
+    }
+
     public virtual void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         foreach(BrainState brainState in _childrenStates) {
             brainState.Enter(overrideBrainState, duration);

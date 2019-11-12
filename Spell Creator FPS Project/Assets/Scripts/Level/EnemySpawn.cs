@@ -7,6 +7,7 @@ public class EnemySpawn : MonoBehaviour {
     [SerializeField] private string _id;
     [SerializeField] private string _enemyPrefabId;
     [SerializeField] private int _enemySpawnLimit;
+    [SerializeField] private bool _spawnOnStart;
     public string EnemyPrefabId => _enemyPrefabId;
     private int _spawnedEnemies = 0;
     private bool _finishedSpawning = false;
@@ -15,6 +16,9 @@ public class EnemySpawn : MonoBehaviour {
 
     private void Start() {
         LevelManager.CampaignLevelManagerInstance.RegisterEnemySpawn(_id, this);
+        if (_spawnOnStart) {
+            SpawnNPC();
+        }
     }
 
     public void InitializeSpawnPoint(Room room) {

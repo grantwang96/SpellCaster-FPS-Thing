@@ -5,13 +5,17 @@ using UnityEngine;
 // this will likely become a parent class for more ranged attacks
 public class RangedAttackState : AttackState {
 
+    private const string CombatPooledObjectsResourcesPath = "Combat";
+
     [SerializeField] private BrainState _targetInRangeState;
     [SerializeField] private BrainState _targetOutOfRangeState;
     [SerializeField] private BrainState _targetMeleeRangeState;
 
+    [SerializeField] private float _meleeRange;
+
     // configurable data for projectiles
     [SerializeField] protected string _projectilePrefabId;
-    [SerializeField] protected int _power;
+    [SerializeField] protected float _power = 1f;
     [SerializeField] protected bool _useGravity;
     [SerializeField] protected Effect[] _effects;
 
@@ -26,6 +30,16 @@ public class RangedAttackState : AttackState {
     private bool _projectileSpawned;
     private Projectile _currentProjectile;
 
+    protected override void Awake() {
+        base.Awake();
+        ObjectPool.Instance.RegisterObjectToPool(CombatPooledObjectsResourcesPath, _projectilePrefabId, 10);
+    }
+
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.RangeAttackStateId;
+    }
+
+
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
         _animController.PlayAnimation(_attackName);
@@ -39,10 +53,11 @@ public class RangedAttackState : AttackState {
             return;
         }
         float currentTime = _animController.GetCurrentAnimationTime();
-        if (currentTime >= 1f && !_npcVision.CanSeeTarget(_npcVision.CurrentTarget.BodyTransform.position)) {
-            _npcBehaviour.ChangeBrainState(_targetOutOfRangeState);
+        if(currentTime >= 1f) {
+            OnAttackFinish();
+            return;
         }
-        if (currentTime > _fireProjectileTime) {
+        if (currentTime > _fireProjectileTime && _currentProjectile != null) {
             // throw projectile
             FireProjectile();
         } else if(currentTime > _spawnProjectileTime  && !_projectileSpawned) {
@@ -53,6 +68,9 @@ public class RangedAttackState : AttackState {
 
     public override void Exit() {
         base.Exit();
+        if(_currentProjectile != null) {
+            _currentProjectile.DeactivatePooledObject();
+        }
         _projectileSpawned = false;
     }
 
@@ -77,11 +95,25 @@ public class RangedAttackState : AttackState {
 
     // launches projectile at given vector
     protected virtual void FireProjectile() {
-        if(_currentProjectile == null || _currentProjectile.IsLive) { return; }
+        if (_currentProjectile == null || _currentProjectile.IsLive) { return; }
         Vector3 forward = _npcVision.CurrentTarget.GetBodyPosition() - _hand.position;
         Vector3 velocity = forward.normalized * _forwardForce + _npcBehaviour.transform.up * _verticalForce;
-        _currentProjectile.FireProjectile(true, velocity);
+        _currentProjectile.FireProjectile(_useGravity, velocity);
         // TODO: Calculate the velocity required to send the object directly at the target
         _currentProjectile = null;
+    }
+
+    private bool TargetTooClose() {
+        return Vector3.Distance(_npcBehaviour.BodyTransform.position, _npcVision.CurrentTarget.BodyTransform.position) < _meleeRange;
+    }
+
+    private void OnAttackFinish() {
+        if (_npcVision.CanSeeTarget(_npcVision.CurrentTarget.GetBodyPosition())) {
+            _npcBehaviour.ChangeBrainState(_targetInRangeState);
+        } else if (TargetTooClose()) {
+            _npcBehaviour.ChangeBrainState(_targetMeleeRangeState);
+        } else {
+            _npcBehaviour.ChangeBrainState(_targetOutOfRangeState);
+        }
     }
 }

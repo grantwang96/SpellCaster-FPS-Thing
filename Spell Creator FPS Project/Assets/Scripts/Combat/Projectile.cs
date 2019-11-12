@@ -7,8 +7,7 @@ using UnityEngine;
 /// </summary>
 public class Projectile : MonoBehaviour, PooledObject {
 
-    [SerializeField] private string _prefabId;
-    public string PrefabId => _prefabId;
+    public string PrefabId => name;
     [SerializeField] private bool _inUse;
     public bool InUse => _inUse;
 
@@ -49,12 +48,16 @@ public class Projectile : MonoBehaviour, PooledObject {
         _powerScale= powerScale;
         _lifeTime = lifeTime;
         _effects = effects;
+        _rigidBody.isKinematic = true;
+        _rigidBody.velocity = Vector3.zero;
+        _collider.enabled = false;
     }
 
     public virtual void FireProjectile(bool useGravity, Vector3 vector) {
         _isLive = true;
         transform.SetParent(ObjectPool.Instance.transform);
         transform.forward = vector;
+        _rigidBody.isKinematic = false;
         _rigidBody.useGravity = useGravity;
         _rigidBody.AddForce(vector, ForceMode.VelocityChange);
         _collider.enabled = true;
@@ -62,7 +65,9 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 	
 	protected virtual void Update () {
-        transform.forward = _rigidBody.velocity;
+        if(_rigidBody.velocity != Vector3.zero) {
+            transform.forward = _rigidBody.velocity;
+        }
         if (_isLive && Time.time - _startTime >= _lifeTime) {
             DeactivatePooledObject();
         }

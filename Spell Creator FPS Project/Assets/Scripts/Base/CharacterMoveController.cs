@@ -8,6 +8,16 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     [SerializeField] protected float _baseSpeed;
     [SerializeField] protected float _maxSpeed;
+    protected float _moveSpeed;
+    public float MoveSpeed {
+        get {
+            return _moveSpeed;
+        }
+        protected set {
+            _moveSpeed = value;
+            OnMoveSpeedChanged?.Invoke(_moveSpeed);
+        }
+    }
     [SerializeField] protected float _mass;
     [SerializeField] protected float _linearDrag;
     [SerializeField] protected float _headDistanceThreshold;
@@ -19,9 +29,12 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     [SerializeField] protected Vector3 _movementVelocity;
     public Vector3 MovementVelocity { get { return _movementVelocity; } }
+    public bool IsGrounded => _characterController.isGrounded;
 
     protected Coroutine _busyAnimation; // coroutine that prevents other actions from being taken
     protected Coroutine _externalForces; // coroutine that prevents movement due to external forces
+
+    public event Action<float> OnMoveSpeedChanged;
 
     protected virtual void Awake() {
         _characterController = GetComponent<CharacterController>();

@@ -15,6 +15,10 @@ public class ScanState : BrainState {
         }
     }
 
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.ScanStateId;
+    }
+
     public override void Execute() {
         if (_vision.CheckVision()) {
             _npcBehaviour.ChangeBrainState(_onEnemySeenState);

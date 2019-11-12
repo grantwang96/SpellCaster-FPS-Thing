@@ -9,6 +9,10 @@ public class IdleState : BrainState {
 
     [SerializeField] private NPCMoveController _moveController;
 
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.IdleStateId;
+    }
+
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
         _startTime = Time.time;

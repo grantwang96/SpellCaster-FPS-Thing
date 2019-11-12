@@ -23,9 +23,8 @@ public class NPCBehaviour : CharacterBehaviour {
 
     [SerializeField] private List<BrainStateTransition> _allBrainStateTransitions = new List<BrainStateTransition>();
     private Dictionary<BrainStateTransitionId, BrainState> _brainStateTransitions = new Dictionary<BrainStateTransitionId, BrainState>();
-
-    public delegate void BrainStateChangeDelegate(string newStateName);
-    public event BrainStateChangeDelegate OnBrainStateChanged;
+    
+    public event Action<string> OnBrainStateChanged;
 
     public event Action OnCharacterSpawned;
 
@@ -80,12 +79,6 @@ public class NPCBehaviour : CharacterBehaviour {
         OnCharacterSpawned?.Invoke();
     }
 
-    public override float GetMoveMagnitude() {
-        Vector3 vel = _charMove.CharacterController.velocity;
-        vel.y = 0f;
-        return vel.magnitude;
-    }
-
     /// <summary>
     /// Changes the current state in the AI State Machine
     /// </summary>
@@ -98,8 +91,7 @@ public class NPCBehaviour : CharacterBehaviour {
         _currentBrainState = brainState;
         _currentBrainState?.Enter(overrideBrainState, duration);
 
-        string stateName = _currentBrainState?.TriggerName ?? string.Empty;
-        InvokeChangeAnimationState(stateName);
+        OnBrainStateChanged?.Invoke(_currentBrainState?.TriggerName);
     }
 
     public virtual bool ChangeBrainState(BrainStateTransitionId transitionId, float duration = 0f) {

@@ -9,6 +9,10 @@ public class AlertState : BrainState
     [SerializeField] private NPCMoveController _npcMoveController;
     [SerializeField] private string _animationName;
 
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.AlertStateId;
+    }
+
     public override void Enter(BrainState overrideBrainState = null, float duration = 0) {
         _duration = duration;
         _startTime = Time.time;
@@ -26,6 +30,7 @@ public class AlertState : BrainState
         float animDuration = _animController.GetCurrentAnimationDuration();
         float currentDuration = Time.time - _startTime;
         if(animDuration >= 1f && currentDuration >= _duration) {
+            Debug.Log("Leave alert state");
             _npcBehaviour.ChangeBrainState(_onAlertEndState);
         }
     }

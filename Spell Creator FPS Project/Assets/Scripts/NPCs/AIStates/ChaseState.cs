@@ -5,51 +5,61 @@ using UnityEngine.AI;
 
 // movement specifically during combat
 public class ChaseState : MoveState {
-
+    
     [SerializeField] private BrainState _onTargetSeenState;
     [SerializeField] private BrainState _onTargetOutOfSightState;
     [SerializeField] private BrainState _onTargetLostState;
 
     private IVision _vision;
-    private Vector3 targetLastKnownPosition;
+    [SerializeField] private Vector3 _targetLastKnownPosition;
 
     private void Start() {
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.ChaseStateId;
+    }
+
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
-        targetLastKnownPosition = _vision.CurrentTarget.transform.position;
-        base.Enter(overrideBrainState, duration);
+        Debug.Log("Chase State entered!");
         if (_vision.CurrentTarget == null) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }
+        base.Enter(overrideBrainState, duration);
     }
 
     protected override Vector3 GetDestination() {
-        return _vision.CurrentTarget.transform.position;
+        _targetLastKnownPosition = _vision.CurrentTarget.transform.position;
+        return _targetLastKnownPosition;
     }
 
     public override void Execute() {
+        base.Execute();
         if (TryAttack()) { return; }
-        SetRotation();
         SetDestination();
     }
 
     protected override void SetRotation() {
-        _moveController.SetRotation(targetLastKnownPosition);
+        _moveController.SetRotation(_targetLastKnownPosition);
     }
 
     private void SetDestination() {
-        bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
-        if (canSeeTarget) {
-            targetLastKnownPosition = _vision.CurrentTarget.transform.position;
-            _moveController.SetDestination(targetLastKnownPosition);
+        bool targetInView = _vision.CheckVision(_vision.CurrentTarget);
+        if (targetInView) {
+            if(_onTargetSeenState != null) {
+                _npcBehaviour.ChangeBrainState(_onTargetSeenState);
+                return;
+            }
+            _targetLastKnownPosition = _vision.CurrentTarget.transform.position;
+            _moveController.SetDestination(_targetLastKnownPosition);
         }
     }
 
     private bool TryAttack() {
         if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
+            _moveController.ClearCurrentDestination();
             _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
             return true;
         }
@@ -61,12 +71,13 @@ public class ChaseState : MoveState {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }
+        _moveController.OnArrivedDestination += OnArriveDestination;
     }
 
     protected override void OnArriveDestination() {
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
-            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
+            _npcBehaviour.ChangeBrainState(_onTargetSeenState);
             return;
         }
         _npcBehaviour.ChangeBrainState(_onTargetLostState);

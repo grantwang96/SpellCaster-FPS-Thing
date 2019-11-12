@@ -21,7 +21,9 @@ public class DetectionRadius : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         // check if collider has a character behaviour
         CharacterBehaviour otherCharBehaviour = other.GetComponent<CharacterBehaviour>();
-
+        if(_vision == null) {
+            _vision = myBehaviour.GetComponent<IVision>();
+        }
         // if so, and it's not us, add to list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {
             _vision.RegisterToKnownCharacters(otherCharBehaviour);
@@ -32,6 +34,9 @@ public class DetectionRadius : MonoBehaviour {
         // check if collider has a character behaviour
         CharacterBehaviour otherCharBehaviour = other.GetComponent<CharacterBehaviour>();
 
+        if (_vision == null) {
+            _vision = myBehaviour.GetComponent<IVision>();
+        }
         // if so, and it's not us, remove from list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {
             _vision.DeregisterFromKnownCharacters(otherCharBehaviour);

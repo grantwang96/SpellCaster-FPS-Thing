@@ -20,17 +20,24 @@ public class NPCVision : MonoBehaviour, IVision{
     public virtual bool CheckVision() {
         for (int i = 0; i < KnownCharacters.Count; i++) {
             CharacterBehaviour knownCharacter = KnownCharacters[i];
-            float distance = Vector3.Distance(knownCharacter.transform.position, transform.position);
-            float angle = Vector3.Angle(transform.forward, knownCharacter.transform.position - transform.position);
-            if (distance <= _npcBehaviour.Blueprint.VisionRange && angle <= _npcBehaviour.Blueprint.VisionAngle) {
-                Vector3 dir = knownCharacter.Head.position - _npcBehaviour.Head.position;
-                RaycastHit hit;
-                if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
-                    CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                    if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.Blueprint.IsEnemy(otherCB)) {
-                        _currentTarget = otherCB;
-                        return true;
-                    }
+            if (CheckVision(knownCharacter)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public virtual bool CheckVision(CharacterBehaviour target) {
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+        float angle = Vector3.Angle(transform.forward, target.transform.position - transform.position);
+        if (distance <= _npcBehaviour.Blueprint.VisionRange && angle <= _npcBehaviour.Blueprint.VisionAngle) {
+            Vector3 dir = target.Head.position - _npcBehaviour.Head.position;
+            RaycastHit hit;
+            if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
+                CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
+                if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.Blueprint.IsEnemy(otherCB)) {
+                    _currentTarget = otherCB;
+                    return true;
                 }
             }
         }
@@ -44,7 +51,7 @@ public class NPCVision : MonoBehaviour, IVision{
         headForward.y = 0f;
         if (distance < _npcBehaviour.Blueprint.VisionRange) {
             RaycastHit hit;
-            if (Physics.Raycast(_npcBehaviour.Head.position, targetDir, out hit, distance, _npcBehaviour.Blueprint.VisionMask)) {
+            if (Physics.Raycast(_npcBehaviour.Head.position, targetDir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 if (hit.transform == CurrentTarget.transform) { return true; }
             }
         }
@@ -76,6 +83,7 @@ public interface IVision {
     CharacterBehaviour CurrentTarget { get; }
 
     bool CheckVision(); // checks general vision and returns first custom object it sees
+    bool CheckVision(CharacterBehaviour target);
     bool CanSeeTarget(Vector3 target); // checks to see if this target is viewable(if it has one)
     void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour);
     void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour);

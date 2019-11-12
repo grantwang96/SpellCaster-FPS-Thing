@@ -11,17 +11,31 @@ public class TakeCoverState : MoveState {
     [SerializeField] private int _searchQueries;
 
     private IVision _vision;
+    private bool _canSeeTarget;
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
+    protected override void SetTriggerName() {
+        base.SetTriggerName();
+        _triggerName = GameplayValues.BrainStates.TakeCoverStateId;
+    }
+
     protected override Vector3 GetDestination() {
+        /*
         Vector3 destination = _moveController.transform.position;
         Vector3 targetDir = _vision.CurrentTarget.transform.position - _moveController.transform.position;
         Vector3 position = _moveController.transform.position + -targetDir.normalized * _searchRadiusOuter;
         NavMeshHit hit;
         if (NavMesh.FindClosestEdge(position, out hit, NavMesh.AllAreas)) {
+            destination = hit.position;
+        }
+        */
+        Vector3 destination = _vision.CurrentTarget.transform.position;
+        NavMeshHit hit;
+        if(NavMesh.FindClosestEdge(destination, out hit, NavMesh.AllAreas)) {
             destination = hit.position;
         }
         return destination;
@@ -35,5 +49,6 @@ public class TakeCoverState : MoveState {
         // select a state
         BrainState nextState = _onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)];
         _npcBehaviour.ChangeBrainState(nextState);
+        _moveController.ClearCurrentDestination();
     }
 }

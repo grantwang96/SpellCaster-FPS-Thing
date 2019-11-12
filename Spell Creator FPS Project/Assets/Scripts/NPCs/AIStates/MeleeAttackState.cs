@@ -27,6 +27,10 @@ public class MeleeAttackState : AttackState {
         }
     }
 
+    protected override void SetTriggerName() {
+        _triggerName = GameplayValues.BrainStates.MeleeAttackStateId;
+    }
+
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
         if (_attackComboIndex > -1) {
