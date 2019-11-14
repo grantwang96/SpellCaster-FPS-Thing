@@ -11,6 +11,7 @@ public abstract class InteractableStation : MonoBehaviour, IInteractable {
 
     [SerializeField] protected string _overrideId;
     public string InteractableId { get; protected set; }
+    [SerializeField] protected string _layerName;
 
     public abstract Vector3 InteractableCenter { get; }
 

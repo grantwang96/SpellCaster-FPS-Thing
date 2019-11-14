@@ -19,6 +19,8 @@ public static partial class GameplayValues {
         public const string GenericButtonIdClose = "GENERIC_BUTTON_CLOSE";
         public const string GenericButtonIdYes = "GENERIC_BUTTON_YES";
         public const string GenericButtonIdNo = "GENERIC_BUTTON_NO";
+
+        public const string PickedUpItemMessageBase = "Picked up {0}!";
     }
 
     public static class BrainStates {

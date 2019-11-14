@@ -203,16 +203,16 @@ public class LoadoutMenu : UISubPanelParent {
 
         private void OnRenameSpellSelected() {
             ReturnToLoadoutView();
-            UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+            UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
             SpellNameEditorInitData initData = new SpellNameEditorInitData() {
                 InitialName = _spellName
             };
-            UIManager.Instance.OpenUIPanel(_loadoutMenu._spellNameEditPrefabId, initData);
-            UIManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
+            UIPanelManager.Instance.OpenUIPanel(_loadoutMenu._spellNameEditPrefabId, initData);
+            UIPanelManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
         }
 
         private void OnSpellNameUpdated(string newSpellName) {
-            UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+            UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
             _spellName = string.IsNullOrEmpty(newSpellName) ? _spellName : newSpellName;
             _currentSpell.SetName(_spellName);
             GameManager.GameManagerInstance.CurrentSpellInventory.SoftRefresh();

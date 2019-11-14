@@ -5,9 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UISpellNameEditor : UIPanel, IUIViewGridParent {
-
-    private const string InputFieldId = "SPELL_NAME_INPUT_FIELD";
+public class UITextBoxEditor : UIPanel, IUIViewGridParent {
+    
     private const string ConfirmButtonId = "SPELL_NAME_CONFIRM_BTN";
     private const string CancelButtonId = "CANCEL_BTN";
 
@@ -19,7 +18,7 @@ public class UISpellNameEditor : UIPanel, IUIViewGridParent {
     public event Action OnNameUpdated;
     public event Action OnNameChangeCancel;
 
-    public string SpellName { get; private set; }
+    public string TextValue { get; private set; }
 
     private int[] _rowLengths = new int[] {
         1, 1
@@ -34,7 +33,7 @@ public class UISpellNameEditor : UIPanel, IUIViewGridParent {
             return;
         }
         _inputField.OnMousePointerClick += OnInputFieldSelected;
-        _inputField.onEndEdit.AddListener(OnNameChanged);
+        _inputField.onEndEdit.AddListener(OnTextChanged);
         _inputField.StartActive = true;
         InitializeButtonView();
         _buttonsView.SetActive(false);
@@ -64,8 +63,8 @@ public class UISpellNameEditor : UIPanel, IUIViewGridParent {
         _buttonsView.SetActive(false);
     }
 
-    private void OnNameChanged(string name) {
-        SpellName = name;
+    private void OnTextChanged(string name) {
+        TextValue = name;
         _inputField.InteractableUnhighlight();
         CoroutineGod.Instance.ExecuteAfterOneFrame(()=> {
             _buttonsView.SetActive(true);
@@ -75,7 +74,7 @@ public class UISpellNameEditor : UIPanel, IUIViewGridParent {
     private void OnButtonsViewSubmit(IUIInteractable interactable) {
         string id = interactable.Id;
         if (id.Equals(ConfirmButtonId)) {
-            UIManager.Instance.PassStringData(SpellName);
+            UIPanelManager.Instance.PassStringData(TextValue);
         }
         ClosePanel();
     }
@@ -87,7 +86,7 @@ public class UISpellNameEditor : UIPanel, IUIViewGridParent {
 
     public override void ClosePanel() {
         base.ClosePanel();
-        _inputField.onEndEdit.RemoveListener(OnNameChanged);
+        _inputField.onEndEdit.RemoveListener(OnTextChanged);
         _inputField.OnMousePointerClick -= OnInputFieldSelected;
         _buttonsView.OnSelectPressed -= OnButtonsViewSubmit;
         _buttonsView.OnHighlighted -= OnButtonsViewHover;

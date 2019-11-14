@@ -81,7 +81,7 @@ public class ArenaManager : GameManager, IArenaManager {
         _config = config;
         InitializeArenaStats();
         RegisterEnemyPrefabs();
-        UIManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
+        UIPanelManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
         NPCManager.Instance.OnEnemySpawned += OnEnemySpawned;
         PlayerController.Instance.Damageable.OnDeath += LoseRound;
     }
@@ -90,7 +90,7 @@ public class ArenaManager : GameManager, IArenaManager {
     }
 
     private void OnDestroy() {
-        UIManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
+        UIPanelManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
         PlayerController.Instance.Damageable.OnDeath -= LoseRound;
         NPCManager.Instance.OnEnemySpawned -= OnEnemySpawned;
     }
@@ -157,7 +157,7 @@ public class ArenaManager : GameManager, IArenaManager {
     private void LoseRound(bool isDead, Damageable damageable) {
         _currentlyRunningRound = false;
         // handle losing screen here
-        UIManager.Instance.OpenUIPanel(_loseScreenPrefabId,
+        UIPanelManager.Instance.OpenUIPanel(_loseScreenPrefabId,
             new ArenaLoseScreenInitData() {
                 ArenaStats = ArenaStats
         });

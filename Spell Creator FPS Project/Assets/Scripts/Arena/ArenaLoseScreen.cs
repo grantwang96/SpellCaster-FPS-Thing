@@ -30,7 +30,7 @@ public class ArenaLoseScreen : LoseScreen {
 
     protected override void RetryGame() {
         // close panels
-        UIManager.Instance.CloseUIPanel();
+        UIPanelManager.Instance.CloseUIPanel();
         // reload state
         GameManager.GameManagerInstance.CurrentSpellInventory?.ClearAll();
         GameManager.GameManagerInstance.CurrentRunicInventory?.ClearAll();

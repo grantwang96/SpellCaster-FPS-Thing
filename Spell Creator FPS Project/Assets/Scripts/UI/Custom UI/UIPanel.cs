@@ -19,7 +19,7 @@ public abstract class UIPanel : MonoBehaviour {
     }
 
     public virtual void Initialize(UIPanelInitData initData) {
-        UIManager.Instance.OnPanelsUpdated += OnUIManagerPanelsUpdated;
+        UIPanelManager.Instance.OnPanelsUpdated += OnUIManagerPanelsUpdated;
         SubscribeToGameplayController();
         OnControllerStateUpdated();
     }
@@ -36,14 +36,14 @@ public abstract class UIPanel : MonoBehaviour {
 
     protected virtual void OnUIManagerPanelsUpdated(bool panels) {
         UnsubscribeToGameplayController();
-        if (panels && UIManager.Instance.CurrentPanel == this) {
+        if (panels && UIPanelManager.Instance.CurrentPanel == this) {
             SubscribeToGameplayController();
         }
     }
 
     public virtual void ClosePanel() {
-        UIManager.Instance.CloseUIPanel();
-        UIManager.Instance.OnPanelsUpdated -= OnUIManagerPanelsUpdated;
+        UIPanelManager.Instance.CloseUIPanel();
+        UIPanelManager.Instance.OnPanelsUpdated -= OnUIManagerPanelsUpdated;
         UnsubscribeToGameplayController();
     }
 
@@ -76,7 +76,7 @@ public abstract class UISubPanelParent : UIPanel {
 
     protected override void OnUIManagerPanelsUpdated(bool panels) {
         base.OnUIManagerPanelsUpdated(panels);
-        bool isCurrentPanel = UIManager.Instance.CurrentPanel == this;
+        bool isCurrentPanel = UIPanelManager.Instance.CurrentPanel == this;
         OnCurrentPanelUpdated?.Invoke(isCurrentPanel);
         if (isCurrentPanel) {
             // do active panel things

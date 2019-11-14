@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
 
+    private const string ItemGetNotificationParentId = "prefab.ui_ItemPickupNotificationParent";
+
     [SerializeField] private string _prefabId;
     public string PrefabId => _prefabId;
     [SerializeField] private bool _inUse;
@@ -31,6 +33,8 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     [SerializeField] private MeshFilter _innerSymbolMeshFilter;
     [SerializeField] private MeshRenderer _innerSymbolMeshRenderer;
 
+    private IInventoryStorable _storable;
+
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
 
@@ -41,8 +45,8 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
     public void Initialize(string itemId) {
         _itemId = itemId;
         InteractableId = $"{GameplayValues.Level.RuneInstanceIdPrefix}{StringGenerator.RandomString(GameplayValues.Level.RuneInstanceIdSize)}";
-        IInventoryStorable storable = InventoryRegistry.Instance.GetItemById(_itemId);
-        if(storable == null) {
+        _storable = InventoryRegistry.Instance.GetItemById(_itemId);
+        if(_storable == null) {
             Debug.LogError($"Item with ID {_itemId} could not be found!");
             DeactivatePooledObject();
             return;
@@ -61,7 +65,6 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         if (!Interactable) { return; }
         if(character == PlayerController.Instance) {
             _interactable = false;
-            GameManager.GameManagerInstance.CurrentRunicInventory.AddItem(_itemId, 1);
             // PersistedInventory.RunicInventory.AddItem(_itemId, 1);
             OnInteractSuccess?.Invoke();
             StartCoroutine(FlyToTarget(character.BodyTransform));
@@ -90,6 +93,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         }
         LevelManager.LevelManagerInstance.RegisterInteractable(this);
         ReleaseFromChest(GetForceDirection() * _spawnForce);
+        // set up visuals for rune
     }
 
     private Vector3 GetForceDirection() {
@@ -115,7 +119,19 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
             transform.position = Vector3.Lerp(transform.position, target.position, time);
             yield return new WaitForSeconds(Time.deltaTime);
         }
+        PickUpItem();
+    }
+
+    private void PickUpItem() {
         DeactivatePooledObject();
         ObjectPool.Instance.ReturnUsedPooledObject(this);
+        GameManager.GameManagerInstance.CurrentRunicInventory.AddItem(_itemId, 1);
+        SendNotification();
+    }
+
+    private void SendNotification() {
+        string message = string.Format(GameplayValues.UI.PickedUpItemMessageBase, _storable.Name);
+        NotificationInitData initData = new NotificationInitData(message, _storable.SmallIcon);
+        UINotificationsManager.Instance.DisplayNotification(ItemGetNotificationParentId, initData);
     }
 }

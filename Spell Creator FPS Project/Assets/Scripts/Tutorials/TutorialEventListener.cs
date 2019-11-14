@@ -21,8 +21,8 @@ public class TutorialEventListener : MonoBehaviour
         NPCManager.Instance.OnEnemySpawned += OnEnemySpawned;
         NPCManager.Instance.OnEnemyDefeated += OnEnemyDefeated;
 
-        UIManager.Instance.OnPanelActivated += OnUIPanelActivated;
-        UIManager.Instance.OnPanelDeactivated += OnUIPanelDeactivated;
+        UIPanelManager.Instance.OnPanelActivated += OnUIPanelActivated;
+        UIPanelManager.Instance.OnPanelDeactivated += OnUIPanelDeactivated;
 
         QuestManager.Instance.OnQuestCompleted += OnQuestCompleted;
     }
@@ -31,8 +31,8 @@ public class TutorialEventListener : MonoBehaviour
         NPCManager.Instance.OnEnemySpawned -= OnEnemySpawned;
         NPCManager.Instance.OnEnemyDefeated -= OnEnemyDefeated;
 
-        UIManager.Instance.OnPanelActivated -= OnUIPanelActivated;
-        UIManager.Instance.OnPanelDeactivated -= OnUIPanelDeactivated;
+        UIPanelManager.Instance.OnPanelActivated -= OnUIPanelActivated;
+        UIPanelManager.Instance.OnPanelDeactivated -= OnUIPanelDeactivated;
 
         QuestManager.Instance.OnQuestCompleted -= OnQuestCompleted;
     }

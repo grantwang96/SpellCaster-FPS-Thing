@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd3d87282f344cb4c945b45ef4a7ef43, type: 3}
+  m_Name: TestIdiot
+  m_EditorClassIdentifier: 
+  _npcIdPrefix: TestIdiot
+  _scoreValue: 10
+  _totalHealth: 1
+  _statResistances:
+  - {fileID: 11400000, guid: 67daa09645c2ba94ca77f168c75c9d72, type: 2}
+  _statWeaknesses: []
+  _walkSpeed: 1.5
+  _runSpeed: 3
+  _idleTimeMinimum: 4
+  _idleTimeMaximum: 6
+  _visionRange: 1
+  _visionAngle: 2
+  _visionMask:
+    serializedVersion: 2
+    m_Bits: 2561
+  _attackRange: 2
+  _attackComboMax: 2
+  _unitTags: []
+  _enemyTags:
+  - PLAYER_UNIT
+  _healthOrbRewards:
+    _min: 5
+    _max: 10
+  _manaOrbRewards:
+    _min: 5
+    _max: 10
+  _rewardDropRange:
+    _min: 10
+    _max: 15
+  _lootTable:
+  - _lootId: CM_SingleShot_Instant_1
+    _dropWeight: 100
+  - _lootId: CM_SingleShot_Charge_1
+    _dropWeight: 100
+  - _lootId: Effect_Damage_1
+    _dropWeight: 100
+  - _lootId: Effect_Damage_2
+    _dropWeight: 50
+  - _lootId: CM_SingleShot_Held_1
+    _dropWeight: 300
+  - _lootId: Effect_Poison_1
+    _dropWeight: 100
+  - _lootId: Effect_Bullrush_1
+    _dropWeight: 150

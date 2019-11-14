@@ -24,6 +24,6 @@ MonoBehaviour:
   _intervalTime: 1
   _powerScale: 1.1
   spellTiming: 02000000
-  _magicProjectilePrefabId: MagicProjectile
+  _magicProjectilePrefabId: prefab.MagicProjectile
   _projectileSpeed: 100
   _lifeTime: 5

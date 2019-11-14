@@ -26,8 +26,8 @@ public class DialoguePanel : UIPanel
     }
 
     public static void DisplayDialogue(Sprite sprite, string text) {
-        if (UIManager.Instance.CurrentPanel != Instance) {
-            UIManager.Instance.OpenUIPanel(DialoguePanelPrefabId);
+        if (UIPanelManager.Instance.CurrentPanel != Instance) {
+            UIPanelManager.Instance.OpenUIPanel(DialoguePanelPrefabId);
         }
         Instance.EnqueueDialogue(sprite, text);
     }

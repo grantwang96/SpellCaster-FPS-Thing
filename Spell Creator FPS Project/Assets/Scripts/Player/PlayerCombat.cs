@@ -205,7 +205,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void OnSlotButtonPressed(int number) {
         if(number <= 0 || number > _spellsList.Count) { return; }
         _selectedSpellIndex = number - 1;
-        Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
+        // Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
         OnSelectedSpellUpdated?.Invoke(_selectedSpellIndex);
     }
 

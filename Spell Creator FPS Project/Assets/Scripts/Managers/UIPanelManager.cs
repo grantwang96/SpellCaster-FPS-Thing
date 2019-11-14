@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour {
+public class UIPanelManager : MonoBehaviour {
 
     public const string GenericMessageBoxPrefabId = "prefab.GenericMessageBox";
     private const string UIPrefabsPath = "UI";
 
-    public static UIManager Instance { get; private set; }
+    public static UIPanelManager Instance { get; private set; }
 
     [SerializeField] private List<UIPanel> _uiPanelPrefabs = new List<UIPanel>();
     private Dictionary<string, UIPanel> _allUIPanels = new Dictionary<string, UIPanel>();
@@ -19,8 +19,13 @@ public class UIManager : MonoBehaviour {
         }
     }
     [SerializeField] private UIPanel _currentScenePanel;
-    [SerializeField] private string mainMenuPrefabName;
+
+    [SerializeField] private List<GameObject> _notificationPrefabGOs = new List<GameObject>();
+    // dictionary that stores all notification prefabs
+    private Dictionary<string, IUINotificationParent> _notificationParents = new Dictionary<string, IUINotificationParent>();
+
     [SerializeField] private Canvas _mainCanvas;
+    [SerializeField] private Transform _interactablePanelsLayer;
 
     public delegate void PanelUpdateEvent(bool empty);
     public event Action<string> OnPanelDeactivated;
@@ -32,7 +37,7 @@ public class UIManager : MonoBehaviour {
 
     private void Awake() {
         if(Instance != null) {
-            Debug.LogWarning("WTF? More than one UIManager exists in the scene!");
+            Debug.LogWarning("WTF? More than one UIPanelManager exists in the scene!");
             return;
         }
         Instance = this;
@@ -40,25 +45,29 @@ public class UIManager : MonoBehaviour {
 
     private void Start() {
         // preload all required UI panels here
-        for(int i = 0; i < _uiPanelPrefabs.Count; i++) {
+        PreloadUIPanels();
+    }
+
+    #region UI PANELS MANAGEMENT
+
+    private void PreloadUIPanels() {
+        for (int i = 0; i < _uiPanelPrefabs.Count; i++) {
             if (_allUIPanels.ContainsKey(_uiPanelPrefabs[i].name)) {
                 Debug.LogError($"[UIManager] Contains duplicate prefab {_uiPanelPrefabs[i].name}");
                 continue;
             }
-            UIPanel panel = Instantiate(_uiPanelPrefabs[i], transform);
-            panel.gameObject.SetActive(false);
-            _allUIPanels.Add(_uiPanelPrefabs[i].name, panel);
+            LoadUIPanelPrefab(_uiPanelPrefabs[i].name);
         }
     }
-    
+
     public void OpenUIPanel(string prefabName, UIPanelInitData initData = null) {
         if(!_allUIPanels.TryGetValue(prefabName, out _currentScenePanel)) {
-            if (!LoadUIPrefab(prefabName)) {
+            if (!LoadUIPanelPrefab(prefabName)) {
                 return;
             }
             _currentScenePanel = _allUIPanels[prefabName];
         }
-        Debug.Log($"[{nameof(UIManager)}] Opening ui panel {_currentScenePanel}");
+        Debug.Log($"[{nameof(UIPanelManager)}] Opening ui panel {_currentScenePanel}");
         _currentScenePanel.Initialize(initData);
         _currentScenePanel.transform.SetAsLastSibling();
         _activeUIPanels.Add(_currentScenePanel);
@@ -66,17 +75,17 @@ public class UIManager : MonoBehaviour {
         OnPanelsUpdated?.Invoke(_activeUIPanels.Count != 0);
     }
 
-    private bool LoadUIPrefab(string prefabName) {
-        string path = $"{UIPrefabsPath}/{prefabName}";
+    private bool LoadUIPanelPrefab(string panelPrefabName) {
+        string path = $"{UIPrefabsPath}/{panelPrefabName}";
         UIPanel panel = Resources.Load<UIPanel>(path);
         if(panel == null) {
-            Debug.LogError($"[{nameof(UIManager)}] Could not find panel in path {path}");
+            Debug.LogError($"[{nameof(UIPanelManager)}] Could not find panel in path {path}");
             return false;
         }
-        UIPanel clone = Instantiate(panel, transform);
+        UIPanel clone = Instantiate(panel, _interactablePanelsLayer);
         clone.gameObject.SetActive(false);
-        clone.name = prefabName;
-        _allUIPanels.Add(prefabName, clone);
+        clone.name = panelPrefabName;
+        _allUIPanels.Add(panelPrefabName, clone);
         return true;
     }
 
@@ -84,7 +93,7 @@ public class UIManager : MonoBehaviour {
         if (_allUIPanels.ContainsKey(prefabName)) {
             return;
         }
-        LoadUIPrefab(prefabName);
+        LoadUIPanelPrefab(prefabName);
     }
 
     // good for panels that are only used in one particular scene
@@ -114,7 +123,7 @@ public class UIManager : MonoBehaviour {
     public void CloseUIPanel(string prefabId) {
         UIPanel panel;
         if(!_allUIPanels.TryGetValue(prefabId, out panel)) {
-            Debug.LogError($"[{nameof(UIManager)}] Received invalid prefab id {prefabId}");
+            Debug.LogError($"[{nameof(UIPanelManager)}] Received invalid prefab id {prefabId}");
             return;
         }
         if (_activeUIPanels.Contains(panel)) {
@@ -154,6 +163,8 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    #endregion
+    
     public Vector2 GetCanvasPosition(Vector2 childPosition) {
         return _mainCanvas.transform.InverseTransformPoint(childPosition);
     }

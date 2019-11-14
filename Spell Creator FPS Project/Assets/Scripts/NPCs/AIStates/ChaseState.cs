@@ -22,7 +22,6 @@ public class ChaseState : MoveState {
     }
 
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
-        Debug.Log("Chase State entered!");
         if (_vision.CurrentTarget == null) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;

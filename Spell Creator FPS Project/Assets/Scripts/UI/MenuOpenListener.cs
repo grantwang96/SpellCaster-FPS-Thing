@@ -20,6 +20,6 @@ public class MenuOpenListener : MonoBehaviour {
     }
 
     private void OnCancelPressed() {
-        UIManager.Instance.OpenUIPanel(_menuPrefabId);
+        UIPanelManager.Instance.OpenUIPanel(_menuPrefabId);
     }
 }

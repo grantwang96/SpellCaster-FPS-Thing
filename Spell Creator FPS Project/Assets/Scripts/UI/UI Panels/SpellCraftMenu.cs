@@ -189,7 +189,7 @@ public class SpellCraftMenu : UISubPanelParent {
         );
         GenericMessageBoxInitData messageBoxData =
             new GenericMessageBoxInitData("Use Spell Now?", "Would you like to use this spell in your current loadout?", buttonActionDatas);
-        UIManager.Instance.OpenUIPanel(UIManager.GenericMessageBoxPrefabId, messageBoxData);
+        UIPanelManager.Instance.OpenUIPanel(UIPanelManager.GenericMessageBoxPrefabId, messageBoxData);
         // cut view grid input listening
 
     }
@@ -200,10 +200,10 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     private void OpenLoadoutPrefab() {
-        UIManager.Instance.OpenUIPanel(_loadoutPrefabId);
+        UIPanelManager.Instance.OpenUIPanel(_loadoutPrefabId);
     }
 
     private void CloseUseSpellNowDialog() {
-        UIManager.Instance.CloseUIPanel();
+        UIPanelManager.Instance.CloseUIPanel();
     }
 }

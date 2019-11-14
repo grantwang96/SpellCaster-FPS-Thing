@@ -13,7 +13,7 @@ public abstract class UIViewCell : MonoBehaviour, IUIInteractable {
     public int XCoord => xCoord;
     public int YCoord => yCoord;
 
-    public Vector2 Position => UIManager.Instance.GetCanvasPosition(_rect.position);
+    public Vector2 Position => UIPanelManager.Instance.GetCanvasPosition(_rect.position);
 
     public abstract void Initialize(int x, int y);
     public abstract void SetValue(IUIInteractableData data);

@@ -14,6 +14,6 @@ public class SpellCraftingStation : InteractableStation {
     }
 
     protected override void OnPlayerInteract() {
-        UIManager.Instance.OpenUIPanel(_spellCraftingStationPrefabName);
+        UIPanelManager.Instance.OpenUIPanel(_spellCraftingStationPrefabName);
     }
 }

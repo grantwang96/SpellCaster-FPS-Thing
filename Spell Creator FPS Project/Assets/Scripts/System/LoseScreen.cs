@@ -62,7 +62,7 @@ public class LoseScreen : UIPanel, IUIViewGridParent {
     }
 
     protected override void MenuBtnAction() {
-        UIManager.Instance.OpenUIPanel(_mainMenuPrefabId);
+        UIPanelManager.Instance.OpenUIPanel(_mainMenuPrefabId);
     }
 
     public IUIInteractable GetCurrentInteractable() {

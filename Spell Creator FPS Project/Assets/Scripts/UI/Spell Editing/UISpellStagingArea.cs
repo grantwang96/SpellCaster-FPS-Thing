@@ -172,14 +172,14 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnSpellNameEditorSelected(IUIInteractable interactable) {
-        UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+        UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
         SpellNameEditorInitData initData = new SpellNameEditorInitData() {
             InitialName = _cachedSpellName
         };
         // open rename spell dialog
-        UIManager.Instance.OpenUIPanel(_renameSpellPanelId, initData);
+        UIPanelManager.Instance.OpenUIPanel(_renameSpellPanelId, initData);
         // listen to rename spell dialog
-        UIManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
+        UIPanelManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
     }
 
     private void OnSpellNameUpdated(string spellName) {
@@ -187,7 +187,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _spellNameEditorView.SetInteractableItem(0, 0, new UICustomButtonInitData() {
             ButtonText = string.IsNullOrEmpty(_cachedSpellName) ? "Insert spell name here..." : _cachedSpellName
         });
-        UIManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+        UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
     }
 
     private void OnSpellComponentHighlighted(IUIInteractable interactable) {

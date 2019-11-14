@@ -15,7 +15,7 @@ public class UICustomInputField : InputField, IUIInteractable, IPointerClickHand
     public string Id => _id;
     [SerializeField] private RectTransform _rect;
     public RectTransform RectTransform => _rect;
-    public Vector2 Position => UIManager.Instance.GetCanvasPosition(_rect.position);
+    public Vector2 Position => UIPanelManager.Instance.GetCanvasPosition(_rect.position);
 
     public event UIInteractableEvent OnMousePointerClick;
     public event UIInteractableEvent OnMousePointerHighlight;

@@ -16,7 +16,7 @@ public class UICustomButton : Button, IUIInteractable {
     [SerializeField] private string _id;
     public string Id => _id;
 
-    public Vector2 Position => UIManager.Instance.GetCanvasPosition(_rect.position);
+    public Vector2 Position => UIPanelManager.Instance.GetCanvasPosition(_rect.position);
 
     [SerializeField] private RectTransform _rect;
     public RectTransform RectTransform => _rect;

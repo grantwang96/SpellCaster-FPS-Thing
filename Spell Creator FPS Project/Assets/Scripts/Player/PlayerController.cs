@@ -80,7 +80,7 @@ public class PlayerController : CharacterBehaviour {
     // Use this for initialization
     void Start() {
         SetMouseEnabled(false);
-        UIManager.Instance.OnPanelsUpdated += OnUIPanelsUpdated;
+        UIPanelManager.Instance.OnPanelsUpdated += OnUIPanelsUpdated;
         InitializeComponents();
     }
 

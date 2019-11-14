@@ -14,6 +14,6 @@ public class LoadoutStation : InteractableStation {
     }
     
     protected override void OnPlayerInteract() {
-        UIManager.Instance.OpenUIPanel(_loadOutPanelPrefabName);
+        UIPanelManager.Instance.OpenUIPanel(_loadOutPanelPrefabName);
     }
 }
