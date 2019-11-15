@@ -12,7 +12,11 @@ public class TutorialActionSetCamera : TutorialAction
             return TutorialActionStatus.Abort;
         }
         CameraManager.Instance.SetActiveCamera(_cameraId);
-        Debug.Log($"Setting active camera {_cameraId}");
         return TutorialActionStatus.Complete;
+    }
+
+    public override void Abort() {
+        base.Abort();
+        CameraManager.Instance.SetActiveCamera(CameraManager.MainCameraId);
     }
 }

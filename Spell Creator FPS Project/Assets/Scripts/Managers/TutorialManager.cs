@@ -79,6 +79,7 @@ public class TutorialManager : MonoBehaviour {
         switch (result) {
             case TutorialActionStatus.Abort:
                 // do not run this entire tutorial set
+                AbortTutorial();
                 break;
             case TutorialActionStatus.Incomplete:
                 // subscribe to the on complete action
@@ -114,9 +115,29 @@ public class TutorialManager : MonoBehaviour {
         RunTutorial();
     }
 
+    // when a tutorial is successfully completed
     private void TutorialCompleted() {
         _currentTutorial.ExitTutorial();
+        ContinueTutorialQueue();
+    }
+
+    private void ContinueTutorialQueue() {
         _tutorialActionIndex = 0;
+        if (_tutorialQueue.Count != 0) {
+            _currentTutorial = _tutorialQueue.Dequeue();
+            RunNextTutorialAction();
+            return;
+        }
         _currentTutorial = null;
+    }
+
+    private void AbortTutorial() {
+        // abort all tutorial actions
+        ErrorManager.LogError(nameof(TutorialManager), $"Aborting tutorial {_currentTutorial.TutorialId} at action index \"{_tutorialActionIndex}\"!");
+        for(int i = 0; i < _tutorialActionIndex; i++) {
+            TutorialAction action = _currentTutorial.GetTutorialAction(i);
+            action?.Abort();
+        }
+        ContinueTutorialQueue();
     }
 }

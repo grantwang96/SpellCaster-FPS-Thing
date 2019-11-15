@@ -11,4 +11,9 @@ public class TutorialActionSetPlayerControllerEnabled : TutorialAction
         PlayerController.Instance.SetPlayerControllerEnabled(_enabled);
         return base.Execute();
     }
+
+    public override void Abort() {
+        // probably should give control back to the player
+        PlayerController.Instance.SetPlayerControllerEnabled(true);
+    }
 }

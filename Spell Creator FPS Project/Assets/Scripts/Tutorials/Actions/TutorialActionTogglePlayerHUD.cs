@@ -11,4 +11,9 @@ public class TutorialActionTogglePlayerHUD : TutorialAction
         PlayerHud.Instance.SetEnabled(_enabled);
         return base.Execute();
     }
+
+    public override void Abort() {
+        base.Abort();
+        PlayerHud.Instance.SetEnabled(true);
+    }
 }

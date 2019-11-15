@@ -23,4 +23,14 @@ public class TutorialActionPointInteractableTarget : TutorialAction {
         // this action will be marked completed when the target has been interacted with
         return TutorialActionStatus.Incomplete;
     }
+
+    public override void Abort() {
+        base.Abort();
+        IInteractable interactable = LevelManager.LevelManagerInstance.GetInteractable(_targetId);
+        if (interactable == null) {
+            Debug.LogError($"[{nameof(TutorialActionPointInteractableTarget)}] Could not find interactable for ID {_targetId}");
+            return;
+        }
+        Debug.LogWarning($"[{nameof(TutorialActionPointInteractableTarget)}] UNFINISHED ABORT ACTION. PLEASE IMPLEMENT!");
+    }
 }

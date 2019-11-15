@@ -12,7 +12,7 @@ public interface ICameraManager {
 
 public class CameraManager : MonoBehaviour, ICameraManager
 {
-    private const string MainCameraId = "Main Camera";
+    public const string MainCameraId = "Main Camera";
     public static ICameraManager Instance { get; private set; }
 
     public Camera ActiveCamera { get; private set; }

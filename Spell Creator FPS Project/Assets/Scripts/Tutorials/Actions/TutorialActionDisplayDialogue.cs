@@ -20,4 +20,11 @@ public class TutorialActionDisplayDialogue : TutorialAction
         TutorialActionCompleted();
         DialoguePanel.Instance.OnContinueDialogue -= OnContinueDialogue;
     }
+
+    public override void Abort() {
+        if(UIPanelManager.Instance.CurrentPanel == DialoguePanel.Instance) {
+            DialoguePanel.Instance.ClearDialogueQueue();
+            DialoguePanel.Instance.ClosePanel();
+        }
+    }
 }

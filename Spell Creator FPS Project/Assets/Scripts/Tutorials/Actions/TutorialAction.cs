@@ -22,4 +22,8 @@ public abstract class TutorialAction : ScriptableObject{
     protected virtual void TutorialActionCompleted() {
         OnTutorialActionComplete?.Invoke();
     }
+
+    public virtual void Abort() {
+
+    }
 }

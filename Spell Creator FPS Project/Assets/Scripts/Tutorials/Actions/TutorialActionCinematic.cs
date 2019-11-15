@@ -29,4 +29,14 @@ public class TutorialActionCinematic : TutorialAction
         TutorialActionCompleted();
         director.stopped -= OnDirectorFinishedPlaying;
     }
+
+    public override void Abort() {
+        base.Abort();
+        PlayableDirector director;
+        if (!CinematicsManager.Instance.Directors.TryGetValue(_cinematicsId, out director)) {
+            ErrorManager.LogGameObjectError(name, $"Could not find Playable Director with id: {_cinematicsId}!");
+            return;
+        }
+        director.Stop();
+    }
 }

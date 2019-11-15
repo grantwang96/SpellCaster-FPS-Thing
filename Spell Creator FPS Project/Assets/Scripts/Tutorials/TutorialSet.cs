@@ -9,6 +9,7 @@ using UnityEngine;
 public class TutorialSet : ScriptableObject {
 
     [SerializeField] private string _tutorialId; // the tutorial id to reference and set flags for
+    public string TutorialId => _tutorialId;
     [SerializeField] private List<string> _triggerIds = new List<string>();
     [SerializeField] private bool _repeatable;
 
