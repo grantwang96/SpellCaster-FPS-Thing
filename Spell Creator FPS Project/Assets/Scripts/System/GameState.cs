@@ -11,10 +11,14 @@ public class GameState : MonoBehaviour {
     public IReadOnlyList<GameStateTransition> Transitions => _transitions;
     [SerializeField] private string _sceneName;
 
+    // lists of asset names required for this state
+    [SerializeField] private List<PooledObjectEntry> _pooledObjectPrefabAssets = new List<PooledObjectEntry>();
+    [SerializeField] private List<string> _uiPrefabAssets = new List<string>();
+
     private bool _initialized = false;
 
     public bool IsLoading { get; protected set; }
-    public bool IsActive;
+    public bool IsActive { get; protected set; }
     public GameState ParentState { get; protected set; }
     private List<GameState> _childStates = new List<GameState>();
 
@@ -46,6 +50,18 @@ public class GameState : MonoBehaviour {
         }
     }
 
+    private void RegisterPrefabs() {
+        for(int i = 0; i < _pooledObjectPrefabAssets.Count; i++) {
+            PooledObjectManager.Instance.RegisterPooledObject(_pooledObjectPrefabAssets[i].Id, _pooledObjectPrefabAssets[i].Count);
+        }
+    }
+
+    private void DeregisterPrefabs() {
+        for(int i = 0; i < _pooledObjectPrefabAssets.Count; i++) {
+            PooledObjectManager.Instance.DeregisterPooledObject(_pooledObjectPrefabAssets[i].Id);
+        }
+    }
+
     public GameState GetGameStateByTransitionName(string transitionName) {
         for(int i = 0; i < _transitions.Count; i++) {
             if (transitionName.Equals(_transitions[i].TransitionName)) {
@@ -57,12 +73,13 @@ public class GameState : MonoBehaviour {
         }
         return null;
     }
-
+    
     public virtual void Enter() {
         IsLoading = true;
-        if (ParentState != null) {
-            ParentState.Enter();
+        // enter parent state first, if necessary
+        if (ParentState != null && !ParentState.IsActive) {
             ParentState.OnGameStateEnter += OnReadyToEnter;
+            ParentState.Enter();
             return;
         }
         OnReadyToEnter();
@@ -74,13 +91,14 @@ public class GameState : MonoBehaviour {
             TryToLoadScene();
             return;
         }
-        OnStateLoaded();
+        OnStateEnterSuccess();
     }
 
     private void TryToLoadScene() {
         bool success = SceneController.Instance.TransitionToScene(_sceneName);
         if (!success) {
-            Debug.LogError($"[{this.name}][{nameof(GameState)}] Failed to find and load scene!");
+            CustomLogger.Error($"[{this.name}]", $"[{nameof(GameState)}] Failed to find and load scene!");
+            OnStateEnterFailed();
             return;
         }
         SceneController.Instance.OnSceneLoaded += OnSceneLoaded;
@@ -89,18 +107,18 @@ public class GameState : MonoBehaviour {
     private void OnSceneLoaded(string sceneName) {
         if (sceneName.Equals(_sceneName)) {
             SceneController.Instance.OnSceneLoaded -= OnSceneLoaded;
-            OnStateLoaded();
+            OnStateEnterSuccess();
         }
     }
 
     // when the game the state has finished loading everything
-    protected void OnStateLoaded() {
+    protected void OnStateEnterSuccess() {
         IsLoading = false;
         IsActive = true;
-        Debug.Log($"Entered game state {this.name}!");
+        RegisterPrefabs();
         OnGameStateEnter?.Invoke();
         if(ParentState != null) {
-            ParentState.OnGameStateEnter -= OnStateLoaded;
+            ParentState.OnGameStateEnter -= OnStateEnterSuccess;
         }
     }
 
@@ -113,7 +131,9 @@ public class GameState : MonoBehaviour {
         if (nextState.StateOnPath(this)) {
             return;
         }
+        IsLoading = false;
         IsActive = false;
+        DeregisterPrefabs();
         OnGameStateExit?.Invoke();
     }
 
@@ -125,7 +145,13 @@ public class GameState : MonoBehaviour {
         if(this == state) {
             return true;
         }
-        return StateOnPath(state);
+        return StateOnPath(ParentState);
+    }
+
+    private void OnStateEnterFailed() {
+        IsActive = false;
+        IsLoading = false;
+        CustomLogger.Error(this.name, $"Failed to enter state!");
     }
 }
 

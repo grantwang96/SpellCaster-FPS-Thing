@@ -56,7 +56,10 @@ public class Effect_SpellSpawn : Effect {
 
     protected virtual MagicProjectile GetMagicProjectile() {
         // retrieve pooled object and cast as magic projectile
-        PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(_magicProjectilePrefabId);
+        PooledObject pooledObject;
+        if (!PooledObjectManager.Instance.UsePooledObject(_magicProjectilePrefabId, out pooledObject)) {
+            return null;
+        }
         MagicProjectile magicProjectile = pooledObject as MagicProjectile;
         if (magicProjectile == null) {
             Debug.LogError($"Object \"{pooledObject}\" retrieved with ID \"{_magicProjectilePrefabId}\" was not of type MagicProjectile.");

@@ -17,9 +17,9 @@ public class PlayerRadiusInteract : MonoBehaviour {
 	}
 
     private void TriggerAreaEnter(Collider other) {
-        IInteractable interactable = other.GetComponent<IInteractable>();
+        ITriggerAreaInteractable interactable = other.GetComponent<ITriggerAreaInteractable>();
         if(interactable != null) {
-            interactable.InteractPress(PlayerController.Instance);
+            interactable.EnterInteractArea(PlayerController.Instance);
         }
     }
 }

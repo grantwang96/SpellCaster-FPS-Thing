@@ -32,7 +32,7 @@ public class RangedAttackState : AttackState {
 
     protected override void Awake() {
         base.Awake();
-        ObjectPool.Instance.RegisterObjectToPool(CombatPooledObjectsResourcesPath, _projectilePrefabId, 10);
+        PooledObjectManager.Instance.RegisterPooledObject(_projectilePrefabId, 10);
     }
 
     protected override void SetTriggerName() {
@@ -77,7 +77,10 @@ public class RangedAttackState : AttackState {
     // prepare projectile
     protected virtual void PrepareProjectile() {
         // spawn projectile
-        PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(_projectilePrefabId);
+        PooledObject pooledObject;
+        if(!PooledObjectManager.Instance.UsePooledObject(_projectilePrefabId, out pooledObject)) {
+            return;
+        }
         _currentProjectile = pooledObject as Projectile;
         if(_currentProjectile == null) {
             Debug.LogError($"Object {pooledObject} retrieved with ID \"{_projectilePrefabId}\" is not of type Projectile");

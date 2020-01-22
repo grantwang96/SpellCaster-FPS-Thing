@@ -6,7 +6,7 @@ public enum RecoveryOrbType {
     Health, Mana
 }
 
-public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
+public class RecoveryOrb : MonoBehaviour, PooledObject, ITriggerAreaInteractable {
 
     [SerializeField] private string _prefabId;
     public string PrefabId => _prefabId;
@@ -92,7 +92,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
             yield return new WaitForSeconds(Time.deltaTime);
         }
         DeactivatePooledObject();
-        ObjectPool.Instance.ReturnUsedPooledObject(this);
+        PooledObjectManager.Instance.ReturnPooledObject(PrefabId, this);
     }
 
     public void ActivatePooledObject(string uniqueId = "") {
@@ -102,11 +102,11 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
 
     public void DeactivatePooledObject() {
         gameObject.SetActive(false);
-        transform.SetParent(ObjectPool.Instance?.transform);
+        // transform.SetParent(ObjectPool.Instance?.transform);
         Interactable = false;
     }
 
-    public void InteractPress(CharacterBehaviour character) {
+    public void EnterInteractArea(CharacterBehaviour character) {
         if(character != PlayerController.Instance) {
             return;
         }
@@ -118,11 +118,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, IInteractable {
         }
     }
 
-    public void InteractHold(CharacterBehaviour character) {
-        
-    }
+    public void StayInteractArea(CharacterBehaviour character) {
 
-    public void Detect() {
-        
     }
 }

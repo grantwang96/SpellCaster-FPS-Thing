@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chest : MonoBehaviour, IInteractable {
+public class Chest : MonoBehaviour, IRaycastInteractable {
 
     [SerializeField] private string _chestId;
     [SerializeField] private MeshRenderer[] meshRenderer; // allows chest visuals to be edited when tier is determined
@@ -21,8 +21,12 @@ public class Chest : MonoBehaviour, IInteractable {
     public string OverrideId => _overrideId;
     public string InteractableId => _chestId;
 
-    public void Detect() {
+    public void Detect(CharacterBehaviour character) {
         
+    }
+
+    public void Undetect() {
+
     }
 
     public void Initialize(ChestType type, string chestId) {
@@ -78,9 +82,11 @@ public class Chest : MonoBehaviour, IInteractable {
     }
 
     private void SpawnRecoveryOrb(RecoveryOrbType recoveryOrbType) {
-        PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId);
+        PooledObject obj;
+        if(!PooledObjectManager.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId, out obj)) {
+            return;
+        }
         RecoveryOrb recoveryOrb = obj as RecoveryOrb;
-        Debug.Log("Spawning recovery orb");
         if (recoveryOrb != null) {
             recoveryOrb.ActivatePooledObject();
             recoveryOrb.Initialize(recoveryOrbType);

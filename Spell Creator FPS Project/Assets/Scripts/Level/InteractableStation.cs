@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class InteractableStation : MonoBehaviour, IInteractable {
+public abstract class InteractableStation : MonoBehaviour, IRaycastInteractable {
     
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
@@ -48,7 +48,11 @@ public abstract class InteractableStation : MonoBehaviour, IInteractable {
 
     protected abstract void OnPlayerInteract();
 
-    public virtual void Detect() {
+    public virtual void Detect(CharacterBehaviour character) {
+
+    }
+
+    public virtual void Undetect() {
 
     }
 

@@ -26,6 +26,6 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
     protected override void OnDeath(bool isDead, Damageable dam) {
         base.OnDeath(isDead, dam);
         DeactivatePooledObject();
-        ObjectPool.Instance?.ReturnUsedPooledObject(this);
+        PooledObjectManager.Instance?.ReturnPooledObject(PrefabId, this);
     }
 }

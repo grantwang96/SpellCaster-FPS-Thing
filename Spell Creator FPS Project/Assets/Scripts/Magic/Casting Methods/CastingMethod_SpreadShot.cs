@@ -21,7 +21,10 @@ public class CastingMethod_SpreadShot : CastingMethod_MagicProjectile {
             Vector3 direction = caster.GunBarrel.forward;
             direction += target;
 
-            PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(_magicProjectilePrefabId);
+            PooledObject pooledObject;
+            if(!PooledObjectManager.Instance.UsePooledObject(_magicProjectilePrefabId, out pooledObject)) {
+                return;
+            }
             MagicProjectile magicProjectile = pooledObject as MagicProjectile;
             if(magicProjectile == null) {
                 Debug.LogError($"Object \"{pooledObject}\" retrieved with ID \"{_magicProjectilePrefabId}\" was not of type MagicProjectile.");

@@ -27,7 +27,6 @@ public class UINotification : MonoBehaviour
         _text.text = initData.Message;
         _icon.sprite = initData.Icon;
         // play display animation
-        Debug.Log("Displaying notification...");
         transform.SetAsLastSibling();
         gameObject.SetActive(true);
         _animator.Play(DisplayAnimationState);

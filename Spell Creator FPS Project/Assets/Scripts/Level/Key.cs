@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Key : MonoBehaviour, IInteractable {
+public class Key : MonoBehaviour, IRaycastInteractable {
     
     public string InteractableId { get; private set; }
     public bool Interactable { get; private set; } = true;
@@ -11,7 +11,11 @@ public class Key : MonoBehaviour, IInteractable {
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
 
-    public void Detect() {
+    public void Detect(CharacterBehaviour character) {
+
+    }
+
+    public void Undetect() {
 
     }
 

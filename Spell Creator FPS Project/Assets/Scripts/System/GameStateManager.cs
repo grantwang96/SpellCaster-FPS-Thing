@@ -47,9 +47,11 @@ public class GameStateManager : MonoBehaviour {
     }
 
     private GameState GetStartingState() {
+        /*
         if (!PlayerDataManager.Instance.GetFlag(GameplayValues.Tutorial.TutorialLevelCompletedId)) {
             return _tutorialState;
         }
+        */
         return _gameHubState;
     }
 

@@ -22,3 +22,8 @@ public class NotificationInitData {
         Icon = icon;
     }
 }
+
+public class NotificationEntry {
+    public string UniqueId;
+    public UINotification Notification;
+}

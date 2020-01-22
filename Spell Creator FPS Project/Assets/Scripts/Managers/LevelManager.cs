@@ -45,7 +45,7 @@ public class LevelManager : MonoBehaviour, ICampaignLevelManager {
 
     private void RegisterEnemyPrefabs() {
         for (int i = 0; i < _enemyPrefabIds.Count; i++) {
-            ObjectPool.Instance.RegisterObjectToPool(EnemiesResourcePath, _enemyPrefabIds[i].Id, _enemyPrefabIds[i].Count);
+            PooledObjectManager.Instance.RegisterPooledObject(_enemyPrefabIds[i].Id, _enemyPrefabIds[i].Count);
         }
     }
 

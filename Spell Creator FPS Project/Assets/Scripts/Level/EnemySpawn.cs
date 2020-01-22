@@ -30,6 +30,9 @@ public class EnemySpawn : MonoBehaviour {
             return;
         }
         EnemyBehaviour enemy = SpawnEnemyObject(overrideUniqueId);
+        if(enemy == null) {
+            return;
+        }
         enemy.ChangeBrainState(transitionId, time);
         _spawnedEnemies++;
         if(_enemySpawnLimit > 0 && _spawnedEnemies == _enemySpawnLimit) {

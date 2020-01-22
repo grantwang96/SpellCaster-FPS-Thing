@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
 public class ObjectPool : MonoBehaviour {
 
     private const int HardPoolCap = 1000; // DO NOT ALLOW ANY POOL SIZE TO EXCEED THIS NUMBER
@@ -164,3 +165,4 @@ public class ObjectPoolInitData {
     public GameObject Prefab;
     public int PoolSize;
 }
+*/

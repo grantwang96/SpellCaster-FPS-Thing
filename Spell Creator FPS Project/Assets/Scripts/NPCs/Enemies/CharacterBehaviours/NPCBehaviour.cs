@@ -121,7 +121,10 @@ public class NPCBehaviour : CharacterBehaviour {
     }
 
     protected virtual void SpawnRecoveryOrb(RecoveryOrbType recoveryOrbType) {
-        PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId);
+        PooledObject obj;
+        if (!PooledObjectManager.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId, out obj)) {
+            return;
+        }
         RecoveryOrb recoveryOrb = obj as RecoveryOrb;
         if (recoveryOrb != null) {
             recoveryOrb.ActivatePooledObject();
@@ -131,7 +134,10 @@ public class NPCBehaviour : CharacterBehaviour {
     }
 
     protected virtual void SpawnInventoryItem(string itemId) {
-        PooledObject obj = ObjectPool.Instance.UsePooledObject(GameplayValues.ObjectPooling.WorldRunePrefabId);
+        PooledObject obj;
+        if (!PooledObjectManager.Instance.UsePooledObject(GameplayValues.ObjectPooling.WorldRunePrefabId, out obj)) {
+            return;
+        }
         Rune rune = obj as Rune;
         if(rune != null) {
             rune.transform.position = GetBodyPosition();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractableDoor : MonoBehaviour, IInteractable {
+public class InteractableDoor : MonoBehaviour, IRaycastInteractable {
 
     public bool Interactable { get; private set; } = true;
     public Vector3 InteractableCenter => transform.position;
@@ -10,6 +10,8 @@ public class InteractableDoor : MonoBehaviour, IInteractable {
     [SerializeField] private string _interactableId;
     public string InteractableId => _interactableId;
     [SerializeField] private Door _parentDoor;
+    [SerializeField] private Animator _animator;
+    [SerializeField] private Transform _interactMessage;
 
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
@@ -27,7 +29,12 @@ public class InteractableDoor : MonoBehaviour, IInteractable {
 
     }
 
-    public void Detect() {
+    public void Detect(CharacterBehaviour character) {
+        // _animator.SetBool("PlayerDetect", true);
+        _interactMessage.gameObject.SetActive(true);
+    }
 
+    public void Undetect() {
+        _interactMessage.gameObject.SetActive(false);
     }
 }

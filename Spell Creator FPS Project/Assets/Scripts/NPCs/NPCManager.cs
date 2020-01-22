@@ -26,7 +26,10 @@ public class NPCManager : MonoBehaviour, INPCManager {
     }
 
     public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId) {
-        PooledObject pooledObject = ObjectPool.Instance.UsePooledObject(npcPrefabId);
+        PooledObject pooledObject;
+        if (!PooledObjectManager.Instance.UsePooledObject(npcPrefabId, out pooledObject)) {
+            return null;
+        }
         EnemyBehaviour enemy = pooledObject as EnemyBehaviour;
         if (enemy == null) {
             ErrorManager.LogError(nameof(NPCManager), $"Pooled object {pooledObject} was not of type {nameof(EnemyBehaviour)}");

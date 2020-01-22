@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArenaStart : MonoBehaviour, IInteractable {
+public class ArenaStart : MonoBehaviour, IRaycastInteractable {
 
     [SerializeField] private string _interactableId;
     public string InteractableId => _interactableId;
@@ -17,8 +17,12 @@ public class ArenaStart : MonoBehaviour, IInteractable {
 
     private GameObject _parentObject;
 
-    public void Detect() {
+    public void Detect(CharacterBehaviour character) {
         
+    }
+
+    public void Undetect() {
+
     }
 
     public void InteractHold(CharacterBehaviour character) {

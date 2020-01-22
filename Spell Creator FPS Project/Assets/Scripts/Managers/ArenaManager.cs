@@ -38,7 +38,7 @@ public class ArenaManager : GameManager, IArenaManager {
     private List<string> _nextRound = new List<string>();
     private List<string> _nextWave = new List<string>();
 
-    private Dictionary<string, IInteractable> _interactables = new Dictionary<string, IInteractable>();
+    private Dictionary<string, IRaycastInteractable> _interactables = new Dictionary<string, IRaycastInteractable>();
     private Dictionary<Damageable, NPCBehaviour> _currentWave = new Dictionary<Damageable, NPCBehaviour>();
 
     [SerializeField] private List<Transform> _spawnPoints;
@@ -97,7 +97,7 @@ public class ArenaManager : GameManager, IArenaManager {
 
     private void RegisterEnemyPrefabs() {
         for (int i = 0; i < _config.EnemyConfigs.Count; i++) {
-            ObjectPool.Instance.RegisterObjectToPool(EnemiesResourcePath, _config.EnemyConfigs[i].EnemyPrefabId, _config.EnemyConfigs[i].HighCount);
+            PooledObjectManager.Instance.RegisterPooledObject(_config.EnemyConfigs[i].EnemyPrefabId, _config.EnemyConfigs[i].HighCount);
         }
     }
 

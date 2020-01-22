@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour {
 
-    [SerializeField] private float interactDistance;
-    [SerializeField] private LayerMask interactLayers;
+    [SerializeField] private float _interactDistance;
+    [SerializeField] private LayerMask _interactLayers;
 
-    private Transform head;
-
-    private IInteractable currentInteractable;
-
+    private Transform _head;
+    private IRaycastInteractable _currentInteractable;
     private bool _active;
 
     private void OnDisable() {
@@ -33,7 +31,7 @@ public class PlayerInteract : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        head = PlayerController.Instance.Head;
+        _head = PlayerController.Instance.Head;
         SubscribeToController();
         OnControllerStateUpdate();
 	}
@@ -44,30 +42,31 @@ public class PlayerInteract : MonoBehaviour {
 	}
 
     private void Look() {
-        Ray ray = new Ray(head.position, head.forward);
+        Ray ray = new Ray(_head.position, _head.forward);
         RaycastHit rayHit;
-        if(Physics.Raycast(ray, out rayHit, interactDistance, interactLayers, QueryTriggerInteraction.Collide)) {
-            IInteractable interactable = rayHit.collider.GetComponent<IInteractable>();
+        if(Physics.Raycast(ray, out rayHit, _interactDistance, _interactLayers, QueryTriggerInteraction.Collide)) {
+            IRaycastInteractable interactable = rayHit.collider.GetComponent<IRaycastInteractable>();
             if (interactable != null) {
-                currentInteractable = interactable;
-                interactable.Detect();
+                _currentInteractable = interactable;
+                interactable.Detect(PlayerController.Instance);
             }
         } else {
-            currentInteractable = null;
+            _currentInteractable?.Undetect();
+            _currentInteractable = null;
         }
     }
 
     private void PressInteract() {
         if (!_active) { return; }
-        if (currentInteractable != null) {
-            currentInteractable.InteractPress(PlayerController.Instance);
+        if (_currentInteractable != null) {
+            _currentInteractable.InteractPress(PlayerController.Instance);
         }
     }
 
     private void HoldInteract() {
         if (!_active) { return; }
-        if (currentInteractable != null) {
-            currentInteractable.InteractHold(PlayerController.Instance);
+        if (_currentInteractable != null) {
+            _currentInteractable.InteractHold(PlayerController.Instance);
         }
     }
 

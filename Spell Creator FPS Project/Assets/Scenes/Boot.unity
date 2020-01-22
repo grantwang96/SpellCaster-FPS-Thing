@@ -131,6 +131,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: prefab.CrossScenePersistent
       objectReference: {fileID: 0}
+    - target: {fileID: 114639890481448664, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _pooledObjectPrefabAssets.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4482592674360416, guid: fd73f7c74818b8c4fa64c3bd90ac6b38, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -175,11 +180,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114099621615724992, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+    - target: {fileID: 5764327391597561687, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
         type: 3}
-      propertyPath: _hackStartState
+      propertyPath: _allPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764327391597561687, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
+        type: 3}
+      propertyPath: _allPrefabs.Array.data[5]
       value: 
-      objectReference: {fileID: 1760877952}
+      objectReference: {fileID: 1847680807995996, guid: c283574ca77c92b4c8e815e54b5312af,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd73f7c74818b8c4fa64c3bd90ac6b38, type: 3}
 --- !u!1 &973169336
@@ -503,15 +514,3 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1638677689}
   m_CullTransparentMesh: 0
---- !u!114 &1760877952 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 114665676364238270, guid: fd73f7c74818b8c4fa64c3bd90ac6b38,
-    type: 3}
-  m_PrefabInstance: {fileID: 926496285}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25033089b4d2dab4984ef3aa243e620a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

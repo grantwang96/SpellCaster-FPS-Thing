@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
+public class Rune : MonoBehaviour, PooledObject, ITriggerAreaInteractable, ILootable {
 
     private const string ItemGetNotificationParentId = "prefab.ui_ItemPickupNotificationParent";
 
@@ -55,12 +55,8 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         ActivatePooledObject();
         // initialize visuals based on item id
     }
-
-    public void Detect() {
-        
-    }
-
-    public void InteractPress(CharacterBehaviour character) {
+    
+    public void EnterInteractArea(CharacterBehaviour character) {
         OnInteractAttempt?.Invoke();
         if (!Interactable) { return; }
         if(character == PlayerController.Instance) {
@@ -71,12 +67,12 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
         }
     }
 
-    public void InteractHold(CharacterBehaviour character) {
-
+    public void StayInteractArea(CharacterBehaviour character) {
+        
     }
 
     public void Initialize() {
-        
+
     }
 
     public void ReleaseFromChest(Vector3 force) {
@@ -124,7 +120,7 @@ public class Rune : MonoBehaviour, PooledObject, IInteractable, ILootable {
 
     private void PickUpItem() {
         DeactivatePooledObject();
-        ObjectPool.Instance.ReturnUsedPooledObject(this);
+        PooledObjectManager.Instance.ReturnPooledObject(PrefabId, this);
         GameManager.GameManagerInstance.CurrentRunicInventory.AddItem(_itemId, 1);
         SendNotification();
     }

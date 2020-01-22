@@ -95,8 +95,3 @@ public class ItemGetNotificationParent : MonoBehaviour, IUINotificationParent {
         return false;
     }
 }
-
-public class NotificationEntry {
-    public string UniqueId;
-    public UINotification Notification;
-}
