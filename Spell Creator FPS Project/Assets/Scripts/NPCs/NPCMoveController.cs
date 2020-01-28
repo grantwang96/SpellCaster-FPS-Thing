@@ -9,6 +9,7 @@ public class NPCMoveController : CharacterMoveController {
     [SerializeField] protected float _destinationArrivalDistance; // distance NPC is considered "arrived" at destination
 
     protected NPCBehaviour _npcBehaviour; // gain read access from character's brain
+    protected NPCVision _npcVision; // vision component
     protected NavMeshAgent _agent;
 
     [SerializeField] protected Vector3 _currentPathCorner; // what the NPC is moving towards(usually path corner)
@@ -38,6 +39,7 @@ public class NPCMoveController : CharacterMoveController {
     protected override void Awake() {
         base.Awake();
         _npcBehaviour = GetComponent<NPCBehaviour>();
+        _npcVision = GetComponent<NPCVision>();
         _agent = GetComponent<NavMeshAgent>();
         _agent.updatePosition = false;
         _agent.updateRotation = false;
@@ -48,40 +50,23 @@ public class NPCMoveController : CharacterMoveController {
         base.Start();
         _baseSpeed = _npcBehaviour.Blueprint.WalkSpeed;
         _maxSpeed = _npcBehaviour.Blueprint.RunSpeed;
-        _npcBehaviour.OnBrainStateChanged += OnCharacterBehaviourStateChange;
         _destinationArrivalDistance = _npcBehaviour.Blueprint.AttackRange;
     }
 
-    private void OnCharacterBehaviourStateChange(string newStateName) {
-        switch (newStateName) {
-            case GameplayValues.BrainStates.IdleStateId:
-                MoveSpeed = 0f;
-                break;
-            case GameplayValues.BrainStates.WalkStateId:
-                MoveSpeed = _baseSpeed;
-                break;
-            case GameplayValues.BrainStates.RunStateId:
-            case GameplayValues.BrainStates.TakeCoverStateId:
-            case GameplayValues.BrainStates.ChaseStateId:
-                MoveSpeed = _maxSpeed;
-                break;
-            default:
-                break;
-        }
-    }
-
     protected override void Update() {
+        ProcessPathing();
         ProcessMovement();
     }
 
     // move character towards current destination if traveling
-    protected virtual void ProcessMovement() {
+    protected override void ProcessMovement() {
         if (_traveling) {
             Move();
             CheckArrivedDestination();
         } else if (_externalForces == null) {
             SlowDown();
         }
+        base.ProcessMovement();
     }
 
     public virtual Vector3 GetNextIdleDestination() {
@@ -95,24 +80,26 @@ public class NPCMoveController : CharacterMoveController {
         return transform.position;
     }
 
-    public virtual void SetDestination(Vector3 target) {
-        if (_agent.pathPending) { StopCoroutine(CalculatePath()); }
+    public virtual void SetDestination(Vector3 target, float speed) {
+        MoveSpeed = speed;
         _pathIndex = 0;
         _path.ClearCorners();
         _agent.nextPosition = transform.position;
         bool success = _agent.CalculatePath(target, _path);
         if (success) {
-            StartCoroutine(CalculatePath());
+            PathPending = true;
         } else {
             OnPathCalculated?.Invoke(NavMeshPathStatus.PathInvalid);
         }
         return;
     }
 
-    private IEnumerator CalculatePath() {
-        PathPending = true;
-        while (_agent.pathPending) {
-            yield return new WaitForEndOfFrame();
+    protected void ProcessPathing() {
+        if (!PathPending) {
+            return;
+        }
+        if (_agent.pathPending) {
+            return;
         }
         PathPending = false;
         OnPathSet();
@@ -123,8 +110,12 @@ public class NPCMoveController : CharacterMoveController {
         _agent.isStopped = true;
         _pathIndex = 0;
         NextPathCorner();
-        _currentPathCorner = Path[_pathIndex];
         _traveling = true;
+        if(Path.Length != 0) {
+            _currentPathCorner = Path[_pathIndex];
+        } else {
+            CustomLogger.Warn(name, $"Path is empty!");
+        }
         OnPathCalculated?.Invoke(_agent.pathStatus);
     }
 

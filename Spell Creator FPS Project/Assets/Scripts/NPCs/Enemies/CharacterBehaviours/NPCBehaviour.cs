@@ -91,7 +91,7 @@ public class NPCBehaviour : CharacterBehaviour {
         _currentBrainState = brainState;
         _currentBrainState?.Enter(overrideBrainState, duration);
 
-        OnBrainStateChanged?.Invoke(_currentBrainState?.TriggerName);
+        // OnBrainStateChanged?.Invoke(_currentBrainState?.TriggerName);
     }
 
     public virtual bool ChangeBrainState(BrainStateTransitionId transitionId, float duration = 0f) {
@@ -123,6 +123,7 @@ public class NPCBehaviour : CharacterBehaviour {
     protected virtual void SpawnRecoveryOrb(RecoveryOrbType recoveryOrbType) {
         PooledObject obj;
         if (!PooledObjectManager.Instance.UsePooledObject(GameplayValues.ObjectPooling.RecoveryOrbPrefabId, out obj)) {
+            CustomLogger.Error(this.name, $"Could not retrieve pooled object with id {GameplayValues.ObjectPooling.RecoveryOrbPrefabId}");
             return;
         }
         RecoveryOrb recoveryOrb = obj as RecoveryOrb;

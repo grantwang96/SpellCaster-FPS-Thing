@@ -59,10 +59,12 @@ public class PersistedInventory : MonoBehaviour, IRunicInventory, ISpellInventor
     private void Awake() {
         RunicInventory = this;
         SpellInventory = this;
+    }
+
+    private void Start() {
         // initialize with persisted data
         InitializeRuneInventory();
         InitializeSpellInventory();
-        DontDestroyOnLoad(gameObject);
     }
 
     private void InitializeRuneInventory() {

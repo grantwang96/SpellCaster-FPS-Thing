@@ -35,16 +35,9 @@ public class PlayerMovement_FPS : CharacterMoveController {
 
     // Update is called once per frame
     protected override void Update () {
-        _movementVelocity = ProcessGravity(_movementVelocity);
-        if(_externalForces == null) {
-            ProcessWalkInput();
-        }
-	}
-
-    protected override void FixedUpdate() {
-        _characterController.Move(_movementVelocity * Time.deltaTime);
+        ProcessWalkInput();
     }
-
+    
     private void ProcessWalkInput() {
         if (!_active) {
             _movementVelocity = Vector2.zero;
@@ -60,26 +53,25 @@ public class PlayerMovement_FPS : CharacterMoveController {
 
     private void OnJump() {
         if (_characterController.isGrounded && _active) {
-            _movementVelocity.y = jumpForce;
+            _externalForce.y = jumpForce;
         }
     }
-
+    
     protected override IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
-        _movementVelocity = externalForce;
+        _externalForce = externalForce;
         yield return new WaitForEndOfFrame();
-        Vector3 start = externalForce;
-        while (!_characterController.isGrounded && (_characterController.velocity.x != 0 || _characterController.velocity.z != 0)) {
+        while (!_characterController.isGrounded) {
             yield return new WaitForFixedUpdate();
         }
+        Vector3 start = _externalForce;
         float time = 0f;
-        while(_movementVelocity.x != 0 && _movementVelocity.z != 0) {
+        while(time < 1f) {
+            _externalForce.x = Mathf.Lerp(start.x, 0f, time);
+            _externalForce.z = Mathf.Lerp(start.z, 0f, time);
             time += Time.deltaTime * drag;
-            Vector3 yVel = new Vector3(0f, _movementVelocity.y, 0f);
-            _movementVelocity = Vector3.Lerp(start, yVel, time);
-            // _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
-            // _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
             yield return new WaitForFixedUpdate();
         }
+        _externalForce = Vector3.zero;
         _externalForces = null;
     }
 

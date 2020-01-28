@@ -5,7 +5,7 @@ using System;
 
 public class CoroutineGod : MonoBehaviour {
 
-    public static CoroutineGod Instance;
+    public static CoroutineGod Instance { get; private set; }
 
     private void Awake() {
         Instance = this;

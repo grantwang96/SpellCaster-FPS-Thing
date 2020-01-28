@@ -251,7 +251,6 @@ GameObject:
   - component: {fileID: 195074310202618124}
   - component: {fileID: 114625353816454100}
   - component: {fileID: 114559599744904062}
-  - component: {fileID: 114227063800751326}
   - component: {fileID: 114963092705066930}
   - component: {fileID: 114103331361837904}
   m_Layer: 11
@@ -310,7 +309,7 @@ MonoBehaviour:
   _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4572717353518604}
   _headTransform: {fileID: 4785619698076382}
-  _animHandler: {fileID: 0}
+  _animHandler: {fileID: 8266300455781874348}
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: ThrowingDingus
@@ -391,31 +390,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weight: 1
---- !u!114 &114227063800751326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1158338626366970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76eb6a63a5d4c7d4f88f84b8cdb0d105, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _anim: {fileID: 95505397180442836}
-  _bodyRoot: {fileID: 4572717353518604}
-  _characterBehaviour: {fileID: 114894150171823558}
-  _moveController: {fileID: 114625353816454100}
-  _damageable: {fileID: 114963092705066930}
-  _accelerationTiltCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _tiltLimit: 0
-  _tiltEnabled: 0
 --- !u!114 &114963092705066930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +496,21 @@ MonoBehaviour:
   _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onEnemySeenState: {fileID: 2745395514517224633}
 --- !u!1 &1221311047883626
 GameObject:
@@ -632,12 +621,26 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 114999031850689574}
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onTargetReachedStates:
   - {fileID: 114373588043902638}
   _onFailedToReachTargetState: {fileID: 114373588043902638}
   _overrideCancelTime: 5
   _moveController: {fileID: 114625353816454100}
-  Destination: {x: 0, y: 0, z: 0}
 --- !u!1 &1381665412155602
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,6 +748,21 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 114999031850689574}
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onIdleEnd: {fileID: 114145398792670118}
   _defaultIdleTime: 4
   _moveController: {fileID: 114625353816454100}
@@ -883,12 +901,26 @@ MonoBehaviour:
   _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onTargetReachedStates:
   - {fileID: 114843615361421774}
   _onFailedToReachTargetState: {fileID: 114373588043902638}
   _overrideCancelTime: 20
   _moveController: {fileID: 114625353816454100}
-  Destination: {x: 0, y: 0, z: 0}
   _onTargetSeenState: {fileID: 114843615361421774}
   _onTargetOutOfSightState: {fileID: 114633609867126860}
   _onTargetLostState: {fileID: 114373588043902638}
@@ -970,12 +1002,26 @@ MonoBehaviour:
   _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onTargetReachedStates:
   - {fileID: 114843615361421774}
   _onFailedToReachTargetState: {fileID: 114373588043902638}
   _overrideCancelTime: 20
   _moveController: {fileID: 114625353816454100}
-  Destination: {x: 0, y: 0, z: 0}
   _searchRadiusOuter: 20
   _searchRadiusInner: 10
   _searchQueries: 6
@@ -1380,6 +1426,7 @@ MonoBehaviour:
   _owner: {fileID: 114963092705066930}
   _effects: []
   _powerScale: 1
+  _knockBackDir: {x: 0, y: 0, z: 0}
 --- !u!1 &1871494797426464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1488,9 +1535,24 @@ MonoBehaviour:
   _triggerName: Attack
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: 
+    _triggers:
+    - Attack
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _npcVision: {fileID: 114103331361837904}
-  _attackName: Attack0
-  _animController: {fileID: 114227063800751326}
+  _attackRange: 20
   _moveController: {fileID: 114625353816454100}
   _targetInRangeState: {fileID: 114843615361421774}
   _targetOutOfRangeState: {fileID: 114633609867126860}
@@ -1501,8 +1563,6 @@ MonoBehaviour:
   _useGravity: 0
   _effects:
   - {fileID: 11400000, guid: 9908df454cc8ba14a8487354bd14aa0d, type: 2}
-  _spawnProjectileTime: 0.1
-  _fireProjectileTime: 0.2
   _hand: {fileID: 4342875679828852}
   _handLocalPosition: {x: 0, y: 0, z: 0}
   _forwardForce: 20
@@ -1518,6 +1578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4572717353518604}
   - component: {fileID: 95505397180442836}
+  - component: {fileID: 8266300455781874348}
   m_Layer: 11
   m_Name: TestHuman
   m_TagString: Untagged
@@ -1560,6 +1621,31 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8266300455781874348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996042855159092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76eb6a63a5d4c7d4f88f84b8cdb0d105, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _anim: {fileID: 95505397180442836}
+  _bodyRoot: {fileID: 4572717353518604}
+  _characterBehaviour: {fileID: 114894150171823558}
+  _moveController: {fileID: 114625353816454100}
+  _damageable: {fileID: 114963092705066930}
+  _accelerationTiltCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _tiltLimit: 0
+  _tiltEnabled: 0
 --- !u!1 &3497806706203741733
 GameObject:
   m_ObjectHideFlags: 0
@@ -1606,7 +1692,21 @@ MonoBehaviour:
   _triggerName: Alert
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
+  _enterAnimationData:
+    _animationName: Alert
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 8266300455781874348}
   _onAlertEndState: {fileID: 114472222764003254}
-  _animController: {fileID: 114227063800751326}
   _npcMoveController: {fileID: 114625353816454100}
   _animationName: Alert

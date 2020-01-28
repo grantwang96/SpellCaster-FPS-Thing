@@ -12,6 +12,7 @@ public abstract class CastingMethod_MagicProjectile : Spell_CastingMethod {
         // retrieve pooled object and cast as magic projectile
         PooledObject pooledObject;
         if(!PooledObjectManager.Instance.UsePooledObject(_magicProjectilePrefabId, out pooledObject)){
+            Debug.LogError($"Could not retrieve pooled object with ID {_magicProjectilePrefabId}");
             return null;
         }
         MagicProjectile magicProjectile = pooledObject as MagicProjectile;

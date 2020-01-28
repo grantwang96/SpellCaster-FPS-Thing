@@ -15,7 +15,11 @@ public class InteractableDoor : MonoBehaviour, IRaycastInteractable {
 
     public event InteractEvent OnInteractAttempt;
     public event InteractEvent OnInteractSuccess;
-    
+
+    private void Awake() {
+        Undetect();
+    }
+
     public void InteractPress(CharacterBehaviour character) {
         if (!Interactable) {
             return;

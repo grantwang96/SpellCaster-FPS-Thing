@@ -7,7 +7,10 @@ using UnityEngine.AI;
 public abstract class CharacterMoveController : MonoBehaviour { // Handles character movement
 
     [SerializeField] protected float _baseSpeed;
+    public float BaseSpeed => _baseSpeed;
     [SerializeField] protected float _maxSpeed;
+    public float MaxSpeed => _maxSpeed;
+
     protected float _moveSpeed;
     public float MoveSpeed {
         get {
@@ -27,6 +30,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     protected CharacterController _characterController; // accesses the character controller on the character
     public CharacterController CharacterController { get { return _characterController; } }
 
+    protected Vector3 _externalForce;
     [SerializeField] protected Vector3 _movementVelocity;
     public Vector3 MovementVelocity { get { return _movementVelocity; } }
     public bool IsGrounded => _characterController.isGrounded;
@@ -49,8 +53,13 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual void FixedUpdate() {
-        _movementVelocity = ProcessGravity(_movementVelocity);
-        _characterController.Move(_movementVelocity * Time.deltaTime);
+        _externalForce = ProcessGravity(_externalForce);
+        ProcessMovement();
+    }
+
+    protected virtual void ProcessMovement() {
+        Vector3 move = _movementVelocity + _externalForce;
+        _characterController.Move(move * Time.deltaTime);
     }
 
     protected virtual Vector3 ProcessGravity(Vector3 vector) {
@@ -73,19 +82,19 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
         float linearDrag = drag;
-        _movementVelocity += externalForce / _mass;
-        _movementVelocity.y = externalForce.y;
-        _characterController.Move(_movementVelocity * Time.deltaTime);
+        _externalForce += externalForce / _mass;
+        _externalForce.y = externalForce.y;
+        _characterController.Move(_externalForce * Time.deltaTime);
         yield return new WaitForFixedUpdate();
         while (!_characterController.isGrounded) {
             yield return new WaitForFixedUpdate();
         }
         float time = 0f;
-        Vector3 start = _movementVelocity;
-        while (_movementVelocity.x != 0 && _movementVelocity.z != 0) {
+        Vector3 start = _externalForce;
+        while (_externalForce.x != 0 && _externalForce.z != 0) {
             time += Time.deltaTime * linearDrag;
-            _movementVelocity.x = Mathf.Lerp(start.x, 0f, time);
-            _movementVelocity.z = Mathf.Lerp(start.z, 0f, time);
+            _externalForce.x = Mathf.Lerp(start.x, 0f, time * drag);
+            _externalForce.z = Mathf.Lerp(start.z, 0f, time * drag);
             yield return new WaitForFixedUpdate();
         }
         _externalForces = null;
@@ -95,7 +104,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
         // check if head was hit
         if (CollidedHead(hit.point) && !CharacterController.isGrounded &&
             (CharacterController.collisionFlags & CollisionFlags.Above) == 0) {
-            _movementVelocity.y = 0f;
+            _externalForce.y = 0f;
         }
     }
 

@@ -13,12 +13,12 @@ public class NPCAnimController : CharacterAnimationHandler {
     }
 
     protected virtual void Update() {
-        ProcessMovement();
+        // ProcessMovement();
+        _isGrounded = _moveController.IsGrounded;
         UpdateVariables();
     }
 
     private void ProcessMovement() {
-        _isGrounded = _moveController.IsGrounded;
         if (!_isGrounded) {
             _moveMagnitude = 0f;
             return;
@@ -34,6 +34,6 @@ public class NPCAnimController : CharacterAnimationHandler {
 
     private void UpdateVariables() {
         _anim.SetBool("IsGrounded", _isGrounded);
-        _anim.SetFloat("Move", _moveMagnitude);
+        // _anim.SetFloat("Move", _moveMagnitude);
     }
 }

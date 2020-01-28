@@ -49,8 +49,8 @@ public static partial class GameplayValues {
 
     // pooled objects that will only ever have one version
     public static class ObjectPooling {
-        public const string RecoveryOrbPrefabId = "RecoveryOrb";
-        public const string WorldRunePrefabId = "SpellComponentRune";
+        public const string RecoveryOrbPrefabId = "prefab.RecoveryOrb";
+        public const string WorldRunePrefabId = "prefab.Interactable_Rune";
     }
 
     public static class Loot {

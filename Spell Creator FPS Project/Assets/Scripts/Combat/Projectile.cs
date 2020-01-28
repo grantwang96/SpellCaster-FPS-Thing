@@ -55,7 +55,7 @@ public class Projectile : MonoBehaviour, PooledObject {
 
     public virtual void FireProjectile(bool useGravity, Vector3 vector) {
         _isLive = true;
-        // transform.SetParent(ObjectPool.Instance.transform);
+        transform.SetParent(PooledObjectManager.Instance.Transform);
         transform.forward = vector;
         _rigidBody.isKinematic = false;
         _rigidBody.useGravity = useGravity;

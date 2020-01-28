@@ -12,39 +12,62 @@ public enum BrainStateTransitionId {
     RangeAttack
 }
 
-public abstract class BrainState : MonoBehaviour{
+public abstract class BrainState : MonoBehaviour {
 
-    [SerializeField] protected string _triggerName;
-    public string TriggerName { get { return _triggerName; } }
-    [SerializeField] protected BrainState[] _childrenStates; // sub actions that should also be processing along with this parent state
+    [SerializeField] protected BrainState[] _childrenStates; // sub states that should also be processing along with this parent state
     [SerializeField] protected NPCBehaviour _npcBehaviour;
+
+    [SerializeField] protected AnimationData _enterAnimationData;
+    [SerializeField] protected AnimationData _exitAnimationData;
+    [SerializeField] protected NPCAnimController _animController;
 
     protected float _startTime;
     protected float _duration;
 
-    protected virtual void Awake() {
-        SetTriggerName();
-    }
+    protected List<BrainState> _validBrainStates = new List<BrainState>();
 
-    protected virtual void SetTriggerName() {
+    protected virtual void Awake() {
 
     }
 
     public virtual void Enter(BrainState overrideBrainState = null, float duration = 0f) {
-        foreach(BrainState brainState in _childrenStates) {
+        _animController.OnAnimationStateUpdated += OnAnimationStateUpdated;
+        foreach (BrainState brainState in _childrenStates) {
             brainState.Enter(overrideBrainState, duration);
         }
+        _animController.UpdateAnimationData(_enterAnimationData);
     }
+
     public virtual void Execute() {
         foreach (BrainState brainState in _childrenStates) {
             brainState.Execute();
         }
     }
+
     public virtual void Exit() {
         // Apply any final changes/calculations before switching to new state
         foreach (BrainState brainState in _childrenStates) {
             brainState.Exit();
         }
+        _animController.UpdateAnimationData(_exitAnimationData);
+        _animController.OnAnimationStateUpdated -= OnAnimationStateUpdated;
+    }
+
+    public virtual bool CanTransition() {
+        return true;
+    }
+
+    protected void GetValidBrainStateTransitions(BrainState[] brainStates) {
+        _validBrainStates.Clear();
+        for(int i = 0; i < brainStates.Length; i++) {
+            if (brainStates[i].CanTransition()) {
+                _validBrainStates.Add(brainStates[i]);
+            }
+        }
+    }
+
+    protected virtual void OnAnimationStateUpdated(AnimationState state) {
+
     }
 }
 

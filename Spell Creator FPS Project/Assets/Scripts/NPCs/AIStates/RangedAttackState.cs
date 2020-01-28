@@ -18,16 +18,13 @@ public class RangedAttackState : AttackState {
     [SerializeField] protected float _power = 1f;
     [SerializeField] protected bool _useGravity;
     [SerializeField] protected Effect[] _effects;
-
-    [SerializeField] private float _spawnProjectileTime;
-    [SerializeField] private float _fireProjectileTime;
+    
     [SerializeField] private Transform _hand;
     [SerializeField] private Vector3 _handLocalPosition;
     [SerializeField] protected float _forwardForce;
     [SerializeField] protected float _verticalForce;
     [SerializeField] protected float _lifeTime;
-
-    private bool _projectileSpawned;
+    
     private Projectile _currentProjectile;
 
     protected override void Awake() {
@@ -35,35 +32,9 @@ public class RangedAttackState : AttackState {
         PooledObjectManager.Instance.RegisterPooledObject(_projectilePrefabId, 10);
     }
 
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.RangeAttackStateId;
-    }
-
-
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
-        _animController.PlayAnimation(_attackName);
         _moveController.SetRotation(_npcVision.CurrentTarget.transform.position, .9f);
-    }
-
-    public override void Execute() {
-        base.Execute();
-        // wait for animation to start
-        if (!_animController.IsStateByName(_attackName)) {
-            return;
-        }
-        float currentTime = _animController.GetCurrentAnimationTime();
-        if(currentTime >= 1f) {
-            OnAttackFinish();
-            return;
-        }
-        if (currentTime > _fireProjectileTime && _currentProjectile != null) {
-            // throw projectile
-            FireProjectile();
-        } else if(currentTime > _spawnProjectileTime  && !_projectileSpawned) {
-            // create projectile and place in hand
-            PrepareProjectile();
-        }
     }
 
     public override void Exit() {
@@ -71,7 +42,6 @@ public class RangedAttackState : AttackState {
         if(_currentProjectile != null) {
             _currentProjectile.DeactivatePooledObject();
         }
-        _projectileSpawned = false;
     }
 
     // prepare projectile
@@ -92,8 +62,6 @@ public class RangedAttackState : AttackState {
         _currentProjectile.transform.localPosition = _handLocalPosition;
         _currentProjectile.ActivatePooledObject();
         _currentProjectile?.InitializeProjectile(_power, _lifeTime, _effects);
-
-        _projectileSpawned = true;
     }
 
     // launches projectile at given vector
@@ -106,17 +74,35 @@ public class RangedAttackState : AttackState {
         _currentProjectile = null;
     }
 
+    public override bool CanTransition() {
+        return !TargetTooClose() && TargetWithinRange(_npcVision.CurrentTarget.GetBodyPosition());
+    }
+
     private bool TargetTooClose() {
         return Vector3.Distance(_npcBehaviour.BodyTransform.position, _npcVision.CurrentTarget.BodyTransform.position) < _meleeRange;
     }
 
     private void OnAttackFinish() {
-        if (_npcVision.CanSeeTarget(_npcVision.CurrentTarget.GetBodyPosition())) {
+        Vector3 targetPosition = _npcVision.CurrentTarget.GetBodyPosition();
+        if (_npcVision.CanSeeTarget(targetPosition) && TargetWithinRange(targetPosition)) {
             _npcBehaviour.ChangeBrainState(_targetInRangeState);
         } else if (TargetTooClose()) {
             _npcBehaviour.ChangeBrainState(_targetMeleeRangeState);
         } else {
             _npcBehaviour.ChangeBrainState(_targetOutOfRangeState);
+        }
+    }
+
+    protected override void OnAnimationStateUpdated(AnimationState state) {
+        base.OnAnimationStateUpdated(state);
+        if (state == AnimationState.Started) {
+            PrepareProjectile();
+        } else if(state == AnimationState.InProgress){
+            FireProjectile();
+        } else if(state == AnimationState.CanTransition) {
+
+        } else if(state == AnimationState.Completed) {
+            OnAttackFinish();
         }
     }
 }

@@ -87,7 +87,7 @@ public class Rune : MonoBehaviour, PooledObject, ITriggerAreaInteractable, ILoot
         if (!string.IsNullOrEmpty(uniqueId)) {
             InteractableId = uniqueId;
         }
-        LevelManager.LevelManagerInstance.RegisterInteractable(this);
+        LevelManager.LevelManagerInstance?.RegisterInteractable(this);
         ReleaseFromChest(GetForceDirection() * _spawnForce);
         // set up visuals for rune
     }
@@ -101,7 +101,7 @@ public class Rune : MonoBehaviour, PooledObject, ITriggerAreaInteractable, ILoot
 
     public void DeactivatePooledObject() {
         gameObject.SetActive(false);
-        LevelManager.LevelManagerInstance.UnregisterInteractable(this);
+        LevelManager.LevelManagerInstance?.UnregisterInteractable(this);
     }
 
     private IEnumerator FlyToTarget(Transform target) {

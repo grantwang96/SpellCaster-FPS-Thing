@@ -14,17 +14,15 @@ public class MoveState : BrainState {
     
     private bool _facingTarget;
     private float _stateTime;
+    protected float _moveSpeed;
 
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
         _stateTime = 0f;
         Vector3 targetDestination = GetDestination();
         _moveController.OnPathCalculated += OnPathCalculated;
-        _moveController.SetDestination(targetDestination);
-    }
-
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.WalkStateId;
+        _moveSpeed = _moveController.BaseSpeed;
+        _moveController.SetDestination(targetDestination, _moveSpeed);
     }
 
     protected virtual Vector3 GetDestination() {
@@ -37,7 +35,7 @@ public class MoveState : BrainState {
             _npcBehaviour.ChangeBrainState(_onFailedToReachTargetState);
             return;
         }
-        if (_moveController.PathPending) { Debug.Log(_npcBehaviour.name + " path is pending..."); return; }
+        if (_moveController.PathPending) { return; }
         SetRotation();
         base.Execute();
     }
@@ -49,7 +47,6 @@ public class MoveState : BrainState {
 
     protected virtual void OnPathCalculated(NavMeshPathStatus status) {
         if(status == NavMeshPathStatus.PathInvalid) {
-            Debug.Log("Could not calculate path to target!");
             _npcBehaviour.ChangeBrainState(_onTargetReachedStates[0]);
             return;
         }

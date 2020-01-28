@@ -6,74 +6,58 @@ public class MeleeAttackState : AttackState {
 
     [SerializeField] private BrainState _onTargetInRangeState; // transition to this state if target is within this range
     [SerializeField] private BrainState _onTargetOutOfRangeState; // transition to this state if target is out of range
+    [SerializeField] private List<HitboxInfo> _hitBoxInfos = new List<HitboxInfo>();
 
-    [SerializeField] private Collider[] _hitBoxes; // hit boxes to activate and deactivate on attacks
-    [SerializeField] private float _timeActivateHitBoxes; // when to activate hitboxes
-    [SerializeField] private float _timeDeactivateHitBoxes; // when to deactivate hitboxes
-    [SerializeField] private int _attackComboIndex = -1;
+    private HitboxController _hitboxController;
 
-    private bool _hitBoxesActive;
-    private bool HitBoxesActive {
-        get { return _hitBoxesActive; }
-        set {
-            _hitBoxesActive = value;
-            SetHitBoxesActive(_hitBoxesActive);
-        }
-    }
-
-    private void Awake() {
-        if (_attackComboIndex > -1) {
-            _attackName = $"{GameplayValues.Combat.NPCNormalAttackTriggerId}{_attackComboIndex}";
-        }
-    }
-
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.MeleeAttackStateId;
+    protected override void Awake() {
+        base.Awake();
+        _hitboxController = _npcBehaviour.GetComponent<HitboxController>();
     }
 
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
-        base.Enter(overrideBrainState, duration);
-        if (_attackComboIndex > -1) {
-            _animController.SetIntParameter(GameplayValues.Combat.NPCAttackComboIndexId, _attackComboIndex);
-            _animController.SetTrigger(GameplayValues.Combat.NPCNormalAttackTriggerId);
-            
-        } else {
-            _animController.PlayAnimation(_attackName);
-        }
-        HitBoxesActive = false;
         _moveController.Stop();
-    }
 
-    public override void Execute() {
-        base.Execute();
-        // wait for animation to start
-        if (!_animController.IsStateByName(_attackName)) {
+        if(_hitboxController == null) {
+            // fail here
+            CustomLogger.Error(_npcBehaviour.name, $"Was not able to detect {nameof(HitboxController)} on character!");
+            _npcBehaviour.ChangeBrainState(_onTargetOutOfRangeState);
             return;
         }
-        float currentTime = _animController.GetCurrentAnimationTime();
-        if(currentTime >= _timeActivateHitBoxes && currentTime < _timeDeactivateHitBoxes && !HitBoxesActive) {
-            HitBoxesActive = true;
-        } else if (currentTime > _timeDeactivateHitBoxes && HitBoxesActive) {
-            HitBoxesActive = false;
-            if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _npcVision.CurrentTarget)) {
-                _npcBehaviour.ChangeBrainState(_onTargetInRangeState);
-                return;
+
+        for(int i = 0; i < _hitBoxInfos.Count; i++) {
+            Hitbox hitbox;
+            if(!_hitboxController.HitBoxes.TryGetValue(_hitBoxInfos[i].Id, out hitbox)) {
+                CustomLogger.Error(_npcBehaviour.name, $"Could not find hitbox with ID \"{_hitBoxInfos[i].Id}\"");
+                continue;
             }
+            hitbox.Initialize(_hitBoxInfos[i]);
         }
-        if (currentTime >= 1f) {
+        base.Enter(overrideBrainState, duration);
+    }
+
+    public override bool CanTransition() {
+        if(_npcVision.CurrentTarget == null) {
+            return false;
+        }
+        return TargetWithinRange(_npcVision.CurrentTarget.GetBodyPosition());
+    }
+
+    protected override void OnAnimationStateUpdated(AnimationState state) {
+        base.OnAnimationStateUpdated(state);
+
+        if(state == AnimationState.CanTransition) {
+            TryTransitionToNextAttack();
+            return;
+        }
+        if(state == AnimationState.Completed) {
             _npcBehaviour.ChangeBrainState(_onTargetOutOfRangeState);
         }
     }
 
-    public override void Exit() {
-        // Debug.Log("Exiting Melee Attack State");
-        _animController.ResetTrigger("Attack");
-        HitBoxesActive = false;
-    }
-
-    private void SetHitBoxesActive(bool active) {
-        foreach(Collider hitBox in _hitBoxes) {
-            hitBox.gameObject.SetActive(active);
+    private void TryTransitionToNextAttack() {
+        if (_onTargetInRangeState.CanTransition()) {
+            _npcBehaviour.ChangeBrainState(_onTargetInRangeState);
         }
     }
 }

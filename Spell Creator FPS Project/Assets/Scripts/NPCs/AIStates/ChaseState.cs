@@ -17,16 +17,13 @@ public class ChaseState : MoveState {
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.ChaseStateId;
-    }
-
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         if (_vision.CurrentTarget == null) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }
         base.Enter(overrideBrainState, duration);
+        _moveSpeed = _moveController.MaxSpeed;
     }
 
     protected override Vector3 GetDestination() {
@@ -36,7 +33,7 @@ public class ChaseState : MoveState {
 
     public override void Execute() {
         base.Execute();
-        if (TryAttack()) { return; }
+        // if (TryAttack()) { return; }
         SetDestination();
     }
 
@@ -47,22 +44,19 @@ public class ChaseState : MoveState {
     private void SetDestination() {
         bool targetInView = _vision.CheckVision(_vision.CurrentTarget);
         if (targetInView) {
-            if(_onTargetSeenState != null) {
-                _npcBehaviour.ChangeBrainState(_onTargetSeenState);
-                return;
-            }
             _targetLastKnownPosition = _vision.CurrentTarget.transform.position;
-            _moveController.SetDestination(_targetLastKnownPosition);
+            _moveController.SetDestination(_targetLastKnownPosition, _moveSpeed);
         }
     }
 
     private bool TryAttack() {
-        if (_npcBehaviour.Blueprint.CanAttack(_npcBehaviour, _vision.CurrentTarget)) {
-            _moveController.ClearCurrentDestination();
-            _npcBehaviour.ChangeBrainState(_onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)]);
-            return true;
+        GetValidBrainStateTransitions(_onTargetReachedStates);
+        if(_validBrainStates.Count == 0) {
+            return false;
         }
-        return false;
+        _moveController.ClearCurrentDestination();
+        _npcBehaviour.ChangeBrainState(_validBrainStates[Random.Range(0, _validBrainStates.Count)]);
+        return true;
     }
 
     protected override void OnPathCalculated(NavMeshPathStatus status) {
@@ -74,6 +68,9 @@ public class ChaseState : MoveState {
     }
 
     protected override void OnArriveDestination() {
+        if (TryAttack()) {
+            return;
+        }
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
             _npcBehaviour.ChangeBrainState(_onTargetSeenState);

@@ -6,6 +6,8 @@ using System;
 
 public interface IPooledObjectManager {
 
+    Transform Transform { get; }
+
     void RegisterPooledObject(string poolId, int initialCount, Action<bool> OnRegisterComplete = null);
     void DeregisterPooledObject(string poolId);
 
@@ -22,6 +24,8 @@ public class PooledObjectManager : MonoBehaviour, IPooledObjectManager
     [SerializeField] private global::PooledObjectEntry[] _objectsToPreload;
 
     private readonly Dictionary<string, PooledObjectEntry> _objectPool = new Dictionary<string, PooledObjectEntry>();
+
+    public Transform Transform => transform;
 
     private void Awake() {
         if(Instance != null) {

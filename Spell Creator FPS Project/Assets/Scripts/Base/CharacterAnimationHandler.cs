@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CharacterAnimationHandler : MonoBehaviour { // base class that handles animations
 
@@ -13,6 +14,8 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     [SerializeField] protected AnimationCurve _accelerationTiltCurve;
     [SerializeField] protected float _tiltLimit;
     [SerializeField] private bool _tiltEnabled;
+
+    public event Action<AnimationState> OnAnimationStateUpdated;
     
     protected virtual void Start() {
         _damageable.OnHealthChanged += OnHealthChanged;
@@ -44,26 +47,33 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         return _anim.GetCurrentAnimatorStateInfo(0).length;
     }
 
-    public virtual void SetIntParameter(string parameter, int num) {
-        if (_anim.GetInteger(parameter) != -1) {
-            _anim.SetInteger(parameter, num);
+    public virtual void UpdateAnimationData(AnimationData data) {
+        if (!string.IsNullOrEmpty(data.AnimationName)) {
+            _anim.Play(data.AnimationName);
         }
-    }
-
-    public virtual void SetTrigger(string triggerName) {
-        _anim.SetTrigger(triggerName);
-    }
-
-    public virtual void ResetTrigger(string triggerName) {
-        _anim.ResetTrigger(triggerName);
-    }
-
-    public virtual void PlayAnimation(string animationName) {
-        _anim.Play(animationName);
+        for(int i = 0; i < data.Bools.Count; i++) {
+            _anim.SetBool(data.Bools[i].Key, data.Bools[i].Value);
+        }
+        for(int i = 0; i < data.Ints.Count; i++) {
+            _anim.SetInteger(data.Ints[i].Key, data.Ints[i].Value);
+        }
+        for(int i = 0; i < data.Floats.Count; i++) {
+            _anim.SetFloat(data.Floats[i].Key, data.Floats[i].Value);
+        }
+        for (int i = 0; i < data.Triggers.Count; i++) {
+            _anim.SetTrigger(data.Triggers[i]);
+        }
+        for (int i = 0; i < data.ResetTriggers.Count; i++) {
+            _anim.ResetTrigger(data.ResetTriggers[i]);
+        }
     }
 
     public virtual void StopAnimation() {
         _anim.StopPlayback();
+    }
+
+    protected void UpdateAnimationState(AnimationState state) {
+        OnAnimationStateUpdated?.Invoke(state);
     }
 
     protected virtual void OnHealthChanged(int health) {
@@ -74,4 +84,11 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     protected virtual void OnDeath(bool isDead, Damageable damageable) {
         // immediately enter death state
     }
+}
+
+public enum AnimationState {
+    Started,
+    InProgress,
+    CanTransition,
+    Completed
 }

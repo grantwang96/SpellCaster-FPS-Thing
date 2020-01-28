@@ -17,12 +17,7 @@ public class TakeCoverState : MoveState {
         base.Awake();
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
-
-    protected override void SetTriggerName() {
-        base.SetTriggerName();
-        _triggerName = GameplayValues.BrainStates.TakeCoverStateId;
-    }
-
+    
     protected override Vector3 GetDestination() {
         /*
         Vector3 destination = _moveController.transform.position;

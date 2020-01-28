@@ -203,7 +203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f91c88590ec8244582e302ec50b6e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabId: SpellComponentRune
+  _prefabId: prefab.Interactable_Rune
   _inUse: 0
   _interactable: 1
   _itemId: CAST_METHOD_SELF_CHARGE

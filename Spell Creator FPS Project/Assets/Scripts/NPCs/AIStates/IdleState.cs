@@ -9,16 +9,11 @@ public class IdleState : BrainState {
 
     [SerializeField] private NPCMoveController _moveController;
 
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.IdleStateId;
-    }
-
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
         base.Enter(overrideBrainState, duration);
         _startTime = Time.time;
         _duration = Mathf.Approximately(duration, 0f) ? _defaultIdleTime : duration;
         _npcBehaviour.CharMove.Stop();
-        // _npcBehaviour.Blueprint.OnIdleEnter(behaviour);
     }
 
     public override void Execute() {
@@ -31,12 +26,5 @@ public class IdleState : BrainState {
         if (Time.time - _startTime > _duration) {
             _npcBehaviour.ChangeBrainState(_onIdleEnd);
         }
-        // perform normal idle behavior
-        // _npcBehaviour.Blueprint.OnIdleExecute(_npcBehaviour);
-    }
-
-    public override void Exit() {
-        base.Exit();
-        // _npcBehaviour.Blueprint.OnIdleExit(_npcBehaviour);
     }
 }

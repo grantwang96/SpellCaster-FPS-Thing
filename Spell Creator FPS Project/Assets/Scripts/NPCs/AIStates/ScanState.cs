@@ -8,18 +8,18 @@ public class ScanState : BrainState {
 
     private IVision _vision;
 
-    private void Awake() {
+    protected override void Awake() {
+        base.Awake();
         _vision = _npcBehaviour.GetComponent<IVision>();
         if(_vision == null) {
             Debug.LogError($"{name}'s Scan State did not find IVision component!");
         }
     }
 
-    protected override void SetTriggerName() {
-        _triggerName = GameplayValues.BrainStates.ScanStateId;
-    }
-
     public override void Execute() {
+        if(_vision == null) {
+            return;
+        }
         if (_vision.CheckVision()) {
             _npcBehaviour.ChangeBrainState(_onEnemySeenState);
         }
