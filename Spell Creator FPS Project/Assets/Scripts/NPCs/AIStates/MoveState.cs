@@ -46,7 +46,7 @@ public class MoveState : BrainState {
     }
 
     protected virtual void OnPathCalculated(NavMeshPathStatus status) {
-        if(status == NavMeshPathStatus.PathInvalid) {
+        if(status == NavMeshPathStatus.PathInvalid || _moveController.Path == null || _moveController.Path.Length == 0) {
             _npcBehaviour.ChangeBrainState(_onTargetReachedStates[0]);
             return;
         }

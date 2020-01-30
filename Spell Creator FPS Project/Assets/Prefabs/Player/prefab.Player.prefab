@@ -388,6 +388,7 @@ MonoBehaviour:
   _bodyTransform: {fileID: 4107163916722246}
   _headTransform: {fileID: 4739983236925610}
   _animHandler: {fileID: 0}
+  _moveController: {fileID: 114187418731465560}
   _unitTags:
   - PLAYER_UNIT
   _controlScheme: 0

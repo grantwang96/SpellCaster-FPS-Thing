@@ -8,8 +8,6 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     [SerializeField] protected Animator _anim;
     [SerializeField] protected Transform _bodyRoot;
     [SerializeField] protected CharacterBehaviour _characterBehaviour;
-    [SerializeField] protected CharacterMoveController _moveController;
-    [SerializeField] protected Damageable _damageable;
 
     [SerializeField] protected AnimationCurve _accelerationTiltCurve;
     [SerializeField] protected float _tiltLimit;
@@ -18,8 +16,8 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     public event Action<AnimationState> OnAnimationStateUpdated;
     
     protected virtual void Start() {
-        _damageable.OnHealthChanged += OnHealthChanged;
-        _damageable.OnDeath += OnDeath;
+        _characterBehaviour.Damageable.OnHealthChanged += OnHealthChanged;
+        _characterBehaviour.Damageable.OnDeath += OnDeath;
     }
     
     public virtual void TiltCharacter(float x) {

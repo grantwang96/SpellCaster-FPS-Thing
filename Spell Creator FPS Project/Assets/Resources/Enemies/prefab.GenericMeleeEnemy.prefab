@@ -316,14 +316,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 193396bb85654d1408dace7d1ddf6bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4178212123154016}
   _headTransform: {fileID: 4171630530523984}
-  _animHandler: {fileID: 0}
+  _animHandler: {fileID: 3251657159653968175}
+  _moveController: {fileID: 114193879206027700}
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: Dingus
-  _charMove: {fileID: 114193879206027700}
   _damageable: {fileID: 114120558083659074}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
@@ -350,7 +349,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1167175321328372}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.75
+  m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -377,13 +376,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseSpeed: 5
   _maxSpeed: 5
+  _moveSpeed: 0
   _mass: 4
   _linearDrag: 2
   _headDistanceThreshold: 0
   _performingAction: 0
   _movementVelocity: {x: 0, y: 0, z: 0}
   _turnSpeed: 360
-  _destinationArrivalDistance: 0.33
+  _destinationArrivalDistance: 1.5
   _currentPathCorner: {x: 0, y: 0, z: 0}
   _traveling: 0
   _pathIndex: 0
@@ -1474,8 +1474,6 @@ MonoBehaviour:
   _anim: {fileID: 95457358620807986}
   _bodyRoot: {fileID: 4178212123154016}
   _characterBehaviour: {fileID: 114862455297173096}
-  _moveController: {fileID: 114193879206027700}
-  _damageable: {fileID: 114120558083659074}
   _accelerationTiltCurve:
     serializedVersion: 2
     m_Curve: []
@@ -1548,7 +1546,7 @@ MonoBehaviour:
     _floats: []
   _animController: {fileID: 3251657159653968175}
   _npcVision: {fileID: 114107591437060838}
-  _attackRange: 2.75
+  _attackRange: 3
   _moveController: {fileID: 114193879206027700}
   _onTargetInRangeState: {fileID: 114640306952357054}
   _onTargetOutOfRangeState: {fileID: 114640306952357054}

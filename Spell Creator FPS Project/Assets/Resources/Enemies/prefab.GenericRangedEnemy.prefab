@@ -310,10 +310,10 @@ MonoBehaviour:
   _bodyTransform: {fileID: 4572717353518604}
   _headTransform: {fileID: 4785619698076382}
   _animHandler: {fileID: 8266300455781874348}
+  _moveController: {fileID: 114625353816454100}
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: ThrowingDingus
-  _charMove: {fileID: 114625353816454100}
   _damageable: {fileID: 114963092705066930}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
@@ -493,7 +493,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6fd7a4523ca08944a044edcdb4fd498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
   _enterAnimationData:
@@ -617,7 +616,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b7a9bf9357a46b499ed280968296187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates:
   - {fileID: 114999031850689574}
   _npcBehaviour: {fileID: 114894150171823558}
@@ -744,7 +742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179493dd88a287941b28a23aac837371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates:
   - {fileID: 114999031850689574}
   _npcBehaviour: {fileID: 114894150171823558}
@@ -898,7 +895,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4979328d3eb5f4ba7a303627fb16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
   _enterAnimationData:
@@ -999,7 +995,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ddf293b64bf514cbba7095925f86a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
   _enterAnimationData:
@@ -1532,7 +1527,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8217251722e43a441baf6fd76b481cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: Attack
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
   _enterAnimationData:
@@ -1636,8 +1630,6 @@ MonoBehaviour:
   _anim: {fileID: 95505397180442836}
   _bodyRoot: {fileID: 4572717353518604}
   _characterBehaviour: {fileID: 114894150171823558}
-  _moveController: {fileID: 114625353816454100}
-  _damageable: {fileID: 114963092705066930}
   _accelerationTiltCurve:
     serializedVersion: 2
     m_Curve: []
@@ -1689,7 +1681,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f881ea45e6fe74386f54de42f25ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: Alert
   _childrenStates: []
   _npcBehaviour: {fileID: 114894150171823558}
   _enterAnimationData:

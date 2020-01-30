@@ -15,6 +15,9 @@ public class PlayerController : CharacterBehaviour {
 
     public static PlayerController Instance { get; private set; }
 
+    [SerializeField] protected Vector3 _moveVector;
+    public Vector3 MoveVector => _moveVector;
+
     public enum ControlScheme {
         MouseKeyboard, Controller
     }
@@ -38,7 +41,7 @@ public class PlayerController : CharacterBehaviour {
     [SerializeField] protected Vector2 _lookVector; // Vector that saves camera controls input
     public Vector2 LookVector { get { return _lookVector; } }
     public override Vector3 GetBodyPosition() {
-        return _bodyTransform.position + _playerMovement.CharacterController.center;
+        return _bodyTransform.position + _moveController.CharacterController.center;
     }
 
     public event Action<float> MouseScrollEvent;
@@ -64,11 +67,8 @@ public class PlayerController : CharacterBehaviour {
     public event Action OnCancelPressed;
 
     public event Action<int> OnSlotBtnPressed;
-
-    private PlayerMovement_FPS _playerMovement; // component that moves the player
+    
     private PlayerCamera_FPS _playerCamera; // component that controls the camera
-    private PlayerCombat _playerCombat;
-    public ISpellCaster PlayerCombat => _playerCombat;
     private PlayerDamageable _playerDamageable;
     public override Damageable Damageable => _playerDamageable;
 
@@ -103,11 +103,9 @@ public class PlayerController : CharacterBehaviour {
     }
 
     private void InitializeComponents() {
-        _playerMovement = GetComponent<PlayerMovement_FPS>();
         _playerCamera = GetComponent<PlayerCamera_FPS>();
         _playerCamera.Head = Head;
         _playerCamera.Body = transform;
-        _playerCombat = GetComponent<PlayerCombat>();
         _playerDamageable = GetComponent<PlayerDamageable>();
     }
 

@@ -11,8 +11,7 @@ public class NPCBehaviour : CharacterBehaviour {
     [SerializeField] protected string _id;
     public string Id => _id;
     
-    [SerializeField] protected NPCMoveController _charMove;
-    public NPCMoveController CharMove => _charMove;
+    public NPCMoveController CharMove { get; private set; }
     [SerializeField] protected Damageable _damageable;
     public override Damageable Damageable => _damageable;
     [SerializeField] protected NPCBlueprint _blueprint; // blueprint to derive data from
@@ -33,8 +32,7 @@ public class NPCBehaviour : CharacterBehaviour {
     protected override void Awake() {
         base.Awake();
         InitializeBrainStateTransitions();
-        _charMove = GetComponent<NPCMoveController>();
-        _damageable = GetComponent<Damageable>();
+        CharMove = _moveController as NPCMoveController;
         _prepped = true;
     }
 
@@ -57,9 +55,6 @@ public class NPCBehaviour : CharacterBehaviour {
             Debug.LogError($"[{nameof(NPCBehaviour)}] NPC {name} doesn't have a blueprint!");
             return;
         }
-        BaseSpeed = _blueprint.WalkSpeed;
-        MaxSpeed = _blueprint.RunSpeed;
-
         if(_damageable == null) {
             Debug.LogError($"[{nameof(NPCBehaviour)}] NPC {name} does not contain damageable!");
             OnDeath(true, null);

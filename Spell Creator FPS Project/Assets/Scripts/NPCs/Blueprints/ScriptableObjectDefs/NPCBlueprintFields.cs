@@ -33,11 +33,6 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     [SerializeField] protected LayerMask _visionMask;
     public LayerMask VisionMask { get { return _visionMask; } }
 
-    [SerializeField] protected float _attackRange;
-    public float AttackRange { get { return _attackRange; } }
-    [SerializeField] protected int _attackComboMax;
-    public int AttackComboMax { get { return _attackComboMax; } }
-
     // what type of enemy this is
     [SerializeField] private string[] _unitTags;
     public string[] UnitTags => _unitTags;

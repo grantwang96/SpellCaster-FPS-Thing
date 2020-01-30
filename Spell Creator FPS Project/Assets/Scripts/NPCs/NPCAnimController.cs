@@ -13,8 +13,8 @@ public class NPCAnimController : CharacterAnimationHandler {
     }
 
     protected virtual void Update() {
-        // ProcessMovement();
-        _isGrounded = _moveController.IsGrounded;
+        _isGrounded = _characterBehaviour.MoveController.IsGrounded;
+        ProcessMovement();
         UpdateVariables();
     }
 
@@ -23,17 +23,11 @@ public class NPCAnimController : CharacterAnimationHandler {
             _moveMagnitude = 0f;
             return;
         }
-        _moveMagnitude = GetMoveMagnitude() / _characterBehaviour.MaxSpeed;
-    }
-
-    private float GetMoveMagnitude() {
-        Vector3 vel = _moveController.MovementVelocity;
-        vel.y = 0f;
-        return vel.magnitude;
+        _moveMagnitude = _characterBehaviour.MoveController.MoveSpeed / _characterBehaviour.MoveController.MaxSpeed;
     }
 
     private void UpdateVariables() {
         _anim.SetBool("IsGrounded", _isGrounded);
-        // _anim.SetFloat("Move", _moveMagnitude);
+        _anim.SetFloat("Move", _moveMagnitude);
     }
 }

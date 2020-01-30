@@ -11,7 +11,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     [SerializeField] protected float _maxSpeed;
     public float MaxSpeed => _maxSpeed;
 
-    protected float _moveSpeed;
+    [SerializeField] protected float _moveSpeed;
     public float MoveSpeed {
         get {
             return _moveSpeed;

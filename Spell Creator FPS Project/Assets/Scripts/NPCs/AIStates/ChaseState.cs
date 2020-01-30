@@ -13,11 +13,14 @@ public class ChaseState : MoveState {
     private IVision _vision;
     [SerializeField] private Vector3 _targetLastKnownPosition;
 
+    private bool _arrivedDestination = false;
+
     private void Start() {
         _vision = _npcBehaviour.GetComponent<IVision>();
     }
 
     public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+        _arrivedDestination = false;
         if (_vision.CurrentTarget == null) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
@@ -33,6 +36,10 @@ public class ChaseState : MoveState {
 
     public override void Execute() {
         base.Execute();
+        if (_arrivedDestination) {
+            OnArriveDestination();
+            return;
+        }
         // if (TryAttack()) { return; }
         SetDestination();
     }
@@ -60,7 +67,7 @@ public class ChaseState : MoveState {
     }
 
     protected override void OnPathCalculated(NavMeshPathStatus status) {
-        if (status == NavMeshPathStatus.PathInvalid) {
+        if (status == NavMeshPathStatus.PathInvalid || _moveController.Path == null || _moveController.Path.Length == 0) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
             return;
         }
@@ -68,6 +75,7 @@ public class ChaseState : MoveState {
     }
 
     protected override void OnArriveDestination() {
+        _arrivedDestination = true;
         if (TryAttack()) {
             return;
         }

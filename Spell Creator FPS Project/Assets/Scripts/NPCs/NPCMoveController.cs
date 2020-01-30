@@ -11,7 +11,7 @@ public class NPCMoveController : CharacterMoveController {
     protected NPCBehaviour _npcBehaviour; // gain read access from character's brain
     protected NPCVision _npcVision; // vision component
     protected NavMeshAgent _agent;
-
+    
     [SerializeField] protected Vector3 _currentPathCorner; // what the NPC is moving towards(usually path corner)
     public Vector3 CurrentPathCorner { get { return _currentPathCorner; } }
     protected Vector3 _currentLookTarget; // what the NPC is looking towards
@@ -26,10 +26,10 @@ public class NPCMoveController : CharacterMoveController {
     public event ArrivedDestinationDelegate OnArrivedDestination;
 
     protected NavMeshPath _path;
-    public Vector3[] Path { get { return _path.corners; } }
+    public Vector3[] Path { get; protected set; }
     [SerializeField] protected int _pathIndex;
 
-    public bool NextPathCorner() {
+    private bool NextPathCorner() {
         if (Path == null || Path.Length == 0) { return false; }
         if (_pathIndex + 1 >= Path.Length) { return false; }
         _pathIndex++;
@@ -50,7 +50,6 @@ public class NPCMoveController : CharacterMoveController {
         base.Start();
         _baseSpeed = _npcBehaviour.Blueprint.WalkSpeed;
         _maxSpeed = _npcBehaviour.Blueprint.RunSpeed;
-        _destinationArrivalDistance = _npcBehaviour.Blueprint.AttackRange;
     }
 
     protected override void Update() {
@@ -84,6 +83,7 @@ public class NPCMoveController : CharacterMoveController {
         MoveSpeed = speed;
         _pathIndex = 0;
         _path.ClearCorners();
+        Path = new Vector3[] { target };
         _agent.nextPosition = transform.position;
         bool success = _agent.CalculatePath(target, _path);
         if (success) {
@@ -109,13 +109,14 @@ public class NPCMoveController : CharacterMoveController {
         PathPending = false;
         _agent.isStopped = true;
         _pathIndex = 0;
-        NextPathCorner();
         _traveling = true;
-        if(Path.Length != 0) {
-            _currentPathCorner = Path[_pathIndex];
-        } else {
-            CustomLogger.Warn(name, $"Path is empty!");
+        if (_path.corners.Length == 0) {
+            OnPathCalculated?.Invoke(NavMeshPathStatus.PathComplete);
+            return;
         }
+        Path = _path.corners;
+        NextPathCorner();
+        _currentPathCorner = Path[_pathIndex];
         OnPathCalculated?.Invoke(_agent.pathStatus);
     }
 
@@ -127,7 +128,7 @@ public class NPCMoveController : CharacterMoveController {
             return;
         }
         // trigger event if you've arrived at destination
-        if (!NextPathCorner() && Path != null) {
+        if (!NextPathCorner()) {
             ArrivedDestination();
             return;
         }
@@ -165,6 +166,7 @@ public class NPCMoveController : CharacterMoveController {
 
     public virtual void Stop() {
         _traveling = false;
+        _moveSpeed = 0f;
     }
 
     private void SlowDown() {
