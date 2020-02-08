@@ -27,9 +27,8 @@ MonoBehaviour:
   _visionMask:
     serializedVersion: 2
     m_Bits: 2561
-  _attackRange: 2.5
-  _attackComboMax: 2
-  _unitTags: []
+  _unitTags:
+  - ENEMY_UNIT
   _enemyTags:
   - PLAYER_UNIT
   _healthOrbRewards:

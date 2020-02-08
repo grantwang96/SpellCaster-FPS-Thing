@@ -16,16 +16,16 @@ MonoBehaviour:
   _id: CM_Raycast_Held_1
   _smallIcon: {fileID: 0}
   _largeIcon: {fileID: 0}
-  _name: 
-  _shortDescription: 
+  _name: Held Raycast I
+  _shortDescription: Continuous Ray directed in front of user
   _longDescription: 
   _lootTier: 0
-  manaCost: 0
-  _intervalTime: 0
-  _powerScale: 0
+  manaCost: 1
+  _intervalTime: 0.25
+  _powerScale: 1
   spellTiming: 01000000
-  _radius: 0
-  _maxEffectiveRange: 0
+  _radius: 1
+  _maxEffectiveRange: 25
   _effectiveLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 262145

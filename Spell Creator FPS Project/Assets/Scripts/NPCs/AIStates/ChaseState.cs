@@ -49,6 +49,9 @@ public class ChaseState : MoveState {
     }
 
     private void SetDestination() {
+        if(_vision.CurrentTarget == null) {
+            return;
+        }
         bool targetInView = _vision.CheckVision(_vision.CurrentTarget);
         if (targetInView) {
             _targetLastKnownPosition = _vision.CurrentTarget.transform.position;
@@ -79,10 +82,13 @@ public class ChaseState : MoveState {
         if (TryAttack()) {
             return;
         }
+        if(_vision.CurrentTarget == null) {
+            _npcBehaviour.ChangeBrainState(_onTargetLostState);
+            return;
+        }
         bool canSeeTarget = _vision.CanSeeTarget(_vision.CurrentTarget.GetBodyPosition());
         if (canSeeTarget) {
             _npcBehaviour.ChangeBrainState(_onTargetSeenState);
-            return;
         }
         _npcBehaviour.ChangeBrainState(_onTargetLostState);
     }

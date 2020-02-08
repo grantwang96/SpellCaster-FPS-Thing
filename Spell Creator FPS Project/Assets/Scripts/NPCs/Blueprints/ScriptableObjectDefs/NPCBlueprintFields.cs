@@ -34,8 +34,8 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public LayerMask VisionMask { get { return _visionMask; } }
 
     // what type of enemy this is
-    [SerializeField] private string[] _unitTags;
-    public string[] UnitTags => _unitTags;
+    [SerializeField] private List<string> _unitTags;
+    public List<string> UnitTags => _unitTags;
 
     // what type of enemies to be aggressive against
     [SerializeField] private List<string> _enemyTags = new List<string>();

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb85fad4a5f009646a341ac185be04f5, type: 3}
+  m_Name: Summon Skeleton Warrior
+  m_EditorClassIdentifier: 
+  _itemType: 2
+  _id: Effect_Summon_Skeleton_Warrior
+  _smallIcon: {fileID: 0}
+  _largeIcon: {fileID: 0}
+  _name: Summon Skeleton Warrior
+  _shortDescription: Summons a skeleton warrior
+  _longDescription: Summons a skeleton warrior, I guess.
+  _lootTier: 0
+  _manaCost: 10
+  _chargeTime: 1
+  _intervalTime: 0.1
+  _basePower: 1
+  _unitPrefabId: prefab.GenericMeleeEnemy
+  _poolBaseCount: 10

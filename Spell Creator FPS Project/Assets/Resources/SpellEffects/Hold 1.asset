@@ -23,7 +23,7 @@ MonoBehaviour:
   _manaCost: 20
   _chargeTime: 3
   _intervalTime: 0.25
-  _basePower: 10
+  _basePower: 1
   _baseHoldRange: 20
   _holdPowerModifier: 0.5
   _risingDuration: 4

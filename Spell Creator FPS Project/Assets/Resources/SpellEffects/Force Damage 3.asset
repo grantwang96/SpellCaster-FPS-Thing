@@ -25,6 +25,5 @@ MonoBehaviour:
   _intervalTime: 0
   _basePower: 19
   _upwardForce: 10
-  _force: 45
-  _powerScale: 1
+  _force: 8
   _element: 0

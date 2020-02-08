@@ -26,8 +26,12 @@ public class NPCManager : MonoBehaviour, INPCManager {
     }
 
     public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId = "") {
+        if (!PooledObjectManager.Instance.HasRegistered(npcPrefabId)) {
+            PooledObjectManager.Instance.RegisterPooledObject(npcPrefabId, 1);
+        }
         PooledObject pooledObject;
         if (!PooledObjectManager.Instance.UsePooledObject(npcPrefabId, out pooledObject)) {
+            CustomLogger.Error(nameof(NPCManager), $"Could not retrieve pooled object for id {npcPrefabId}");
             return null;
         }
         EnemyBehaviour enemy = pooledObject as EnemyBehaviour;

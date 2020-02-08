@@ -89,6 +89,7 @@ public class Rune : MonoBehaviour, PooledObject, ITriggerAreaInteractable, ILoot
         }
         LevelManager.LevelManagerInstance?.RegisterInteractable(this);
         ReleaseFromChest(GetForceDirection() * _spawnForce);
+        _interactable = true;
         // set up visuals for rune
     }
 

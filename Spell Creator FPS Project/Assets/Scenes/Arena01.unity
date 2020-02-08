@@ -225,7 +225,7 @@ GameObject:
   - component: {fileID: 90748598}
   - component: {fileID: 90748597}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: ItemSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -252,7 +252,7 @@ MonoBehaviour:
   - CM_Raycast_Held_1
   - Effect_Hold_1
   - Effect_Damage_2
-  - SpellMod_PowerBoost_1
+  - Effect_Summon_Skeleton_Warrior
 --- !u!4 &90748598
 Transform:
   m_ObjectHideFlags: 0

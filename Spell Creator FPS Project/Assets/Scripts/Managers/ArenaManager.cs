@@ -83,7 +83,6 @@ public class ArenaManager : GameManager, IArenaManager {
         InitializeArenaStats();
         RegisterEnemyPrefabs();
         UIPanelManager.Instance.RegisterUIPanel(_loseScreenPrefabId);
-        NPCManager.Instance.OnEnemySpawned += OnEnemySpawned;
         PlayerController.Instance.Damageable.OnDeath += LoseRound;
     }
     private void InitializeArenaStats() {
@@ -93,7 +92,6 @@ public class ArenaManager : GameManager, IArenaManager {
     private void OnDestroy() {
         UIPanelManager.Instance.DeregisterUIPanel(_loseScreenPrefabId);
         PlayerController.Instance.Damageable.OnDeath -= LoseRound;
-        NPCManager.Instance.OnEnemySpawned -= OnEnemySpawned;
     }
 
     private void RegisterEnemyPrefabs() {
@@ -116,13 +114,12 @@ public class ArenaManager : GameManager, IArenaManager {
 
     // check if next wave needs to be spawned or if round is over here
     private void OnEnemyDefeatedListener(bool isDead, Damageable damageable) {
-        _enemiesDefeated++;
-        damageable.OnDeath -= OnEnemyDefeatedListener;
         NPCBehaviour enemy;
         if(!_currentWave.TryGetValue(damageable, out enemy)) {
-            Debug.LogError($"[{nameof(ArenaManager)}] Received unregistered damageable! HOW?");
             return;
         }
+        _enemiesDefeated++;
+        damageable.OnDeath -= OnEnemyDefeatedListener;
         SendEnemyDefeatedMessage(enemy);
         _currentWave.Remove(damageable);
 
@@ -200,10 +197,7 @@ public class ArenaManager : GameManager, IArenaManager {
 
     private void SpawnEnemyPrefab(string prefabName, Vector3 position) {
         Quaternion forward = Quaternion.LookRotation(-position);
-        NPCManager.Instance.SpawnPooledNPC(prefabName, position, forward.eulerAngles, string.Empty);
-    }
-
-    private void OnEnemySpawned(string id, NPCBehaviour npc) {
+        NPCBehaviour npc = NPCManager.Instance.SpawnPooledNPC(prefabName, position, forward.eulerAngles, string.Empty);
         npc.Damageable.OnDeath += OnEnemyDefeatedListener;
         _currentWave.Add(npc.Damageable, npc);
         OnWaveCountUpdated?.Invoke(_currentWave.Count);

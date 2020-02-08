@@ -10,6 +10,7 @@ public interface IPooledObjectManager {
 
     void RegisterPooledObject(string poolId, int initialCount, Action<bool> OnRegisterComplete = null);
     void DeregisterPooledObject(string poolId);
+    bool HasRegistered(string poolId);
 
     bool UsePooledObject(string poolId, out PooledObject obj);
     void ReturnPooledObject(string poolId, PooledObject obj);
@@ -100,6 +101,10 @@ public class PooledObjectManager : MonoBehaviour, IPooledObjectManager
             Destroy(obj);
         }
         _objectPool.Remove(objectId);
+    }
+
+    public bool HasRegistered(string objectId) {
+        return _objectPool.ContainsKey(objectId);
     }
 
     public bool UsePooledObject(string objectId, out PooledObject obj) {

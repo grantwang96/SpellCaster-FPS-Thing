@@ -33,7 +33,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     public CharacterController CharacterController { get { return _characterController; } }
 
     protected bool _hasControl = true;
-    protected Vector3 _externalForce;
+    [SerializeField] protected Vector3 _externalForce;
     [SerializeField] protected Vector3 _movementVelocity;
     public Vector3 MovementVelocity { get { return _movementVelocity; } }
     public bool IsGrounded => _characterController.isGrounded;
@@ -79,9 +79,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
         if (!gameObject.activeInHierarchy) {
             return;
         }
-        float linearDrag = drag > 0f ? drag : _currentDrag;
-        _hasControl = allowControl;
-        _currentDrag = drag;
+        _currentDrag = drag > 0f ? drag : _linearDrag;
         _externalForce += velocity / _mass;
     }
 
@@ -92,15 +90,12 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     protected virtual void ProcessExternalForces() {
         _externalForce = ProcessGravity(_externalForce);
-        if (!CharacterController.isGrounded) {
-            return;
-        }
         bool forced = false;
-        if(Mathf.Approximately(0f, _externalForce.x)) {
+        if(!Mathf.Approximately(0f, _externalForce.x)) {
             _externalForce.x = ExtraMath.ReduceAbsolute(_externalForce.x, Time.deltaTime * _currentDrag);
             forced = true;
         }
-        if(Mathf.Approximately(0f, _externalForce.z)) {
+        if(!Mathf.Approximately(0f, _externalForce.z)) {
             _externalForce.z = ExtraMath.ReduceAbsolute(_externalForce.z, Time.deltaTime * _currentDrag);
             forced = true;
         }
@@ -111,7 +106,6 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     protected virtual void ResetMoveController() {
         _currentDrag = _linearDrag;
-        _hasControl = true;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit) {

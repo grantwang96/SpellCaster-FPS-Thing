@@ -17,6 +17,7 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
         gameObject.SetActive(true);
         GenerateUniqueId(uniqueId);
         FireCharacterSpawnedEvent();
+        OverrideUnitTags(Blueprint.UnitTags);
     }
     
     public void DeactivatePooledObject() {

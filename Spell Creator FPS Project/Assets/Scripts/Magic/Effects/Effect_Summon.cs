@@ -23,6 +23,11 @@ public class Effect_Summon : Effect {
         TrySpawnUnit(position, caster.Body.eulerAngles, behaviour.UnitTags);
     }
 
+    public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Collider collider, List<Effect> additionalEffects = null) {
+        CharacterBehaviour behaviour = caster.GetComponent<CharacterBehaviour>();
+        TrySpawnUnit(position, caster.Body.eulerAngles, behaviour.UnitTags);
+    }
+
     private void TrySpawnUnit(Vector3 position, Vector3 rotation, List<string> overrideTags) {
         EnemyBehaviour newUnit = NPCManager.Instance?.SpawnPooledNPC(_unitPrefabId, position, rotation);
         newUnit.OverrideUnitTags(overrideTags);

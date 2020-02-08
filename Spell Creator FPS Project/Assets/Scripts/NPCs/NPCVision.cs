@@ -5,7 +5,7 @@ using UnityEngine;
 public class NPCVision : MonoBehaviour, IVision {
 
     public List<CharacterBehaviour> KnownCharacters { get; } = new List<CharacterBehaviour>();
-    public List<CharacterBehaviour> EnemyCharacters { get; } = new List<CharacterBehaviour>(); // REPLACE THIS WITH TAG SYSTEM
+
     public CharacterBehaviour CurrentTarget { get; private set; }
 
     private NPCBehaviour _npcBehaviour;
@@ -32,8 +32,9 @@ public class NPCVision : MonoBehaviour, IVision {
             RaycastHit hit;
             if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                if (otherCB != null && KnownCharacters.Contains(otherCB)) {
+                if (otherCB != null && KnownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
                     CurrentTarget = otherCB;
+                    CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
                     return true;
                 }
             }
@@ -69,6 +70,11 @@ public class NPCVision : MonoBehaviour, IVision {
         if (KnownCharacters.Contains(characterBehaviour)) {
             KnownCharacters.Remove(characterBehaviour);
         }
+    }
+
+    private void OnTargetDefeated(bool dead, Damageable damageable) {
+        damageable.OnDeath -= OnTargetDefeated;
+        ClearCurrentTarget();
     }
 }
 
