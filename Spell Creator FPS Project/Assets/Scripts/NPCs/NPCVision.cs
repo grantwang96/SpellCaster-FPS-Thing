@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCVision : MonoBehaviour, IVision{
+public class NPCVision : MonoBehaviour, IVision {
 
-    private List<CharacterBehaviour> _knownCharacters = new List<CharacterBehaviour>();
-    public List<CharacterBehaviour> KnownCharacters => _knownCharacters;
-    private List<CharacterBehaviour> _enemyCharacters = new List<CharacterBehaviour>(); // WE SHOULD PHASE THIS OUT AND USE BLUEPRINT TO CHECK IF ENEMY TARGET(tag system?)
-    public List<CharacterBehaviour> EnemyCharacters => _enemyCharacters;
-    private CharacterBehaviour _currentTarget;
-    public CharacterBehaviour CurrentTarget => _currentTarget;
+    public List<CharacterBehaviour> KnownCharacters { get; } = new List<CharacterBehaviour>();
+    public List<CharacterBehaviour> EnemyCharacters { get; } = new List<CharacterBehaviour>(); // REPLACE THIS WITH TAG SYSTEM
+    public CharacterBehaviour CurrentTarget { get; private set; }
 
     private NPCBehaviour _npcBehaviour;
 
@@ -35,8 +32,8 @@ public class NPCVision : MonoBehaviour, IVision{
             RaycastHit hit;
             if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.Blueprint.IsEnemy(otherCB)) {
-                    _currentTarget = otherCB;
+                if (otherCB != null && KnownCharacters.Contains(otherCB)) {
+                    CurrentTarget = otherCB;
                     return true;
                 }
             }
@@ -59,18 +56,18 @@ public class NPCVision : MonoBehaviour, IVision{
     }
 
     public virtual void ClearCurrentTarget() {
-        _currentTarget = null;
+        CurrentTarget = null;
     }
 
     public virtual void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (!_knownCharacters.Contains(characterBehaviour)) {
-            _knownCharacters.Add(characterBehaviour);
+        if (!KnownCharacters.Contains(characterBehaviour)) {
+            KnownCharacters.Add(characterBehaviour);
         }
     }
 
     public virtual void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (_knownCharacters.Contains(characterBehaviour)) {
-            _knownCharacters.Remove(characterBehaviour);
+        if (KnownCharacters.Contains(characterBehaviour)) {
+            KnownCharacters.Remove(characterBehaviour);
         }
     }
 }

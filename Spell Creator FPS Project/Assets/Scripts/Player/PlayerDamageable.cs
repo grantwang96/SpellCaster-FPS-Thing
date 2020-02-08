@@ -49,7 +49,11 @@ public class PlayerDamageable : Damageable {
         base.Die();
     }
 
-    public override void AddForce(Vector3 velocity, float drag = 0f) {
-        _moveController.AddForce(velocity, drag);
+    public override void AddForce(Vector3 velocity, float drag = 0f, bool overrideForce = false, bool allowControl = false) {
+        if (overrideForce) {
+            _moveController.OverrideForce(velocity, drag, allowControl);
+        } else {
+            _moveController.AddForce(velocity, drag, allowControl);
+        }
     }
 }

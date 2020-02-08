@@ -21,11 +21,11 @@ public class TestDummyDamageable : Damageable {
     [SerializeField] private Transform _body;
     public override Transform Body => _body;
 
-    private CharacterMoveController moveController;
+    private CharacterMoveController _moveController;
 
 	// Use this for initialization
 	void Start () {
-        moveController = GetComponent<CharacterMoveController>();
+        _moveController = GetComponent<CharacterMoveController>();
 	}
 
     public override void TakeDamage(int damage, Element element) {
@@ -63,7 +63,11 @@ public class TestDummyDamageable : Damageable {
         AddStatusEffect(statusEffect, damage);
     }
 
-    public override void AddForce(Vector3 velocity, float drag = 0f) {
-        moveController.AddForce(velocity, drag);
+    public override void AddForce(Vector3 velocity, float drag = 0f, bool overrideForce = false, bool allowControl = false) {
+        if (overrideForce) {
+            _moveController.OverrideForce(velocity, drag, allowControl);
+        } else {
+            _moveController.AddForce(velocity, drag, allowControl);
+        }
     }
 }

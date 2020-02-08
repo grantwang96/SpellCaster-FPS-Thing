@@ -52,14 +52,6 @@ public class MagicProjectile : Projectile {
         _previousPosition = _rigidBody.position;
 	}
 
-    protected override void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
-        Vector3 dir = damageable.Body.position - _rigidBody.position;
-        foreach (Effect effect in Spell.Effects) {
-            effect?.TriggerEffect(SpellCaster.Damageable, dir.normalized * _rigidBody.mass, _powerScale, transform.position, damageable);
-        }
-        Die();
-    }
-
     public void SetParticleSystemMesh(Mesh newMesh) {
         var ParticleSystemShape = _mainParticleSystem.shape;
         ParticleSystemShape.mesh = newMesh;

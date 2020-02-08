@@ -38,8 +38,8 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public string[] UnitTags => _unitTags;
 
     // what type of enemies to be aggressive against
-    [SerializeField] private string[] _enemyTags;
-    public string[] EnemyTags => _enemyTags;
+    [SerializeField] private List<string> _enemyTags = new List<string>();
+    public List<string> EnemyTags => _enemyTags;
 
     // loot drop data
     [SerializeField] private MinMax_Int _healthOrbRewards;

@@ -20,6 +20,7 @@ public enum ChestType {
 public interface ILootManager {
     
     RewardsSet GetRewards(string id);
+    void OverrideRewards(string id, RewardsSet set);
 }
 
 public class LootManager : MonoBehaviour, ILootManager {
@@ -102,7 +103,7 @@ public class LootManager : MonoBehaviour, ILootManager {
         NPCManager.Instance.OnEnemySpawned -= OnNPCSpawned;
     }
 
-    // called when player opens chest
+    // called when player opens chest or defeats an enemy
     public RewardsSet GetRewards(string id) {
         RewardsSet rewards;
         if (_chests.ContainsKey(id)) {
@@ -154,6 +155,16 @@ public class LootManager : MonoBehaviour, ILootManager {
         int healthOrbs = Random.Range(data.HealthOrbs.Min, data.HealthOrbs.Max);
         int manaOrbs = Random.Range(data.ManaOrbs.Min, data.ManaOrbs.Max);
         return new RewardsSet(healthOrbs, manaOrbs, inventoryRewards);
+    }
+
+    // used to override a specific chest's reward
+    public void OverrideRewards(string id, RewardsSet set) {
+        if (_chests.ContainsKey(id)) {
+            return;
+        } else if (_enemies.ContainsKey(id)) {
+            return;
+        }
+        // fail here
     }
 
     // creates a chest based on tier and returns the Id

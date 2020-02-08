@@ -5,7 +5,7 @@ using UnityEngine;
 
 public interface INPCManager {
 
-    EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId);
+    EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId = "");
     EnemyBehaviour GetActiveNPC(string npcId);
 
     event Action<string, EnemyBehaviour> OnEnemySpawned;
@@ -25,7 +25,7 @@ public class NPCManager : MonoBehaviour, INPCManager {
         Instance = this;
     }
 
-    public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId) {
+    public EnemyBehaviour SpawnPooledNPC(string npcPrefabId, Vector3 position, Vector3 rotation, string uniqueId = "") {
         PooledObject pooledObject;
         if (!PooledObjectManager.Instance.UsePooledObject(npcPrefabId, out pooledObject)) {
             return null;

@@ -207,7 +207,6 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnCraftSpellButtonHighlighted(IUIInteractable interactable) {
-        Debug.Log($"Craft Spell Button Highlighted!");
         _spellComponentsView.UnhighlightCell(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY);
         _spellNameEditorView.UnhighlightCell(_spellNameEditorView.CurrentItemX, _spellNameEditorView.CurrentItemY);
         _craftButtonView.SetActive(true);

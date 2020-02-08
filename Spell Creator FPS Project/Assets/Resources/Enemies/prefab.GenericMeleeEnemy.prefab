@@ -172,6 +172,7 @@ Transform:
   - {fileID: 4212716528986876}
   - {fileID: 4741786014919726}
   - {fileID: 4055505519521304}
+  - {fileID: 3873718606492136174}
   m_Father: {fileID: 4178212123154016}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -262,6 +263,7 @@ GameObject:
   - component: {fileID: 114120558083659074}
   - component: {fileID: 114107591437060838}
   - component: {fileID: 8384280533347491300}
+  - component: {fileID: 3472906998817916264}
   m_Layer: 11
   m_Name: prefab.GenericMeleeEnemy
   m_TagString: Untagged
@@ -444,6 +446,21 @@ MonoBehaviour:
   _hitBoxGOs:
   - {fileID: 7562619477280338505}
   _characterBehaviour: {fileID: 114862455297173096}
+--- !u!114 &3472906998817916264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167175321328372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f10047948f65e418b12b0868b1503b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _owner: {fileID: 114120558083659074}
+  _hurtBoxGOs:
+  - {fileID: 4837892836192976431}
 --- !u!1 &1179719906111838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1819,6 +1836,67 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 14
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &3255362963413140473
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3873718606492136174}
+  - component: {fileID: 7345598106680562932}
+  - component: {fileID: 4837892836192976431}
+  m_Layer: 18
+  m_Name: Hurtbox1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3873718606492136174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3255362963413140473}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.006, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4094145307567022}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7345598106680562932
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3255362963413140473}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4837892836192976431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3255362963413140473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2d32eef52d2bd459f2b53c17a0a3a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _priority: 0
+  _damageScale: 1
+  _owner: {fileID: 114120558083659074}
 --- !u!1 &7885354559010835749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1832,6 +1910,7 @@ GameObject:
   - component: {fileID: 4911497489353265869}
   - component: {fileID: 6115186835309096914}
   - component: {fileID: 7562619477280338505}
+  - component: {fileID: 8253768497378590507}
   m_Layer: 11
   m_Name: SwordHitBox_1
   m_TagString: Untagged
@@ -1927,3 +2006,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _owner: {fileID: 114120558083659074}
   _powerScale: 1
+--- !u!54 &8253768497378590507
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7885354559010835749}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

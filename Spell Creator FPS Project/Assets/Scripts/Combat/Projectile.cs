@@ -82,15 +82,14 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 
     protected virtual void OnTriggerEnter(Collider coll) {
-        Damageable dam = coll.GetComponent<Damageable>();
-        if (dam == _owner) {
+        Hurtbox hurtBox = coll.GetComponent<Hurtbox>();
+        if(hurtBox != null && !hurtBox.CompareOwner(_owner)) {
+            OnHitDamageable(transform.position, hurtBox);
             return;
         }
-        if (dam == null) {
+        if(hurtBox == null) {
             OnHitCollider(coll);
-            return;
         }
-        OnHitDamageable(transform.position, dam);
         // if it collides with a wall
     }
 
@@ -102,7 +101,6 @@ public class Projectile : MonoBehaviour, PooledObject {
         if(coll.attachedRigidbody != null) {
             coll.attachedRigidbody.AddForce(dir * force, ForceMode.Impulse);
         }
-
         for (int i = 0; i < _effects.Length; i++) {
             _effects[i].TriggerEffect(_owner, _powerScale, transform.position, coll);
         }
@@ -110,11 +108,10 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 
     // what happens when this collides with something?
-    protected virtual void OnHitDamageable(Vector3 hitPoint, Damageable damageable) {
+    protected virtual void OnHitDamageable(Vector3 hitPoint, Hurtbox hurtbox) {
         // apply effects here
-        for(int i = 0; i < _effects.Length; i++) {
-            _effects[i].TriggerEffect(_owner, _powerScale, hitPoint, damageable);
-        }
+        HitData hitData = new HitData(_effects, _rigidBody.velocity.normalized, _owner, _powerScale, hitPoint);
+        hurtbox.Hit(hitData);
         Die();
     }
 

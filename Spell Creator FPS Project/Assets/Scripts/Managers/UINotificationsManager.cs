@@ -50,7 +50,6 @@ public class UINotificationsManager : MonoBehaviour
             ErrorManager.LogError(nameof(UIPanelManager), $"Failed to retrieve notification parent with id {notificationParentId}");
             return string.Empty;
         }
-        Debug.Log($"Display notification on parent {notificationParentId}");
         string uniqueId = parent.DisplayNotification(initData);
         return uniqueId;
     }

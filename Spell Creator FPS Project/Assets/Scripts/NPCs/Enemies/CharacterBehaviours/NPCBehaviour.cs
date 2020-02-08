@@ -140,6 +140,20 @@ public class NPCBehaviour : CharacterBehaviour {
             rune.Initialize(itemId);
         }
     }
+
+    public void OverrideUnitTags(List<string> overrideTags) {
+        _unitTags.Clear();
+        _unitTags.AddRange(overrideTags);
+    }
+
+    public bool IsAnEnemy(CharacterBehaviour behaviour) {
+        for(int i = 0; i < behaviour.UnitTags.Count; i++) {
+            if (!_unitTags.Contains(behaviour.UnitTags[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 public interface INPCInitializable {

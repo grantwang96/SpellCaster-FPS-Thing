@@ -20,10 +20,17 @@ public class Effect_Hold : Effect {
 
     public override void TriggerEffect(Damageable caster, float powerScale, List<Effect> effects = null) {
         // Can't really hold yourself, can you? Can you?
+        // maybe you can?...Allows you to float and move?
+        Vector3 velocity = Vector3.up * _basePower;
+        caster.AddForce(velocity, _holdPowerModifier / powerScale, true, true);
     }
 
     public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> effects = null) {
         if(damageable == null) {
+            return;
+        }
+        if(caster == damageable) {
+            TriggerEffect(caster, powerScale, effects);
             return;
         }
         // calculate distance at which the object is being held

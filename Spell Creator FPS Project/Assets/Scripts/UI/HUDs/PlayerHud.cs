@@ -78,7 +78,7 @@ public class PlayerHud : MonoBehaviour {
 
     private void PlayerManaChanged(int newMana) {
         _mana = newMana;
-        UpdateManaDisplay(newMana, _maxMana);
+        UpdateManaDisplay(_mana, _maxMana);
     }
 
     private void UpdateManaDisplay(int mana, int maxMana) {
@@ -92,6 +92,5 @@ public class PlayerHud : MonoBehaviour {
             return;
         }
         _spellChargeBar.fillAmount = activeSpell.holdTime / activeSpell.maxHoldTime;
-        UpdateManaDisplay(_mana - activeSpell.totalManaCost, _maxMana);
     }
 }

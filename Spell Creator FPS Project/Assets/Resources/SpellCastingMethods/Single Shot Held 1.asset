@@ -20,7 +20,7 @@ MonoBehaviour:
   _shortDescription: 
   _longDescription: 
   _lootTier: 0
-  manaCost: 6
+  manaCost: 4
   _intervalTime: 0.33
   _powerScale: 0.33
   spellTiming: 0000000001000000

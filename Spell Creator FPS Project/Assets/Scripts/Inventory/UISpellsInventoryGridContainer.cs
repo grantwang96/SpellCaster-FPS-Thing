@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,20 +17,10 @@ public class UISpellsInventoryGridContainer : UIInventoryViewGridContainer {
     private List<StorableSpell> _storedSpells = new List<StorableSpell>();
     
     public bool DisplayLoadoutSpells { get; private set; }
-
-    protected override void Awake() {
-        Initialize(GameManager.GameManagerInstance?.CurrentSpellInventory);
-    }
-
-    private void Initialize(ISpellInventory inventory) {
-        SpellsInventory = inventory;
-    }
-
+    
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
-        if(SpellsInventory == null) {
-            SpellsInventory = GameManager.GameManagerInstance?.CurrentSpellInventory;
-        }
+        SpellsInventory = GameManager.GameManagerInstance?.CurrentSpellInventory;
         SpellsInventory.OnSpellInventoryDataUpdated += OnInventoryUpdated;
         OnInventoryUpdated(SpellsInventory.StoredSpells);
     }

@@ -63,7 +63,7 @@ public abstract class Damageable : MonoBehaviour {
         }
     }
 
-    public abstract void AddForce(Vector3 velocity, float drag = 0f);
+    public abstract void AddForce(Vector3 velocity, float drag = 0f, bool overrideForce = false, bool allowControl = false);
     protected virtual void Die() {
         OnDeath?.Invoke(true, this);
     }

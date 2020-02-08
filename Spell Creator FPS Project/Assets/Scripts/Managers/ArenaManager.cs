@@ -62,8 +62,9 @@ public class ArenaManager : GameManager, IArenaManager {
         CurrentSpellInventory = tempInventory;
     }
 
-    private void Start() {
+    protected override void Start() {
         // temp
+        base.Start();
         Initialize(_config);
     }
 

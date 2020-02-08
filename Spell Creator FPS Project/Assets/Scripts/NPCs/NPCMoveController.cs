@@ -59,10 +59,10 @@ public class NPCMoveController : CharacterMoveController {
 
     // move character towards current destination if traveling
     protected override void ProcessMovement() {
-        if (_traveling) {
+        if (_traveling && _hasControl) {
             Move();
             CheckArrivedDestination();
-        } else if (_externalForces == null) {
+        } else {
             SlowDown();
         }
         base.ProcessMovement();
@@ -157,11 +157,12 @@ public class NPCMoveController : CharacterMoveController {
     
     // move the character at this speed in this direction
     protected virtual void Move() {
-        if (_externalForces == null) {
-            Vector3 moveDir = (_currentPathCorner - _npcBehaviour.transform.position).normalized;
-            _movementVelocity.x = moveDir.x * MoveSpeed;
-            _movementVelocity.z = moveDir.z * MoveSpeed;
+        if (!_hasControl) {
+            return;
         }
+        Vector3 moveDir = (_currentPathCorner - _npcBehaviour.transform.position).normalized;
+        _movementVelocity.x = moveDir.x * MoveSpeed;
+        _movementVelocity.z = moveDir.z * MoveSpeed;
     }
 
     public virtual void Stop() {

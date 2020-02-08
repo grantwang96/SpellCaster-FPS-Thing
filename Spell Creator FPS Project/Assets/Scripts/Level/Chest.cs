@@ -77,7 +77,7 @@ public class Chest : MonoBehaviour, IRaycastInteractable {
             SpawnRecoveryOrb(RecoveryOrbType.Mana);
         }
         for(int i = 0; i < rewards.InventoryItems.Count; i++) {
-
+            SpawnInventoryItem(rewards.InventoryItems[i]);
         }
     }
 
@@ -91,6 +91,18 @@ public class Chest : MonoBehaviour, IRaycastInteractable {
             recoveryOrb.ActivatePooledObject();
             recoveryOrb.Initialize(recoveryOrbType);
             recoveryOrb.transform.position = _rewardsSpawn.position;
+        }
+    }
+
+    private void SpawnInventoryItem(string itemId) {
+        PooledObject obj;
+        if (!PooledObjectManager.Instance.UsePooledObject(GameplayValues.ObjectPooling.WorldRunePrefabId, out obj)) {
+            return;
+        }
+        Rune rune = obj as Rune;
+        if (rune != null) {
+            rune.transform.position = _rewardsSpawn.position;
+            rune.Initialize(itemId);
         }
     }
 }

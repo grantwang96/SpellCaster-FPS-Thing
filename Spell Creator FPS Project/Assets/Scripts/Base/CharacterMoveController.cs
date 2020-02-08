@@ -23,20 +23,22 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
     [SerializeField] protected float _mass;
     [SerializeField] protected float _linearDrag;
+    [SerializeField] protected float _currentDrag;
     [SerializeField] protected float _headDistanceThreshold;
+
     [SerializeField] protected bool _performingAction;
     public bool performingAction { get { return _performingAction; } }
 
     protected CharacterController _characterController; // accesses the character controller on the character
     public CharacterController CharacterController { get { return _characterController; } }
 
+    protected bool _hasControl = true;
     protected Vector3 _externalForce;
     [SerializeField] protected Vector3 _movementVelocity;
     public Vector3 MovementVelocity { get { return _movementVelocity; } }
     public bool IsGrounded => _characterController.isGrounded;
 
     protected Coroutine _busyAnimation; // coroutine that prevents other actions from being taken
-    protected Coroutine _externalForces; // coroutine that prevents movement due to external forces
 
     public event Action<float> OnMoveSpeedChanged;
 
@@ -45,7 +47,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual void Start() {
-
+        _currentDrag = _linearDrag;
     }
 
     protected virtual void Update() {
@@ -53,51 +55,63 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual void FixedUpdate() {
-        _externalForce = ProcessGravity(_externalForce);
+        // _externalForce = ProcessGravity(_externalForce);
+        ProcessExternalForces();
         ProcessMovement();
     }
 
     protected virtual void ProcessMovement() {
+        if (!_hasControl) {
+            _movementVelocity = Vector3.zero;
+        }
         Vector3 move = _movementVelocity + _externalForce;
         _characterController.Move(move * Time.deltaTime);
     }
 
     protected virtual Vector3 ProcessGravity(Vector3 vector) {
         if (vector.y > Physics.gravity.y) {
-            vector.y += Time.deltaTime * Physics.gravity.y;
+            vector.y += Time.deltaTime * Physics.gravity.y * _currentDrag;
         }
         return vector;
     }
 
-    public virtual void AddForce(Vector3 velocity, float drag) {
+    public virtual void AddForce(Vector3 velocity, float drag, bool allowControl = false) {
         if (!gameObject.activeInHierarchy) {
             return;
         }
-        float linearDrag = drag > 0f ? drag : _linearDrag;
-        if (_externalForces != null) {
-            StopCoroutine(_externalForces);
-        }
-        _externalForces = StartCoroutine(ExternalForceRoutine(velocity, linearDrag));
+        float linearDrag = drag > 0f ? drag : _currentDrag;
+        _hasControl = allowControl;
+        _currentDrag = drag;
+        _externalForce += velocity / _mass;
     }
 
-    protected virtual IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
-        float linearDrag = drag;
-        _externalForce += externalForce / _mass;
-        _externalForce.y = externalForce.y;
-        _characterController.Move(_externalForce * Time.deltaTime);
-        yield return new WaitForFixedUpdate();
-        while (!_characterController.isGrounded) {
-            yield return new WaitForFixedUpdate();
+    public virtual void OverrideForce(Vector3 velocity, float drag, bool allowControl = false) {
+        _externalForce = Vector3.zero;
+        AddForce(velocity, drag, allowControl);
+    }
+
+    protected virtual void ProcessExternalForces() {
+        _externalForce = ProcessGravity(_externalForce);
+        if (!CharacterController.isGrounded) {
+            return;
         }
-        float time = 0f;
-        Vector3 start = _externalForce;
-        while (_externalForce.x != 0 && _externalForce.z != 0) {
-            time += Time.deltaTime * linearDrag;
-            _externalForce.x = Mathf.Lerp(start.x, 0f, time * drag);
-            _externalForce.z = Mathf.Lerp(start.z, 0f, time * drag);
-            yield return new WaitForFixedUpdate();
+        bool forced = false;
+        if(Mathf.Approximately(0f, _externalForce.x)) {
+            _externalForce.x = ExtraMath.ReduceAbsolute(_externalForce.x, Time.deltaTime * _currentDrag);
+            forced = true;
         }
-        _externalForces = null;
+        if(Mathf.Approximately(0f, _externalForce.z)) {
+            _externalForce.z = ExtraMath.ReduceAbsolute(_externalForce.z, Time.deltaTime * _currentDrag);
+            forced = true;
+        }
+        if (!forced) {
+            ResetMoveController();
+        }
+    }
+
+    protected virtual void ResetMoveController() {
+        _currentDrag = _linearDrag;
+        _hasControl = true;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit) {

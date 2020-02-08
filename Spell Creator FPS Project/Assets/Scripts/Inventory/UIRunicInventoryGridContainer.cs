@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
 
@@ -11,25 +8,23 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
 
     [SerializeField] private InventoryItemType[] _filter;
     private List<KeyValuePair<string, int>> _items = new List<KeyValuePair<string, int>>();
-    private IRunicInventory Inventory;
 
     public delegate void InventoryUpdatedEvent();
     public event InventoryUpdatedEvent OnInventoryUpdated;
 
-    protected override void Awake() {
-        Inventory = GameManager.GameManagerInstance?.CurrentRunicInventory;
-    }
-
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
-        if(Inventory == null) { Inventory = GameManager.GameManagerInstance?.CurrentRunicInventory; }
-        Inventory.OnRunicInventoryDataUpdated += OnItemsUpdated;
-        OnItemsUpdated(Inventory.StoredRunes);
+        if(GameManager.GameManagerInstance?.CurrentRunicInventory == null) {
+            CustomLogger.Error(nameof(UIRunicInventoryGridContainer), $"Current {nameof(IRunicInventory)} is unavailable!");
+            return;
+        }
+        GameManager.GameManagerInstance.CurrentRunicInventory.OnRunicInventoryDataUpdated += OnItemsUpdated;
+        OnItemsUpdated(GameManager.GameManagerInstance?.CurrentRunicInventory.StoredRunes);
     }
     
     private void OnDisable() {
-        if(Inventory != null) {
-            Inventory.OnRunicInventoryDataUpdated -= OnItemsUpdated;
+        if(GameManager.GameManagerInstance?.CurrentRunicInventory != null) {
+            GameManager.GameManagerInstance.CurrentRunicInventory.OnRunicInventoryDataUpdated -= OnItemsUpdated;
         }
     }
 
@@ -60,10 +55,10 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     }
 
     public void AddItem(string id, int count) {
-        Inventory.AddItem(id, count);
+        GameManager.GameManagerInstance?.CurrentRunicInventory.AddItem(id, count);
     }
 
     public void RemoveItem(string id, int count) {
-        Inventory.RemoveItem(id, count);
+        GameManager.GameManagerInstance?.CurrentRunicInventory.RemoveItem(id, count);
     }
 }

@@ -39,7 +39,7 @@ public class PlayerMovement_FPS : CharacterMoveController {
     }
     
     private void ProcessWalkInput() {
-        if (!_active) {
+        if (!_active || !_hasControl) {
             _movementVelocity = Vector2.zero;
             return;
         }
@@ -57,24 +57,6 @@ public class PlayerMovement_FPS : CharacterMoveController {
         }
     }
     
-    protected override IEnumerator ExternalForceRoutine(Vector3 externalForce, float drag) {
-        _externalForce = externalForce;
-        yield return new WaitForEndOfFrame();
-        while (!_characterController.isGrounded) {
-            yield return new WaitForFixedUpdate();
-        }
-        Vector3 start = _externalForce;
-        float time = 0f;
-        while(time < 1f) {
-            _externalForce.x = Mathf.Lerp(start.x, 0f, time);
-            _externalForce.z = Mathf.Lerp(start.z, 0f, time);
-            time += Time.deltaTime * drag;
-            yield return new WaitForFixedUpdate();
-        }
-        _externalForce = Vector3.zero;
-        _externalForces = null;
-    }
-
     private void OnControllerStateUpdated() {
         _active = PlayerController.Instance.ControllerState == ControllerState.Gameplay;
     }

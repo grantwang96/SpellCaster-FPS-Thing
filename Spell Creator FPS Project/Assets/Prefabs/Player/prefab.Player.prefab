@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 114216178686495076}
   - component: {fileID: 114290673117529676}
   - component: {fileID: 114504995677471432}
+  - component: {fileID: 1739815507388825116}
   m_Layer: 9
   m_Name: prefab.Player
   m_TagString: Untagged
@@ -384,13 +385,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feda22a22abb1fd4db22bbffc7d23cce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 4107163916722246}
   _headTransform: {fileID: 4739983236925610}
   _animHandler: {fileID: 0}
   _moveController: {fileID: 114187418731465560}
   _unitTags:
   - PLAYER_UNIT
+  _moveVector: {x: 0, y: 0, z: 0}
   _controlScheme: 0
   _uiPanelsEmpty: 1
   _directionalHoldThreshold: 0.3
@@ -410,6 +411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseSpeed: 7
   _maxSpeed: 0
+  _moveSpeed: 0
   _mass: 1
   _linearDrag: 1
   _headDistanceThreshold: 0.4
@@ -451,7 +453,7 @@ MonoBehaviour:
   _mana: 1000
   _maxMana: 1000
   _manaRechargeDelay: 1
-  _manaRechargeRate: 20
+  _manaRechargeRate: 30
   _gunBarrel: {fileID: 4325496623865586}
   _spellsList: []
   _selectedSpellIndex: 0
@@ -484,8 +486,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentDamageable: {fileID: 0}
-  _health: 99999
-  _maxHealth: 99999
+  _health: 100
+  _maxHealth: 100
   _body: {fileID: 4172213873589246}
 --- !u!114 &114216178686495076
 MonoBehaviour:
@@ -526,6 +528,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _triggerArea: {fileID: 114040448584885618}
+--- !u!114 &1739815507388825116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125936217374846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f10047948f65e418b12b0868b1503b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _owner: {fileID: 114820299144877070}
+  _hurtBoxGOs:
+  - {fileID: 4409788406049031509}
 --- !u!1 &1206581343326352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1035,6 +1052,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4346623059715724}
+  - {fileID: 4326829593973438148}
   m_Father: {fileID: 4107163916722246}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2202,3 +2220,64 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &6180616890377658587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4326829593973438148}
+  - component: {fileID: 8877469028698783766}
+  - component: {fileID: 4409788406049031509}
+  m_Layer: 18
+  m_Name: BodyHurtBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4326829593973438148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180616890377658587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4746690635541582}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8877469028698783766
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180616890377658587}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.35
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4409788406049031509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180616890377658587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d2d32eef52d2bd459f2b53c17a0a3a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _priority: 0
+  _damageScale: 1
+  _owner: {fileID: 114820299144877070}

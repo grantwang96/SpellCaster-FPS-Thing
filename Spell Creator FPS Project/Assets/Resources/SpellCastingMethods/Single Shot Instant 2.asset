@@ -20,7 +20,7 @@ MonoBehaviour:
   _shortDescription: Fires a magic projectile
   _longDescription: 
   _lootTier: 1
-  manaCost: 29
+  manaCost: 14
   _intervalTime: 0.5
   _powerScale: 1
   spellTiming: 00000000

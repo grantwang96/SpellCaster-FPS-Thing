@@ -11,7 +11,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         }
         private set {
             _mana = value;
-            OnManaChanged?.Invoke(_mana);
+            OnManaChanged?.Invoke(Mana);
         }
     }
     [SerializeField] private int _maxMana;
@@ -142,7 +142,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void OnFire1Pressed() {
         if (!CanFireSpell()) { return; }
         InitializeActiveSpell();
-        if (_mana < SelectedSpell.ManaCost) {
+        if (_mana < ActiveSpell.totalManaCost) {
             return;
         }
         if (_manaRegeneration != null) {
@@ -161,13 +161,13 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
             InitializeActiveSpell();
         }
         UpdateActiveSpell();
-        if (_mana < SelectedSpell.ManaCost) {
+        if (_mana < ActiveSpell.totalManaCost) {
             return;
         }
         // Attempt to fire currently equipped spell
         bool successfullyCast = SelectedSpell.OnHoldCastSpell(this);
         if (successfullyCast) {
-            FinishedCastSpell(ActiveSpell.baseManaCost);
+            FinishedCastSpell(ActiveSpell.totalManaCost);
         }
     }
 
@@ -175,7 +175,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
         if (!CanFireSpell() || ActiveSpell == null) {
             return;
         }
-        if(_mana < SelectedSpell.ManaCost) {
+        if(_mana < ActiveSpell.totalManaCost) {
             ActiveSpell = new ActiveSpell();
             return;
         }
@@ -205,7 +205,6 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private void OnSlotButtonPressed(int number) {
         if(number <= 0 || number > _spellsList.Count) { return; }
         _selectedSpellIndex = number - 1;
-        // Debug.Log($"Selected spell {SelectedSpell.Name}_{number}");
         OnSelectedSpellUpdated?.Invoke(_selectedSpellIndex);
     }
 
@@ -225,11 +224,11 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     }
 
     private int CalculateTotalManaCost(int baseManaCost, float holdTime) {
-        return Mathf.RoundToInt(baseManaCost * (1f + holdTime));
+        return Mathf.Max(Mathf.RoundToInt(baseManaCost * (1f + holdTime)), baseManaCost);
     }
 
     private void FinishedCastSpell(int lostMana) {
-        Mana -= lostMana;
+        Mana = Mathf.Max(Mana - lostMana, 0);
         ActiveSpell.holdIntervalTime = 0f;
         ActiveSpell.holdTime = 0f;
         StartCoroutine(CoolDownSpell(ActiveSpell.interval));
@@ -250,8 +249,8 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
     private IEnumerator RegenerateMana() {
         yield return new WaitForSeconds(_manaRechargeDelay);
         float time = 0f;
-        while(_mana < _maxMana) {
-            float waitTime = 1f / _manaRechargeRate;
+        float waitTime = 1f / _manaRechargeRate;
+        while (_mana < _maxMana) {
             time += Time.deltaTime;
             if(time >= waitTime) {
                 Mana++;
