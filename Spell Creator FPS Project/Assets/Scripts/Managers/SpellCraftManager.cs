@@ -110,13 +110,16 @@ public class SpellCraftManager : ISpellCraftManager {
     }
 
     public void ClearSpellComponents() {
+        GameManager.GameManagerInstance.CurrentRunicInventory.RemoveItem(_loadedCastingMethod.Id, 1);
         _loadedCastingMethod = null;
         OnCastingMethodChanged?.Invoke(null);
         for(int i = 0; i < _loadedSpellEffects.Count; i++) {
+            GameManager.GameManagerInstance.CurrentRunicInventory.RemoveItem(_loadedSpellEffects[i].Id, 1);
             OnSpellEffectRemoved?.Invoke(_loadedSpellEffects[i]);
         }
         _loadedSpellEffects.Clear();
         for(int i = 0; i < _loadedSpellModifiers.Count; i++) {
+            GameManager.GameManagerInstance.CurrentRunicInventory.RemoveItem(_loadedSpellModifiers[i].Id, 1);
             OnSpellModifierRemoved?.Invoke(_loadedSpellModifiers[i]);
         }
         _loadedSpellModifiers.Clear();

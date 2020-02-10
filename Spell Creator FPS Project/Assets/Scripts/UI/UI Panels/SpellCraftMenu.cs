@@ -33,6 +33,7 @@ public class SpellCraftMenu : UISubPanelParent {
 
         // add on hover events here(maybe limit if we're on PC or not)
         SubscribeToSubPanels();
+        _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
     }
 
     private void SubscribeToSubPanels() {
@@ -133,6 +134,7 @@ public class SpellCraftMenu : UISubPanelParent {
             _spellCraftManager.AddSpellModifier(spellModifier);
             _spellStagingArea.AddUISpellModifier(spellModifier);
         }
+        _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
     }
 
     private void OnStagingAreaItemHighlighted(string itemId) {

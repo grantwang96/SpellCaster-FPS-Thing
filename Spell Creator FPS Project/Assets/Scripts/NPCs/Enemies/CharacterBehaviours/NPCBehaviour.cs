@@ -143,10 +143,8 @@ public class NPCBehaviour : CharacterBehaviour {
     }
 
     public void OverrideUnitTags(List<string> overrideTags) {
-        Debug.Log("Overriding unit tags...");
         _unitTags.Clear();
         _unitTags.AddRange(overrideTags);
-        Debug.Log("New Unit Tag Count: " + _unitTags.Count);
     }
 
     public bool IsAnEnemy(CharacterBehaviour behaviour) {

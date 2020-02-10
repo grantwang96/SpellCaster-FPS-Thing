@@ -7,7 +7,7 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     [SerializeField] private InventoryViewCell _inventoryViewCellPrefab;
 
     [SerializeField] private InventoryItemType[] _filter;
-    private List<KeyValuePair<string, int>> _items = new List<KeyValuePair<string, int>>();
+    private List<RuneInfo> _items = new List<RuneInfo>();
 
     public delegate void InventoryUpdatedEvent();
     public event InventoryUpdatedEvent OnInventoryUpdated;
@@ -31,7 +31,7 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     private void OnItemsUpdated(IReadOnlyDictionary<string, int> updatedInventory) {
         _items.Clear();
         foreach(KeyValuePair<string, int> pair in updatedInventory) {
-            _items.Add(pair);
+            _items.Add(new RuneInfo(pair.Key, pair.Value));
         }
         UpdateViewCells();
         OnInventoryUpdated?.Invoke();
@@ -48,17 +48,44 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
             _mainInventoryGrid.SetInteractableItem(x, y, initData);
             return;
         }
-        KeyValuePair<string, int> currentItem = _items[itemIndex + startingIndex];
-        initData.Id = currentItem.Key;
-        initData.itemCount = currentItem.Value;
+        RuneInfo currentItem = _items[itemIndex + startingIndex];
+        initData.Id = currentItem.Id;
+        initData.itemCount = currentItem.Count;
         _mainInventoryGrid.SetInteractableItem(x, y, initData);
     }
 
     public void AddItem(string id, int count) {
-        GameManager.GameManagerInstance?.CurrentRunicInventory.AddItem(id, count);
+        for(int i = 0; i < _items.Count; i++) {
+            if(_items[i].Id == id) {
+                _items[i].Count += count;
+                return;
+            }
+        }
+        _items.Add(new RuneInfo(id, count));
+        UpdateViewCells();
+        OnInventoryUpdated?.Invoke();
     }
 
     public void RemoveItem(string id, int count) {
-        GameManager.GameManagerInstance?.CurrentRunicInventory.RemoveItem(id, count);
+        RuneInfo info = _items.Find(x => x.Id == id);
+        if(info != null) {
+            _items.Remove(info);    
+        }
+        UpdateViewCells();
+        OnInventoryUpdated?.Invoke();
+    }
+}
+
+public class RuneInfo {
+    public string Id;
+    public int Count;
+
+    public RuneInfo() {
+
+    }
+
+    public RuneInfo(string id, int count) {
+        Id = id;
+        Count = count;
     }
 }
