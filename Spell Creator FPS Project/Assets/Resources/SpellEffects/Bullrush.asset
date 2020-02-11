@@ -21,7 +21,7 @@ MonoBehaviour:
   _longDescription: 
   _lootTier: 0
   _manaCost: 10
-  _chargeTime: 0
-  _intervalTime: 0
-  _basePower: 100
-  _overrideDrag: 1
+  _chargeTime: 1
+  _intervalTime: 0.5
+  _basePower: 20
+  _overrideDrag: 2

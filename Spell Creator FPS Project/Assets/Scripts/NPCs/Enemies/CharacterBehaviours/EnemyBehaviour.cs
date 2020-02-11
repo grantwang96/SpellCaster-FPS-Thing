@@ -18,6 +18,7 @@ public class EnemyBehaviour : NPCBehaviour, PooledObject {
         GenerateUniqueId(uniqueId);
         FireCharacterSpawnedEvent();
         OverrideUnitTags(Blueprint.UnitTags);
+        ChangeBrainState(_startingState);
     }
     
     public void DeactivatePooledObject() {

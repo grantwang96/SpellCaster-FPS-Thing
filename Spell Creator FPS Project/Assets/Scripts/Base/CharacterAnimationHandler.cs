@@ -66,8 +66,8 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         }
     }
 
-    public virtual void StopAnimation() {
-        _anim.StopPlayback();
+    public virtual void SetAnimatorEnabled(bool enabled) {
+        _anim.enabled = enabled;
     }
 
     protected void UpdateAnimationState(AnimationState state) {

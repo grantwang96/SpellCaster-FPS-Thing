@@ -17,7 +17,7 @@ public class Effect_Bullrush : Effect {
             return;
         }
         Vector3 velocity = damageable.Body.forward * _basePower * powerScale;
-        damageable.AddForce(velocity, _overrideDrag);
+        damageable.AddForce(velocity, _overrideDrag, true);
     }
 
     public override void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
