@@ -253,6 +253,8 @@ MonoBehaviour:
   - Effect_Hold_1
   - Effect_Damage_2
   - Effect_Summon_Skeleton_Warrior
+  - CM_SingleShot_Instant_1
+  - Effect_Summon_Skeleton_Warrior
 --- !u!4 &90748598
 Transform:
   m_ObjectHideFlags: 0
@@ -989,6 +991,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224483020250121844, guid: 812065aed1e892742943ff7da605aaac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -157.50002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 812065aed1e892742943ff7da605aaac, type: 3}

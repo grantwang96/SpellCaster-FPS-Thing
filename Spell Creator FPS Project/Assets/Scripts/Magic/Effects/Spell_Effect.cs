@@ -21,6 +21,8 @@ public abstract class Effect : ScriptableObject, IInventoryStorable, ILootableIt
     public string ShortDescription => _shortDescription;
     [SerializeField] protected string _longDescription;
     public string LongDescription => _longDescription;
+    [SerializeField] protected string _defaultName;
+    public string DefaultName => _defaultName;
 
     [SerializeField] private LootTier _lootTier;
     public LootTier LootTier => _lootTier;

@@ -106,7 +106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c4683dd065b004c8024b9f9f79031c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabId: Projectile
   _inUse: 0
   _owner: {fileID: 0}
   _onHitVFX: {fileID: 0}
@@ -116,7 +115,7 @@ MonoBehaviour:
   _effects: []
   _collisionMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 262145
   _isLive: 0
 --- !u!54 &54150543550743488
 Rigidbody:
@@ -133,4 +132,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3

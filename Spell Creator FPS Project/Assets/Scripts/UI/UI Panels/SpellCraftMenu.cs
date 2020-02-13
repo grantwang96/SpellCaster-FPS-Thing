@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -17,19 +15,14 @@ public class SpellCraftMenu : UISubPanelParent {
     [SerializeField] private UISpellStagingArea _spellStagingArea;
     [SerializeField] private UISpellComponentDescView _spellComponentDescriptionView;
 
-    public ISpellCraftManager SpellCraftManager => _spellCraftManager;
-    private SpellCraftManager _spellCraftManager;
-
     public override void Initialize(UIPanelInitData initData = null) {
         base.Initialize(initData);
-        _spellCraftManager = new SpellCraftManager();
         _spellStagingArea.Initialize(null);
         _runicInventoryView.Initialize(null);
         _runicInventoryView.SetFocus(true, false, IntVector3.Zero);
         _runicInventoryView.SetVisible(true);
         _spellStagingArea.SetFocus(false, false, IntVector3.Zero);
         _spellStagingArea.SetVisible(true);
-
 
         // add on hover events here(maybe limit if we're on PC or not)
         SubscribeToSubPanels();
@@ -57,16 +50,6 @@ public class SpellCraftMenu : UISubPanelParent {
     }
 
     public override void ClosePanel() {
-        // return any staged runes to the player
-        if (_spellCraftManager.LoadedCastingMethod != null) {
-            _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
-        }
-        foreach (Effect spellEffect in _spellCraftManager.LoadedSpellEffects) {
-            _runicInventoryView.AddItem(spellEffect.Id, 1);
-        }
-        foreach (SpellModifier spellModifier in _spellCraftManager.LoadedSpellModifiers) {
-            _runicInventoryView.AddItem(spellModifier.Id, 1);
-        }
         _spellStagingArea.ClearSpellComponentSlots();
 
         // close the panel
@@ -103,40 +86,28 @@ public class SpellCraftMenu : UISubPanelParent {
         IInventoryStorable inventoryStorable = InventoryRegistry.Instance.GetItemById(_runicInventoryView.HighlightedItemId);
         Spell_CastingMethod castingMethod = inventoryStorable as Spell_CastingMethod;
         if(castingMethod != null) {
-            if(_spellCraftManager.LoadedCastingMethod != null) {
-                _runicInventoryView.AddItem(_spellCraftManager.LoadedCastingMethod.Id, 1);
-            }
+            _spellStagingArea.SetCastingMethod(castingMethod);
             _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
-            _spellCraftManager.SetCastingMethod(castingMethod);
-            _spellStagingArea.SetUICastingMethod(castingMethod);
+            _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
             return;
         }
         Effect spellEffect = inventoryStorable as Effect;
         if(spellEffect != null) {
-            if (_spellCraftManager.LoadedSpellEffects.Contains(spellEffect)) {
-                // do failed effect here
-                Debug.Log($"Already contains component {inventoryStorable.Id}");
-                return;
+            if (_spellStagingArea.AddSpellEffect(spellEffect)) {
+                _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
+                _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
             }
-            _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
-            _spellCraftManager.AddSpellEffect(spellEffect);
-            _spellStagingArea.AddUISpellEffect(spellEffect);
             return;
         }
         SpellModifier spellModifier = inventoryStorable as SpellModifier;
         if(spellModifier != null) {
-            if (_spellCraftManager.LoadedSpellModifiers.Contains(spellModifier)) {
-                // do failed effect here
-                Debug.Log($"Already contains component {inventoryStorable.Id}");
-                return;
+            if (_spellStagingArea.AddSpellModifier(spellModifier)) {
+                _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
+                _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
             }
-            _runicInventoryView.RemoveItem(_runicInventoryView.HighlightedItemId, 1);
-            _spellCraftManager.AddSpellModifier(spellModifier);
-            _spellStagingArea.AddUISpellModifier(spellModifier);
         }
-        _spellComponentDescriptionView.UpdateDescription(_runicInventoryView.HighlightedItemId);
     }
-
+    
     private void OnStagingAreaItemHighlighted(string itemId) {
         _spellComponentDescriptionView.UpdateDescription(itemId);
     }
@@ -148,64 +119,10 @@ public class SpellCraftMenu : UISubPanelParent {
             return;
         }
         _runicInventoryView.AddItem(itemId, 1);
-
-        _spellCraftManager.RemoveComponentFromSpell(itemId);
         _spellStagingArea.RemoveHighlightedSpellComponent();
     }
 
     private void OnCraftSpellButtonPressed() {
-        if(_spellCraftManager.LoadedCastingMethod == null) {
-            return;
-        }
-        if(_spellCraftManager.LoadedSpellEffects.Count == 0) {
-            return;
-        }
-        StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
-        storableSpell.SetName(_spellStagingArea.SpellName);
-        GameManager.GameManagerInstance.CurrentSpellInventory.AddSpell(storableSpell);
-        _spellCraftManager.ClearSpellComponents();
-        _spellStagingArea.ClearSpellComponentSlots();
-        
-        // add this to loadout if loadout is not full
-        for(int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
-            if(GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout[i] == null) {
-                GameManager.GameManagerInstance.CurrentSpellInventory.SetSpellInLoadout(storableSpell.InstanceId, i);
-                return;
-            }
-        }
-        // ask the player if they wish to use this spell now
-        List<ButtonActionData> buttonActionDatas = new List<ButtonActionData>();
-        buttonActionDatas.Add(
-            new ButtonActionData() {
-                ButtonId = GameplayValues.UI.GenericButtonIdYes,
-                ButtonText = "Yes",
-                Action = OpenLoadoutEditor
-            }
-        );
-        buttonActionDatas.Add(
-            new ButtonActionData() {
-                ButtonId = GameplayValues.UI.GenericButtonIdNo,
-                ButtonText = "No",
-                Action = CloseUseSpellNowDialog
-            }
-        );
-        GenericMessageBoxInitData messageBoxData =
-            new GenericMessageBoxInitData("Use Spell Now?", "Would you like to use this spell in your current loadout?", buttonActionDatas);
-        UIPanelManager.Instance.OpenUIPanel(UIPanelManager.GenericMessageBoxPrefabId, messageBoxData);
-        // cut view grid input listening
 
-    }
-
-    private void OpenLoadoutEditor() {
-        CloseUseSpellNowDialog();
-        CoroutineGod.Instance.ExecuteAfterOneFrame(OpenLoadoutPrefab);
-    }
-
-    private void OpenLoadoutPrefab() {
-        UIPanelManager.Instance.OpenUIPanel(_loadoutPrefabId);
-    }
-
-    private void CloseUseSpellNowDialog() {
-        UIPanelManager.Instance.CloseUIPanel();
     }
 }

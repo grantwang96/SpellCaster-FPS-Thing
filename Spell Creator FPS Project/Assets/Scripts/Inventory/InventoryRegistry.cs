@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public interface IInventoryRegistry {
 
+    bool HasRegisteredItem(string id);
     IInventoryStorable GetItemById(string id);
 }
 
@@ -52,6 +52,10 @@ public class InventoryRegistry : MonoBehaviour, IInventoryRegistry {
             // Debug.Log($"Registering inventory storable ({inventoryStorable.ToString()}) with ID {inventoryStorable.Id}");
             _inventoryRegistry.Add(inventoryStorable.Id, inventoryStorable);
         }
+    }
+
+    public bool HasRegisteredItem(string id) {
+        return _inventoryRegistry.ContainsKey(id);
     }
 
     public IInventoryStorable GetItemById(string id) {

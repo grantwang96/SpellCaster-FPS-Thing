@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
-    // the 3 rects that will contain the images
+    [SerializeField] private string _loadoutPrefabId;
 
     [SerializeField] private RectTransform[] _componentsLists;
     [SerializeField] private RectTransform _imageTarget;
@@ -14,6 +14,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     [SerializeField] private string _cachedSpellName;
     public string SpellName => _cachedSpellName;
+    private bool _playerModifiedName;
 
     [SerializeField] private int[] _spellNameEditorViewRowLengths;
     [SerializeField] private int[] _spellComponentsViewRowLengths;
@@ -28,6 +29,8 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     private UIViewGrid _cachedUIViewGrid;
     private IUIInteractable _currentInteractable;
 
+    private SpellCraftManager _spellCraftManager;
+
     public delegate void SpellSlotsUpdatedEvent(string itemId);
     public event SpellSlotsUpdatedEvent OnSpellSlotsUpdated;
 
@@ -41,6 +44,10 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
+
+        _playerModifiedName = false;
+        _spellCraftManager = new SpellCraftManager();
+
         UIViewGridInitData spellNameEditorInitData = new UIViewGridInitData();
         spellNameEditorInitData.RowLengths = _spellNameEditorViewRowLengths;
         _spellNameEditorView.Initialize(spellNameEditorInitData);
@@ -60,6 +67,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         SubscribeToViewGrids();
     }
 
+    #region SUBCRIBE TO EVENTS
     private void SubscribeToViewGrids() {
         _spellNameEditorView.OnSelectPressed += OnSpellNameEditorSelected;
         _spellNameEditorView.OnHighlighted += OnSpellNameEditorHighlighted;
@@ -77,7 +85,9 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _craftButtonView.OnSelectPressed -= OnCraftSpellButtonSelected;
         _craftButtonView.OnHighlighted -= OnCraftSpellButtonHighlighted;
     }
+    #endregion
 
+    #region UI FUNCTIONS AND OVERRIDES
     protected override void OnParentPanelClosed() {
         base.OnParentPanelClosed();
         UnsubscribeToViewGrids();
@@ -119,27 +129,75 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         _parentPanel.ChangePanel(this, IntVector3.Zero);
     }
 
-    public void SetUICastingMethod(Spell_CastingMethod castingMethod) {
+    public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
+        base.SetFocus(active, hardLocked, dir);
+        if (active) {
+            _spellComponentsView.SetCurrentAtBound(dir);
+        }
+        _spellComponentsView.SetActive(active, hardLocked);
+        _craftButtonView.SetActive(false, hardLocked);
+        _spellNameEditorView.SetActive(false, hardLocked);
+    }
+
+    public IUIInteractable GetCurrentInteractable() {
+        return _currentInteractable;
+    }
+
+    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
+        base.OnActivePanelUpdated(isCurrentPanel);
+        if (isCurrentPanel) {
+            _spellNameEditorView.SetActive(_spellNameEditorView == _cachedUIViewGrid && IsFocused);
+            _spellComponentsView.SetActive(_spellComponentsView == _cachedUIViewGrid && IsFocused);
+            _craftButtonView.SetActive(_craftButtonView == _cachedUIViewGrid && IsFocused);
+        } else {
+            _spellNameEditorView.SetActive(false);
+            _spellComponentsView.SetActive(false);
+            _craftButtonView.SetActive(false);
+        }
+    }
+    #endregion
+
+    #region SPELL EDITS
+    public void SetCastingMethod(Spell_CastingMethod castingMethod) {
+
+        _spellCraftManager.SetCastingMethod(castingMethod);
+
         SpellComponentData componentData = new SpellComponentData(0, 0);
         // temp
         componentData.Id = castingMethod.Id;
         componentData.Name = castingMethod.Name;
         componentData.Text = castingMethod.Name;
-
-        // _spellComponentsView.AddInteractableItemToRow(0, componentData);
+        
         _spellComponentsView.SetInteractableItem(0, 0, componentData);
+        OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
     }
 
-    public void AddUISpellEffect(Effect spell_Effect) {
+    public bool AddSpellEffect(Effect spellEffect) {
+        if (_spellCraftManager.LoadedSpellEffects.Contains(spellEffect)) {
+            // do failed effect here
+            Debug.Log($"Already contains component {spellEffect.Id}");
+            return false;
+        }
+        _spellCraftManager.AddSpellEffect(spellEffect);
+
         SpellComponentData componentData = new SpellComponentData(1, 0);
-        componentData.Id = spell_Effect.Id;
-        componentData.Name = spell_Effect.Name;
-        componentData.Text = spell_Effect.Name;
+        componentData.Id = spellEffect.Id;
+        componentData.Name = spellEffect.Name;
+        componentData.Text = spellEffect.Name;
 
         _spellComponentsView.AddInteractableItemToRow(1, componentData);
+        OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
+        return true;
     }
 
-    public void AddUISpellModifier(SpellModifier spellModifier) {
+    public bool AddSpellModifier(SpellModifier spellModifier) {
+
+        if (_spellCraftManager.LoadedSpellModifiers.Contains(spellModifier)) {
+            // do failed effect here
+            Debug.Log($"Already contains component {spellModifier.Id}");
+            return false;
+        }
+
         SpellComponentData componentData = new SpellComponentData(2, 0);
         componentData.Id = spellModifier.Id;
         componentData.Name = spellModifier.Name;
@@ -147,6 +205,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
 
         _spellComponentsView.AddInteractableItemToRow(2, componentData);
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
+        return true;
     }
 
     public void RemoveHighlightedSpellComponent() {
@@ -163,6 +222,15 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
             }
         }
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
+    }
+    #endregion
+
+    #region BUTTON PRESSES
+    private void OnStageComponentsUpdated() {
+        if (_playerModifiedName) {
+            return;
+        }
+        string newName = string.Empty;
     }
 
     private void OnSpellNameEditorHighlighted(IUIInteractable interactable) {
@@ -203,6 +271,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         if (id.Equals(GameplayValues.UI.EmptyInventoryItemId)) {
             return;
         }
+        _spellCraftManager.RemoveComponentFromSpell(id);
         OnSpellSlotSelected?.Invoke(id);
     }
 
@@ -215,33 +284,63 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     }
 
     private void OnCraftSpellButtonSelected(IUIInteractable interactable) {
+        if (_spellCraftManager.LoadedCastingMethod == null) {
+            return;
+        }
+        if (_spellCraftManager.LoadedSpellEffects.Count == 0) {
+            return;
+        }
+        StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
+        storableSpell.SetName(_cachedSpellName);
+        GameManager.GameManagerInstance.CurrentSpellInventory.AddSpell(storableSpell);
+        _spellCraftManager.ClearSpellComponents();
+        ClearSpellComponentSlots();
+
+        // add this to loadout if loadout is not full
+        for (int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
+            if (GameManager.GameManagerInstance.CurrentSpellInventory.CurrentLoadout[i] == null) {
+                GameManager.GameManagerInstance.CurrentSpellInventory.SetSpellInLoadout(storableSpell.InstanceId, i);
+                return;
+            }
+        }
+
+        ShowAskToEnterLoadoutMenuPopup();
         OnCraftSpellPressed?.Invoke();
     }
+    #endregion
 
-    public override void SetFocus(bool active, bool hardLocked, IntVector3 dir) {
-        base.SetFocus(active, hardLocked, dir);
-        if (active) {
-            _spellComponentsView.SetCurrentAtBound(dir);
-        }
-        _spellComponentsView.SetActive(active, hardLocked);
-        _craftButtonView.SetActive(false, hardLocked);
-        _spellNameEditorView.SetActive(false, hardLocked);
+    private void ShowAskToEnterLoadoutMenuPopup() {
+        // ask the player if they wish to use this spell now
+        List<ButtonActionData> buttonActionDatas = new List<ButtonActionData>();
+        buttonActionDatas.Add(
+            new ButtonActionData() {
+                ButtonId = GameplayValues.UI.GenericButtonIdYes,
+                ButtonText = "Yes",
+                Action = OpenLoadoutEditor,
+            }
+        );
+        buttonActionDatas.Add(
+            new ButtonActionData() {
+                ButtonId = GameplayValues.UI.GenericButtonIdNo,
+                ButtonText = "No",
+                Action = CloseUseSpellNowDialog
+            }
+        );
+        GenericMessageBoxInitData messageBoxData =
+            new GenericMessageBoxInitData("Use Spell Now?", "Would you like to use this spell in your current loadout?", buttonActionDatas);
+        UIPanelManager.Instance.OpenUIPanel(UIPanelManager.GenericMessageBoxPrefabId, messageBoxData);
     }
 
-    public IUIInteractable GetCurrentInteractable() {
-        return _currentInteractable;
+    private void OpenLoadoutEditor() {
+        CloseUseSpellNowDialog();
+        CoroutineGod.Instance.ExecuteAfterOneFrame(OpenLoadoutPrefab);
     }
 
-    protected override void OnActivePanelUpdated(bool isCurrentPanel) {
-        base.OnActivePanelUpdated(isCurrentPanel);
-        if (isCurrentPanel) {
-            _spellNameEditorView.SetActive(_spellNameEditorView == _cachedUIViewGrid && IsFocused);
-            _spellComponentsView.SetActive(_spellComponentsView == _cachedUIViewGrid && IsFocused);
-            _craftButtonView.SetActive(_craftButtonView == _cachedUIViewGrid && IsFocused);
-        } else {
-            _spellNameEditorView.SetActive(false);
-            _spellComponentsView.SetActive(false);
-            _craftButtonView.SetActive(false);
-        }
+    private void OpenLoadoutPrefab() {
+        UIPanelManager.Instance.OpenUIPanel(_loadoutPrefabId);
+    }
+
+    private void CloseUseSpellNowDialog() {
+        UIPanelManager.Instance.CloseUIPanel();
     }
 }

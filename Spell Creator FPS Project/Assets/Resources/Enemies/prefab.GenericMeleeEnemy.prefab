@@ -6787,7 +6787,7 @@ GameObject:
   - component: {fileID: 6115186835309096914}
   - component: {fileID: 7562619477280338505}
   - component: {fileID: 8253768497378590507}
-  m_Layer: 11
+  m_Layer: 18
   m_Name: SwordHitBox_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

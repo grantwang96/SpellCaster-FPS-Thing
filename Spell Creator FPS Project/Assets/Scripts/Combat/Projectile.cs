@@ -74,11 +74,12 @@ public class Projectile : MonoBehaviour, PooledObject {
     }
 
     protected virtual void FixedUpdate() {
-        _previousPosition = _rigidBody.position;
+
     }
 
     protected virtual void LateUpdate() {
         CheckClipping();
+        _previousPosition = _rigidBody.position;
     }
 
     protected virtual void OnTriggerEnter(Collider coll) {
@@ -120,7 +121,7 @@ public class Projectile : MonoBehaviour, PooledObject {
         Vector3 dir = _rigidBody.position - _previousPosition;
         if (Physics.Raycast(_previousPosition, dir, out hit, Vector3.Distance(_previousPosition, _rigidBody.position), _collisionMask)) {
             _rigidBody.position = hit.point;
-            _collider.SendMessage("OnTriggerEnter", hit.collider);
+            OnTriggerEnter(hit.collider);
         }
     }
 
