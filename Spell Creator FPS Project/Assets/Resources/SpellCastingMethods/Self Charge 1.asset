@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Self Rune Charge I
   _shortDescription: Casts spell upon self
   _longDescription: 
+  _defaultName: Charged Self
   _lootTier: 0
   manaCost: 10
   _intervalTime: 0

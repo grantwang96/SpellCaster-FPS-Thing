@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Bullrush I
   _shortDescription: 
   _longDescription: 
+  _defaultName: Bullrush
   _lootTier: 0
   _manaCost: 10
   _chargeTime: 1

@@ -10,10 +10,11 @@ public static partial class GameplayValues {
     }
 
     public static class UI {
+        public const int DefaultSpellName_MaxCastingMethods = 1;
+        public const int DefaultSpellName_MaxEffects = 2;
+        public const int DefaultSpellName_MaxModifiers = 2;
+
         public const string EmptyInventoryItemId = "NONE";
-        public const int MaximumSpellCastingMethods = 1;
-        public const int MaximumSpellEffects = 5;
-        public const int MaximumSpellModifiers = 5;
         public const string EmptySpellStageText = "-----";
         public const string EmptyUIElementId = "EMPTY_UI_ELEMENT";
         public const string GenericButtonIdClose = "GENERIC_BUTTON_CLOSE";
@@ -73,6 +74,9 @@ public static partial class GameplayValues {
     }
 
     public static class Magic {
+        public const int MaximumSpellCastingMethods = 1;
+        public const int MaximumSpellEffects = 5;
+        public const int MaximumSpellModifiers = 5;
         public const string StorableSpellInstanceIdPrefix = "StoredSpell_";
         public const int StorableSpellInstanceIdSize = 20;
         public const int PlayerLoadoutMaxSize = 3;

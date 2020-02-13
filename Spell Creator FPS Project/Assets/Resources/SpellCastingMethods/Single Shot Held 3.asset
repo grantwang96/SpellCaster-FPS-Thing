@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Rapid Missile 3
   _shortDescription: 
   _longDescription: 
+  _defaultName: Rapid Bolt of
   _lootTier: 2
   manaCost: 12
   _intervalTime: 0.1

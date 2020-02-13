@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Poison II
   _shortDescription: 
   _longDescription: 
+  _defaultName: Poison
   _lootTier: 1
   _manaCost: 10
   _chargeTime: 0

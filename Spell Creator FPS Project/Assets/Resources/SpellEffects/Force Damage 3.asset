@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Force Damage III
   _shortDescription: Deals normal damage
   _longDescription: 
+  _defaultName: Force
   _lootTier: 2
   _manaCost: 14
   _chargeTime: 0

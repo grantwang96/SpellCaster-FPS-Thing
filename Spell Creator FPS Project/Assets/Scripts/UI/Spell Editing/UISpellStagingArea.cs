@@ -13,8 +13,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     [SerializeField] private UICustomButton _craftSpellButton;
 
     [SerializeField] private string _cachedSpellName;
-    public string SpellName => _cachedSpellName;
-    private bool _playerModifiedName;
+    private string _defaultSpellName;
 
     [SerializeField] private int[] _spellNameEditorViewRowLengths;
     [SerializeField] private int[] _spellComponentsViewRowLengths;
@@ -45,9 +44,6 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
     public override void Initialize(UIPanelInitData initData) {
         base.Initialize(initData);
 
-        _playerModifiedName = false;
-        _spellCraftManager = new SpellCraftManager();
-
         UIViewGridInitData spellNameEditorInitData = new UIViewGridInitData();
         spellNameEditorInitData.RowLengths = _spellNameEditorViewRowLengths;
         _spellNameEditorView.Initialize(spellNameEditorInitData);
@@ -63,6 +59,11 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         UIViewGridInitData craftButtonInit = new UIViewGridInitData();
         craftButtonInit.RowLengths = _craftButtonViewRowLengths;
         _craftButtonView.Initialize(craftButtonInit);
+
+        _defaultSpellName = string.Empty;
+        _cachedSpellName = string.Empty;
+        SetDisplayedSpellName(GetCurrentSpellName());
+        _spellCraftManager = new SpellCraftManager();
 
         SubscribeToViewGrids();
     }
@@ -169,6 +170,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         componentData.Text = castingMethod.Name;
         
         _spellComponentsView.SetInteractableItem(0, 0, componentData);
+        OnStageComponentsUpdated();
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
     }
 
@@ -186,6 +188,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         componentData.Text = spellEffect.Name;
 
         _spellComponentsView.AddInteractableItemToRow(1, componentData);
+        OnStageComponentsUpdated();
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
         return true;
     }
@@ -204,6 +207,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         componentData.Text = spellModifier.Name;
 
         _spellComponentsView.AddInteractableItemToRow(2, componentData);
+        OnStageComponentsUpdated();
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
         return true;
     }
@@ -212,6 +216,7 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         int x = _spellComponentsView.CurrentItemX;
         int y = _spellComponentsView.CurrentItemY;
         _spellComponentsView.RemoveInteractableFromRow(x, y);
+        OnStageComponentsUpdated();
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(x, y).Id);
     }
 
@@ -222,16 +227,16 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
             }
         }
         OnSpellSlotsUpdated?.Invoke(_spellComponentsView.GetInteractableAt(_spellComponentsView.CurrentItemX, _spellComponentsView.CurrentItemY).Id);
+        OnStageComponentsUpdated();
+    }
+
+    private void OnStageComponentsUpdated() {
+        GenerateDefaultName();
+        SetDisplayedSpellName(GetCurrentSpellName());
     }
     #endregion
 
     #region BUTTON PRESSES
-    private void OnStageComponentsUpdated() {
-        if (_playerModifiedName) {
-            return;
-        }
-        string newName = string.Empty;
-    }
 
     private void OnSpellNameEditorHighlighted(IUIInteractable interactable) {
         _craftButtonView.SetActive(false);
@@ -248,14 +253,6 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         UIPanelManager.Instance.OpenUIPanel(_renameSpellPanelId, initData);
         // listen to rename spell dialog
         UIPanelManager.Instance.OnStringDataPassed += OnSpellNameUpdated;
-    }
-
-    private void OnSpellNameUpdated(string spellName) {
-        _cachedSpellName = spellName;
-        _spellNameEditorView.SetInteractableItem(0, 0, new UICustomButtonInitData() {
-            ButtonText = string.IsNullOrEmpty(_cachedSpellName) ? "Insert spell name here..." : _cachedSpellName
-        });
-        UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
     }
 
     private void OnSpellComponentHighlighted(IUIInteractable interactable) {
@@ -291,10 +288,14 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
             return;
         }
         StorableSpell storableSpell = _spellCraftManager.GenerateSpell();
-        storableSpell.SetName(_cachedSpellName);
+        storableSpell.SetName(GetCurrentSpellName());
         GameManager.GameManagerInstance.CurrentSpellInventory.AddSpell(storableSpell);
+
         _spellCraftManager.ClearSpellComponents();
         ClearSpellComponentSlots();
+        _defaultSpellName = string.Empty;
+        _cachedSpellName = string.Empty;
+        SetDisplayedSpellName(GetCurrentSpellName());
 
         // add this to loadout if loadout is not full
         for (int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
@@ -307,6 +308,48 @@ public class UISpellStagingArea : UISubPanel, IUIViewGridParent {
         ShowAskToEnterLoadoutMenuPopup();
         OnCraftSpellPressed?.Invoke();
     }
+    #endregion
+
+    #region SPELL NAME BUILDING
+
+    private void GenerateDefaultName() {
+        _defaultSpellName = string.Empty;
+        if(_spellCraftManager.LoadedCastingMethod != null) {
+            _defaultSpellName = _spellCraftManager.LoadedCastingMethod.DefaultName;
+        }
+        for (int i = 0; i < GameplayValues.UI.DefaultSpellName_MaxModifiers; i++) {
+            if (i >= _spellCraftManager.LoadedSpellModifiers.Count) {
+                break;
+            }
+            _defaultSpellName = $"{_defaultSpellName} {_spellCraftManager.LoadedSpellModifiers[i].DefaultName}";
+        }
+        for (int i = 0; i < GameplayValues.UI.DefaultSpellName_MaxEffects; i++) {
+            if (i >= _spellCraftManager.LoadedSpellEffects.Count) {
+                break;
+            }
+            _defaultSpellName = $"{_defaultSpellName} {_spellCraftManager.LoadedSpellEffects[i].DefaultName}";
+        }
+    }
+
+    private string GetCurrentSpellName() {
+        if (string.IsNullOrEmpty(_defaultSpellName)) {
+            return "Insert spell name here...";
+        }
+        return _cachedSpellName == string.Empty ? _defaultSpellName : _cachedSpellName;
+    }
+
+    private void SetDisplayedSpellName(string spellName) {
+        _spellNameEditorView.SetInteractableItem(0, 0, new UICustomButtonInitData() {
+            ButtonText = spellName
+        });
+    }
+
+    private void OnSpellNameUpdated(string spellName) {
+        _cachedSpellName = spellName;
+        SetDisplayedSpellName(GetCurrentSpellName());
+        UIPanelManager.Instance.OnStringDataPassed -= OnSpellNameUpdated;
+    }
+
     #endregion
 
     private void ShowAskToEnterLoadoutMenuPopup() {

@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Self Rune Instant IV
   _shortDescription: Cast spell upon self
   _longDescription: 
+  _defaultName: Invoked Self
   _lootTier: 3
   manaCost: 60
   _intervalTime: 0.05

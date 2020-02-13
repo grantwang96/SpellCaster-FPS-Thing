@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Magic Missile III
   _shortDescription: Fires a magic projectile
   _longDescription: 
+  _defaultName: Invoked Bolt of
   _lootTier: 2
   manaCost: 20
   _intervalTime: 0.2

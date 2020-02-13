@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -18,6 +19,7 @@ MonoBehaviour:
   _name: Poison I
   _shortDescription: 
   _longDescription: 
+  _defaultName: Poison
   _lootTier: 0
   _manaCost: 10
   _chargeTime: 0

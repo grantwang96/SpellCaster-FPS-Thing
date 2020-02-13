@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Summon Skeleton Warrior
   _shortDescription: Summons a skeleton warrior
   _longDescription: Summons a skeleton warrior, I guess.
+  _defaultName: Skeleton Warrior Summoning
   _lootTier: 0
   _manaCost: 10
   _chargeTime: 1

@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Hold Target
   _shortDescription: Holds the target in place
   _longDescription: Holds the freaking target in place
+  _defaultName: Telekinesis
   _lootTier: 0
   _manaCost: 20
   _chargeTime: 3

@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Self Rune Instant II
   _shortDescription: Cast spell upon self
   _longDescription: 
+  _defaultName: Invoked Self
   _lootTier: 1
   manaCost: 30
   _intervalTime: 0.5

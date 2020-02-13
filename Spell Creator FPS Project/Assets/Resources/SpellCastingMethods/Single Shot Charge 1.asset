@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Charged Missile I
   _shortDescription: 
   _longDescription: 
+  _defaultName: Charged Bolt of
   _lootTier: 0
   manaCost: 10
   _intervalTime: 1

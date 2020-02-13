@@ -19,6 +19,7 @@ MonoBehaviour:
   _name: Self Rune Instant III
   _shortDescription: Cast spell upon self
   _longDescription: 
+  _defaultName: Invoked Self
   _lootTier: 2
   manaCost: 42
   _intervalTime: 0.25
