@@ -10,6 +10,8 @@ public class PlayerHud : MonoBehaviour {
     [SerializeField] private int _mana;
     [SerializeField] private int _maxMana;
 
+    [SerializeField] private UIProgressBar _healthDisplay;
+
     [SerializeField] private Text _healthTextDisplay;
     [SerializeField] private Text _manaTextDisplay;
     [SerializeField] private Image _spellChargeBar;
@@ -37,6 +39,7 @@ public class PlayerHud : MonoBehaviour {
     void Start () {
         _health = _playerDamageable.Health;
         _maxHealth = _playerDamageable.MaxHealth;
+        PlayerMaxHealthChanged(_maxHealth);
         _mana = _playerCombat.Mana;
         _maxMana = _playerCombat.MaxMana;
         SubscribeToEvents();
@@ -69,11 +72,13 @@ public class PlayerHud : MonoBehaviour {
 
     private void PlayerMaxHealthChanged(int newMaxHealth) {
         _maxHealth = newMaxHealth;
+        _healthDisplay.SetBarSize(new Vector2(newMaxHealth * 2f, 25f)); // hack man wonderland
         UpdateHealthDisplay(_health, newMaxHealth);
     }
 
     private void UpdateHealthDisplay(int health, int maxHealth) {
-        _healthTextDisplay.text = $"{health} / {maxHealth} ";
+        // _healthTextDisplay.text = $"{health} / {maxHealth} ";
+        _healthDisplay.UpdateFill((float)health / maxHealth);
     }
 
     private void PlayerManaChanged(int newMana) {

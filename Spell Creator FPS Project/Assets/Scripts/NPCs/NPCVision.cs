@@ -28,6 +28,9 @@ public class NPCVision : MonoBehaviour {
     }
 
     public virtual bool CheckVision(CharacterBehaviour target) {
+        if (target == null) {
+            return false;
+        }
         float distance = Vector3.Distance(target.transform.position, transform.position);
         float angle = Vector3.Angle(transform.forward, target.transform.position - transform.position);
         if (distance <= _npcBehaviour.Blueprint.VisionRange && angle <= _npcBehaviour.Blueprint.VisionAngle) {
@@ -36,8 +39,6 @@ public class NPCVision : MonoBehaviour {
             if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
                 if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
-                    CurrentTarget = otherCB;
-                    CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
                     return true;
                 }
             }
@@ -46,6 +47,9 @@ public class NPCVision : MonoBehaviour {
     }
 
     public virtual bool CheckVisionRadial(CharacterBehaviour target) {
+        if(target == null) {
+            return false;
+        }
         float distance = Vector3.Distance(target.transform.position, transform.position);
         if (distance <= _npcBehaviour.Blueprint.VisionRange) {
             Vector3 dir = target.Head.position - _npcBehaviour.Head.position;
@@ -53,8 +57,6 @@ public class NPCVision : MonoBehaviour {
             if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
                 if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
-                    CurrentTarget = otherCB;
-                    CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
                     return true;
                 }
             }

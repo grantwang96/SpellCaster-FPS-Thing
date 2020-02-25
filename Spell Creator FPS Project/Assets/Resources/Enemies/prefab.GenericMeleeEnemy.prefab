@@ -222,6 +222,7 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 114565834472377426}
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -246,7 +247,6 @@ MonoBehaviour:
   _onFailedToReachTargetState: {fileID: 114743803374490666}
   _overrideCancelTime: 10
   _moveController: {fileID: 114193879206027700}
-  _npcVision: {fileID: 114107591437060838}
 --- !u!1 &1167175321328372
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,6 +893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -909,7 +910,6 @@ MonoBehaviour:
     _floats: []
   _animController: {fileID: 3251657159653968175}
   _onEnemySeenState: {fileID: 6158020164048484062}
-  _vision: {fileID: 114107591437060838}
 --- !u!1 &1513670847630290
 GameObject:
   m_ObjectHideFlags: 0
@@ -1208,6 +1208,7 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 114565834472377426}
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -1225,7 +1226,6 @@ MonoBehaviour:
   _animController: {fileID: 3251657159653968175}
   _onIdleEnd: {fileID: 114101361072768558}
   _defaultIdleTime: 4
-  _npcVision: {fileID: 114107591437060838}
 --- !u!1 &1767324195382670
 GameObject:
   m_ObjectHideFlags: 0
@@ -1271,6 +1271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers:
@@ -1289,7 +1290,6 @@ MonoBehaviour:
     _ints: []
     _floats: []
   _animController: {fileID: 3251657159653968175}
-  _npcVision: {fileID: 114107591437060838}
   _attackRange: 2.6
   _moveController: {fileID: 114193879206027700}
   _onTargetInRangeState: {fileID: 114648719597348348}
@@ -1344,6 +1344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -1368,7 +1369,6 @@ MonoBehaviour:
   _onFailedToReachTargetState: {fileID: 114743803374490666}
   _overrideCancelTime: 20
   _moveController: {fileID: 114193879206027700}
-  _npcVision: {fileID: 0}
   _onTargetSeenState: {fileID: 114640306952357054}
   _onTargetOutOfSightState: {fileID: 114640306952357054}
   _onTargetLostState: {fileID: 114743803374490666}
@@ -1559,6 +1559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers:
@@ -1577,7 +1578,6 @@ MonoBehaviour:
     _ints: []
     _floats: []
   _animController: {fileID: 3251657159653968175}
-  _npcVision: {fileID: 114107591437060838}
   _attackRange: 3
   _moveController: {fileID: 114193879206027700}
   _onTargetInRangeState: {fileID: 114640306952357054}
@@ -1710,6 +1710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: Alert
     _triggers: []
@@ -1773,6 +1774,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -1927,6 +1929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: Spawn
     _triggers: []
@@ -2048,7 +2051,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _childrenStates: []
-  _npcBehaviour: {fileID: 0}
+  _npcBehaviour: {fileID: 114862455297173096}
+  _npcVision: {fileID: 114107591437060838}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -2063,9 +2067,8 @@ MonoBehaviour:
     _bools: []
     _ints: []
     _floats: []
-  _animController: {fileID: 0}
+  _animController: {fileID: 3251657159653968175}
   _nextState: {fileID: 0}
-  _npcVision: {fileID: 0}
 --- !u!1 &7071356944157755765
 GameObject:
   m_ObjectHideFlags: 0

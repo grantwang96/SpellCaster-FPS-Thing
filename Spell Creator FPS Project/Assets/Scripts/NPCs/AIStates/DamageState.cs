@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageState : BrainState
+public class DamageState : SingleAnimationState
 {
     [SerializeField] protected BrainState[] _targetKnownStates;
     [SerializeField] protected BrainState[] _targetUnknownStates;
 
-    [SerializeField] private NPCVision _npcVision;
+    protected override void OnCanTransition() {
 
-    protected override void OnAnimationStateUpdated(AnimationState state) {
-        base.OnAnimationStateUpdated(state);
-        if(state == AnimationState.CanTransition) {
+    }
+
+    protected override void OnComplete() {
+        if (_npcVision.CheckVisionRadial(_npcVision.CurrentTarget)) {
 
         }
     }
