@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour, PooledObject {
 
     public string UniqueId { get; private set; }
 
-    [SerializeField] protected Damageable _owner;
+    protected Damageable _owner;
     [SerializeField] protected GameObject _onHitVFX;
     [SerializeField] protected Rigidbody _rigidBody;
     [SerializeField] protected Collider _collider;

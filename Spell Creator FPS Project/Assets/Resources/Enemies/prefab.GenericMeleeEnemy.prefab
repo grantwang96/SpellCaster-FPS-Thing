@@ -205,7 +205,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114101361072768558
 MonoBehaviour:
@@ -243,9 +243,10 @@ MonoBehaviour:
   _animController: {fileID: 3251657159653968175}
   _onTargetReachedStates:
   - {fileID: 114743803374490666}
-  _onFailedToReachTargetState: {fileID: 0}
+  _onFailedToReachTargetState: {fileID: 114743803374490666}
   _overrideCancelTime: 10
   _moveController: {fileID: 114193879206027700}
+  _npcVision: {fileID: 114107591437060838}
 --- !u!1 &1167175321328372
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +326,7 @@ MonoBehaviour:
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: Dingus
-  _damageable: {fileID: 114120558083659074}
+  _damageableGO: {fileID: 1167175321328372}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 7106583016626064572}
@@ -334,12 +335,16 @@ MonoBehaviour:
     _brainState: {fileID: 114743803374490666}
   - _transitionId: 1
     _brainState: {fileID: 114101361072768558}
-  - _transitionId: 2
+  - _transitionId: 3
     _brainState: {fileID: 6158020164048484062}
   - _transitionId: 5
     _brainState: {fileID: 114911393473976966}
-  - _transitionId: 3
+  - _transitionId: 4
     _brainState: {fileID: 114640306952357054}
+  - _transitionId: 8
+    _brainState: {fileID: 855259600358597982}
+  - _transitionId: 2
+    _brainState: {fileID: 6373963910276023853}
   _prefabId: Dingus
   _inUse: 0
 --- !u!195 &195419894049088246
@@ -380,8 +385,9 @@ MonoBehaviour:
   _maxSpeed: 5
   _moveSpeed: 0
   _mass: 4
-  _linearDrag: 2
-  _currentDrag: 0
+  _airDrag: 1
+  _groundDrag: 2
+  _currentDrag: 2
   _headDistanceThreshold: 0
   _performingAction: 0
   _externalForce: {x: 0, y: 0, z: 0}
@@ -416,10 +422,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1711357440be3064a8aec2338f9555fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parentDamageable: {fileID: 0}
   _health: 30
   _maxHealth: 30
   _isDead: 0
+  _root: {fileID: 4425764811352246}
   _body: {fileID: 4094145307567022}
 --- !u!114 &114107591437060838
 MonoBehaviour:
@@ -460,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f10047948f65e418b12b0868b1503b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 114120558083659074}
+  _ownerGO: {fileID: 1167175321328372}
   _hurtBoxGOs:
   - {fileID: 4837892836192976431}
 --- !u!1 &1179719906111838
@@ -903,6 +909,7 @@ MonoBehaviour:
     _floats: []
   _animController: {fileID: 3251657159653968175}
   _onEnemySeenState: {fileID: 6158020164048484062}
+  _vision: {fileID: 114107591437060838}
 --- !u!1 &1513670847630290
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,6 +939,7 @@ Transform:
   m_Children:
   - {fileID: 550391370967926671}
   - {fileID: 4751661386879416}
+  - {fileID: 7302561930568996764}
   - {fileID: 4999387198712640}
   - {fileID: 4861305966922928}
   - {fileID: 4008029670839990}
@@ -1061,6 +1069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBehaviour: {fileID: 114862455297173096}
+  _vision: {fileID: 0}
 --- !u!1 &1595414152829164
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,7 +1191,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114743803374490666
 MonoBehaviour:
@@ -1216,7 +1225,7 @@ MonoBehaviour:
   _animController: {fileID: 3251657159653968175}
   _onIdleEnd: {fileID: 114101361072768558}
   _defaultIdleTime: 4
-  _moveController: {fileID: 114193879206027700}
+  _npcVision: {fileID: 114107591437060838}
 --- !u!1 &1767324195382670
 GameObject:
   m_ObjectHideFlags: 0
@@ -1246,7 +1255,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114911393473976966
 MonoBehaviour:
@@ -1319,7 +1328,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114640306952357054
 MonoBehaviour:
@@ -1356,12 +1365,14 @@ MonoBehaviour:
   _animController: {fileID: 3251657159653968175}
   _onTargetReachedStates:
   - {fileID: 114911393473976966}
-  _onFailedToReachTargetState: {fileID: 0}
+  _onFailedToReachTargetState: {fileID: 114743803374490666}
   _overrideCancelTime: 20
   _moveController: {fileID: 114193879206027700}
+  _npcVision: {fileID: 0}
   _onTargetSeenState: {fileID: 114640306952357054}
   _onTargetOutOfSightState: {fileID: 114640306952357054}
   _onTargetLostState: {fileID: 114743803374490666}
+  _vision: {fileID: 114107591437060838}
   _targetLastKnownPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1782738988515684
 GameObject:
@@ -1532,7 +1543,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114648719597348348
 MonoBehaviour:
@@ -1683,7 +1694,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6158020164048484062
 MonoBehaviour:
@@ -1726,8 +1737,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 642994389116436983}
+  - component: {fileID: 855259600358597982}
   m_Layer: 11
-  m_Name: SpawnState
+  m_Name: DamageState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1745,8 +1757,38 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4465758820062802}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &855259600358597982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580494168040717589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d9b51c2f9772743a16f6f5fb46bb1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _childrenStates: []
+  _npcBehaviour: {fileID: 114862455297173096}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 3251657159653968175}
+  _nextState: {fileID: 6158020164048484062}
 --- !u!1 &2063328685476496500
 GameObject:
   m_ObjectHideFlags: 0
@@ -1961,7 +2003,69 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _priority: 0
   _damageScale: 1
-  _owner: {fileID: 114120558083659074}
+  _ownerGO: {fileID: 1167175321328372}
+--- !u!1 &6194471531890630642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7302561930568996764}
+  - component: {fileID: 6373963910276023853}
+  m_Layer: 11
+  m_Name: SearchState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7302561930568996764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194471531890630642}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4465758820062802}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6373963910276023853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194471531890630642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1092ab0ebd866fe46a52d80c77ed0712, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _childrenStates: []
+  _npcBehaviour: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 0}
+  _nextState: {fileID: 0}
+  _npcVision: {fileID: 0}
 --- !u!1 &7071356944157755765
 GameObject:
   m_ObjectHideFlags: 0
@@ -6880,7 +6984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 659b01d08f425b64db2a1a3db2683f1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 114120558083659074}
+  _ownerGO: {fileID: 1167175321328372}
   _powerScale: 1
 --- !u!54 &8253768497378590507
 Rigidbody:

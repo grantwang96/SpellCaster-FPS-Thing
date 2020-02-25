@@ -16,7 +16,7 @@ public class MoveState : BrainState {
     private float _stateTime;
     protected float _moveSpeed;
 
-    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f, bool isChild = false) {
         base.Enter(overrideBrainState, duration);
         _stateTime = 0f;
         Vector3 targetDestination = GetDestination();
@@ -61,6 +61,7 @@ public class MoveState : BrainState {
         _moveController.OnPathCalculated -= OnPathCalculated;
         _moveController.OnArrivedDestination -= OnArriveDestination;
         _moveController.ClearCurrentDestination();
+
         base.Exit();
     }
 }

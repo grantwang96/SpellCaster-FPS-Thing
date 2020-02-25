@@ -50,6 +50,8 @@ public class NPCMoveController : CharacterMoveController {
         base.Start();
         _baseSpeed = _npcBehaviour.Blueprint.WalkSpeed;
         _maxSpeed = _npcBehaviour.Blueprint.RunSpeed;
+
+        _npcBehaviour.Damageable.OnKnockback += OnKnockback;
     }
 
     protected override void Update() {
@@ -199,5 +201,9 @@ public class NPCMoveController : CharacterMoveController {
 
         Vector3 newLook = Vector3.Lerp(transform.forward, lookDirectionBody, value);
         transform.rotation = Quaternion.LookRotation(newLook);
+    }
+
+    protected void OnKnockback(Vector3 direction, float power) {
+        SetRotation(_npcBehaviour.BodyTransform.position - direction, 1f);
     }
 }

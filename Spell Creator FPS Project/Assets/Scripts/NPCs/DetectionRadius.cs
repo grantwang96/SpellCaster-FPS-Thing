@@ -9,20 +9,19 @@ using UnityEngine;
 public class DetectionRadius : MonoBehaviour {
 
     [SerializeField] private NPCBehaviour myBehaviour;
-    private IVision _vision;
+    [SerializeField] private NPCVision _vision;
     private SphereCollider _collider;
 
     private void Start() {
         _collider = GetComponent<SphereCollider>();
         _collider.radius = myBehaviour.Blueprint.VisionRange;
-        _vision = myBehaviour.GetComponent<IVision>();
     }
 
     private void OnTriggerEnter(Collider other) {
         // check if collider has a character behaviour
         CharacterBehaviour otherCharBehaviour = other.GetComponent<CharacterBehaviour>();
         if(_vision == null) {
-            _vision = myBehaviour.GetComponent<IVision>();
+            _vision = myBehaviour.GetComponent<NPCVision>();
         }
         // if so, and it's not us, add to list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {
@@ -35,7 +34,7 @@ public class DetectionRadius : MonoBehaviour {
         CharacterBehaviour otherCharBehaviour = other.GetComponent<CharacterBehaviour>();
 
         if (_vision == null) {
-            _vision = myBehaviour.GetComponent<IVision>();
+            _vision = myBehaviour.GetComponent<NPCVision>();
         }
         // if so, and it's not us, remove from list of "known" characters
         if (otherCharBehaviour && otherCharBehaviour != myBehaviour) {

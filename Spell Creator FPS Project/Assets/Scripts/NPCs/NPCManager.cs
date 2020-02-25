@@ -57,7 +57,7 @@ public class NPCManager : MonoBehaviour, INPCManager {
 
     private void OnEnemyDeath(bool isDead, Damageable damageable) {
         damageable.OnDeath -= OnEnemyDeath;
-        EnemyBehaviour enemy = damageable.GetComponent<EnemyBehaviour>();
+        EnemyBehaviour enemy = damageable.Root.GetComponent<EnemyBehaviour>();
         if(enemy == null) {
             return;
         }

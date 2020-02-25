@@ -67,7 +67,7 @@ public class RecoveryOrb : MonoBehaviour, PooledObject, ITriggerAreaInteractable
         if(dam == null) {
             return;
         }
-        dam.TakeDamage(-GameplayValues.Level.HealthOrbValue, Element.Healing);
+        dam.TakeDamage(null, -GameplayValues.Level.HealthOrbValue, Element.Healing);
         StartCoroutine(FlyToTarget(dam.Body));
     }
 

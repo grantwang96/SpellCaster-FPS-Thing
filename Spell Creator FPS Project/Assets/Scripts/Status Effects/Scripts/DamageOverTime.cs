@@ -14,6 +14,6 @@ public class DamageOverTime : StatusEffect {
 
     public override void ApplyEffect(Damageable damageable, int power) {
         int totalPower = _baseDamage * power;
-        damageable.TakeDamage(totalPower, _element);
+        damageable.TakeDamage(null, totalPower, _element);
     }
 }

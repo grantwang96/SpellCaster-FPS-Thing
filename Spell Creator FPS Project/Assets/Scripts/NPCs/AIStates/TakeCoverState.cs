@@ -10,13 +10,8 @@ public class TakeCoverState : MoveState {
     [SerializeField] private float _searchRadiusInner;
     [SerializeField] private int _searchQueries;
 
-    private IVision _vision;
+    [SerializeField] private NPCVision _vision;
     private bool _canSeeTarget;
-
-    protected override void Awake() {
-        base.Awake();
-        _vision = _npcBehaviour.GetComponent<IVision>();
-    }
     
     protected override Vector3 GetDestination() {
         /*
@@ -45,5 +40,9 @@ public class TakeCoverState : MoveState {
         BrainState nextState = _onTargetReachedStates[Random.Range(0, _onTargetReachedStates.Length)];
         _npcBehaviour.ChangeBrainState(nextState);
         _moveController.ClearCurrentDestination();
+    }
+
+    protected override void OnEnterHitStun(Vector3 direction, float power) {
+        _npcBehaviour.ChangeBrainState(BrainStateTransitionId.Alert, this);
     }
 }

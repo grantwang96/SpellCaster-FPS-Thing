@@ -18,7 +18,7 @@ public class WeaponCollider : MonoBehaviour {
     }
 
     private void TriggerEffects(Damageable target) {
-        Vector3 direction = _owner.transform.TransformDirection(_knockBackDir);
+        Vector3 direction = _owner.Root.TransformDirection(_knockBackDir);
         for(int i = 0; i < _effects.Length; i++) {
             _effects[i].TriggerEffect(_owner, direction, _powerScale, transform.position, target);
         }

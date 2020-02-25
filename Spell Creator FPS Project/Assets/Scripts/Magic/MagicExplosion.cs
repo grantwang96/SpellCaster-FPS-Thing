@@ -50,7 +50,7 @@ public class MagicExplosion : MonoBehaviour {
     }
 
     private void ApplyEffects(Damageable damageable) {
-        Vector3 dir = (damageable.transform.position - transform.position).normalized;
+        Vector3 dir = (damageable.Root.position - transform.position).normalized;
         foreach (Effect effect in _effects) {
             effect?.TriggerEffect(_owner, dir * _force, _powerScale, transform.position, damageable, _effects);
         }

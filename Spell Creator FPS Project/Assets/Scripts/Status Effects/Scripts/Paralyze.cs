@@ -6,14 +6,14 @@ using UnityEngine;
 public class Paralyze : StatusEffect {
 
     public override void OnAddEffect(Damageable damageable, int power) {
-        CharacterMoveController characterMove = damageable.GetComponent<CharacterMoveController>();
+        CharacterMoveController characterMove = damageable.Root.GetComponent<CharacterMoveController>();
         if (characterMove != null) {
             characterMove.enabled = false;
         }
     }
 
     public override void OnRemoveEffect(Damageable damageable) {
-        CharacterMoveController characterMove = damageable.GetComponent<CharacterMoveController>();
+        CharacterMoveController characterMove = damageable.Root.GetComponent<CharacterMoveController>();
         if (characterMove != null) {
             characterMove.enabled = true;
         }

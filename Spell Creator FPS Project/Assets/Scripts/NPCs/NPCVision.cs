@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCVision : MonoBehaviour, IVision {
+public class NPCVision : MonoBehaviour {
 
-    public List<CharacterBehaviour> KnownCharacters { get; } = new List<CharacterBehaviour>();
+    private List<CharacterBehaviour> _knownCharacters = new List<CharacterBehaviour>();
+    public IReadOnlyList<CharacterBehaviour> KnownCharacters => _knownCharacters;
 
     public CharacterBehaviour CurrentTarget { get; private set; }
 
     private NPCBehaviour _npcBehaviour;
+    private NPCDamageable _npcDamageable;
 
     private void Awake() {
         _npcBehaviour = GetComponent<NPCBehaviour>();
+        _npcDamageable = GetComponent<NPCDamageable>();
     }
 
-    public virtual bool CheckVision() {
+    public virtual CharacterBehaviour CheckVision() {
         for (int i = 0; i < KnownCharacters.Count; i++) {
             CharacterBehaviour knownCharacter = KnownCharacters[i];
             if (CheckVision(knownCharacter)) {
-                return true;
+                return knownCharacter;
             }
         }
-        return false;
+        return null;
     }
 
     public virtual bool CheckVision(CharacterBehaviour target) {
@@ -32,7 +35,24 @@ public class NPCVision : MonoBehaviour, IVision {
             RaycastHit hit;
             if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
                 CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
-                if (otherCB != null && KnownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
+                if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
+                    CurrentTarget = otherCB;
+                    CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public virtual bool CheckVisionRadial(CharacterBehaviour target) {
+        float distance = Vector3.Distance(target.transform.position, transform.position);
+        if (distance <= _npcBehaviour.Blueprint.VisionRange) {
+            Vector3 dir = target.Head.position - _npcBehaviour.Head.position;
+            RaycastHit hit;
+            if (Physics.Raycast(_npcBehaviour.Head.position, dir, out hit, _npcBehaviour.Blueprint.VisionRange, _npcBehaviour.Blueprint.VisionMask)) {
+                CharacterBehaviour otherCB = hit.transform.GetComponent<CharacterBehaviour>();
+                if (otherCB != null && _knownCharacters.Contains(otherCB) && _npcBehaviour.IsAnEnemy(otherCB)) {
                     CurrentTarget = otherCB;
                     CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
                     return true;
@@ -56,19 +76,40 @@ public class NPCVision : MonoBehaviour, IVision {
         return false;
     }
 
+    public void SetCurrentTarget(CharacterBehaviour character) {
+        if(CurrentTarget != null) {
+            ClearCurrentTarget();
+        }
+        CurrentTarget = character;
+        CurrentTarget.Damageable.OnDeath += OnTargetDefeated;
+    }
+
     public virtual void ClearCurrentTarget() {
+        CurrentTarget.Damageable.OnDeath -= OnTargetDefeated;
         CurrentTarget = null;
     }
 
     public virtual void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (!KnownCharacters.Contains(characterBehaviour)) {
-            KnownCharacters.Add(characterBehaviour);
+        if (!_knownCharacters.Contains(characterBehaviour)) {
+            _knownCharacters.Add(characterBehaviour);
         }
     }
 
     public virtual void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour) {
-        if (KnownCharacters.Contains(characterBehaviour)) {
-            KnownCharacters.Remove(characterBehaviour);
+        if (_knownCharacters.Contains(characterBehaviour)) {
+            _knownCharacters.Remove(characterBehaviour);
+        }
+    }
+
+    private void OnTakeDamage(CharacterBehaviour attacker, int damage, Element element, Vector3 velocity, StatusEffect statusEffect) {
+        if(CurrentTarget != null) {
+            return;
+        }
+        if (CanSeeTarget(attacker.GetBodyPosition())) {
+            if (!_knownCharacters.Contains(attacker)) {
+                _knownCharacters.Add(attacker);
+            }
+            CurrentTarget = attacker;
         }
     }
 
@@ -76,18 +117,4 @@ public class NPCVision : MonoBehaviour, IVision {
         damageable.OnDeath -= OnTargetDefeated;
         ClearCurrentTarget();
     }
-}
-
-/// <summary>
-/// Interface that allows NPCs to check for vision
-/// </summary>
-public interface IVision {
-    // WIP: these should return values
-    CharacterBehaviour CurrentTarget { get; }
-
-    bool CheckVision(); // checks general vision and returns first custom object it sees
-    bool CheckVision(CharacterBehaviour target);
-    bool CanSeeTarget(Vector3 target); // checks to see if this target is viewable(if it has one)
-    void RegisterToKnownCharacters(CharacterBehaviour characterBehaviour);
-    void DeregisterFromKnownCharacters(CharacterBehaviour characterBehaviour);
 }

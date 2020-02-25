@@ -1,54 +1,146 @@
 fileFormatVersion: 2
 guid: 527a1ab7885f39448a1c5c22ac8e9dc9
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Chest
-    100002: Chin
-    100004: Core
-    100006: Head
-    100008: HeadBase
-    100010: LeftElbow
-    100012: LeftFoot
-    100014: LeftHand
-    100016: LeftHip
-    100018: LeftKnee
-    100020: LeftShoulder
-    100022: Neck
-    100024: RightElbow
-    100026: RightFoot
-    100028: RightHand
-    100030: RightHip
-    100032: RightKnee
-    100034: RightShoulder
-    100036: SM_Shape_HumanPlaceholder
-    100038: Stomach
-    100040: //RootNode
-    400000: Chest
-    400002: Chin
-    400004: Core
-    400006: Head
-    400008: HeadBase
-    400010: LeftElbow
-    400012: LeftFoot
-    400014: LeftHand
-    400016: LeftHip
-    400018: LeftKnee
-    400020: LeftShoulder
-    400022: Neck
-    400024: RightElbow
-    400026: RightFoot
-    400028: RightHand
-    400030: RightHip
-    400032: RightKnee
-    400034: RightShoulder
-    400036: SM_Shape_HumanPlaceholder
-    400038: Stomach
-    400040: //RootNode
-    2100000: Material
-    4300000: SM_Shape_HumanPlaceholder
-    9500000: //RootNode
-    13700000: SM_Shape_HumanPlaceholder
+  serializedVersion: 26
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Chest
+  - first:
+      1: 100002
+    second: Chin
+  - first:
+      1: 100004
+    second: Core
+  - first:
+      1: 100006
+    second: Head
+  - first:
+      1: 100008
+    second: HeadBase
+  - first:
+      1: 100010
+    second: LeftElbow
+  - first:
+      1: 100012
+    second: LeftFoot
+  - first:
+      1: 100014
+    second: LeftHand
+  - first:
+      1: 100016
+    second: LeftHip
+  - first:
+      1: 100018
+    second: LeftKnee
+  - first:
+      1: 100020
+    second: LeftShoulder
+  - first:
+      1: 100022
+    second: Neck
+  - first:
+      1: 100024
+    second: RightElbow
+  - first:
+      1: 100026
+    second: RightFoot
+  - first:
+      1: 100028
+    second: RightHand
+  - first:
+      1: 100030
+    second: RightHip
+  - first:
+      1: 100032
+    second: RightKnee
+  - first:
+      1: 100034
+    second: RightShoulder
+  - first:
+      1: 100036
+    second: SM_Shape_HumanPlaceholder
+  - first:
+      1: 100038
+    second: Stomach
+  - first:
+      1: 100040
+    second: //RootNode
+  - first:
+      4: 400000
+    second: Chest
+  - first:
+      4: 400002
+    second: Chin
+  - first:
+      4: 400004
+    second: Core
+  - first:
+      4: 400006
+    second: Head
+  - first:
+      4: 400008
+    second: HeadBase
+  - first:
+      4: 400010
+    second: LeftElbow
+  - first:
+      4: 400012
+    second: LeftFoot
+  - first:
+      4: 400014
+    second: LeftHand
+  - first:
+      4: 400016
+    second: LeftHip
+  - first:
+      4: 400018
+    second: LeftKnee
+  - first:
+      4: 400020
+    second: LeftShoulder
+  - first:
+      4: 400022
+    second: Neck
+  - first:
+      4: 400024
+    second: RightElbow
+  - first:
+      4: 400026
+    second: RightFoot
+  - first:
+      4: 400028
+    second: RightHand
+  - first:
+      4: 400030
+    second: RightHip
+  - first:
+      4: 400032
+    second: RightKnee
+  - first:
+      4: 400034
+    second: RightShoulder
+  - first:
+      4: 400036
+    second: SM_Shape_HumanPlaceholder
+  - first:
+      4: 400038
+    second: Stomach
+  - first:
+      4: 400040
+    second: //RootNode
+  - first:
+      21: 2100000
+    second: Material
+  - first:
+      43: 4300000
+    second: SM_Shape_HumanPlaceholder
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: SM_Shape_HumanPlaceholder
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -83,6 +175,8 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -90,29 +184,139 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.02
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
-    skeleton: []
+    skeleton:
+    - name: TestHuman(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: SM_Shape_HumanPlaceholder
+      parentName: TestHuman(Clone)
+      position: {x: -0, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Core
+      parentName: TestHuman(Clone)
+      position: {x: -0, y: 0.9, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftHip
+      parentName: Core
+      position: {x: -0.099999994, y: -0.06, z: 0}
+      rotation: {x: 0, y: -0, z: -0.034899496, w: 0.99939084}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftKnee
+      parentName: LeftHip
+      position: {x: -0, y: -0.39, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftFoot
+      parentName: LeftKnee
+      position: {x: -0, y: -0.39999998, z: 0}
+      rotation: {x: 0, y: 0, z: 0.034899496, w: 0.99939084}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightHip
+      parentName: Core
+      position: {x: 0.099999994, y: -0.06, z: 0}
+      rotation: {x: 0, y: 0, z: 0.034899496, w: 0.99939084}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightKnee
+      parentName: RightHip
+      position: {x: -0, y: -0.39, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightFoot
+      parentName: RightKnee
+      position: {x: -0, y: -0.39999998, z: 0}
+      rotation: {x: 0, y: -0, z: -0.034899496, w: 0.99939084}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Stomach
+      parentName: Core
+      position: {x: -0, y: 0.19999999, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Chest
+      parentName: Stomach
+      position: {x: -0, y: 0.21, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Neck
+      parentName: Chest
+      position: {x: -0, y: 0.14999999, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: HeadBase
+      parentName: Neck
+      position: {x: -0, y: 0.057933554, z: -0.02003223}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Head
+      parentName: HeadBase
+      position: {x: -0, y: 0.120015234, z: 0.06015046}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Chin
+      parentName: Head
+      position: {x: -0, y: -0.1129488, z: 0.10988177}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightShoulder
+      parentName: Neck
+      position: {x: 0.14999999, y: -0.035, z: 0}
+      rotation: {x: -0, y: -0, z: -0.04035241, w: 0.9991855}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightElbow
+      parentName: RightShoulder
+      position: {x: 0.29999998, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: RightHand
+      parentName: RightElbow
+      position: {x: 0.26999998, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftShoulder
+      parentName: Neck
+      position: {x: -0.14999999, y: -0.035, z: 0}
+      rotation: {x: -0, y: -0, z: 0.04035241, w: 0.9991855}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftElbow
+      parentName: LeftShoulder
+      position: {x: -0.29999998, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: LeftHand
+      parentName: LeftElbow
+      position: {x: -0.26999998, y: 0, z: 0}
+      rotation: {x: 0, y: -0, z: -0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
     armTwist: 0.5
     foreArmTwist: 0.5
     upperLegTwist: 0.5
@@ -120,6 +324,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

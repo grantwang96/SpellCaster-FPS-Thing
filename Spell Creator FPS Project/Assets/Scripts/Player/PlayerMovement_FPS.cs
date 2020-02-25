@@ -17,14 +17,12 @@ public class PlayerMovement_FPS : CharacterMoveController {
         PlayerController.Instance.OnJumpPressed += OnJump;
         PlayerController.Instance.Damageable.OnDeath += OnPlayerDeath;
         PlayerController.Instance.OnControllerStateUpdated += OnControllerStateUpdated;
-
     }
 
     private void UnsubscribeToController() {
         PlayerController.Instance.OnJumpPressed -= OnJump;
         PlayerController.Instance.Damageable.OnDeath -= OnPlayerDeath;
         PlayerController.Instance.OnControllerStateUpdated -= OnControllerStateUpdated;
-
     }
 
     protected override void Start() {
@@ -37,9 +35,14 @@ public class PlayerMovement_FPS : CharacterMoveController {
     protected override void Update () {
         ProcessWalkInput();
     }
-    
+
+    protected override void ProcessMovement() {
+        Vector3 move = _movementVelocity + _externalForce;
+        _characterController.Move(move * Time.deltaTime);
+    }
+
     private void ProcessWalkInput() {
-        if (!_active || !_hasControl) {
+        if (!_active) {
             _movementVelocity = Vector2.zero;
             return;
         }

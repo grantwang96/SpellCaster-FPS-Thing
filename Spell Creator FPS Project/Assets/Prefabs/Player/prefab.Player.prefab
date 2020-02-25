@@ -70,7 +70,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -157.5}
+  m_AnchoredPosition: {x: 20, y: -157.49998}
   m_SizeDelta: {x: 275, y: -335}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &222467699063449452
@@ -410,12 +410,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseSpeed: 7
-  _maxSpeed: 0
+  _maxSpeed: 7
   _moveSpeed: 0
   _mass: 1
-  _linearDrag: 1
+  _airDrag: 1
+  _groundDrag: 2
+  _currentDrag: 2
   _headDistanceThreshold: 0.4
   _performingAction: 0
+  _externalForce: {x: 0, y: 0, z: 0}
   _movementVelocity: {x: 0, y: 0, z: 0}
   lookSpeed: 150
   jumpForce: 8
@@ -485,9 +488,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f31853af2dae80e49a43db70c30fc06a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parentDamageable: {fileID: 0}
   _health: 100
   _maxHealth: 100
+  _isDead: 0
+  _root: {fileID: 4107163916722246}
   _body: {fileID: 4172213873589246}
 --- !u!114 &114216178686495076
 MonoBehaviour:
@@ -540,7 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f10047948f65e418b12b0868b1503b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 114820299144877070}
+  _ownerGO: {fileID: 1125936217374846}
   _hurtBoxGOs:
   - {fileID: 4409788406049031509}
 --- !u!1 &1206581343326352
@@ -2280,4 +2284,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _priority: 0
   _damageScale: 1
-  _owner: {fileID: 114820299144877070}
+  _ownerGO: {fileID: 1125936217374846}

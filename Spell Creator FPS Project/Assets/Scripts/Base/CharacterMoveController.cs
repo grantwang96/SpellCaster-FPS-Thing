@@ -22,8 +22,11 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
         }
     }
     [SerializeField] protected float _mass;
-    [SerializeField] protected float _linearDrag;
+
+    [SerializeField] protected float _airDrag;
+    [SerializeField] protected float _groundDrag;
     [SerializeField] protected float _currentDrag;
+
     [SerializeField] protected float _headDistanceThreshold;
 
     [SerializeField] protected bool _performingAction;
@@ -47,7 +50,7 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
     }
 
     protected virtual void Start() {
-        _currentDrag = _linearDrag;
+        _currentDrag = _groundDrag;
     }
 
     protected virtual void Update() {
@@ -79,8 +82,16 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
         if (!gameObject.activeInHierarchy) {
             return;
         }
-        _currentDrag = drag > 0f ? drag : _linearDrag;
+        _currentDrag = GetDrag(drag, velocity.y);
         _externalForce += velocity / _mass;
+        _hasControl = allowControl;
+    }
+
+    protected float GetDrag(float overrideDrag, float upwardForce) {
+        if(overrideDrag > 0f) {
+            return overrideDrag;
+        }
+        return (upwardForce > 0f || !_characterController.isGrounded) ? _airDrag : _groundDrag;
     }
 
     public virtual void OverrideForce(Vector3 velocity, float drag, bool allowControl = false) {
@@ -90,22 +101,20 @@ public abstract class CharacterMoveController : MonoBehaviour { // Handles chara
 
     protected virtual void ProcessExternalForces() {
         _externalForce = ProcessGravity(_externalForce);
-        bool forced = false;
-        if(!Mathf.Approximately(0f, _externalForce.x)) {
-            _externalForce.x = ExtraMath.ReduceAbsolute(_externalForce.x, Time.deltaTime * _currentDrag);
-            forced = true;
-        }
-        if(!Mathf.Approximately(0f, _externalForce.z)) {
-            _externalForce.z = ExtraMath.ReduceAbsolute(_externalForce.z, Time.deltaTime * _currentDrag);
-            forced = true;
-        }
-        if (!forced) {
-            ResetMoveController();
-        }
+        ReduceExternalForce();
     }
 
-    protected virtual void ResetMoveController() {
-        _currentDrag = _linearDrag;
+    protected void ReduceExternalForce() {
+        if (Mathf.Approximately(_externalForce.x, 0f) && Mathf.Approximately(_externalForce.z, 0f)) {
+            _currentDrag = GetDrag(0f, _externalForce.y);
+            _hasControl = true;
+            return;
+        }
+        float vertical = _externalForce.y;
+        Vector3 lateralExternalForce = _externalForce;
+        lateralExternalForce.y = 0f;
+        _externalForce = ExtraMath.ReduceVector(lateralExternalForce, Time.deltaTime * _currentDrag);
+        _externalForce.y = vertical;
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit) {

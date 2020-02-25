@@ -14,15 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _npcIdPrefix: SkeletonSwordsman
   _scoreValue: 10
-  _totalHealth: 40
+  _totalHealth: 100
   _statResistances:
   - {fileID: 11400000, guid: 67daa09645c2ba94ca77f168c75c9d72, type: 2}
   _statWeaknesses: []
   _walkSpeed: 1.5
   _runSpeed: 5
+  _stunThreshold: 10
+  _knockbackThreshold: 20
   _idleTimeMinimum: 4
   _idleTimeMaximum: 6
-  _visionRange: 25
+  _visionRange: 10
   _visionAngle: 80
   _visionMask:
     serializedVersion: 2

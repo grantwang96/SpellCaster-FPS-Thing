@@ -10,16 +10,16 @@ public class ChaseState : MoveState {
     [SerializeField] private BrainState _onTargetOutOfSightState;
     [SerializeField] private BrainState _onTargetLostState;
 
-    private IVision _vision;
+    [SerializeField] private NPCVision _vision;
     [SerializeField] private Vector3 _targetLastKnownPosition;
 
     private bool _arrivedDestination = false;
 
-    private void Start() {
-        _vision = _npcBehaviour.GetComponent<IVision>();
+    public override bool CanTransition() {
+        return _vision.CurrentTarget != null;
     }
 
-    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f, bool isChild = false) {
         _arrivedDestination = false;
         if (_vision.CurrentTarget == null) {
             _npcBehaviour.ChangeBrainState(_onTargetLostState);
@@ -91,5 +91,13 @@ public class ChaseState : MoveState {
             _npcBehaviour.ChangeBrainState(_onTargetSeenState);
         }
         _npcBehaviour.ChangeBrainState(_onTargetLostState);
+    }
+
+    protected override void OnTakeDamage(DamageData data) {
+
+    }
+
+    protected override void OnEnterHitStun(Vector3 direction, float power) {
+        _npcBehaviour.ChangeBrainState(BrainStateTransitionId.TakeDamage, this);
     }
 }

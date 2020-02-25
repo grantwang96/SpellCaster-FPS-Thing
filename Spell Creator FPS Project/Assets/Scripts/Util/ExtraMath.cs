@@ -18,4 +18,12 @@ public static class ExtraMath
         }
         return value;
     }
+
+    public static Vector3 ReduceVector(Vector3 vector, float amount) {
+        Vector3 value = vector;
+        float magnitude = value.magnitude;
+        float percent = Mathf.Clamp01(amount / magnitude);
+        value = Vector3.Lerp(vector, Vector3.zero, percent);
+        return value;
+    }
 }

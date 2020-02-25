@@ -15,7 +15,7 @@ public class MeleeAttackState : AttackState {
         _hitboxController = _npcBehaviour.GetComponent<HitboxController>();
     }
 
-    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f, bool isChild = false) {
         _moveController.Stop();
 
         if(_hitboxController == null) {
@@ -59,5 +59,9 @@ public class MeleeAttackState : AttackState {
         if (_onTargetInRangeState.CanTransition()) {
             _npcBehaviour.ChangeBrainState(_onTargetInRangeState);
         }
+    }
+
+    protected override void OnTakeDamage(DamageData data) {
+        
     }
 }

@@ -16,8 +16,8 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
     public event Action<AnimationState> OnAnimationStateUpdated;
     
     protected virtual void Start() {
-        _characterBehaviour.Damageable.OnHealthChanged += OnHealthChanged;
-        _characterBehaviour.Damageable.OnDeath += OnDeath;
+        _characterBehaviour.Damageable.OnStun += OnStun;
+        _characterBehaviour.Damageable.OnKnockback += OnKnockback;
     }
     
     public virtual void TiltCharacter(float x) {
@@ -74,13 +74,24 @@ public class CharacterAnimationHandler : MonoBehaviour { // base class that hand
         OnAnimationStateUpdated?.Invoke(state);
     }
 
-    protected virtual void OnHealthChanged(int health) {
-        // determine if damage was taken
-        // immediately enter damaged animation state
+    private void OnTakeDamage(DamageData data) {
+        _anim.SetFloat("Horizontal", data.Direction.normalized.x);
+        _anim.SetFloat("Vertical", data.Direction.normalized.z);
     }
 
-    protected virtual void OnDeath(bool isDead, Damageable damageable) {
-        // immediately enter death state
+    private void OnStun(Vector3 direction, float power) {
+        Vector3 localDirection = _characterBehaviour.BodyTransform.InverseTransformDirection(direction);
+        _anim.SetFloat("Horizontal", localDirection.x);
+        _anim.SetFloat("Vertical", localDirection.z);
+        _anim.SetTrigger("Stun");
+    }
+
+    private void OnKnockback(Vector3 direction, float power) {
+        _anim.SetTrigger("Knockback");
+    }
+
+    private void OnDeath(bool isDead, Damageable damageable) {
+        
     }
 }
 

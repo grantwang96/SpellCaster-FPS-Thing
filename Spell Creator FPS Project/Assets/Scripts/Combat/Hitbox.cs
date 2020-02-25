@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class Hitbox : MonoBehaviour
 {
-    [SerializeField] private Damageable _owner;
+    [SerializeField] private GameObject _ownerGO;
     [SerializeField] private float _powerScale = 1f;
 
+    private Damageable _owner;
     private HitboxInfo _info;
     private HitData _hitData;
 
     public void Initialize(HitboxInfo info) {
+        if(_owner == null) {
+            _owner = _ownerGO.GetComponent<Damageable>();
+        }
         _info = info;
         _hitData = new HitData(_info, _owner, _powerScale, transform.position);
     }
@@ -21,22 +25,6 @@ public class Hitbox : MonoBehaviour
             hurtBox.Hit(_hitData);
         }
     }
-
-    /*
-    void OnTriggerEnter(Collider other) {
-        Damageable damageable = other.GetComponent<Damageable>();
-        if (damageable != null && damageable != _owner) {
-            TriggerEffects(damageable);
-        }
-    }
-
-    private void TriggerEffects(Damageable target) {
-        Vector3 direction = _owner.transform.TransformDirection(_info.KnockBackDir);
-        for (int i = 0; i < _info.Effects.Length; i++) {
-            _info.Effects[i].TriggerEffect(_owner, direction, _powerScale, transform.position, target);
-        }
-    }
-    */
 }
 
 [System.Serializable]
@@ -71,7 +59,7 @@ public class HitData {
     }
 
     public void TriggerEffects(Damageable target) {
-        Vector3 direction = Owner.transform.TransformDirection(KnockBackDir);
+        Vector3 direction = Owner.Body.TransformDirection(KnockBackDir);
         for (int i = 0; i < Effects.Length; i++) {
             Effects[i].TriggerEffect(Owner, direction, PowerScale, Origin, target);
         }

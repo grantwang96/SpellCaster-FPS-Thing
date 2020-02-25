@@ -55,13 +55,17 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     }
 
     public void AddItem(string id, int count) {
+        bool hasItem = false;
         for(int i = 0; i < _items.Count; i++) {
             if(_items[i].Id == id) {
                 _items[i].Count += count;
-                return;
+                hasItem = true;
+                break;
             }
         }
-        _items.Add(new RuneInfo(id, count));
+        if (!hasItem) {
+            _items.Add(new RuneInfo(id, count));
+        }
         UpdateViewCells();
         OnInventoryUpdated?.Invoke();
     }
@@ -69,7 +73,10 @@ public class UIRunicInventoryGridContainer : UIInventoryViewGridContainer {
     public void RemoveItem(string id, int count) {
         RuneInfo info = _items.Find(x => x.Id == id);
         if(info != null) {
-            _items.Remove(info);    
+            info.Count -= count;
+            if(info.Count <= 0) {
+                _items.Remove(info);
+            }   
         }
         UpdateViewCells();
         OnInventoryUpdated?.Invoke();

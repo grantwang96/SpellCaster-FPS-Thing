@@ -14,7 +14,7 @@ public class TutorialActionOverrideEnemyState : TutorialAction
                 ErrorManager.LogError(nameof(TutorialActionOverrideEnemyState), $"Could not retrieve enemy with id: {_enemyStateOverrideDatas[i].EnemyUniqueId}");
                 return TutorialActionStatus.Abort;
             }
-            enemy.ChangeBrainState(_enemyStateOverrideDatas[i].TransitionId, _enemyStateOverrideDatas[i].Duration);
+            enemy.ChangeBrainState(_enemyStateOverrideDatas[i].TransitionId, null, _enemyStateOverrideDatas[i].Duration);
         }
         return base.Execute();
     }

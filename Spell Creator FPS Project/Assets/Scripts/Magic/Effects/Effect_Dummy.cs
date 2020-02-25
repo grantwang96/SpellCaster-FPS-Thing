@@ -20,6 +20,6 @@ public class Effect_Dummy : Effect {
         if (caster == damageable || damageable == null) { return; }
         Debug.Log(caster + " performed spell on " + damageable);
         velocity.y += _upwardForce;
-        damageable.AddForce(velocity);
+        damageable.AddForce(velocity, _basePower);
     }
 }

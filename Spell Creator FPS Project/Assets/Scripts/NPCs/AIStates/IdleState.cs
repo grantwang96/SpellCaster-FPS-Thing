@@ -7,9 +7,7 @@ public class IdleState : BrainState {
     [SerializeField] private BrainState _onIdleEnd;
     [SerializeField] private float _defaultIdleTime;
 
-    [SerializeField] private NPCMoveController _moveController;
-
-    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f, bool isChild = false) {
         base.Enter(overrideBrainState, duration);
         _startTime = Time.time;
         _duration = Mathf.Approximately(duration, 0f) ? _defaultIdleTime : duration;

@@ -33,7 +33,7 @@ public class EnemySpawn : MonoBehaviour {
         if(enemy == null) {
             return;
         }
-        enemy.ChangeBrainState(transitionId, time);
+        enemy.ChangeBrainState(transitionId, null, time);
         _spawnedEnemies++;
         if(_enemySpawnLimit > 0 && _spawnedEnemies == _enemySpawnLimit) {
             _finishedSpawning = true;

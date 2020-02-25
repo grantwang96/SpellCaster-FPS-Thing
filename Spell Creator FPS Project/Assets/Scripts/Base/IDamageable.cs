@@ -1,72 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public abstract class Damageable : MonoBehaviour {
+public interface Damageable {
 
-    public abstract int Health { get; }
-    public abstract int MaxHealth { get; }
-    public abstract bool IsDead { get; }
-    public abstract Transform Body { get; } // center of the Damageable object
+    int Health { get; }
+    int MaxHealth { get; }
+    bool IsDead { get; }
+    Transform Root { get; }
+    Transform Body { get; } // center of the Damageable object
 
-    public delegate void HealthChanged(int health);
-    public event HealthChanged OnHealthChanged;
-    public event HealthChanged OnMaxHealthChanged;
-    public delegate void DeathEvent(bool isDead, Damageable damageable);
-    public event DeathEvent OnDeath;
+    event Action<Vector3, float> OnStun;
+    event Action<Vector3, float> OnKnockback;
+    event Action<int> OnHealthChanged;
+    event Action<int> OnMaxHealthChanged;
+    
+    event Action<DamageData> OnDamaged;
+    event Action<bool, Damageable> OnDeath;
 
-    public Damageable _parentDamageable;
-    protected List<ActiveStatusEffect> _activeStatusEffects = new List<ActiveStatusEffect>();
+    Damageable ParentDamageable { get; }
+    
+    void TakeDamage(
+        Damageable attacker,
+        int power,
+        Element element = Element.Neutral,
+        Vector3 velocity = new Vector3(),
+        StatusEffect statusEffect = null
+    );
 
-    protected virtual void Update() {
-        ProcessActiveStatusEffects();
-    }
-
-    public abstract void TakeDamage(int power, Element element);
-    public abstract void TakeDamage(int power, Element element, Vector3 velocity);
-    public abstract void TakeDamage(int power, Element element, StatusEffect statusEffect);
-    public abstract void TakeDamage(int power, Element element, Vector3 velocity, StatusEffect statusEffect);
-
-    protected void FireHealthUpdateEvent() {
-        OnHealthChanged?.Invoke(Health);
-    }
-    protected void FireMaxHealthUpdatedEvent() {
-        OnMaxHealthChanged?.Invoke(MaxHealth);
-    }
-
-    protected virtual void AddStatusEffect(StatusEffect statusEffect, int power) {
-        ActiveStatusEffect newActiveStatus =
-            new ActiveStatusEffect(power, statusEffect);
-        for (int i = 0; i < _activeStatusEffects.Count; i++) {
-            StatusEffect currentStatusEffect = _activeStatusEffects[i].StatusEffect;
-            if(currentStatusEffect == statusEffect) {
-                _activeStatusEffects[i] = newActiveStatus;
-                return;
-            }
-        }
-        _activeStatusEffects.Add(newActiveStatus);
-        newActiveStatus.StatusEffect.OnAddEffect(this, power);
-    }
-    protected virtual void ProcessActiveStatusEffects() {
-        for (int i = 0; i < _activeStatusEffects.Count; i++) {
-            ActiveStatusEffect activeStatusEffect = _activeStatusEffects[i];
-            activeStatusEffect.Duration -= Time.deltaTime;
-            if(activeStatusEffect.Duration <= 0) {
-                activeStatusEffect.StatusEffect.OnRemoveEffect(this);
-                _activeStatusEffects.Remove(activeStatusEffect);
-                continue;
-            }
-            if(activeStatusEffect.Duration <= activeStatusEffect.LastEffectTime) {
-                activeStatusEffect.StatusEffect.ApplyEffect(this, 1);
-                activeStatusEffect.LastEffectTime = activeStatusEffect.Duration - activeStatusEffect.StatusEffect.Interval;
-            }
-        }
-    }
-
-    public abstract void AddForce(Vector3 velocity, float drag = 0f, bool overrideForce = false, bool allowControl = false);
-    protected virtual void Die() {
-        OnDeath?.Invoke(true, this);
-    }
+    void AddForce(Vector3 direction, int power, float drag = 0f, bool overrideForce = false, bool allowControl = false);
+    void SetParentDamageable(Damageable parent);
 }
 
 [System.Serializable]
@@ -83,4 +46,20 @@ public class ActiveStatusEffect {
     public float Duration;
     public float LastEffectTime;
     public StatusEffect StatusEffect { get; private set; }
+}
+
+public class DamageData {
+    public readonly Damageable Attacker;
+    public readonly int Damage;
+    public readonly Vector3 Direction;
+    public readonly Element Element;
+    public readonly StatusEffect StatusEffect;
+
+    public DamageData(Damageable attacker, int damage, Element element, Vector3 direction, StatusEffect statusEffect) {
+        Attacker = attacker;
+        Damage = damage;
+        Direction = direction;
+        Element = element;
+        StatusEffect = statusEffect;
+    }
 }

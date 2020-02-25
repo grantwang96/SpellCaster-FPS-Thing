@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SingleAnimationState : BrainState
 {
@@ -10,7 +8,26 @@ public class SingleAnimationState : BrainState
         base.OnAnimationStateUpdated(state);
 
         if (state == AnimationState.CanTransition) {
-            _npcBehaviour.ChangeBrainState(_nextState);
+            OnCanTransition();
         }
+        if(state == AnimationState.Completed) {
+            OnComplete();
+        }
+    }
+
+    protected virtual void OnCanTransition() {
+        if (_overrideNextState != null) {
+            _npcBehaviour.ChangeBrainState(_overrideNextState);
+            return;
+        }
+        _npcBehaviour.ChangeBrainState(_nextState);
+    }
+
+    protected virtual void OnComplete() {
+        if (_overrideNextState != null) {
+            _npcBehaviour.ChangeBrainState(_overrideNextState);
+            return;
+        }
+        _npcBehaviour.ChangeBrainState(_nextState);
     }
 }

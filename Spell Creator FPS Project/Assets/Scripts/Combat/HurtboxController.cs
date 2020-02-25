@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class HurtboxController : MonoBehaviour
 {
-    [SerializeField] private Damageable _owner;
+    [SerializeField] private GameObject _ownerGO;
     [SerializeField] private List<Hurtbox> _hurtBoxGOs = new List<Hurtbox>();
 
     private Dictionary<string, Hurtbox> _hurtBoxes = new Dictionary<string, Hurtbox>();
+    private Damageable _owner;
 
     private bool _hit;
     private float _damageScale;
@@ -15,6 +16,7 @@ public class HurtboxController : MonoBehaviour
     private HitData _hitData;
 
     private void Awake() {
+        _owner = _ownerGO.GetComponent<Damageable>();
         RegisterHurtBoxes();
     }
 
@@ -60,7 +62,7 @@ public class HurtboxController : MonoBehaviour
 
 
     private void TriggerEffects() {
-        Vector3 direction = _hitData.Owner.transform.TransformDirection(_hitData.KnockBackDir);
+        Vector3 direction = _hitData.Owner.Body.TransformDirection(_hitData.KnockBackDir);
         Effect[] effects = _hitData.Effects;
         for (int i = 0; i < effects.Length; i++) {
             effects[i].TriggerEffect(_hitData.Owner, direction, _hitData.PowerScale * _damageScale, _hitData.Origin, _owner);

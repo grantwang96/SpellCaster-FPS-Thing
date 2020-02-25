@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,12 +11,14 @@ public class NPCBehaviour : CharacterBehaviour {
     public string Id => _id;
     
     public NPCMoveController CharMove { get; private set; }
-    [SerializeField] protected Damageable _damageable;
+    [SerializeField] protected GameObject _damageableGO;
+    protected Damageable _damageable;
     public override Damageable Damageable => _damageable;
     [SerializeField] protected NPCBlueprint _blueprint; // blueprint to derive data from
     public NPCBlueprint Blueprint => _blueprint;
 
     [SerializeField] protected BrainState _currentBrainState; // current state of AI State Machine
+    public BrainState CurrentBrainState => _currentBrainState;
     [SerializeField] protected BrainState _startingState; // how the NPC should behave at start (usually idle)
 
     [SerializeField] private List<BrainStateTransition> _allBrainStateTransitions = new List<BrainStateTransition>();
@@ -32,6 +33,7 @@ public class NPCBehaviour : CharacterBehaviour {
     protected override void Awake() {
         base.Awake();
         InitializeBrainStateTransitions();
+        _damageable = _damageableGO.GetComponent<Damageable>();
         CharMove = _moveController as NPCMoveController;
         _prepped = true;
     }
@@ -78,22 +80,22 @@ public class NPCBehaviour : CharacterBehaviour {
     /// Changes the current state in the AI State Machine
     /// </summary>
     /// <param name="brainState"></param>
-    public virtual void ChangeBrainState(BrainState brainState, BrainState overrideBrainState = null, float duration = 0f) {
+    public virtual void ChangeBrainState(BrainState brainState, BrainState overrideNextState = null, float duration = 0f) {
         // perform any exit operations from the previous state
         _currentBrainState?.Exit();
 
         // save the new brain state and enter
         _currentBrainState = brainState;
-        _currentBrainState?.Enter(overrideBrainState, duration);
+        _currentBrainState?.Enter(overrideNextState, duration);
 
         // OnBrainStateChanged?.Invoke(_currentBrainState?.TriggerName);
     }
 
-    public virtual bool ChangeBrainState(BrainStateTransitionId transitionId, float duration = 0f) {
+    public virtual bool ChangeBrainState(BrainStateTransitionId transitionId, BrainState overrideNextState = null, float duration = 0f) {
         if (!_brainStateTransitions.ContainsKey(transitionId)) {
             return false;
         }
-        ChangeBrainState(_brainStateTransitions[transitionId], null, duration);
+        ChangeBrainState(_brainStateTransitions[transitionId], overrideNextState, duration);
         return true;
     }
 

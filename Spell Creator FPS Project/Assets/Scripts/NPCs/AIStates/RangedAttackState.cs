@@ -32,7 +32,7 @@ public class RangedAttackState : AttackState {
         PooledObjectManager.Instance.RegisterPooledObject(_projectilePrefabId, 10);
     }
 
-    public override void Enter(BrainState overrideBrainState = null, float duration = 0f) {
+    public override void Enter(BrainState overrideBrainState = null, float duration = 0f, bool isChild = false) {
         base.Enter(overrideBrainState, duration);
         _moveController.SetRotation(_npcVision.CurrentTarget.transform.position, .9f);
     }
@@ -104,5 +104,9 @@ public class RangedAttackState : AttackState {
         } else if(state == AnimationState.Completed) {
             OnAttackFinish();
         }
+    }
+
+    protected override void OnTakeDamage(DamageData data) {
+        
     }
 }

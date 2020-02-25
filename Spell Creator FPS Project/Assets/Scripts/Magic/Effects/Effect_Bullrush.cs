@@ -9,15 +9,15 @@ public class Effect_Bullrush : Effect {
 
     public override void TriggerEffect(Damageable caster, float powerScale, List<Effect> additionalEffects = null) {
         Vector3 velocity = caster.Body.forward * _basePower * powerScale;
-        caster.AddForce(velocity, _overrideDrag);
+        caster.AddForce(velocity, GetTotalPower(powerScale), _overrideDrag);
     }
 
     public override void TriggerEffect(Damageable caster, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {
         if(damageable == null) {
             return;
         }
-        Vector3 velocity = damageable.Body.forward * _basePower * powerScale;
-        damageable.AddForce(velocity, _overrideDrag, true);
+        Vector3 velocity = damageable.Body.forward;
+        damageable.AddForce(velocity, GetTotalPower(powerScale), _overrideDrag, true);
     }
 
     public override void TriggerEffect(Damageable caster, Vector3 velocity, float powerScale, Vector3 position, Damageable damageable = null, List<Effect> additionalEffects = null) {

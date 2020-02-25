@@ -21,6 +21,10 @@ public abstract partial class NPCBlueprint : ScriptableObject {
     public float WalkSpeed { get { return _walkSpeed; } }
     [SerializeField] protected float _runSpeed;
     public float RunSpeed { get { return _runSpeed; } }
+    [SerializeField] protected int _stunThreshold;
+    public int StunThreshold => _stunThreshold;
+    [SerializeField] protected int _knockbackThreshold;
+    public int KnockbackThreshold => _knockbackThreshold;
 
     [SerializeField] private float _idleTimeMinimum;
     [SerializeField] private float _idleTimeMaximum;

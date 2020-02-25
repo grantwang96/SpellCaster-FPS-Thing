@@ -314,7 +314,7 @@ MonoBehaviour:
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: ThrowingDingus
-  _damageable: {fileID: 114963092705066930}
+  _damageableGO: {fileID: 1158338626366970}
   _blueprint: {fileID: 11400000, guid: 66fa06f1c7f30ef4c90dcd5048cfa9a7, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 1809357437649186404}
@@ -405,10 +405,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1711357440be3064a8aec2338f9555fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parentDamageable: {fileID: 0}
   _health: 30
   _maxHealth: 30
   _isDead: 0
+  _root: {fileID: 4890738134755894}
   _body: {fileID: 4416672607642428}
 --- !u!114 &114103331361837904
 MonoBehaviour:
@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f10047948f65e418b12b0868b1503b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 114963092705066930}
+  _ownerGO: {fileID: 1158338626366970}
   _hurtBoxGOs:
   - {fileID: 4231073702262752265}
 --- !u!1 &1188099691863894
@@ -1438,7 +1438,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e12fd06ab46cc4c9a92a614d8d3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 114963092705066930}
   _effects: []
   _powerScale: 1
   _knockBackDir: {x: 0, y: 0, z: 0}
@@ -1718,7 +1717,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _priority: 0
   _damageScale: 1
-  _owner: {fileID: 114963092705066930}
+  _ownerGO: {fileID: 1158338626366970}
 --- !u!1 &3497806706203741733
 GameObject:
   m_ObjectHideFlags: 0
