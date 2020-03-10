@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
-public delegate void SceneUpdateDelegate(string sceneName);
+using System;
 
 public class SceneController : MonoBehaviour {
 
@@ -14,7 +12,10 @@ public class SceneController : MonoBehaviour {
 
     public string CurrentSceneName => SceneManager.GetActiveScene().name;
 
-    public event SceneUpdateDelegate OnSceneLoaded;
+    public event Action<string> OnSceneStartedLoading;
+    public event Action<string> OnSceneFinishedLoading;
+
+    private Action _onLoadingScreenAnimationCompleted;
 
     private string _nextSceneName;
     private bool isLoadingScene;
@@ -36,13 +37,25 @@ public class SceneController : MonoBehaviour {
         _nextSceneName = sceneName;
         // check to see if we're already in that scene or if we're currently loading
         // play some transition animation
-        // temp: we're just gonna go straight in
-        OnEndSceneTransition();
+        _onLoadingScreenAnimationCompleted = OnEnterSceneTransition;
+        FullScreenOverlayController.Instance.DisplayLoadingScreen();
+        FullScreenOverlayController.Instance.LoadingScreenAnimationUpdated += OnScreenAnimationFinished;
         return true;
     }
 
+    private void OnScreenAnimationFinished(AnimationState state) {
+        switch (state) {
+            case AnimationState.Completed:
+                FullScreenOverlayController.Instance.LoadingScreenAnimationUpdated -= OnScreenAnimationFinished;
+                _onLoadingScreenAnimationCompleted?.Invoke();
+                _onLoadingScreenAnimationCompleted = null;
+                break;
+        }
+    }
+
     // when transition animation ends -> should be in loading screen
-    private void OnEndSceneTransition() {
+    private void OnEnterSceneTransition() {
+        OnSceneStartedLoading?.Invoke(_nextSceneName);
         LoadSceneInstant(LoadingScreenScene);
         StartCoroutine(LoadSceneAsync());
     }
@@ -53,15 +66,20 @@ public class SceneController : MonoBehaviour {
         while (!asyncLoad.isDone) {
             yield return new WaitForEndOfFrame();
         }
+        FullScreenOverlayController.Instance.HideLoadingScreen();
         FinishLoadingScene();
     }
 
     private void FinishLoadingScene() {
         isLoadingScene = false;
-        OnSceneLoaded?.Invoke(_nextSceneName);
+        OnSceneFinishedLoading?.Invoke(_nextSceneName);
     }
 
     public bool LoadSceneInstant(string sceneName) {
+        if(SceneManager.GetSceneByName(sceneName) == null) {
+            return false;
+        }
+        SceneManager.LoadScene(sceneName);
         return true;
     }
 }

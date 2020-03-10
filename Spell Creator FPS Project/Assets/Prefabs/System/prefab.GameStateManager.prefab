@@ -318,7 +318,7 @@ MonoBehaviour:
     _gameState: {fileID: 4625419297767987839}
   - _transitionName: enter_testinggrounds
     _gameState: {fileID: 4625946838509758739}
-  _sceneName: 
+  _sceneName: LoadingScreen
   _pooledObjectPrefabAssets: []
   _uiPrefabAssets: []
 --- !u!1 &4729860671830249955

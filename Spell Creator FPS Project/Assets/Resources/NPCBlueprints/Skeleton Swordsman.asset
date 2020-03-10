@@ -19,12 +19,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67daa09645c2ba94ca77f168c75c9d72, type: 2}
   _statWeaknesses: []
   _walkSpeed: 1.5
-  _runSpeed: 5
+  _runSpeed: 4.5
   _stunThreshold: 10
   _knockbackThreshold: 20
   _idleTimeMinimum: 4
   _idleTimeMaximum: 6
-  _visionRange: 10
+  _visionRange: 20
   _visionAngle: 80
   _visionMask:
     serializedVersion: 2

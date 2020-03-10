@@ -32,7 +32,7 @@ public class LootManager : MonoBehaviour, ILootManager {
     private static LootManager _instance;
     public static ILootManager Instance => _instance;
 
-    public ChestConfig ChestConfig { get; private set; }
+    public ChestConfig ChestConfig => ConfigManager.Instance.ChestConfigData;
 
     // list of all chests that appear in the level
     private Dictionary<string, ChestInfo> _chests = new Dictionary<string, ChestInfo>();
@@ -47,7 +47,6 @@ public class LootManager : MonoBehaviour, ILootManager {
 	// Use this for initialization
 	private void Awake () {
         _instance = this;
-        LoadConfig();
 	}
 
     private void Start() {
@@ -73,14 +72,6 @@ public class LootManager : MonoBehaviour, ILootManager {
                 continue;
             }
             _lootTable[lootable.LootTier].Add(_allLoot[i]);
-        }
-    }
-
-    private void LoadConfig() {
-        Object obj = Resources.Load(ResourceLocation, typeof(ChestConfig));
-        ChestConfig = obj as ChestConfig;
-        if(ChestConfig != null) {
-            Debug.Log("Successfully loaded chest config!");
         }
     }
 

@@ -12,6 +12,7 @@ public class UIPlayerArsenalView : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         _playerCombat.OnSpellsInventoryUpdated += OnHeldSpellsUpdated;
+        _playerCombat.OnSelectedSpellUpdated += OnSelectedSpellUpdated;
 
         for(int i = 0; i < GameplayValues.Magic.PlayerLoadoutMaxSize; i++) {
             UIPlayerSpellSlot spellSlot = Instantiate(_playerSpellSlotPrefab, transform);
@@ -22,6 +23,7 @@ public class UIPlayerArsenalView : MonoBehaviour {
 
     private void OnDestroy() {
         _playerCombat.OnSpellsInventoryUpdated -= OnHeldSpellsUpdated;
+        _playerCombat.OnSelectedSpellUpdated -= OnSelectedSpellUpdated;
     }
 
     private void OnHeldSpellsUpdated(List<SpellSlotInfo> slotInfos) {
@@ -32,6 +34,13 @@ public class UIPlayerArsenalView : MonoBehaviour {
                 continue;
             }
             _spellSlots[i].SetSpellSlotInfo(slotInfos[i]);
+            _spellSlots[i].SetSelected(i == _playerCombat.SelectedSpellIndex);
+        }
+    }
+
+    private void OnSelectedSpellUpdated(int slot) {
+        for(int i = 0; i < _spellSlots.Count; i++) {
+            _spellSlots[i].SetSelected(i == _playerCombat.SelectedSpellIndex);
         }
     }
 }

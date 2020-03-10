@@ -7,6 +7,7 @@ public interface ICameraManager {
     Camera ActiveCamera { get; }
 
     void SetActiveCamera(string cameraId);
+    void SetCameraActive(string cameraId, bool active);
     Camera GetCameraById(string cameraId);
 }
 
@@ -24,7 +25,6 @@ public class CameraManager : MonoBehaviour, ICameraManager
     {
         Instance = this;
         InitializeCameras();
-        SetActiveCamera(MainCameraId);
     }
 
     private void InitializeCameras() {
@@ -40,10 +40,16 @@ public class CameraManager : MonoBehaviour, ICameraManager
             return;
         }
         if(ActiveCamera != null) {
-            ActiveCamera.gameObject.SetActive(false);
+            ActiveCamera.enabled = false;
         }
-        camera.gameObject.SetActive(true);
+        camera.enabled = true;
         ActiveCamera = camera;
+    }
+
+    public void SetCameraActive(string cameraId, bool active) {
+        if(SceneCameras.TryGetValue(cameraId, out Camera camera)) {
+            camera.enabled = active;
+        }
     }
 
     public Camera GetCameraById(string cameraId) {

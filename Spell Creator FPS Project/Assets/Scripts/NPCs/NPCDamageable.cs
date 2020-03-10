@@ -25,6 +25,11 @@ public class NPCDamageable : CharacterDamageable {
         _isDead = false;
     }
 
+    public override void TakeDamage(Damageable attacker, int damage, Element element = Element.Neutral, Vector3 velocity = default, StatusEffect statusEffect = null) {
+        base.TakeDamage(attacker, damage, element, velocity, statusEffect);
+        Debug.Log("Took damage from: " + attacker);
+    }
+
     protected override void AddStatusEffect(StatusEffect statusEffect, int damage) {
         if(ArrayHelper.Contains(_npcBehaviour.Blueprint.StatResistances, statusEffect)) {
             return;

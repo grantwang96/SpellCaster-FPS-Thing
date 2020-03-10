@@ -45,6 +45,7 @@ public class PlayerCombat : MonoBehaviour, ISpellCaster {
 
     private const int _spellInventoryLimit = GameplayValues.Magic.PlayerLoadoutMaxSize;
     [SerializeField] private int _selectedSpellIndex;
+    public int SelectedSpellIndex => _selectedSpellIndex;
     private Spell SelectedSpell {
         get {
             if(_spellsList.Count == 0) { return null; }

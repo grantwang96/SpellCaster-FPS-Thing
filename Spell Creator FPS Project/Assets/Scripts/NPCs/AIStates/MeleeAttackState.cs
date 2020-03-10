@@ -46,6 +46,13 @@ public class MeleeAttackState : AttackState {
     protected override void OnAnimationStateUpdated(AnimationState state) {
         base.OnAnimationStateUpdated(state);
 
+        if(state == AnimationState.Started) {
+            if(_npcVision.CurrentTarget == null) {
+                return;
+            }
+            _moveController.SetRotation(_npcVision.CurrentTarget.GetBodyPosition(), .5f);
+        }
+
         if(state == AnimationState.CanTransition) {
             TryTransitionToNextAttack();
             return;

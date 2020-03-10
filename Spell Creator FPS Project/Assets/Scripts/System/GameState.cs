@@ -101,12 +101,12 @@ public class GameState : MonoBehaviour {
             OnStateEnterFailed();
             return;
         }
-        SceneController.Instance.OnSceneLoaded += OnSceneLoaded;
+        SceneController.Instance.OnSceneFinishedLoading += OnSceneLoaded;
     }
 
     private void OnSceneLoaded(string sceneName) {
         if (sceneName.Equals(_sceneName)) {
-            SceneController.Instance.OnSceneLoaded -= OnSceneLoaded;
+            SceneController.Instance.OnSceneFinishedLoading -= OnSceneLoaded;
             OnStateEnterSuccess();
         }
     }

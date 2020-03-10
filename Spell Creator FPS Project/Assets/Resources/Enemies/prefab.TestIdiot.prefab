@@ -43,11 +43,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f881ea45e6fe74386f54de42f25ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
-  _onAlertEndState: {fileID: 8324929048625041116}
+  _npcVision: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
   _animController: {fileID: 8325480276375257848}
+  _onAlertEndState: {fileID: 8324929048625041116}
   _npcMoveController: {fileID: 8325727062395415510}
   _animationName: Alert
 --- !u!1 &7489579702572726135
@@ -325,9 +339,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4979328d3eb5f4ba7a303627fb16ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
+  _npcVision: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 0}
   _onTargetReachedStates:
   - {fileID: 8324729436802863332}
   _onFailedToReachTargetState: {fileID: 0}
@@ -336,6 +365,7 @@ MonoBehaviour:
   _onTargetSeenState: {fileID: 8324929048625041116}
   _onTargetOutOfSightState: {fileID: 8324929048625041116}
   _onTargetLostState: {fileID: 8325177677495819848}
+  _vision: {fileID: 0}
   _targetLastKnownPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8221630372671680492
 GameObject:
@@ -380,20 +410,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283fb30e867a997469beee061704f31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: Attack
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
   _npcVision: {fileID: 8325530784265797764}
-  _attackName: 
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
   _animController: {fileID: 8325480276375257848}
+  _attackRange: 0
   _moveController: {fileID: 8325727062395415510}
   _onTargetInRangeState: {fileID: 8324919835238313886}
   _onTargetOutOfRangeState: {fileID: 8324929048625041116}
-  _hitBoxes:
-  - {fileID: 8283625784619795170}
-  _timeActivateHitBoxes: 0.25
-  _timeDeactivateHitBoxes: 0.75
-  _attackComboIndex: 0
+  _hitBoxInfos: []
 --- !u!1 &8221635755730603844
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,13 +476,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179493dd88a287941b28a23aac837371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates:
   - {fileID: 8325004071113672240}
   _npcBehaviour: {fileID: 8324706926033267722}
+  _npcVision: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 0}
   _onIdleEnd: {fileID: 8325467453322136652}
   _defaultIdleTime: 4
-  _moveController: {fileID: 8325727062395415510}
 --- !u!1 &8221722531713812100
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,20 +571,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283fb30e867a997469beee061704f31f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: Attack
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
   _npcVision: {fileID: 8325530784265797764}
-  _attackName: 
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
   _animController: {fileID: 8325480276375257848}
+  _attackRange: 0
   _moveController: {fileID: 8325727062395415510}
   _onTargetInRangeState: {fileID: 8324929048625041116}
   _onTargetOutOfRangeState: {fileID: 8324929048625041116}
-  _hitBoxes:
-  - {fileID: 8283625784619795170}
-  _timeActivateHitBoxes: 0.25
-  _timeDeactivateHitBoxes: 0.75
-  _attackComboIndex: 1
+  _hitBoxInfos: []
 --- !u!1 &8221764461252437628
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,9 +758,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6fd7a4523ca08944a044edcdb4fd498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
+  _npcVision: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 0}
   _onEnemySeenState: {fileID: 2840347131615345852}
 --- !u!1 &8222014045197349208
 GameObject:
@@ -911,6 +988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myBehaviour: {fileID: 8324706926033267722}
+  _vision: {fileID: 0}
 --- !u!1 &8222192544572388162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,10 +1124,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b7a9bf9357a46b499ed280968296187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerName: 
   _childrenStates:
   - {fileID: 8325004071113672240}
   _npcBehaviour: {fileID: 8324706926033267722}
+  _npcVision: {fileID: 0}
+  _enterAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _exitAnimationData:
+    _animationName: 
+    _triggers: []
+    _resetTriggers: []
+    _bools: []
+    _ints: []
+    _floats: []
+  _animController: {fileID: 0}
   _onTargetReachedStates:
   - {fileID: 8325177677495819848}
   _onFailedToReachTargetState: {fileID: 0}
@@ -1126,15 +1219,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 193396bb85654d1408dace7d1ddf6bbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveVector: {x: 0, y: 0, z: 0}
   _bodyTransform: {fileID: 8219498212802927618}
   _headTransform: {fileID: 8219504794680817970}
   _animHandler: {fileID: 8325480276375257848}
+  _moveController: {fileID: 0}
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: Poopooface
-  _charMove: {fileID: 8325727062395415510}
-  _damageable: {fileID: 8325517534402141984}
+  _damageableGO: {fileID: 8222301431439102102}
   _blueprint: {fileID: 11400000, guid: 2a16740bda6b64740b80dfd859c02bf5, type: 2}
   _currentBrainState: {fileID: 0}
   _startingState: {fileID: 8325177677495819848}
@@ -1187,10 +1279,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _baseSpeed: 5
   _maxSpeed: 5
+  _moveSpeed: 0
   _mass: 4
-  _linearDrag: 2
+  _airDrag: 0
+  _groundDrag: 0
+  _currentDrag: 0
   _headDistanceThreshold: 0
   _performingAction: 0
+  _externalForce: {x: 0, y: 0, z: 0}
   _movementVelocity: {x: 0, y: 0, z: 0}
   _turnSpeed: 360
   _destinationArrivalDistance: 0.5
@@ -1225,8 +1321,6 @@ MonoBehaviour:
   _anim: {fileID: 8308156057884842320}
   _bodyRoot: {fileID: 8219498212802927618}
   _characterBehaviour: {fileID: 8324706926033267722}
-  _moveController: {fileID: 8325727062395415510}
-  _damageable: {fileID: 8325517534402141984}
   _accelerationTiltCurve:
     serializedVersion: 2
     m_Curve: []
@@ -1247,10 +1341,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1711357440be3064a8aec2338f9555fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _parentDamageable: {fileID: 0}
   _health: 30
   _maxHealth: 30
   _isDead: 0
+  _root: {fileID: 0}
   _body: {fileID: 8219585569848650188}
 --- !u!114 &8325530784265797764
 MonoBehaviour:
@@ -1500,10 +1594,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e12fd06ab46cc4c9a92a614d8d3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 8325517534402141984}
   _effects:
   - {fileID: 11400000, guid: 9908df454cc8ba14a8487354bd14aa0d, type: 2}
   _powerScale: 1
+  _knockBackDir: {x: 0, y: 0, z: 0}
 --- !u!1 &8222395666656208642
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,6 +1927,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e12fd06ab46cc4c9a92a614d8d3d67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _owner: {fileID: 8325517534402141984}
   _effects: []
   _powerScale: 1
+  _knockBackDir: {x: 0, y: 0, z: 0}

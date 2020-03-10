@@ -56,7 +56,7 @@ public class HurtboxController : MonoBehaviour
 
     private void ProcesssHit() {
         // actually trigger the effects here
-        _hitData?.TriggerEffects(_owner);
+        _hitData?.Trigger(_owner);
         _hit = false;
     }
 

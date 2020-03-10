@@ -7,7 +7,6 @@ public class UIPlayerSpellSlot : MonoBehaviour {
 
     [SerializeField] private Text _spellName;
     [SerializeField] private Image _background;
-    
 
     public void SetSpellSlotInfo(SpellSlotInfo info) {
         if(info == null) {
@@ -16,5 +15,11 @@ public class UIPlayerSpellSlot : MonoBehaviour {
             return;
         }
         _spellName.text = info.SpellName;
+    }
+
+    public void SetSelected(bool selected) {
+        _spellName.color = selected ?
+            ConfigManager.Instance.UIConfigData.HighlightedUIColor :
+            ConfigManager.Instance.UIConfigData.NeutralUIColor;
     }
 }

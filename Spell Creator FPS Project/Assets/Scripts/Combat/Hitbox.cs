@@ -30,12 +30,16 @@ public class Hitbox : MonoBehaviour
 [System.Serializable]
 public class HitboxInfo {
     public string Id;
+    public int Power;
+    public Element Element;
     public Effect[] Effects;
     public Vector3 KnockBackDir;
 }
 
 public class HitData {
 
+    public readonly int Power;
+    public readonly Element Element;
     public readonly Effect[] Effects;
     public readonly Vector3 KnockBackDir;
     public readonly Damageable Owner;
@@ -43,6 +47,8 @@ public class HitData {
     public readonly float PowerScale;
 
     public HitData(HitboxInfo info, Damageable owner, float powerScale, Vector3 origin) {
+        Power = info.Power;
+        Element = info.Element;
         Effects = info.Effects;
         KnockBackDir = info.KnockBackDir;
         Owner = owner;
@@ -58,8 +64,11 @@ public class HitData {
         Origin = origin;
     }
 
-    public void TriggerEffects(Damageable target) {
+    public void Trigger(Damageable target) {
         Vector3 direction = Owner.Body.TransformDirection(KnockBackDir);
+        if(target != Owner) {
+            target.TakeDamage(Owner, Power, Element, direction);
+        }
         for (int i = 0; i < Effects.Length; i++) {
             Effects[i].TriggerEffect(Owner, direction, PowerScale, Origin, target);
         }

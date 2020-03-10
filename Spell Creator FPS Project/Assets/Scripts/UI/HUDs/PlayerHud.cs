@@ -11,10 +11,8 @@ public class PlayerHud : MonoBehaviour {
     [SerializeField] private int _maxMana;
 
     [SerializeField] private UIProgressBar _healthDisplay;
-
-    [SerializeField] private Text _healthTextDisplay;
-    [SerializeField] private Text _manaTextDisplay;
-    [SerializeField] private Image _spellChargeBar;
+    [SerializeField] private UIProgressBar _manaDisplay;
+    [SerializeField] private UIProgressBar _spellChargeBar;
 
     [SerializeField] private PlayerDamageable _playerDamageable;
     [SerializeField] private PlayerCombat _playerCombat;
@@ -45,6 +43,7 @@ public class PlayerHud : MonoBehaviour {
         SubscribeToEvents();
         UpdateHealthDisplay(_health, _maxHealth);
         UpdateManaDisplay(_mana, _maxMana);
+        OnActiveSpellDataUpdated();
 	}
 
     private void SubscribeToEvents() {
@@ -77,7 +76,6 @@ public class PlayerHud : MonoBehaviour {
     }
 
     private void UpdateHealthDisplay(int health, int maxHealth) {
-        // _healthTextDisplay.text = $"{health} / {maxHealth} ";
         _healthDisplay.UpdateFill((float)health / maxHealth);
     }
 
@@ -87,15 +85,15 @@ public class PlayerHud : MonoBehaviour {
     }
 
     private void UpdateManaDisplay(int mana, int maxMana) {
-        _manaTextDisplay.text = $"{mana} / {maxMana}";
+        _manaDisplay.UpdateFill((float)mana / maxMana);
     }
 
     private void OnActiveSpellDataUpdated() {
         ActiveSpell activeSpell = _playerCombat.ActiveSpell;
         if(activeSpell == null) {
-            _spellChargeBar.fillAmount = 0f;
+            _spellChargeBar.UpdateFill(0f);
             return;
         }
-        _spellChargeBar.fillAmount = activeSpell.holdTime / activeSpell.maxHoldTime;
+        _spellChargeBar.UpdateFill(activeSpell.holdTime / activeSpell.maxHoldTime);
     }
 }
