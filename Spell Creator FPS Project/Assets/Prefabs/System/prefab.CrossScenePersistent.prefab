@@ -1087,7 +1087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _uiConfigData: {fileID: 11400000, guid: ec88593031b35cb47a221b2d106a0b5d, type: 2}
-  _chestConfig: {fileID: 0}
+  _chestConfig: {fileID: 11400000, guid: bea057623dcf91543ade23670e74b7d5, type: 2}
 --- !u!1001 &4730436008343744459
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -60,6 +60,7 @@ public class LootManager : MonoBehaviour, ILootManager {
     }
 
     private void BuildLootTable() {
+        _lootTable.Clear();
         _lootTable.Add(LootTier.White, new List<string>());
         _lootTable.Add(LootTier.Green, new List<string>());
         _lootTable.Add(LootTier.Purple, new List<string>());

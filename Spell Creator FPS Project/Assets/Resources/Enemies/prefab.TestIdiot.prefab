@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
-  _npcVision: {fileID: 0}
+  _npcVision: {fileID: 8325530784265797764}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
-  _npcVision: {fileID: 0}
+  _npcVision: {fileID: 8325530784265797764}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -356,16 +356,16 @@ MonoBehaviour:
     _bools: []
     _ints: []
     _floats: []
-  _animController: {fileID: 0}
+  _animController: {fileID: 8325480276375257848}
   _onTargetReachedStates:
   - {fileID: 8324729436802863332}
-  _onFailedToReachTargetState: {fileID: 0}
+  _onFailedToReachTargetState: {fileID: 8325177677495819848}
   _overrideCancelTime: 20
   _moveController: {fileID: 8325727062395415510}
   _onTargetSeenState: {fileID: 8324929048625041116}
   _onTargetOutOfSightState: {fileID: 8324929048625041116}
   _onTargetLostState: {fileID: 8325177677495819848}
-  _vision: {fileID: 0}
+  _vision: {fileID: 8325530784265797764}
   _targetLastKnownPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8221630372671680492
 GameObject:
@@ -479,7 +479,7 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 8325004071113672240}
   _npcBehaviour: {fileID: 8324706926033267722}
-  _npcVision: {fileID: 0}
+  _npcVision: {fileID: 8325530784265797764}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -494,7 +494,7 @@ MonoBehaviour:
     _bools: []
     _ints: []
     _floats: []
-  _animController: {fileID: 0}
+  _animController: {fileID: 8325480276375257848}
   _onIdleEnd: {fileID: 8325467453322136652}
   _defaultIdleTime: 4
 --- !u!1 &8221722531713812100
@@ -760,7 +760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _childrenStates: []
   _npcBehaviour: {fileID: 8324706926033267722}
-  _npcVision: {fileID: 0}
+  _npcVision: {fileID: 8325530784265797764}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -775,7 +775,7 @@ MonoBehaviour:
     _bools: []
     _ints: []
     _floats: []
-  _animController: {fileID: 0}
+  _animController: {fileID: 8325480276375257848}
   _onEnemySeenState: {fileID: 2840347131615345852}
 --- !u!1 &8222014045197349208
 GameObject:
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   _childrenStates:
   - {fileID: 8325004071113672240}
   _npcBehaviour: {fileID: 8324706926033267722}
-  _npcVision: {fileID: 0}
+  _npcVision: {fileID: 8325530784265797764}
   _enterAnimationData:
     _animationName: 
     _triggers: []
@@ -1142,10 +1142,10 @@ MonoBehaviour:
     _bools: []
     _ints: []
     _floats: []
-  _animController: {fileID: 0}
+  _animController: {fileID: 8325480276375257848}
   _onTargetReachedStates:
   - {fileID: 8325177677495819848}
-  _onFailedToReachTargetState: {fileID: 0}
+  _onFailedToReachTargetState: {fileID: 8325177677495819848}
   _overrideCancelTime: 10
   _moveController: {fileID: 8325727062395415510}
 --- !u!1 &8222301431439102102
@@ -1222,7 +1222,7 @@ MonoBehaviour:
   _bodyTransform: {fileID: 8219498212802927618}
   _headTransform: {fileID: 8219504794680817970}
   _animHandler: {fileID: 8325480276375257848}
-  _moveController: {fileID: 0}
+  _moveController: {fileID: 8325727062395415510}
   _unitTags:
   - PLAYER_ENEMY_UNIT
   _id: Poopooface
